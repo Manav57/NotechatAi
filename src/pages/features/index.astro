@@ -10,184 +10,532 @@ import Button from '../../components/ui/Button.astro';
 import Card from '../../components/ui/Card.astro';
 ---
 
-<Layout title="Features — NotesChatAI" description="Explore all features of NotesChatAI: persistent memory, global search, audio overviews, mind maps, study tools, and developer API.">
+<Layout title="Features — NotesChatAI vs NotebookLM | AI Study Assistant" description="Full feature comparison: why NotesChatAI is the better AI study assistant and free NotebookLM alternative. Persistent memory, unlimited sources, API access, flashcard generator, and more." keywords="notebooklm alternative, ai study assistant, features, persistent ai memory, chat with pdf ai, ai flashcard generator, api access">
   <NavBar user={null} />
 
   <main>
-    <HeroBand
-      badge="Free Beta Available"
-      title="Features that make learning stick"
-      subtitle="Every feature is designed around one principle: your knowledge should compound, not disappear when a chat ends."
-      ctaPrimary={{ text: 'Start Free Beta', href: '/signup' }}
-      ctaSecondary={{ text: 'View Pricing', href: '/pricing' }}
-    />
-
-    <FeatureMeshBand
-      title="Core Features"
-      subtitle="The foundation of persistent, cross-document intelligence."
-      features={[
-        {
-          icon: '♾️',
-          title: 'Unlimited Documents',
-          description: 'No 50-source caps. Upload PDFs, EPUBs, YouTube links, web pages, audio files. Your library grows with you.'
-        },
-        {
-          icon: '🌐',
-          title: 'Global Semantic Search',
-          description: 'Vector-powered search across your entire knowledge base. Find concepts, not just keywords. Filter by source, date, type.'
-        },
-        {
-          icon: '🔗',
-          title: 'Cross-Document Citations',
-          description: 'Every answer cites exact passages from your sources. Hover to preview. Click to jump. Works across multiple documents.'
-        },
-        {
-          icon: '🧠',
-          title: 'Persistent Conversation Memory',
-          description: 'Conversations are summarized and embedded. Context from past chats informs future answers — even weeks later.'
-        },
-        {
-          icon: '⚡',
-          title: 'Multi-Model Support',
-          description: 'Choose Gemini 1.5 Flash/Pro, Claude 3.5 Sonnet, GPT-4o, or local models. Optimize for speed, cost, or reasoning.'
-        },
-        {
-          icon: '🔒',
-          title: 'Privacy-First Architecture',
-          description: 'Your data is never used for training. End-to-end encryption optional. Self-hosted deployment available for teams.'
-        },
-      ]}
-    />
-
-    <section class="showcase-band-light" aria-labelledby="audio-features-title">
-      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 id="audio-features-title" class="font-display-lg text-ink mb-4">
-            Audio Overviews — Reimagined
-          </h2>
-          <p class="font-body-lg text-body max-w-2xl mx-auto">
-            NotebookLM's audio feature is great. We made it better: transcripts, chapters, saved library, speed control, and offline download.
+    {/* ═══════════════ HERO ═══════════════ */}
+    <section class="hero-band relative overflow-hidden" aria-labelledby="features-hero-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.08]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+          <span class="badge-secondary inline-flex items-center gap-1.5 mb-6 font-caption-mono">
+            Feature Comparison
+          </span>
+          <h1 id="features-hero-title" class="font-display-xl text-ink mb-6 text-balance">
+            Every feature. Side by side.
+          </h1>
+          <p class="font-body-lg text-body mb-8 text-balance max-w-2xl mx-auto">
+            A detailed comparison of NotesChatAI and NotebookLM across every dimension that matters for students and researchers.
           </p>
-        </div>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card variant="marketing">
-            <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center mb-4">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-on-primary" aria-hidden="true">
-                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
-                <polygon points="7,7 13,10 7,13" fill="currentColor"/>
-              </svg>
-            </div>
-            <h3 class="font-display-sm text-ink mb-2">Two-Host Dialogue</h3>
-            <p class="font-body-md text-body">Natural conversation between AI hosts explaining your documents with examples and analogies.</p>
-          </Card>
-
-          <Card variant="marketing">
-            <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center mb-4">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-on-primary" aria-hidden="true">
-                <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M5 10h10M5 13h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <h3 class="font-display-sm text-ink mb-2">Full Transcripts</h3>
-            <p class="font-body-md text-body">Word-level timestamps. Search within audio. Jump to any sentence. Export as Markdown, SRT, or VTT.</p>
-          </Card>
-
-          <Card variant="marketing">
-            <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center mb-4">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-on-primary" aria-hidden="true">
-                <path d="M10 3L4 7v6l6 4 6-4V7L10 3z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                <circle cx="10" cy="10" r="3" fill="currentColor"/>
-              </svg>
-            </div>
-            <h3 class="font-display-sm text-ink mb-2">Smart Chapters</h3>
-            <p class="font-body-md text-body">Auto-generated chapters with timestamps. Navigate by topic. Rename or regenerate chapters.</p>
-          </Card>
-
-          <Card variant="marketing">
-            <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center mb-4">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-on-primary" aria-hidden="true">
-                <rect x="3" y="3" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M7 10h6M10 7v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <h3 class="font-display-sm text-ink mb-2">Saved Library</h3>
-            <p class="font-body-md text-body">Every overview saved forever. Organize into playlists. Share via link. Download for offline.</p>
-          </Card>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="/auth/signup" class="btn-primary">Start Free Beta</a>
+            <a href="#comparison-table" class="btn-secondary">Jump to Comparison</a>
+          </div>
         </div>
       </div>
     </section>
 
-    <FeatureMeshBand
-      title="Study Tools That Work"
-      subtitle="Transform your library into active learning material."
-      features={[
-        {
-          icon: '🗺️',
-          title: 'Interactive Mind Maps',
-          description: 'Visual knowledge graph of entities and relationships. Click nodes to explore. Query subgraphs. Export as image or Mermaid.'
-        },
-        {
-          icon: '🃏',
-          title: 'Spaced Repetition Flashcards',
-          description: 'Auto-generate cloze, basic, and reversed cards. FSRS algorithm schedules reviews. Sync with Anki (.apkg export).'
-        },
-        {
-          icon: '❓',
-          title: 'Quiz Generator',
-          description: 'Create MCQs, short answer, and explanation questions from any document subset. Timed practice modes. Detailed explanations.'
-        },
-        {
-          icon: '📅',
-          title: 'Study Planner',
-          description: 'Set exam dates. Daily goals. Progress tracking. Adaptive scheduling based on retention scores.'
-        },
-        {
-          icon: '📤',
-          title: 'Universal Export',
-          description: 'Export to Markdown, PDF, Obsidian vault, Notion, Anki, CSV, Zotero, Mendeley. Your data, your format.'
-        },
-        {
-          icon: '🔌',
-          title: 'Integrations',
-          description: 'Zotero, Mendeley, Notion, Obsidian, Readwise, Google Drive, OneDrive. Sync bidirectionally.'
-        },
-      ]}
-    />
+    {/* ═══════════════ FULL COMPARISON TABLE ═══════════════ */}
+    <section id="comparison-table" class="showcase-band-light relative scroll-mt-20" aria-labelledby="table-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="text-center mb-12">
+          <span class="font-caption-mono text-violet uppercase tracking-wider text-xs mb-3 block">Head to head</span>
+          <h2 id="table-title" class="font-display-lg text-ink mb-4 text-balance">
+            NotesChatAI vs NotebookLM
+          </h2>
+          <p class="font-body-lg text-body max-w-2xl mx-auto">
+            We compared every feature, limit, and capability. Here's the full picture.
+          </p>
+        </div>
 
+        {/* Category: Knowledge Base */}
+        <div class="max-w-5xl mx-auto mb-12">
+          <h3 class="font-display-sm text-ink mb-4 flex items-center gap-2">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-violet" aria-hidden="true">
+              <rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M6 7h8M6 10h5M6 13h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Knowledge Base & Sources
+          </h3>
+          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-2">
+            <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
+              <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Feature</span></div>
+              <div class="p-4 text-center border-x border-hairline">
+                <span class="font-body-sm-strong text-ink">NotesChatAI</span>
+              </div>
+              <div class="p-4 text-center">
+                <span class="font-body-sm-strong text-body">NotebookLM</span>
+              </div>
+            </div>
+            {[
+              { f: 'Architecture', nc: 'Unified knowledge base', nlm: 'Separate notebooks (isolated)' },
+              { f: 'Cross-notebook search', nc: true, nlm: 'Not possible' },
+              { f: 'Source limit per project', nc: 'Unlimited', nlm: '50 (Free) → 600 (Ultra)' },
+              { f: 'Max words per source', nc: 'No limit', nlm: '500,000 words' },
+              { f: 'Max file size', nc: '200 MB', nlm: '200 MB' },
+              { f: 'Supported formats', nc: 'PDF, EPUB, DOCX, TXT, MDX, MP3, WAV, YouTube, URLs', nlm: 'PDF, DOCX, Google Docs, YouTube, audio, URLs' },
+              { f: 'Import from', nc: 'Obsidian, Roam, Notion, Anki, GitHub', nlm: 'Google Drive only' },
+              { f: 'OCR (scanned PDFs)', nc: true, nlm: true },
+              { f: 'Auto-indexing', nc: 'Real-time vector embeddings', nlm: 'Batch processing' },
+            ].map((row) => (
+              <div class="grid grid-cols-3 border-b border-hairline last:border-b-0 hover:bg-canvas-soft/50 transition-colors">
+                <div class="p-4 flex items-center"><span class="font-body-sm text-ink">{row.f}</span></div>
+                <div class="p-4 flex items-center justify-center border-x border-hairline bg-violet/5">
+                  {typeof row.nc === 'boolean' ? (
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-success" aria-hidden="true">
+                      <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/>
+                      <path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  ) : (
+                    <span class="font-body-sm text-ink text-center">{row.nc}</span>
+                  )}
+                </div>
+                <div class="p-4 flex items-center justify-center">
+                  {typeof row.nlm === 'boolean' ? (
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-success" aria-hidden="true">
+                      <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/>
+                      <path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  ) : (
+                    <span class="font-body-sm text-body text-center">{row.nlm}</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Category: Chat & AI */}
+        <div class="max-w-5xl mx-auto mb-12">
+          <h3 class="font-display-sm text-ink mb-4 flex items-center gap-2">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan-deep" aria-hidden="true">
+              <path d="M17 10a7 7 0 0 1-7 7H4l-2 2V3a7 7 0 0 1 14 0z" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            Chat & AI Capabilities
+          </h3>
+          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-2">
+            <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
+              <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Feature</span></div>
+              <div class="p-4 text-center border-x border-hairline"><span class="font-body-sm-strong text-ink">NotesChatAI</span></div>
+              <div class="p-4 text-center"><span class="font-body-sm-strong text-body">NotebookLM</span></div>
+            </div>
+            {[
+              { f: 'Daily chat limit', nc: 'Unlimited (Pro)', nlm: '50 (Free) → 5,000 (Ultra)' },
+              { f: 'Chat history', nc: 'Permanent, searchable', nlm: 'Saved (added Oct 2025)' },
+              { f: 'Cross-session context', nc: true, nlm: 'Per-notebook only' },
+              { f: 'Citations', nc: 'Page + paragraph + confidence', nlm: 'Source-level only' },
+              { f: 'Citation verification', nc: 'Confidence scores + exact location', nlm: 'Click to source' },
+              { f: 'Model choice', nc: 'Gemini, Claude, GPT, local', nlm: 'Gemini only' },
+              { f: 'Streaming responses', nc: true, nlm: true },
+              { f: 'Custom personas/goals', nc: 'Global + per-conversation', nlm: 'Per-notebook (5,000 chars)' },
+              { f: 'Multi-language', nc: true, nlm: true },
+            ].map((row) => (
+              <div class="grid grid-cols-3 border-b border-hairline last:border-b-0 hover:bg-canvas-soft/50 transition-colors">
+                <div class="p-4 flex items-center"><span class="font-body-sm text-ink">{row.f}</span></div>
+                <div class="p-4 flex items-center justify-center border-x border-hairline bg-violet/5">
+                  {typeof row.nc === 'boolean' ? (
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-success" aria-hidden="true"><circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  ) : (
+                    <span class="font-body-sm text-ink text-center">{row.nc}</span>
+                  )}
+                </div>
+                <div class="p-4 flex items-center justify-center">
+                  {typeof row.nlm === 'boolean' ? (
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-success" aria-hidden="true"><circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  ) : (
+                    <span class="font-body-sm text-body text-center">{row.nlm}</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Category: Study Tools */}
+        <div class="max-w-5xl mx-auto mb-12">
+          <h3 class="font-display-sm text-ink mb-4 flex items-center gap-2">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-highlight-pink" aria-hidden="true">
+              <rect x="3" y="4" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M7 8h6M7 11h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Study Tools
+          </h3>
+          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-2">
+            <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
+              <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Feature</span></div>
+              <div class="p-4 text-center border-x border-hairline"><span class="font-body-sm-strong text-ink">NotesChatAI</span></div>
+              <div class="p-4 text-center"><span class="font-body-sm-strong text-body">NotebookLM</span></div>
+            </div>
+            {[
+              { f: 'Flashcards', nc: 'Auto-generated, FSRS spaced repetition', nlm: 'Not available' },
+              { f: 'Quiz mode', nc: 'MCQ, short answer, timed practice', nlm: 'Not available' },
+              { f: 'Practice exams', nc: 'Customizable, auto-graded', nlm: 'Not available' },
+              { f: 'Study planner', nc: 'Exam dates, daily goals, adaptive', nlm: 'Not available' },
+              { f: 'Knowledge graph', nc: 'Interactive mind map, zoom, filter', nlm: 'Basic mind map output' },
+              { f: 'Anki export', nc: '.apkg direct export', nlm: 'Not available' },
+              { f: 'Retention tracking', nc: 'Per-card mastery, streak, analytics', nlm: 'Not available' },
+              { f: 'Study groups', nc: 'Shared knowledge bases, real-time', nlm: 'Basic notebook sharing' },
+            ].map((row) => (
+              <div class="grid grid-cols-3 border-b border-hairline last:border-b-0 hover:bg-canvas-soft/50 transition-colors">
+                <div class="p-4 flex items-center"><span class="font-body-sm text-ink">{row.f}</span></div>
+                <div class="p-4 flex items-center justify-center border-x border-hairline bg-violet/5">
+                  <span class="font-body-sm text-ink text-center">{row.nc}</span>
+                </div>
+                <div class="p-4 flex items-center justify-center">
+                  <span class="font-body-sm text-mute text-center">{row.nlm}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Category: Audio & Media */}
+        <div class="max-w-5xl mx-auto mb-12">
+          <h3 class="font-display-sm text-ink mb-4 flex items-center gap-2">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-warning" aria-hidden="true">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+              <polygon points="8,7 13,10 8,13" fill="currentColor"/>
+            </svg>
+            Audio & Media
+          </h3>
+          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-2">
+            <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
+              <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Feature</span></div>
+              <div class="p-4 text-center border-x border-hairline"><span class="font-body-sm-strong text-ink">NotesChatAI</span></div>
+              <div class="p-4 text-center"><span class="font-body-sm-strong text-body">NotebookLM</span></div>
+            </div>
+            {[
+              { f: 'Audio overviews', nc: 'Two-host podcast style', nlm: 'Two-host Deep Dive' },
+              { f: 'Daily audio limit', nc: 'Unlimited (Pro)', nlm: '3 (Free) → 200 (Ultra)' },
+              { f: 'Full transcripts', nc: 'Word-level timestamps, search', nlm: 'Available' },
+              { f: 'Chapter markers', nc: 'Auto-generated, editable', nlm: 'Basic' },
+              { f: 'Playback speed', nc: '0.5x – 2x', nlm: '0.5x – 2x' },
+              { f: 'Offline download', nc: 'MP3 export', nlm: 'Not available' },
+              { f: 'Saved library', nc: 'Organize, share, playlist', nlm: 'Saved in notebook' },
+              { f: 'Video overviews', nc: 'Coming soon', nlm: 'Veo 3 (Ultra only)' },
+              { f: 'Slides / PPTX export', nc: 'Coming soon', nlm: 'Available (Feb 2026)' },
+              { f: 'Data tables', nc: 'Coming soon', nlm: 'Google Sheets export' },
+            ].map((row) => (
+              <div class="grid grid-cols-3 border-b border-hairline last:border-b-0 hover:bg-canvas-soft/50 transition-colors">
+                <div class="p-4 flex items-center"><span class="font-body-sm text-ink">{row.f}</span></div>
+                <div class="p-4 flex items-center justify-center border-x border-hairline bg-violet/5">
+                  <span class="font-body-sm text-ink text-center">{row.nc}</span>
+                </div>
+                <div class="p-4 flex items-center justify-center">
+                  <span class="font-body-sm text-body text-center">{row.nlm}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Category: Platform & API */}
+        <div class="max-w-5xl mx-auto mb-12">
+          <h3 class="font-display-sm text-ink mb-4 flex items-center gap-2">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-success" aria-hidden="true">
+              <path d="M16 8a8 8 0 0 1-8 8H2l-1 1V2a8 8 0 0 1 15-1z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            </svg>
+            Platform & Developer
+          </h3>
+          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-2">
+            <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
+              <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Feature</span></div>
+              <div class="p-4 text-center border-x border-hairline"><span class="font-body-sm-strong text-ink">NotesChatAI</span></div>
+              <div class="p-4 text-center"><span class="font-body-sm-strong text-body">NotebookLM</span></div>
+            </div>
+            {[
+              { f: 'REST API', nc: true, nlm: 'Not available' },
+              { f: 'GraphQL API', nc: true, nlm: 'Not available' },
+              { f: 'Webhooks', nc: true, nlm: 'Not available' },
+              { f: 'SDKs', nc: 'TypeScript, Python, Go', nlm: 'Not available' },
+              { f: 'Self-hosted option', nc: 'Docker (Pro/Enterprise)', nlm: 'Not available' },
+              { f: 'Export formats', nc: 'MD, JSON, CSV, Anki, Notion, Obsidian', nlm: 'Notes text only' },
+              { f: 'Embeddings API', nc: true, nlm: 'Not available' },
+              { f: 'Custom model hosting', nc: 'Workers AI, local', nlm: 'Not available' },
+            ].map((row) => (
+              <div class="grid grid-cols-3 border-b border-hairline last:border-b-0 hover:bg-canvas-soft/50 transition-colors">
+                <div class="p-4 flex items-center"><span class="font-body-sm text-ink">{row.f}</span></div>
+                <div class="p-4 flex items-center justify-center border-x border-hairline bg-violet/5">
+                  {typeof row.nc === 'boolean' ? (
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-success" aria-hidden="true"><circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  ) : (
+                    <span class="font-body-sm text-ink text-center">{row.nc}</span>
+                  )}
+                </div>
+                <div class="p-4 flex items-center justify-center">
+                  {typeof row.nlm === 'boolean' ? (
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-success" aria-hidden="true"><circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  ) : (
+                    <span class="font-body-sm text-mute text-center">{row.nlm}</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Category: Pricing */}
+        <div class="max-w-5xl mx-auto mb-12">
+          <h3 class="font-display-sm text-ink mb-4 flex items-center gap-2">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-link" aria-hidden="true">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M10 5v10M7.5 7.5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5-2.5 1.12-2.5 2.5 1.12 2.5 2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Pricing & Limits
+          </h3>
+          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-2">
+            <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
+              <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Feature</span></div>
+              <div class="p-4 text-center border-x border-hairline"><span class="font-body-sm-strong text-ink">NotesChatAI</span></div>
+              <div class="p-4 text-center"><span class="font-body-sm-strong text-body">NotebookLM</span></div>
+            </div>
+            {[
+              { f: 'Free tier', nc: '50 docs, 30 chats/day, 2 audio/day', nlm: '50 sources, 50 chats/day, 3 audio/day' },
+              { f: 'Pro price', nc: '$9.99/mo', nlm: '$19.99/mo (AI Pro)' },
+              { f: 'Enterprise', nc: 'Self-hosted, custom limits', nlm: 'Google Workspace' },
+              { f: 'API included', nc: 'All paid plans', nlm: 'Not available' },
+              { f: 'Storage', nc: 'Unlimited (Pro)', nlm: '2 TB (Pro) → 5 TB (Ultra)' },
+              { f: 'Team features', nc: 'Shared KB, roles, audit log', nlm: 'Basic sharing' },
+              { f: 'Data portability', nc: 'Full export, any format', nlm: 'Limited notes export' },
+              { f: 'Uptime SLA', nc: '99.9% (Enterprise)', nlm: 'Google SLA' },
+            ].map((row) => (
+              <div class="grid grid-cols-3 border-b border-hairline last:border-b-0 hover:bg-canvas-soft/50 transition-colors">
+                <div class="p-4 flex items-center"><span class="font-body-sm text-ink">{row.f}</span></div>
+                <div class="p-4 flex items-center justify-center border-x border-hairline bg-violet/5">
+                  <span class="font-body-sm text-ink text-center">{row.nc}</span>
+                </div>
+                <div class="p-4 flex items-center justify-center">
+                  <span class="font-body-sm text-body text-center">{row.nlm}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Where NotebookLM Wins — honest */}
+        <div class="max-w-5xl mx-auto mb-8">
+          <div class="bg-canvas-soft rounded-xl border border-hairline p-6 lg:p-8">
+            <h3 class="font-display-sm text-ink mb-4 flex items-center gap-2">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-link" aria-hidden="true">
+                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10 6v5M10 13.5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              Where NotebookLM Leads
+            </h3>
+            <p class="font-body-sm text-body mb-4">We believe in transparency. Here's where NotebookLM currently has advantages:</p>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div class="flex items-start gap-3 p-3 bg-canvas rounded-lg">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-link flex-shrink-0 mt-0.5" aria-hidden="true">
+                  <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M9 6v4M9 12.5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <div>
+                  <p class="font-body-sm-strong text-ink">Cinematic Video Overviews</p>
+                  <p class="font-caption text-body">Veo 3 AI-generated video (Ultra only)</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 p-3 bg-canvas rounded-lg">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-link flex-shrink-0 mt-0.5" aria-hidden="true">
+                  <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M9 6v4M9 12.5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <div>
+                  <p class="font-body-sm-strong text-ink">Slides & PPTX Export</p>
+                  <p class="font-caption text-body">Auto-generated presentations (available now)</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 p-3 bg-canvas rounded-lg">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-link flex-shrink-0 mt-0.5" aria-hidden="true">
+                  <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M9 6v4M9 12.5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <div>
+                  <p class="font-body-sm-strong text-ink">Google Drive Integration</p>
+                  <p class="font-caption text-body">Native Google ecosystem sync</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 p-3 bg-canvas rounded-lg">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-link flex-shrink-0 mt-0.5" aria-hidden="true">
+                  <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M9 6v4M9 12.5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <div>
+                  <p class="font-body-sm-strong text-ink">Deep Research (Web Search)</p>
+                  <p class="font-caption text-body">Agentic web research with citations</p>
+                </div>
+              </div>
+            </div>
+            <p class="font-body-sm text-body mt-4">These features are on our roadmap. Video generation, slides export, and web research are coming to NotesChatAI.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ═══════════════ DEEP DIVES ═══════════════ */}
+
+    {/* Deep Dive: Unified Knowledge Base */}
+    <section class="feature-mesh-band relative overflow-hidden" aria-labelledby="unified-kb-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.04]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div>
+            <span class="font-caption-mono text-cyan-deep uppercase tracking-wider text-xs mb-3 block">Deep Dive</span>
+            <h2 id="unified-kb-title" class="font-display-lg text-ink mb-4">
+              The unified knowledge base changes everything.
+            </h2>
+            <p class="font-body-lg text-body mb-6">
+              NotebookLM's biggest limitation is notebook isolation. Your ML notes can't talk to your physics textbook. Your biology flashcards don't know about your chemistry notes.
+            </p>
+            <p class="font-body-md text-body mb-6">
+              NotesChatAI puts everything in one connected knowledge base. Ask "What connects my bio notes to my chemistry textbook?" — and get a real answer with citations from both.
+            </p>
+            <ul class="space-y-3 mb-8">
+              {[
+                'Search across all courses, semesters, and years simultaneously',
+                'AI finds connections you didn\'t know existed',
+                'No need to remember which notebook has what',
+                'Your knowledge compounds — the more you add, the smarter it gets',
+              ].map((item) => (
+                <li class="flex items-start gap-3 font-body-md text-ink">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan-deep flex-shrink-0 mt-0.5" aria-hidden="true">
+                    <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                    <path d="M7 10l3 3 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <a href="/auth/signup" class="btn-primary">Try it free →</a>
+          </div>
+          <div class="relative">
+            <div class="bg-canvas rounded-xl border border-hairline shadow-level-3 p-6">
+              {/* Visual: Notebook silos vs unified KB */}
+              <div class="space-y-4">
+                <div class="text-center mb-4">
+                  <span class="font-caption-mono text-mute text-xs uppercase">NotebookLM: Isolated notebooks</span>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                  <div class="bg-error-soft/50 border border-error/20 rounded-lg p-3 text-center">
+                    <p class="font-body-sm text-error font-medium">Biology</p>
+                    <p class="font-caption text-error/60">12 sources</p>
+                    <p class="font-caption text-error/60 mt-1">🔒 Can't search Physics</p>
+                  </div>
+                  <div class="bg-error-soft/50 border border-error/20 rounded-lg p-3 text-center">
+                    <p class="font-body-sm text-error font-medium">Physics</p>
+                    <p class="font-caption text-error/60">8 sources</p>
+                    <p class="font-caption text-error/60 mt-1">🔒 Can't search Bio</p>
+                  </div>
+                  <div class="bg-error-soft/50 border border-error/20 rounded-lg p-3 text-center">
+                    <p class="font-body-sm text-error font-medium">Chem</p>
+                    <p class="font-caption text-error/60">15 sources</p>
+                    <p class="font-caption text-error/60 mt-1">🔒 Can't search either</p>
+                  </div>
+                </div>
+                <div class="text-center py-3">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="mx-auto text-mute" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="text-center mb-2">
+                  <span class="font-caption-mono text-cyan-deep text-xs uppercase">NotesChatAI: Unified knowledge base</span>
+                </div>
+                <div class="bg-success/5 border border-success/20 rounded-lg p-4 text-center">
+                  <p class="font-body-sm-strong text-ink mb-2">📚 All 35 Sources Connected</p>
+                  <div class="flex justify-center gap-2 flex-wrap">
+                    <span class="badge-secondary text-xs">Biology</span>
+                    <span class="badge-secondary text-xs">Physics</span>
+                    <span class="badge-secondary text-xs">Chemistry</span>
+                  </div>
+                  <p class="font-caption text-cyan-deep mt-2">✓ Search everything at once</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Deep Dive: Study Tools */}
+    <section class="showcase-band-dark relative overflow-hidden" aria-labelledby="study-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="text-center mb-16">
+          <span class="font-caption-mono text-cyan-soft uppercase tracking-wider text-xs mb-3 block">Deep Dive</span>
+          <h2 id="study-title" class="font-display-lg text-on-primary mb-4">
+            Study tools NotebookLM can't offer.
+          </h2>
+          <p class="font-body-lg text-cyan-soft max-w-2xl mx-auto">
+            Active recall, spaced repetition, and practice exams — built right into your knowledge base.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              title: 'Flashcards with FSRS',
+              desc: 'Auto-generate cloze, basic, and reversed cards from any document. Spaced repetition adapts to what you struggle with.',
+              icon: 'M4 5h16M4 5v10h16V5M4 10h16',
+            },
+            {
+              title: 'Quiz Generator',
+              desc: 'Multiple choice, short answer, and explanation questions. Timed practice modes. Detailed explanations for every answer.',
+              icon: 'M12 2l-8 4.5v7l8 4.5 8-4.5v-7L12 2z',
+            },
+            {
+              title: 'Practice Exams',
+              desc: 'Generate realistic exams from your knowledge base. Customize length, difficulty, and topic coverage. Auto-graded with explanations.',
+              icon: 'M9 5H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2M9 5h6',
+            },
+            {
+              title: 'Retention Analytics',
+              desc: 'Track mastery per topic. See your weakest areas. Streak tracking. Weekly progress reports. Adaptive study scheduling.',
+              icon: 'M3 3v14h14M7 13l3 3 7-7',
+            },
+          ].map((item) => (
+            <div class="bg-canvas/10 rounded-xl border border-hairline-strong/20 p-5">
+              <div class="w-12 h-12 mb-4 bg-cyan/20 rounded-xl flex items-center justify-center">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-cyan" aria-hidden="true">
+                  <path d={item.icon} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h3 class="font-display-sm text-on-primary mb-2">{item.title}</h3>
+              <p class="font-body-sm text-on-primary/70">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* Deep Dive: Developer Platform */}
     <ShowcaseBandDark
-      title="Developer Platform"
-      subtitle="Build custom workflows on top of persistent RAG."
-      reverse={false}
+      title="An API that opens possibilities."
+      subtitle="Everything NotesChatAI does is available via API. Build custom study tools, automate workflows, integrate with your stack."
+      reverse={true}
     >
       <slot name="content" slot="content">
-        <div class="space-y-6">
-          <div class="grid sm:grid-cols-2 gap-4">
-            <Badge variant="primary" size="md" class="text-sm">REST API</Badge>
-            <Badge variant="primary" size="md" class="text-sm">GraphQL</Badge>
-            <Badge variant="primary" size="md" class="text-sm">Webhooks</Badge>
-            <Badge variant="primary" size="md" class="text-sm">SDKs</Badge>
-            <Badge variant="secondary" size="md" class="text-sm">TypeScript</Badge>
-            <Badge variant="secondary" size="md" class="text-sm">Python</Badge>
-            <Badge variant="secondary" size="md" class="text-sm">Go</Badge>
-            <Badge variant="secondary" size="md" class="text-sm">Rust</Badge>
+        <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-3">
+            {['REST API', 'GraphQL', 'Webhooks', 'SDKs'].map((label) => (
+              <div class="bg-canvas/10 rounded-lg px-4 py-2.5 text-center border border-hairline-strong/20">
+                <span class="font-body-sm-strong text-on-primary">{label}</span>
+              </div>
+            ))}
           </div>
           <ul class="space-y-3" role="list">
             {[
               'POST /v1/documents — Upload and process documents',
               'POST /v1/chat — Streaming RAG chat with citations',
               'GET /v1/search — Semantic search across knowledge base',
-              'POST /v1/audio — Generate audio overviews programmatically',
+              'POST /v1/flashcards — Generate study cards from documents',
               'GET /v1/mindmap — Fetch knowledge graph as nodes/edges',
               'POST /v1/export — Export to any supported format',
-              'Webhooks: document.processed, chat.completed, audio.ready',
             ].map((item) => (
-              <li class="flex items-center gap-3 font-body-md text-on-primary/80">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan flex-shrink-0" aria-hidden="true">
-                  <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
-                  <path d="M7 10l3 3 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <li class="flex items-center gap-3 font-body-sm text-on-primary/80">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="text-cyan flex-shrink-0" aria-hidden="true">
+                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M5.5 8l2 2 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <code class="font-code bg-canvas/10 px-2 py-0.5 rounded">{item}</code>
+                <code class="font-code text-xs">{item}</code>
               </li>
             ))}
           </ul>
@@ -195,9 +543,9 @@ import Card from '../../components/ui/Card.astro';
       </slot>
 
       <slot name="visual" slot="visual">
-        <div class="bg-canvas/5 rounded-xl border border-hairline-strong p-6">
-          <pre class="font-code text-on-primary/90 overflow-x-auto"><code>{`// TypeScript SDK example
-import { NotesChatAI } from '@noteschatai/sdk';
+        <div class="bg-primary text-on-primary rounded-md p-6 overflow-x-auto">
+          <p class="font-caption-mono text-cyan-soft text-xs mb-4">SDK Example</p>
+          <pre class="font-code text-xs leading-relaxed"><code>{`import { NotesChatAI } from '@noteschatai/sdk';
 
 const client = new NotesChatAI({
   apiKey: process.env.NOTESCHATAI_API_KEY,
@@ -206,44 +554,40 @@ const client = new NotesChatAI({
 // Upload a document
 const doc = await client.documents.upload({
   file: fs.createReadStream('./notes.pdf'),
-  title: 'ML Lecture Notes',
+  tags: ['ML', 'Coursework'],
 });
 
-// Chat with RAG
+// Chat with RAG across entire KB
 const stream = await client.chat.stream({
-  message: 'What are the key concepts in my ML notes?',
+  message: 'Compare my ML and physics notes',
   model: 'gemini-1.5-flash',
   retrieval: { topK: 10, rerank: true },
 });
 
-for await (const chunk of stream) {
-  if (chunk.type === 'citation') {
-    console.log('Source:', chunk.documentTitle, chunk.page);
-  } else if (chunk.type === 'text') {
-    process.stdout.write(chunk.text);
-  }
-}`}
-          </code></pre>
+// Generate flashcards
+const cards = await client.study.flashcards({
+  sourceIds: [doc.id],
+  count: 20,
+  focusArea: 'key concepts',
+});`}</code></pre>
         </div>
       </slot>
     </ShowcaseBandDark>
 
-    <section class="hero-band bg-canvas-soft" aria-labelledby="features-cta-title">
-      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+    {/* ═══════════════ FINAL CTA ═══════════════ */}
+    <section class="hero-band bg-canvas-soft relative overflow-hidden" aria-labelledby="features-cta-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.06]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
         <div class="text-center max-w-3xl mx-auto">
-          <h2 id="features-cta-title" class="font-display-lg text-ink mb-4">
-            See it in action
+          <h2 id="features-cta-title" class="font-display-lg text-ink mb-4 text-balance">
+            Ready to build your knowledge base?
           </h2>
-          <p class="font-body-lg text-body mb-8">
-            Join the free beta and experience persistent AI memory for yourself.
+          <p class="font-body-lg text-body mb-8 text-balance">
+            Join the free beta. No credit card required. Start with 50 documents and upgrade anytime.
           </p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="/signup" class="btn-primary w-full sm:w-auto">
-              Start Free Beta
-            </a>
-            <a href="/docs" class="btn-secondary w-full sm:w-auto">
-              Read the Docs
-            </a>
+            <a href="/auth/signup" class="btn-primary w-full sm:w-auto">Start Free Beta</a>
+            <a href="/pricing" class="btn-secondary w-full sm:w-auto">View Pricing</a>
           </div>
         </div>
       </div>

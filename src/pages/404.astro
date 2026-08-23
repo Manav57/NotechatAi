@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import NavBar from '../components/ui/NavBar.astro';
+import Footer from '../components/ui/Footer.astro';
+---
+
+<Layout title="Page Not Found — NotesChatAI" description="The page you're looking for doesn't exist. Head back to NotesChatAI home." robots="noindex">
+  <NavBar user={null} />
+
+  <main>
+    <section class="hero-band relative overflow-hidden min-h-[60vh] flex items-center" aria-labelledby="404-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.08]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10 w-full">
+        <div class="max-w-3xl mx-auto text-center">
+          <span class="font-display-xl text-muted/30 block mb-4" aria-hidden="true">404</span>
+          <h1 id="404-title" class="font-display-xl text-ink mb-6 text-balance">
+            Page not found
+          </h1>
+          <p class="font-body-lg text-body mb-8 text-balance max-w-xl mx-auto">
+            The page you're looking for doesn't exist or has been moved. Let's get you back on track.
+          </p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="/" class="btn-primary w-full sm:w-auto">Go Home</a>
+            <a href="/features" class="btn-secondary w-full sm:w-auto">Explore Features</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="showcase-band-light relative" aria-labelledby="helpful-links-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center">
+          <h2 id="helpful-links-title" class="font-display-md text-ink mb-8">Or try one of these</h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            {[
+              { label: 'Features', href: '/features', desc: 'See what NotesChatAI can do' },
+              { label: 'Pricing', href: '/pricing', desc: 'Simple, transparent plans' },
+              { label: 'Blog', href: '/blog', desc: 'Latest articles and guides' },
+              { label: 'Contact', href: '/contact', desc: 'Get in touch with us' },
+            ].map((link) => (
+              <a href={link.href} class="bg-canvas rounded-xl border border-hairline shadow-level-2 p-5 text-left hover:shadow-level-3 transition-shadow group">
+                <span class="font-body-md-strong text-ink group-hover:text-link transition-colors">{link.label}</span>
+                <span class="block font-body-sm text-body mt-1">{link.desc}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

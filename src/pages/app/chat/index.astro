@@ -1,154 +1,253 @@
+export const prerender = false;
 ---
 import AppLayout from '../../../layouts/AppLayout.astro';
-import Button from '../../../components/ui/Button.astro';
-import Input from '../../../components/ui/Input.astro';
-import Card from '../../../components/ui/Card.astro';
-import Badge from '../../../components/ui/Badge.astro';
 ---
 
-<AppLayout title="Chat — NotesChatAI" user={{ name: 'Demo User', email: 'demo@noteschatai.com', plan: 'free' }}>
-  <div class="h-[calc(100vh-64px)] flex flex-col">
-    <!-- Sidebar -->
-    <aside class="hidden lg:block w-80 bg-canvas border-r border-hairline flex flex-col">
-      <div class="p-4 border-b border-hairline flex items-center justify-between">
-        <h2 class="font-display-sm text-ink">Conversations</h2>
-        <Button variant="primary-sm" size="sm" class="w-full" id="new-chat-btn">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="mr-1.5" aria-hidden="true">
-            <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          New Chat
-        </Button>
+<AppLayout title="Chat — NotesChatAI">
+  <div class="h-[calc(100vh-64px)] flex flex-col -my-8 -mx-4 lg:-mx-8">
+    {/* Sidebar */}
+    <aside id="chat-sidebar" class="hidden lg:flex w-80 bg-canvas border-r border-hairline flex-col flex-shrink-0">
+      <div class="p-4 border-b border-hairline">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-display-sm text-ink">Conversations</h2>
+          <button id="new-chat-btn" class="btn-primary-sm" aria-label="New chat">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="mr-1" aria-hidden="true">
+              <path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            New
+          </button>
+        </div>
       </div>
-      <div class="flex-1 overflow-y-auto divide-y divide-hairline" id="conversation-list">
-        {[
-          { id: '1', title: 'Transformer architectures', updated: '4 hours ago', messages: 12 },
-          { id: '2', title: 'RNN vs LSTM comparison', updated: '1 day ago', messages: 8 },
-          { id: '3', title: 'Attention mechanism deep dive', updated: '2 days ago', messages: 15 },
-          { id: '4', title: 'ML fundamentals review', updated: '3 days ago', messages: 6 },
-        ].map((conv) => (
-          <a href={`/app/chat/${conv.id}`} class="block p-4 hover:bg-canvas-soft transition-colors">
-            <p class="font-body-md text-ink truncate mb-1">{conv.title}</p>
-            <div class="flex items-center gap-2 font-body-sm text-mute">
-              <span>{conv.updated}</span>
-              <span>·</span>
-              <span>{conv.messages} messages</span>
-            </div>
-          </a>
-        ))}
-      </div>
-      <div class="p-4 border-t border-hairline">
-        <a href="/app/chat/history" class="font-body-sm link-inline">View all conversations</a>
+      <div class="flex-1 overflow-y-auto" id="conversation-list">
+        <div class="p-4 text-center">
+          <p class="font-body-sm text-mute">No conversations yet</p>
+        </div>
       </div>
     </aside>
 
-    <!-- Main Chat Area -->
-    <main class="flex-1 flex flex-col min-w-0">
-      <div class="flex-1 flex flex-col overflow-hidden">
-        <!-- Chat Header -->
-        <header class="bg-canvas border-b border-hairline px-6 py-4">
-          <div class="flex items-center justify-between">
-            <div>
-              <h1 class="font-display-md text-ink">New Conversation</h1>
-              <p class="font-body-sm text-mute">Ask anything about your knowledge base</p>
-            </div>
-            <div class="flex items-center gap-3">
-              <select id="model-select" class="input h-10 w-auto">
-                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Fast)</option>
-                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Best)</option>
-                <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-              </select>
-              <Button variant="ghost" size="sm" aria-label="Settings">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                  <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5"/>
-                  <path d="M9 13.5V15M9 3v1.5M15 9h1.5M3 9H4.5M4.94 4.94l1.06 1.06M12 12l1.06 1.06M4.94 13.06l1.06-1.06M12 6.94l1.06-1.06" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-              </Button>
-            </div>
-          </div>
-        </header>
-
-        <!-- Messages Area -->
-        <div class="flex-1 overflow-y-auto p-6 space-y-6" id="messages-container">
-          <!-- Welcome State -->
-          <div class="flex flex-col items-center justify-center h-full text-center" id="welcome-state">
-            <div class="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
-              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" class="text-primary" aria-hidden="true">
-                <path d="M20 8a12 12 0 1 0 0 24 12 12 0 0 0 0-24z" stroke="currentColor" stroke-width="2"/>
-                <path d="M20 14v6M20 26h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <h2 class="font-display-lg text-ink mb-3">Start a conversation</h2>
-            <p class="font-body-lg text-body max-w-md mb-8">
-              Ask questions, get summaries, or explore concepts across your entire knowledge base. Every answer includes citations from your documents.
-            </p>
-            <div class="grid sm:grid-cols-2 gap-4 max-w-md w-full">
-              {[
-                'Summarize my ML notes',
-                'Explain attention mechanism',
-                'Compare RNN vs Transformer',
-                'Generate study questions',
-              ].map((suggestion) => (
-                <button class="suggestion-btn btn-secondary text-left p-4 hover:bg-canvas-soft transition-colors" data-suggestion={suggestion}>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="mr-3 text-mute" aria-hidden="true">
-                    <path d="M10 3v14M3 10h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                  <span class="font-body-md text-ink">{suggestion}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <!-- Messages (hidden initially) -->
-          <div id="messages-list" class="hidden space-y-6">
-            <!-- Messages will be inserted here -->
+    {/* Main Chat Area */}
+    <main class="flex-1 flex flex-col min-w-0 bg-canvas-soft">
+      <header class="bg-canvas border-b border-hairline px-4 lg:px-6 py-3 flex items-center justify-between gap-4 flex-shrink-0">
+        <div class="flex items-center gap-3 min-w-0">
+          <button id="mobile-sidebar-toggle" class="lg:hidden w-8 h-8 flex items-center justify-center rounded-full hover:bg-canvas-soft transition-colors text-mute" aria-label="Open conversations">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 5h12M3 9h12M3 13h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="min-w-0">
+            <h1 class="font-display-sm text-ink truncate" id="chat-title">New Conversation</h1>
+            <p class="font-caption text-mute">Across your entire knowledge base</p>
           </div>
         </div>
+      </header>
 
-        <!-- Composer -->
-        <div class="bg-canvas border-t border-hairline p-4">
-          <div class="max-w-3xl mx-auto">
-            <div class="flex items-end gap-3 mb-3">
-              <div class="flex items-center gap-2">
-                <Button variant="ghost" size="sm" aria-label="Attach file">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                    <path d="M13.5 4.5L9 9l-4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9 9v7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M4.5 13.5h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                </Button>
-                <Button variant="ghost" size="sm" aria-label="Search knowledge base">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                    <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M13.5 13.5L16.5 16.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                </Button>
-              </div>
-              <form id="chat-form" class="flex-1 flex items-end gap-3">
-                <textarea
-                  id="chat-input"
-                  placeholder="Ask anything about your documents..."
-                  class="input resize-none min-h-[44px] max-h-48 flex-1"
-                  rows="1"
-                  aria-label="Message"
-                ></textarea>
-                <Button type="submit" variant="primary" size="lg" aria-label="Send message">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                    <path d="M17.5 10.5L6.5 18.5V10.5L17.5 10.5Z" fill="currentColor"/>
-                    <path d="M6.5 1.5L17.5 9.5V1.5L6.5 1.5Z" fill="currentColor" opacity="0.5"/>
-                  </svg>
-                </Button>
-              </form>
-            </div>
-            <p class="font-caption text-mute text-center">
-              Powered by Gemini 1.5 Flash · Responses are grounded in your documents · <a href="/privacy" class="link-inline">Privacy</a>
-            </p>
+      {/* Messages Area */}
+      <div class="flex-1 overflow-y-auto px-4 lg:px-6 py-6" id="messages-container">
+        <div class="flex flex-col items-center justify-center h-full text-center" id="welcome-state">
+          <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-5">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" class="text-primary" aria-hidden="true">
+              <path d="M16 6a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" stroke="currentColor" stroke-width="2"/>
+              <path d="M16 12v5M16 21h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
           </div>
+          <h2 class="font-display-lg text-ink mb-2">Ask anything about your documents</h2>
+          <p class="font-body-md text-body max-w-lg mb-8">Get answers with citations from your entire knowledge base.</p>
+          <div class="grid sm:grid-cols-2 gap-3 max-w-lg w-full">
+            {['Summarize my ML notes', 'Explain attention mechanism', 'Compare sources on RNNs', 'Generate study questions'].map((s) => (
+              <button class="suggestion-btn text-left p-3.5 bg-canvas rounded-lg border border-hairline hover:border-violet hover:bg-violet/5 transition-all group" data-suggestion={s}>
+                <span class="font-body-sm text-ink group-hover:text-violet transition-colors">{s}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div id="messages-list" class="hidden max-w-3xl mx-auto space-y-6"></div>
+      </div>
+
+      {/* Composer */}
+      <div class="border-t border-hairline bg-canvas px-4 lg:px-6 py-3 flex-shrink-0">
+        <div class="max-w-3xl mx-auto">
+          <form id="chat-form" class="relative">
+            <div class="flex items-end gap-2 bg-canvas-soft rounded-xl border border-hairline focus-within:border-violet focus-within:ring-1 focus-within:ring-violet/20 transition-all">
+              <textarea id="chat-input" placeholder="Ask anything about your documents..." class="flex-1 bg-transparent font-body-md text-ink placeholder:text-mute resize-none py-3 pl-4 pr-3 focus:outline-none min-h-[44px] max-h-48" rows="1" aria-label="Message"></textarea>
+              <div class="pr-2 pb-2">
+                <button type="submit" id="send-btn" class="w-9 h-9 flex items-center justify-center rounded-lg bg-primary text-on-primary hover:opacity-90 active:opacity-70 transition-all disabled:opacity-30 disabled:cursor-not-allowed" disabled aria-label="Send">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M16 9L3 3l2.5 6L3 15l13-6z" fill="currentColor"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="flex items-center justify-center mt-2">
+              <p class="font-caption text-mute"><kbd class="px-1.5 py-0.5 bg-canvas-soft-2 rounded text-mute font-mono text-[11px]">Enter</kbd> to send · <kbd class="px-1.5 py-0.5 bg-canvas-soft-2 rounded text-mute font-mono text-[11px]">Shift+Enter</kbd> for new line</p>
+            </div>
+          </form>
         </div>
       </div>
     </main>
   </div>
-</AppLayout>
 
-<script type="module">
-  import { ChatClient } from '../../../components/ChatClient/ChatClient.tsx';
-</script>
+  <script>
+    const chatForm = document.getElementById('chat-form') as HTMLFormElement;
+    const chatInput = document.getElementById('chat-input') as HTMLTextAreaElement;
+    const messagesContainer = document.getElementById('messages-container');
+    const welcomeState = document.getElementById('welcome-state');
+    const messagesList = document.getElementById('messages-list');
+    const sendBtn = document.getElementById('send-btn') as HTMLButtonElement;
+    const newChatBtn = document.getElementById('new-chat-btn');
+    const chatTitle = document.getElementById('chat-title');
+    const mobileSidebarToggle = document.getElementById('mobile-sidebar-toggle');
+    const chatSidebar = document.getElementById('chat-sidebar');
+    const convList = document.getElementById('conversation-list');
+
+    let currentConversationId: string | null = null;
+    let isStreaming = false;
+
+    chatInput?.addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 192) + 'px';
+      if (sendBtn) sendBtn.disabled = !this.value.trim() || isStreaming;
+    });
+
+    document.querySelectorAll('.suggestion-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const s = (btn as HTMLElement).dataset.suggestion;
+        if (s && chatInput) { chatInput.value = s; chatInput.dispatchEvent(new Event('input')); chatInput.focus(); }
+      });
+    });
+
+    newChatBtn?.addEventListener('click', () => { currentConversationId = null; resetChat(); });
+
+    mobileSidebarToggle?.addEventListener('click', () => {
+      chatSidebar?.classList.toggle('hidden');
+      chatSidebar?.classList.toggle('flex');
+      chatSidebar?.classList.toggle('absolute');
+      chatSidebar?.classList.toggle('inset-0');
+      chatSidebar?.classList.toggle('z-50');
+    });
+
+    function resetChat() {
+      welcomeState?.classList.remove('hidden');
+      messagesList?.classList.add('hidden');
+      if (messagesList) messagesList.innerHTML = '';
+      if (chatTitle) chatTitle.textContent = 'New Conversation';
+    }
+
+    function scrollToBottom() { if (messagesContainer) messagesContainer.scrollTop = messagesContainer.scrollHeight; }
+
+    function escapeHtml(text: string) { const d = document.createElement('div'); d.textContent = text; return d.innerHTML.replace(/\n/g, '<br>'); }
+
+    function addMessage(role: 'user' | 'assistant', content: string, citations?: any[]) {
+      if (!messagesList) return;
+      const div = document.createElement('div');
+      div.className = 'message flex gap-3 animate-slide-up';
+      const avatar = role === 'user'
+        ? '<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary text-sm font-medium flex-shrink-0">U</div>'
+        : '<div class="w-8 h-8 rounded-full bg-violet flex items-center justify-center text-on-primary text-sm font-medium flex-shrink-0">AI</div>';
+      const citationsHtml = citations?.length
+        ? `<div class="flex flex-wrap gap-1.5 mt-3">${citations.map((c: any) => `<span class="inline-flex items-center gap-1 px-2 py-1 bg-violet/10 text-violet-deep rounded-full text-xs">📄 ${c.title}</span>`).join('')}</div>` : '';
+      div.innerHTML = `${avatar}<div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="font-body-sm-strong ${role === 'user' ? 'text-ink' : 'text-violet'}">${role === 'user' ? 'You' : 'NotesChatAI'}</span><span class="font-caption text-mute">Just now</span></div><div class="font-body-md text-ink/90 leading-relaxed whitespace-pre-wrap">${escapeHtml(content)}</div>${citationsHtml}</div>`;
+      messagesList.appendChild(div);
+      scrollToBottom();
+    }
+
+    function addTypingIndicator(): string {
+      const id = 'typing-' + Date.now();
+      const div = document.createElement('div');
+      div.id = id;
+      div.className = 'message flex gap-3 animate-slide-up';
+      div.innerHTML = `<div class="w-8 h-8 rounded-full bg-violet flex items-center justify-center text-on-primary text-sm font-medium flex-shrink-0">AI</div><div class="flex-1"><div class="flex items-center gap-2 mb-1"><span class="font-body-sm-strong text-violet">NotesChatAI</span><span class="font-caption text-mute">Thinking...</span></div><div class="flex gap-1.5 py-2"><span class="w-2 h-2 bg-violet/30 rounded-full animate-bounce" style="animation-delay:0ms"></span><span class="w-2 h-2 bg-violet/30 rounded-full animate-bounce" style="animation-delay:150ms"></span><span class="w-2 h-2 bg-violet/30 rounded-full animate-bounce" style="animation-delay:300ms"></span></div></div>`;
+      messagesList?.appendChild(div);
+      scrollToBottom();
+      return id;
+    }
+
+    chatForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const message = chatInput?.value?.trim();
+      if (!message || isStreaming) return;
+
+      welcomeState?.classList.add('hidden');
+      messagesList?.classList.remove('hidden');
+      addMessage('user', message);
+      chatInput.value = '';
+      chatInput.style.height = 'auto';
+      sendBtn.disabled = true;
+      isStreaming = true;
+
+      const typingId = addTypingIndicator();
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message, conversationId: currentConversationId }),
+        });
+
+        document.getElementById(typingId)?.remove();
+
+        if (!res.ok) throw new Error('Chat failed');
+
+        const data = await res.json();
+
+        if (data.conversationId) {
+          currentConversationId = data.conversationId;
+          if (chatTitle) chatTitle.textContent = message.slice(0, 50);
+          loadConversations();
+        }
+
+        addMessage('assistant', data.message || 'No response generated.', data.citations);
+      } catch {
+        document.getElementById(typingId)?.remove();
+        addMessage('assistant', 'Sorry, something went wrong. Please try again.');
+      } finally {
+        isStreaming = false;
+        sendBtn.disabled = true;
+      }
+    });
+
+    async function loadConversations() {
+      try {
+        const res = await fetch('/api/chat');
+        const data = await res.json();
+        const convs = data.conversations || [];
+        if (!convList) return;
+
+        if (convs.length === 0) {
+          convList.innerHTML = '<div class="p-4 text-center"><p class="font-body-sm text-mute">No conversations yet</p></div>';
+          return;
+        }
+
+        convList.innerHTML = convs.map((c: any) => `
+          <a href="/app/chat" class="block px-4 py-3 hover:bg-canvas-soft transition-colors ${c.id === currentConversationId ? 'border-l-2 border-primary bg-canvas-soft/50' : ''}" onclick="event.preventDefault(); loadConversation('${c.id}', '${escapeHtml(c.title)}')">
+            <p class="font-body-sm text-ink truncate mb-1">${escapeHtml(c.title)}</p>
+            <div class="flex items-center gap-2 font-caption text-mute">
+              <span>${new Date(c.updatedAt).toLocaleDateString()}</span>
+            </div>
+          </a>
+        `).join('');
+      } catch {}
+    }
+
+    (window as any).loadConversation = async (id: string, title: string) => {
+      currentConversationId = id;
+      if (chatTitle) chatTitle.textContent = title;
+      welcomeState?.classList.add('hidden');
+      messagesList?.classList.remove('hidden');
+      if (messagesList) messagesList.innerHTML = '';
+
+      try {
+        const res = await fetch(`/api/chat/${id}`);
+        const data = await res.json();
+        (data.messages || []).forEach((m: any) => {
+          if (m.role === 'user' || m.role === 'assistant') {
+            addMessage(m.role, m.content, m.citations ? JSON.parse(m.citations) : undefined);
+          }
+        });
+      } catch {}
+      loadConversations();
+    };
+
+    loadConversations();
+  </script>
+
+  <style>
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+    .animate-bounce { animation: bounce 1.4s infinite ease-in-out both; }
+  </style>
+</AppLayout>

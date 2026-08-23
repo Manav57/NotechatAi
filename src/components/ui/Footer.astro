@@ -11,28 +11,22 @@ const footerLinks = {
   Product: [
     { label: 'Features', href: '/features' },
     { label: 'Pricing', href: '/pricing' },
-    { label: 'Docs', href: '/docs' },
-    { label: 'Changelog', href: '/changelog' },
-    { label: 'Roadmap', href: '/roadmap' },
+    { label: 'Docs', href: '/free-beta' },
+    { label: 'Blog', href: '/blog' },
   ],
   Company: [
     { label: 'About', href: '/about' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Careers', href: '/careers' },
-    { label: 'Press', href: '/press' },
     { label: 'Contact', href: '/contact' },
+    { label: 'Blog', href: '/blog' },
   ],
   Resources: [
-    { label: 'Community', href: '/community' },
-    { label: 'Templates', href: '/templates' },
-    { label: 'Integrations', href: '/integrations' },
-    { label: 'API Reference', href: '/docs/api' },
+    { label: 'Community', href: 'https://discord.gg/noteschatai' },
+    { label: 'API Reference', href: '/free-beta' },
     { label: 'Status', href: '/status' },
   ],
   Legal: [
     { label: 'Privacy', href: '/privacy' },
     { label: 'Terms', href: '/terms' },
-    { label: 'Security', href: '/security' },
     { label: 'Cookies', href: '/cookies' },
   ],
 };
@@ -49,10 +43,7 @@ const socialLinks = [
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12 mb-12 lg:mb-16">
       <div class="col-span-2 lg:col-span-1">
         <a href="/" class="flex items-center gap-2 mb-6" aria-label="NotesChatAI Home">
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="text-primary">
-            <rect width="28" height="28" rx="6" fill="currentColor"/>
-            <path d="M8 10h12M8 14h12M8 18h8" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-          </svg>
+          <img src="/logo.svg" alt="NotesChatAI" width="28" height="28" class="rounded-md" />
           <span class="font-display-sm text-ink">NotesChatAI</span>
         </a>
         <p class="font-body-sm text-body max-w-xs">

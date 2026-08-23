@@ -1,16 +1,48 @@
+export const prerender = false;
 ---
 import AppLayout from '../../layouts/AppLayout.astro';
-import Button from '../../components/ui/Button.astro';
 import Card from '../../components/ui/Card.astro';
 import Badge from '../../components/ui/Badge.astro';
+
+const user = (Astro.locals as any)?.user;
+
+// Fetch real data server-side
+let docCount = 0;
+let convCount = 0;
+let readyCount = 0;
+let processingCount = 0;
+let recentDocs: any[] = [];
+
+try {
+  const docsRes = await fetch(`${Astro.url.origin}/api/documents`, {
+    headers: { Cookie: Astro.request.headers.get('cookie') || '' },
+  });
+  if (docsRes.ok) {
+    const docsData = await docsRes.json();
+    docCount = docsData.stats?.totalDocuments || 0;
+    readyCount = docsData.stats?.readyCount || 0;
+    processingCount = docsData.stats?.processingCount || 0;
+    recentDocs = (docsData.documents || []).slice(0, 5);
+  }
+} catch {}
+
+try {
+  const convsRes = await fetch(`${Astro.url.origin}/api/chat`, {
+    headers: { Cookie: Astro.request.headers.get('cookie') || '' },
+  });
+  if (convsRes.ok) {
+    const convsData = await convsRes.json();
+    convCount = (convsData.conversations || []).length;
+  }
+} catch {}
 ---
 
-<AppLayout title="Dashboard — NotesChatAI" user={{ name: 'Demo User', email: 'demo@noteschatai.com', plan: 'free' }}>
+<AppLayout title="Dashboard — NotesChatAI">
   <div class="space-y-8">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
         <h1 class="font-display-lg text-ink">Dashboard</h1>
-        <p class="font-body-md text-body mt-1">Welcome back! Here's what's happening with your knowledge base.</p>
+        <p class="font-body-md text-body mt-1">Welcome back, {user?.name || 'there'}! Here's what's happening with your knowledge base.</p>
       </div>
       <div class="flex gap-3">
         <a href="/app/documents" class="btn-primary">
@@ -23,41 +55,41 @@ import Badge from '../../components/ui/Badge.astro';
       </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div id="stats-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <Card variant="marketing">
         <div class="flex items-center justify-between mb-2">
           <span class="font-caption-mono text-mute uppercase tracking-wider">Documents</span>
-          <Badge variant="secondary">12</Badge>
+          <Badge variant="secondary">{docCount} total</Badge>
         </div>
-        <p class="font-display-xl text-ink">24</p>
+        <p class="font-display-xl text-ink">{docCount}</p>
         <p class="font-body-sm text-mute mt-1">Total in knowledge base</p>
       </Card>
 
       <Card variant="marketing">
         <div class="flex items-center justify-between mb-2">
-          <span class="font-caption-mono text-mute uppercase tracking-wider">Chats Today</span>
-          <Badge variant="secondary">30/day</Badge>
+          <span class="font-caption-mono text-mute uppercase tracking-wider">Conversations</span>
+          <Badge variant="secondary">All time</Badge>
         </div>
-        <p class="font-display-xl text-ink">7</p>
-        <p class="font-body-sm text-mute mt-1">Used this period</p>
+        <p class="font-display-xl text-ink">{convCount}</p>
+        <p class="font-body-sm text-mute mt-1">Chat sessions started</p>
       </Card>
 
       <Card variant="marketing">
         <div class="flex items-center justify-between mb-2">
-          <span class="font-caption-mono text-mute uppercase tracking-wider">Audio Overviews</span>
-          <Badge variant="secondary">2/day</Badge>
+          <span class="font-caption-mono text-mute uppercase tracking-wider">Ready</span>
+          <Badge variant="success">Ready</Badge>
         </div>
-        <p class="font-display-xl text-ink">1</p>
-        <p class="font-body-sm text-mute mt-1">Generated this period</p>
+        <p class="font-display-xl text-ink">{readyCount}</p>
+        <p class="font-body-sm text-mute mt-1">Documents processed</p>
       </Card>
 
       <Card variant="marketing">
         <div class="flex items-center justify-between mb-2">
-          <span class="font-caption-mono text-mute uppercase tracking-wider">Storage Used</span>
-          <Badge variant="secondary">1 GB</Badge>
+          <span class="font-caption-mono text-mute uppercase tracking-wider">Processing</span>
+          <Badge variant="warning">Queue</Badge>
         </div>
-        <p class="font-display-xl text-ink">342 MB</p>
-        <p class="font-body-sm text-mute mt-1">Of 1 GB limit</p>
+        <p class="font-display-xl text-ink">{processingCount}</p>
+        <p class="font-body-sm text-mute mt-1">Documents in queue</p>
       </Card>
     </div>
 
@@ -70,9 +102,7 @@ import Badge from '../../components/ui/Badge.astro';
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-on-primary" aria-hidden="true">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M14 2v6h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M16 13H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                <path d="M16 17H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                <path d="M10 9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </div>
             <h3 class="font-display-sm text-ink mb-1">Upload Document</h3>
@@ -105,7 +135,6 @@ import Badge from '../../components/ui/Badge.astro';
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-on-primary" aria-hidden="true">
                 <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
                 <path d="M12 2v2m0 16v2M2 12h2m16 0h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                <path d="M4.93 4.93l1.41 1.41m10.24 10.24l1.41 1.41M4.93 19.07l1.41-1.41m10.24-10.24l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </div>
             <h3 class="font-display-sm text-ink mb-1">View Mind Map</h3>
@@ -116,48 +145,25 @@ import Badge from '../../components/ui/Badge.astro';
 
       <Card variant="marketing-large">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="font-display-md text-ink">Recent Activity</h2>
-          <a href="/app/activity" class="font-body-sm link-inline">View all</a>
+          <h2 class="font-display-md text-ink">Recent Documents</h2>
+          <a href="/app/documents" class="font-body-sm link-inline">View all</a>
         </div>
-        <div class="space-y-4">
-          {[
-            { type: 'document', title: 'Machine Learning Fundamentals.pdf', time: '2 hours ago', status: 'Ready' },
-            { type: 'chat', title: 'Conversation: Transformer architectures', time: '4 hours ago', messages: 12 },
-            { type: 'audio', title: 'Audio Overview: Attention Mechanisms', time: '1 day ago', duration: '12:34' },
-            { type: 'document', title: 'Neural Networks Overview (YouTube)', time: '2 days ago', status: 'Processing' },
-          ].map((activity) => (
-            <div class="flex items-center gap-4 p-4 bg-canvas-soft/50 rounded-lg hover:bg-canvas-soft transition-colors">
-              <div class="w-10 h-10 rounded-lg flex items-center justify-center 
-                {activity.type === 'document' ? 'bg-cyan-soft text-cyan-deep' : 
-                 activity.type === 'chat' ? 'bg-violet-soft text-violet-deep' : 
-                 'bg-highlight-pink/10 text-highlight-pink'}">
-                {activity.type === 'document' && (
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan-deep" aria-hidden="true">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M14 2v6h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                )}
-                {activity.type === 'chat' && (
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-violet-deep" aria-hidden="true">
-                    <path d="M17.5 13.5a2 2 0 0 1-2 2H4.5l-3 3V4.5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                )}
-                {activity.type === 'audio' && (
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-highlight-pink" aria-hidden="true">
-                    <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
-                    <polygon points="8,7 13,10 8,13" fill="currentColor"/>
-                  </svg>
-                )}
+        <div id="recent-docs" class="space-y-3">
+          {recentDocs.length === 0 ? (
+            <p class="font-body-sm text-mute text-center py-8">No documents yet. Upload your first document to get started!</p>
+          ) : (
+            recentDocs.map((doc: any) => (
+              <div class="flex items-center gap-3 p-3 bg-canvas-soft/50 rounded-lg hover:bg-canvas-soft transition-colors">
+                <div class="w-9 h-9 rounded-lg bg-canvas-soft-2 flex items-center justify-center flex-shrink-0">
+                  <span class="font-caption-mono text-[10px] font-medium text-mute uppercase">{doc.type}</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-body-sm text-ink truncate">{doc.title}</p>
+                  <p class="font-caption text-mute">{doc.chunkCount} chunks · {new Date(doc.createdAt).toLocaleDateString()}</p>
+                </div>
               </div>
-              <div class="flex-1 min-w-0">
-                <p class="font-body-md text-ink truncate">{activity.title}</p>
-                <p class="font-body-sm text-mute">{activity.time} · {activity.status || activity.messages ? `${activity.messages} messages` : activity.duration || activity.status}</p>
-              </div>
-              <Badge variant="secondary" size="sm" class="whitespace-nowrap">
-                {activity.type === 'document' ? 'Document' : activity.type === 'chat' ? 'Chat' : 'Audio'}
-              </Badge>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </Card>
     </div>
@@ -183,4 +189,6 @@ import Badge from '../../components/ui/Badge.astro';
       </div>
     </Card>
   </div>
+
+
 </AppLayout>

@@ -1,74 +1,326 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
 import NavBar from '../../../components/ui/NavBar.astro';
 import Footer from '../../../components/ui/Footer.astro';
-import Button from '../../../components/ui/Button.astro';
-import { slugify } from '../../../utils/slugify';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.id },
     props: { post },
   }));
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await render(post);
+
+const readingTime = Math.ceil(post.data.description.length / 100);
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+
+const blogUrl = `https://noteschatai.com/blog/${post.id}/`;
+const shareText = encodeURIComponent(post.data.title);
+
+const blogStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  url: blogUrl,
+  datePublished: post.data.pubDate.toISOString(),
+  dateModified: post.data.updatedDate?.toISOString() || post.data.pubDate.toISOString(),
+  author: {
+    '@type': 'Organization',
+    name: post.data.author || 'NotesChatAI',
+    url: 'https://noteschatai.com',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'NotesChatAI',
+    url: 'https://noteschatai.com',
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': blogUrl,
+  },
+  keywords: post.data.tags?.join(', ') || '',
+};
 ---
 
-<Layout title={`${post.data.title} — NotesChatAI Blog`} description={post.data.description} ogImage={post.data.heroImage}>
+<Layout title={`${post.data.title} — NotesChatAI Blog | AI Study Assistant`} description={post.data.description} ogImage={post.data.heroImage} ogType="article" publishedTime={post.data.pubDate.toISOString()} modifiedTime={post.data.updatedDate?.toISOString()} keywords={post.data.tags?.join(', ') || 'ai study assistant, notebooklm alternative, chat with notes'} structuredData={blogStructuredData}>
   <NavBar user={null} />
 
   <main>
-    <article class="max-w-3xl mx-auto px-4 lg:px-8 py-16 lg:py-24">
-      <header class="mb-12">
-        <div class="flex flex-wrap gap-2 mb-4">
+    {/* Article Header */}
+    <section class="hero-band relative overflow-hidden pb-8" aria-labelledby="article-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.05]" aria-hidden="true"></div>
+      <div class="max-w-4xl mx-auto px-4 lg:px-8 relative z-10">
+        {/* Tags */}
+        <div class="flex flex-wrap gap-2 mb-6">
           {post.data.tags.map((tag) => (
-            <a href={`/blog?tag=${slugify(tag)}`} class="badge-secondary text-sm hover:bg-canvas-soft transition-colors">{tag}</a>
+            <a href={`/blog?tag=${tag}`} class="badge-secondary text-xs hover:bg-canvas-soft-2 transition-colors">{tag}</a>
           ))}
         </div>
-        <h1 class="font-display-xl text-ink mb-4 text-balance">{post.data.title}</h1>
-        <div class="flex items-center gap-4 font-body-sm text-mute">
-          <time dateTime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</time>
+
+        {/* Title */}
+        <h1 id="article-title" class="font-display-xl text-ink mb-6 text-balance">
+          {post.data.title}
+        </h1>
+
+        {/* Meta */}
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 font-body-sm text-mute mb-6">
+          <time datetime={post.data.pubDate.toISOString()}>
+            {post.data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          </time>
           <span>·</span>
           <span>{post.data.author}</span>
           <span>·</span>
-          <span>{Math.ceil(post.data.description.length / 100)} min read</span>
+          <span>{readingTime} min read</span>
+          {post.data.updatedDate && (
+            <>
+              <span>·</span>
+              <span class="text-violet">Updated {post.data.updatedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+            </>
+          )}
         </div>
-      </header>
 
-      {post.data.heroImage && (
-        <div class="mb-12 rounded-xl overflow-hidden">
-          <img src={post.data.heroImage} alt="" class="w-full h-auto" />
-        </div>
-      )}
-
-      <div class="prose prose-invert max-w-none font-body-md text-body/90" style="--tw-prose-body: #4d4d4d; --tw-prose-headings: #171717; --tw-prose-links: #0070f3;">
-        <Content />
-      </div>
-
-      <footer class="mt-16 pt-8 border-t border-hairline">
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" class="text-primary" aria-hidden="true">
-              <rect width="40" height="40" rx="8" fill="currentColor"/>
-              <path d="M12 14h16M12 20h16M12 26h10" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        {/* Share buttons */}
+        <div class="flex items-center gap-2">
+          <span class="font-body-sm text-mute mr-1">Share:</span>
+          <a href={`https://twitter.com/intent/tweet?text=${shareText}&url=${encodeURIComponent(blogUrl)}`} target="_blank" rel="noopener noreferrer" class="w-8 h-8 flex items-center justify-center rounded-full border border-hairline hover:border-ink hover:bg-canvas-soft transition-all text-mute hover:text-ink" aria-label="Share on Twitter">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(blogUrl)}&title=${shareText}`} target="_blank" rel="noopener noreferrer" class="w-8 h-8 flex items-center justify-center rounded-full border border-hairline hover:border-ink hover:bg-canvas-soft transition-all text-mute hover:text-ink" aria-label="Share on LinkedIn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href={`https://news.ycombinator.com/submitlink?u=${encodeURIComponent(blogUrl)}&t=${shareText}`} target="_blank" rel="noopener noreferrer" class="w-8 h-8 flex items-center justify-center rounded-full border border-hairline hover:border-ink hover:bg-canvas-soft transition-all text-mute hover:text-ink" aria-label="Share on Hacker News">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M0 0v24h24V0H0zm12.7 13.5v6.1h-1.5v-6.1L7 4.4h1.7l3.3 6.5 3.3-6.5H17l-4.3 9.1z"/></svg>
+          </a>
+          <button id="copy-link" class="w-8 h-8 flex items-center justify-center rounded-full border border-hairline hover:border-ink hover:bg-canvas-soft transition-all text-mute hover:text-ink" aria-label="Copy link">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="copy-icon" aria-hidden="true">
+              <rect x="4.5" y="4.5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M2.5 9.5V3a1.5 1.5 0 0 1 1.5-1.5H9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
-            <div>
-              <p class="font-body-md-strong text-ink">NotesChatAI Team</p>
-              <p class="font-body-sm text-mute">Building persistent AI memory for learners</p>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="check-icon hidden text-success" aria-hidden="true">
+              <circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M4.5 7l2 2 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    {/* Article Body */}
+    <article class="max-w-[1400px] mx-auto px-4 lg:px-8 py-12 lg:py-16">
+      <div class="grid lg:grid-cols-[1fr_260px] gap-12">
+        {/* Main content */}
+        <div class="min-w-0">
+          {post.data.heroImage && (
+            <div class="mb-10 rounded-xl overflow-hidden shadow-level-2">
+              <img src={post.data.heroImage} alt="" class="w-full h-auto" loading="eager" />
+            </div>
+          )}
+
+          {/* MDX Content */}
+          <div class="prose max-w-none font-body-md text-body leading-relaxed" id="article-content">
+            <Content />
+          </div>
+
+          {/* Article footer */}
+          <footer class="mt-16 pt-8 border-t border-hairline">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div class="flex items-center gap-4">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" class="text-primary" aria-hidden="true">
+                  <rect width="48" height="48" rx="10" fill="currentColor"/>
+                  <path d="M14 17h20M14 24h20M14 31h12" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <div>
+                  <p class="font-body-md-strong text-ink">NotesChatAI Team</p>
+                  <p class="font-body-sm text-mute">Building persistent AI memory for learners</p>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <a href="/auth/signup" class="btn-primary">Start Free Beta</a>
+                <a href="/blog" class="btn-secondary">All Posts</a>
+              </div>
+            </div>
+          </footer>
+        </div>
+
+        {/* Sidebar — Table of Contents */}
+        <aside class="hidden lg:block">
+          <div class="sticky top-24">
+            {tocHeadings.length > 0 && (
+              <nav aria-label="Table of contents" class="mb-8">
+                <h2 class="font-caption-mono text-mute uppercase tracking-wider text-xs mb-3">On this page</h2>
+                <ul class="space-y-2">
+                  {tocHeadings.map((heading) => (
+                    <li class:list={[heading.depth === 3 && 'ml-4']}>
+                      <a
+                        href={`#${heading.slug}`}
+                        class="toc-link font-body-sm text-body hover:text-violet transition-colors block py-0.5"
+                      >
+                        {heading.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )}
+
+            {/* Related CTA */}
+            <div class="bg-canvas-soft rounded-xl border border-hairline p-5">
+              <h3 class="font-body-sm-strong text-ink mb-2">Try NotesChatAI</h3>
+              <p class="font-body-sm text-body mb-4">Start building your persistent knowledge base today.</p>
+              <a href="/auth/signup" class="btn-primary-sm w-full text-center block">Start Free Beta</a>
             </div>
           </div>
-          <div class="flex gap-3">
-            <a href="/signup" class="btn-primary">Start Free Beta</a>
-            <a href="/blog" class="btn-secondary">More Posts</a>
-          </div>
-        </div>
-      </footer>
+        </aside>
+      </div>
     </article>
   </main>
 
   <Footer />
 </Layout>
+
+<script>
+  // Copy link
+  const copyBtn = document.getElementById('copy-link');
+  copyBtn?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      copyBtn.querySelector('.copy-icon')?.classList.add('hidden');
+      copyBtn.querySelector('.check-icon')?.classList.remove('hidden');
+      setTimeout(() => {
+        copyBtn.querySelector('.copy-icon')?.classList.remove('hidden');
+        copyBtn.querySelector('.check-icon')?.classList.add('hidden');
+      }, 2000);
+    } catch {}
+  });
+
+  // Active TOC highlight
+  const tocLinks = document.querySelectorAll<HTMLElement>('.toc-link');
+  const headings = document.querySelectorAll('#article-content h2, #article-content h3');
+
+  if (tocLinks.length && headings.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            tocLinks.forEach((link) => {
+              link.classList.toggle('text-violet', link.getAttribute('href') === `#${id}`);
+              link.classList.toggle('font-body-sm-strong', link.getAttribute('href') === `#${id}`);
+            });
+          }
+        });
+      },
+      { rootMargin: '-80px 0px -80% 0px' }
+    );
+    headings.forEach((h) => observer.observe(h));
+  }
+</script>
+
+<style is:global>
+  /* Prose styling for MDX content */
+  .prose h2 {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: -0.96px;
+    color: var(--color-ink);
+    margin-top: 48px;
+    margin-bottom: 16px;
+  }
+  .prose h3 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 28px;
+    letter-spacing: -0.6px;
+    color: var(--color-ink);
+    margin-top: 32px;
+    margin-bottom: 12px;
+  }
+  .prose p {
+    font-size: 16px;
+    line-height: 28px;
+    color: var(--color-body);
+    margin-bottom: 20px;
+  }
+  .prose strong {
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+  .prose a {
+    color: var(--color-link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .prose a:hover {
+    color: var(--color-link-deep);
+  }
+  .prose ul, .prose ol {
+    margin-bottom: 20px;
+    padding-left: 24px;
+  }
+  .prose li {
+    margin-bottom: 8px;
+    line-height: 28px;
+  }
+  .prose blockquote {
+    border-left: 3px solid var(--color-violet);
+    padding-left: 20px;
+    margin: 32px 0;
+    font-style: italic;
+    color: var(--color-body);
+  }
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--color-canvas-soft);
+    border: 1px solid var(--color-hairline);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .prose pre {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 24px 0;
+  }
+  .prose pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+  }
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+  }
+  .prose th {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 2px solid var(--color-hairline);
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-ink);
+  }
+  .prose td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--color-hairline);
+    font-size: 14px;
+  }
+  .prose hr {
+    border: none;
+    border-top: 1px solid var(--color-hairline);
+    margin: 40px 0;
+  }
+  .prose img {
+    border-radius: 8px;
+    margin: 24px 0;
+  }
+</style>

@@ -1,63 +1,155 @@
 ---
-import { sortedPosts } from '../../data/blog-posts.ts';
+import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import NavBar from '../../components/ui/NavBar.astro';
-import HeroBand from '../../components/ui/HeroBand.astro';
 import Footer from '../../components/ui/Footer.astro';
-import Card from '../../components/ui/Card.astro';
-import Button from '../../components/ui/Button.astro';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const featuredPost = sortedPosts[0];
+const remainingPosts = sortedPosts.slice(1);
+
+const allTags = [...new Set(sortedPosts.flatMap((p) => p.data.tags))].sort();
 ---
 
-<Layout title="Blog — NotesChatAI" description="Updates, guides, and insights from the NotesChatAI team.">
+<Layout title="Blog — NotesChatAI | AI Study Assistant Guides & Updates" description="Read the NotesChatAI blog for guides on AI-powered learning, NotebookLM comparisons, study tips, flashcard strategies, and product updates." keywords="ai study assistant blog, notebooklm alternative, chat with notes, ai flashcard generator, persistent ai memory, study tips">
   <NavBar user={null} />
 
   <main>
-    <HeroBand
-      badge="Latest Updates"
-      title="NotesChatAI Blog"
-      subtitle="Product updates, tutorials, comparisons, and insights on AI-powered learning."
-      ctaPrimary={{ text: "Start Free Beta", href: "/signup" }}
-      ctaSecondary={{ text: "Join Discord", href: "https://discord.gg/noteschatai" }}
-    />
-
-    <section class="showcase-band-light" aria-labelledby="posts-title">
-      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
-        <div class="mb-12">
-          <h2 id="posts-title" class="font-display-lg text-ink mb-4">Latest Posts</h2>
+    {/* ═══════════════ HERO ═══════════════ */}
+    <section class="hero-band relative overflow-hidden" aria-labelledby="blog-hero-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.06]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <span class="badge-secondary inline-flex items-center gap-1.5 mb-6 font-caption-mono">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-violet" aria-hidden="true">
+              <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Blog
+          </span>
+          <h1 id="blog-hero-title" class="font-display-xl text-ink mb-4 text-balance">
+            NotesChatAI Blog
+          </h1>
+          <p class="font-body-lg text-body mb-8 text-balance">
+            Product updates, study strategies, AI insights, and comparisons. Learn how to get the most from your persistent knowledge base.
+          </p>
         </div>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {sortedPosts.map((post) => (
-            <Card variant="marketing" class="flex flex-col h-full">
-              <div class="flex items-center gap-2 mb-3">
-                {post.data.tags.map((tag) => (
-                  <span key={tag} class="badge-secondary text-xs">{tag}</span>
-                ))}
-              </div>
-              <h3 class="font-display-sm text-ink mb-2 line-clamp-2">
-                <a href={`/blog/${post.slug}/`} class="hover:text-link transition-colors">{post.data.title}</a>
-              </h3>
-              <p class="font-body-md text-body mb-4 flex-1 line-clamp-3">{post.data.description}</p>
-              <div class="flex items-center justify-between pt-4 border-t border-hairline">
-                <div class="flex items-center gap-2">
-                  <span class="font-caption-mono text-mute">{post.data.pubDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
-                  <span class="font-caption-mono text-mute">·</span>
-                  <span class="font-caption-mono text-mute">{post.data.author}</span>
-                </div>
-                <a href={`/blog/${post.slug}/`} class="btn-primary-sm">Read</a>
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        {sortedPosts.length === 0 && (
-          <div class="text-center py-16">
-            <p class="font-body-lg text-body">No posts yet. Check back soon!</p>
-          </div>
-        )}
       </div>
     </section>
 
+    {/* ═══════════════ FEATURED POST ═══════════════ */}
+    {featuredPost && (
+      <section class="showcase-band-light" aria-labelledby="featured-title">
+        <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+          <span class="font-caption-mono text-violet uppercase tracking-wider text-xs mb-6 block">Featured</span>
+          <a href={`/blog/${featuredPost.id}/`} class="group block bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-3 hover:shadow-level-4 transition-all duration-200">
+            <div class="grid md:grid-cols-5 gap-0">
+              {/* Gradient visual */}
+              <div class="md:col-span-2 bg-primary relative overflow-hidden min-h-[200px] md:min-h-0 flex items-center justify-center">
+                <div class="absolute inset-0 mesh-gradient-bg opacity-30" aria-hidden="true"></div>
+                <div class="relative z-10 text-center p-8">
+                  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" class="mx-auto mb-4 text-cyan" aria-hidden="true">
+                    <rect x="4" y="8" width="40" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+                    <path d="M12 20h24M12 26h18M12 32h24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  <p class="font-caption-mono text-cyan-soft text-xs uppercase tracking-wider">{featuredPost.data.tags[0]}</p>
+                </div>
+              </div>
+              {/* Content */}
+              <div class="md:col-span-3 p-8 lg:p-10 flex flex-col justify-center">
+                <div class="flex flex-wrap gap-2 mb-4">
+                  {featuredPost.data.tags.map((tag) => (
+                    <span class="badge-secondary text-xs">{tag}</span>
+                  ))}
+                </div>
+                <h2 id="featured-title" class="font-display-lg text-ink mb-3 group-hover:text-violet transition-colors text-balance">
+                  {featuredPost.data.title}
+                </h2>
+                <p class="font-body-md text-body mb-6 line-clamp-3">
+                  {featuredPost.data.description}
+                </p>
+                <div class="flex items-center gap-4">
+                  <div class="flex items-center gap-2 font-body-sm text-mute">
+                    <time datetime={featuredPost.data.pubDate.toISOString()}>
+                      {featuredPost.data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                    </time>
+                    <span>·</span>
+                    <span>{featuredPost.data.author}</span>
+                  </div>
+                  <span class="btn-primary-sm ml-auto">Read Article →</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+    )}
+
+    {/* ═══════════════ POSTS GRID ═══════════════ */}
+    <section class="feature-mesh-band relative overflow-hidden" aria-labelledby="posts-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.03]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
+          <h2 id="posts-title" class="font-display-lg text-ink">All Posts</h2>
+
+          {/* Tag filter */}
+          <div class="flex flex-wrap gap-2" id="tag-filter">
+            <button class="tag-btn px-3 py-1.5 rounded-full font-body-sm border border-hairline bg-canvas text-ink hover:border-violet transition-colors" data-tag="all">
+              All
+            </button>
+            {allTags.map((tag) => (
+              <button class="tag-btn px-3 py-1.5 rounded-full font-body-sm border border-hairline bg-canvas text-body hover:border-violet hover:text-ink transition-colors" data-tag={tag}>
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" id="posts-grid">
+          {remainingPosts.map((post) => (
+            <article class="post-card bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-2 hover:shadow-level-3 transition-all duration-200 group flex flex-col" data-tags={post.data.tags.join(',')}>
+              {/* Card header gradient */}
+              <div class="h-32 bg-canvas-soft relative overflow-hidden flex items-center justify-center">
+                <div class="absolute inset-0 mesh-gradient-bg opacity-[0.08]" aria-hidden="true"></div>
+                <div class="relative z-10 flex items-center gap-3">
+                  {post.data.tags.slice(0, 2).map((tag) => (
+                    <span class="badge-secondary text-xs">{tag}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div class="p-6 flex flex-col flex-1">
+                <h3 class="font-display-sm text-ink mb-2 group-hover:text-violet transition-colors line-clamp-2">
+                  <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                </h3>
+                <p class="font-body-sm text-body mb-4 flex-1 line-clamp-3">{post.data.description}</p>
+
+                <div class="flex items-center justify-between pt-4 border-t border-hairline mt-auto">
+                  <div class="flex items-center gap-2 font-caption text-mute">
+                    <time datetime={post.data.pubDate.toISOString()}>
+                      {post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </time>
+                    <span>·</span>
+                    <span>{Math.ceil(post.data.description.length / 100)} min</span>
+                  </div>
+                  <a href={`/blog/${post.id}/`} class="font-body-sm-strong text-violet hover:text-violet-deep transition-colors">
+                    Read →
+                  </a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        {/* Empty state for tag filter */}
+        <div id="no-results" class="hidden text-center py-16">
+          <p class="font-body-lg text-body">No posts found for this tag.</p>
+          <button id="clear-filter" class="btn-secondary mt-4">Show all posts</button>
+        </div>
+      </div>
+    </section>
+
+    {/* ═══════════════ NEWSLETTER ═══════════════ */}
     <section class="hero-band bg-canvas-soft" aria-labelledby="newsletter-title">
       <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
         <div class="text-center max-w-2xl mx-auto">
@@ -67,9 +159,9 @@ import Button from '../../components/ui/Button.astro';
           <p class="font-body-lg text-body mb-8">
             Get product updates, tutorials, and AI learning tips delivered to your inbox.
           </p>
-          <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto" action="/api/newsletter" method="POST">
-            <input type="email" name="email" placeholder="your@email.com" class="input-lg flex-1" required />
-            <button type="submit" class="btn-primary whitespace-nowrap">Subscribe</button>
+          <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" action="/api/newsletter" method="POST">
+            <input type="email" name="email" placeholder="your@email.com" class="input h-11 flex-1" required />
+            <button type="submit" class="btn-primary whitespace-nowrap h-11">Subscribe</button>
           </form>
           <p class="font-caption text-mute mt-4">No spam. Unsubscribe anytime.</p>
         </div>
@@ -79,3 +171,42 @@ import Button from '../../components/ui/Button.astro';
 
   <Footer />
 </Layout>
+
+<script>
+  // Tag filtering
+  const tagBtns = document.querySelectorAll<HTMLElement>('.tag-btn');
+  const postCards = document.querySelectorAll<HTMLElement>('.post-card');
+  const noResults = document.getElementById('no-results');
+  const clearFilter = document.getElementById('clear-filter');
+
+  tagBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.tag;
+      if (!tag) return;
+
+      // Update active state
+      tagBtns.forEach((b) => {
+        b.classList.remove('bg-primary', 'text-on-primary', 'border-primary');
+        b.classList.add('bg-canvas', 'text-body', 'border-hairline');
+      });
+      btn.classList.add('bg-primary', 'text-on-primary', 'border-primary');
+      btn.classList.remove('bg-canvas', 'text-body', 'border-hairline');
+
+      // Filter posts
+      let visibleCount = 0;
+      postCards.forEach((card) => {
+        const tags = card.dataset.tags?.split(',') || [];
+        const show = tag === 'all' || tags.includes(tag);
+        card.style.display = show ? '' : 'none';
+        if (show) visibleCount++;
+      });
+
+      noResults?.classList.toggle('hidden', visibleCount > 0);
+    });
+  });
+
+  clearFilter?.addEventListener('click', () => {
+    const allBtn = document.querySelector<HTMLElement>('[data-tag="all"]');
+    allBtn?.click();
+  });
+</script>

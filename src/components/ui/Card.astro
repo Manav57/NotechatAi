@@ -4,6 +4,8 @@ interface Props {
   class?: string;
   padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
   hover?: boolean;
+  id?: string;
+  'aria-label'?: string;
 }
 
 const {
@@ -11,6 +13,8 @@ const {
   class: className = '',
   padding,
   hover = true,
+  id,
+  'aria-label': ariaLabel,
   ...attrs
 } = Astro.props;
 
@@ -39,7 +43,7 @@ const defaultPadding = padding || (variant === 'marketing-large' ? 'lg' : varian
 const classes = `${variantClasses[variant]} ${paddingClasses[defaultPadding]} ${hoverClass} ${className}`;
 ---
 
-<div class={classes} {...attrs}>
+<div class={classes} id={id} aria-label={ariaLabel} {...attrs}>
   <slot />
 </div>
 

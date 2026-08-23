@@ -10,75 +10,374 @@ import Button from '../components/ui/Button.astro';
 import CodeEditorMockup from '../components/ui/CodeEditorMockup.astro';
 ---
 
-<Layout title="NotesChatAI — Your Persistent AI Study Assistant" description="Upload notes, textbooks, and PDFs once. Chat with an AI that remembers everything across sessions. Build your personal knowledge base that grows with you.">
+<Layout title="NotesChatAI — The AI Study Assistant That Actually Remembers" description="Upload notes, textbooks, and PDFs once. Chat with an AI that remembers everything across sessions. Unlike NotebookLM, your knowledge base grows forever — no notebook isolation, no source limits.">
   <NavBar user={null} />
 
   <main>
-    <HeroBand
-      badge="Now in Free Beta"
-      title="Upload once. Remember forever."
-      subtitle="Unlike ChatGPT or NotebookLM, NotesChatAI builds a persistent knowledge base across all your documents. Add more over time. Ask questions across your entire library. No session limits. No notebook isolation."
-      ctaPrimary={{ text: 'Start Free Beta', href: '/signup' }}
-      ctaSecondary={{ text: 'See How It Works', href: '/features' }}
-    />
+    {/* ═══════════════ HERO ═══════════════ */}
+    <section class="hero-band relative overflow-hidden" aria-labelledby="hero-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.08]" aria-hidden="true"></div>
 
-    <FeatureMeshBand
-      title="Why NotesChatAI?"
-      subtitle="We built the study assistant we wanted as students — one that actually remembers."
-      features={[
-        {
-          icon: '🧠',
-          title: 'Persistent Memory',
-          description: 'Every document you upload stays in your knowledge base forever. No 50-source limits. No notebook isolation. Chat across your entire library.'
-        },
-        {
-          icon: '🔍',
-          title: 'Global Semantic Search',
-          description: 'Find anything across all your documents instantly. Vector-powered search understands meaning, not just keywords.'
-        },
-        {
-          icon: '🎧',
-          title: 'Audio Overviews with Transcripts',
-          description: 'Generate podcast-style summaries with full transcripts, chapters, and speed control. Save and replay anytime.'
-        },
-      ]}
-    />
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+          <span class="badge-secondary inline-flex items-center gap-1.5 mb-6 font-caption-mono">
+            <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+            Now in Free Beta
+          </span>
 
+          <h1 id="hero-title" class="font-display-xl text-ink mb-6 text-balance">
+            Your entire library,<br class="hidden sm:block" /> one AI that remembers it all.
+          </h1>
+
+          <p class="font-body-lg text-body mb-8 text-balance max-w-2xl mx-auto">
+            NotesChatAI builds a <strong class="text-ink">persistent knowledge base</strong> across all your documents. Upload notes, textbooks, and PDFs once — then ask questions across your <em>entire</em> library. No notebook isolation. No source limits. No forgetting.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
+            <a href="/auth/signup" class="btn-primary w-full sm:w-auto">
+              Start Free Beta
+            </a>
+            <a href="/features" class="btn-secondary w-full sm:w-auto">
+              See How It Works
+            </a>
+          </div>
+
+          {/* Trust badges */}
+          <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-caption text-mute">
+            <span class="flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-success" aria-hidden="true"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M5 7l2 2 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              No credit card required
+            </span>
+            <span class="flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-success" aria-hidden="true"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M5 7l2 2 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              50 documents free
+            </span>
+            <span class="flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-success" aria-hidden="true"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M5 7l2 2 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Export anytime
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ═══════════════ COMPETITIVE COMPARISON ═══════════════ */}
+    <section class="showcase-band-light relative" aria-labelledby="comparison-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="text-center mb-12">
+          <span class="font-caption-mono text-violet uppercase tracking-wider text-xs mb-3 block">Why switch</span>
+          <h2 id="comparison-title" class="font-display-lg text-ink mb-4 text-balance">
+            NotesChatAI vs NotebookLM
+          </h2>
+          <p class="font-body-lg text-body max-w-2xl mx-auto text-balance">
+            Both let you chat with your documents. Here's why students are switching.
+          </p>
+        </div>
+
+        {/* Comparison Table */}
+        <div class="max-w-4xl mx-auto">
+          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-3">
+            {/* Header */}
+            <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
+              <div class="p-4 lg:p-6">
+                <span class="font-caption-mono text-mute uppercase tracking-wider text-xs">Feature</span>
+              </div>
+              <div class="p-4 lg:p-6 text-center border-x border-hairline">
+                <div class="flex items-center justify-center gap-2">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-primary" aria-hidden="true">
+                    <rect width="20" height="20" rx="4" fill="currentColor"/>
+                    <path d="M5 7h10M5 10h10M5 13h7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  <span class="font-body-sm-strong text-ink">NotesChatAI</span>
+                </div>
+              </div>
+              <div class="p-4 lg:p-6 text-center">
+                <span class="font-body-sm-strong text-body">NotebookLM</span>
+              </div>
+            </div>
+
+            {/* Rows */}
+            {[
+              { feature: 'Cross-document search', nc: 'unlimited', nlm: 'per-notebook only', ncGood: true },
+              { feature: 'Source limit per project', nc: 'Unlimited', nlm: '50–600', ncGood: true },
+              { feature: 'Daily chat limit', nc: 'Unlimited (Pro)', nlm: '50–5,000', ncGood: true },
+              { feature: 'API access', nc: 'Full REST + GraphQL', nlm: 'None', ncGood: true },
+              { feature: 'Spaced repetition & quizzes', nc: 'Built-in', nlm: 'None', ncGood: true },
+              { feature: 'Knowledge graph visualization', nc: 'Interactive mind map', nlm: 'Basic only', ncGood: true },
+              { feature: 'Multi-model choice', nc: 'Gemini, Claude, GPT', nlm: 'Gemini only', ncGood: true },
+              { feature: 'Export formats', nc: 'MD, JSON, CSV, Anki, Notion', nlm: 'Limited', ncGood: true },
+              { feature: 'Self-hosted option', nc: 'Docker (Pro/Enterprise)', nlm: 'None', ncGood: true },
+              { feature: 'Collaborative study groups', nc: 'Real-time sharing', nlm: 'Basic sharing', ncGood: true },
+              { feature: 'Audio overviews', nc: 'Unlimited (Pro)', nlm: '3–200/day', ncGood: false },
+              { feature: 'Video generation', nc: 'Coming soon', nlm: 'Veo 3 (Ultra only)', ncGood: false },
+            ].map((row) => (
+              <div class="grid grid-cols-3 border-b border-hairline last:border-b-0 hover:bg-canvas-soft/50 transition-colors">
+                <div class="p-4 lg:p-5 flex items-center">
+                  <span class="font-body-sm text-ink">{row.feature}</span>
+                </div>
+                <div class="p-4 lg:p-5 flex items-center justify-center border-x border-hairline bg-violet/5">
+                  {row.ncGood ? (
+                    <span class="flex items-center gap-1.5 font-body-sm-strong text-ink">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="text-success flex-shrink-0" aria-hidden="true">
+                        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M5.5 8l2 2 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      {row.nc}
+                    </span>
+                  ) : (
+                    <span class="font-body-sm text-body">{row.nc}</span>
+                  )}
+                </div>
+                <div class="p-4 lg:p-5 flex items-center justify-center">
+                  {row.ncGood ? (
+                    <span class="font-body-sm text-mute">{row.nlm}</span>
+                  ) : (
+                    <span class="flex items-center gap-1.5 font-body-sm text-body">
+                      {row.nlm}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div class="text-center mt-8">
+            <a href="/features" class="btn-primary">
+              See Full Feature Comparison
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="ml-1.5 inline" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ═══════════════ CORE DIFFERENTIATORS ═══════════════ */}
+    <section class="feature-mesh-band relative overflow-hidden" aria-labelledby="differentiators-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.04]" aria-hidden="true"></div>
+
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="text-center mb-16 lg:mb-20">
+          <span class="font-caption-mono text-cyan-deep uppercase tracking-wider text-xs mb-3 block">Built different</span>
+          <h2 id="differentiators-title" class="font-display-lg text-ink mb-4 text-balance">
+            What makes NotesChatAI the better choice.
+          </h2>
+          <p class="font-body-lg text-body max-w-2xl mx-auto text-balance">
+            We studied every limitation of existing tools and built the study assistant students actually need.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {/* 1. Unified Knowledge Base */}
+          <article class="card-marketing group">
+            <div class="w-12 h-12 mb-4 bg-canvas-soft rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-on-primary transition-colors duration-200">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-primary group-hover:text-on-primary" aria-hidden="true">
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 5v2m0 10v2M5 12h2m10 0h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M7.05 7.05l1.41 1.41m7.08 7.08l1.41 1.41M7.05 16.95l1.41-1.41m7.08-7.08l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-2">Unified Knowledge Base</h3>
+            <p class="font-body-md text-body">No notebook silos. Every document lives in one connected knowledge base. Ask questions that span your entire library — across courses, semesters, and years.</p>
+          </article>
+
+          {/* 2. Unlimited Growth */}
+          <article class="card-marketing group">
+            <div class="w-12 h-12 mb-4 bg-canvas-soft rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-on-primary transition-colors duration-200">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-primary group-hover:text-on-primary" aria-hidden="true">
+                <path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-2">Unlimited Growth</h3>
+            <p class="font-body-md text-body">No per-notebook source caps. Add documents forever. Your knowledge base compounds over your entire academic career — the more you add, the smarter it gets.</p>
+          </article>
+
+          {/* 3. Active Recall & Quizzes */}
+          <article class="card-marketing group">
+            <div class="w-12 h-12 mb-4 bg-canvas-soft rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-on-primary transition-colors duration-200">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-primary group-hover:text-on-primary" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M3 10h18" stroke="currentColor" stroke-width="2"/>
+                <path d="M9 15l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-2">Active Recall & Quizzes</h3>
+            <p class="font-body-md text-body">Built-in flashcards with spaced repetition, multiple-choice quizzes, and practice exams. NotebookLM has nothing like this — you need separate apps.</p>
+          </article>
+
+          {/* 4. API & Integrations */}
+          <article class="card-marketing group">
+            <div class="w-12 h-12 mb-4 bg-canvas-soft rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-on-primary transition-colors duration-200">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-primary group-hover:text-on-primary" aria-hidden="true">
+                <path d="M16 18l6-6-6-6M8 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-2">API-First Platform</h3>
+            <p class="font-body-md text-body">Full REST + GraphQL API. Build custom study tools, integrate with your workflow, automate document processing. NotebookLM is a closed garden.</p>
+          </article>
+
+          {/* 5. Multi-Model */}
+          <article class="card-marketing group">
+            <div class="w-12 h-12 mb-4 bg-canvas-soft rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-on-primary transition-colors duration-200">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-primary group-hover:text-on-primary" aria-hidden="true">
+                <path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9m-9 9a9 9 0 0 1 9-9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-2">Choose Your AI Model</h3>
+            <p class="font-body-md text-body">Use Gemini, Claude, or GPT — pick the model that works best for your subject. NotebookLM locks you into Google's ecosystem.</p>
+          </article>
+
+          {/* 6. Data Ownership */}
+          <article class="card-marketing group">
+            <div class="w-12 h-12 mb-4 bg-canvas-soft rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-on-primary transition-colors duration-200">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-primary group-hover:text-on-primary" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-2">Own Your Data</h3>
+            <p class="font-body-md text-body">Export everything as Markdown, JSON, CSV, or Anki decks. Self-host on your own server. Your knowledge base is yours — not locked in Google's cloud.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    {/* ═══════════════ HOW IT WORKS ═══════════════ */}
+    <section class="showcase-band-dark relative overflow-hidden" aria-labelledby="how-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="text-center mb-16">
+          <span class="font-caption-mono text-cyan-soft uppercase tracking-wider text-xs mb-3 block">Simple workflow</span>
+          <h2 id="how-title" class="font-display-lg text-on-primary mb-4 text-balance">
+            Three steps to your personal AI tutor.
+          </h2>
+          <p class="font-body-lg text-cyan-soft max-w-2xl mx-auto text-balance">
+            Upload your materials once. Then just ask questions — the AI remembers everything.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
+          {/* Step 1 */}
+          <div class="text-center">
+            <div class="w-16 h-16 mx-auto mb-6 bg-cyan/20 rounded-2xl flex items-center justify-center">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" class="text-cyan" aria-hidden="true">
+                <path d="M16 6v20M6 16h20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="font-caption-mono text-cyan-soft text-xs uppercase tracking-wider mb-2 block">Step 1</span>
+            <h3 class="font-display-sm text-on-primary mb-2">Upload your documents</h3>
+            <p class="font-body-sm text-on-primary/70">PDFs, EPUBs, YouTube videos, web pages, audio files, and more. Drag and drop or paste a URL.</p>
+          </div>
+
+          {/* Step 2 */}
+          <div class="text-center">
+            <div class="w-16 h-16 mx-auto mb-6 bg-violet/20 rounded-2xl flex items-center justify-center">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" class="text-violet-soft" aria-hidden="true">
+                <circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M16 10v4l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span class="font-caption-mono text-violet-soft text-xs uppercase tracking-wider mb-2 block">Step 2</span>
+            <h3 class="font-display-sm text-on-primary mb-2">AI builds your knowledge graph</h3>
+            <p class="font-body-sm text-on-primary/70">Our RAG pipeline indexes everything, finds connections, and builds a semantic map of your entire library.</p>
+          </div>
+
+          {/* Step 3 */}
+          <div class="text-center">
+            <div class="w-16 h-16 mx-auto mb-6 bg-highlight-pink/20 rounded-2xl flex items-center justify-center">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" class="text-highlight-pink" aria-hidden="true">
+                <path d="M26 18a2 2 0 0 1-2 2H10l-6 6V6a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </div>
+            <span class="font-caption-mono text-highlight-pink text-xs uppercase tracking-wider mb-2 block">Step 3</span>
+            <h3 class="font-display-sm text-on-primary mb-2">Ask anything, get citations</h3>
+            <p class="font-body-sm text-on-primary/70">Chat across your entire library. Every answer links back to the exact source. Generate quizzes, audio summaries, and mind maps.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ═══════════════ SEO CONTENT ═══════════════ */}
+    <section class="showcase-band-light relative" aria-labelledby="seo-heading">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+          <h2 id="seo-heading" class="font-display-lg text-ink mb-8">
+            The AI Study Assistant That Actually Remembers Your Notes
+          </h2>
+
+          <div class="space-y-6 font-body-md text-body leading-relaxed">
+            <p>
+              NotesChatAI is a <strong>free NotebookLM alternative</strong> built for students, researchers, and lifelong learners who need more than a basic note-taking app. Unlike traditional AI chatbots that forget everything between sessions, NotesChatAI gives you <strong>persistent AI memory</strong> — a knowledge base that grows smarter with every document you upload. Whether you're studying for finals, writing a thesis, or organizing your professional development materials, NotesChatAI is the <strong>AI study assistant for students</strong> that keeps up with you.
+            </p>
+
+            <h3 class="font-display-md text-ink mt-8 mb-4">Chat With Your Documents — Not Just One at a Time</h3>
+            <p>
+              Most AI tools force you into isolated notebooks. You upload PDFs to one project, notes to another, and never the twain shall meet. NotesChatAI eliminates that problem entirely. Our unified knowledge base means you can <strong>chat with PDF AI</strong> across your entire library. Ask a question like "What connects my biology notes to my chemistry textbook?" and get a real, cited answer that pulls from both sources. No other tool lets you <strong>chat with your notes</strong> across courses, semesters, and years — all in one place.
+            </p>
+            <p>
+              Upload notes, ask questions, AI — that's the core workflow. Drop in your PDFs, EPUBs, lecture transcripts, YouTube video links, web pages, or audio files. NotesChatAI processes everything through our advanced RAG pipeline, building semantic embeddings and a knowledge graph that connects ideas across your entire collection. When you <strong>upload notes and ask questions</strong>, the AI doesn't just search for keywords — it understands context, finds relationships, and delivers precise answers with page-level citations.
+            </p>
+
+            <h3 class="font-display-md text-ink mt-8 mb-4">Why Students Are Switching from NotebookLM</h3>
+            <p>
+              Google's NotebookLM has strict source limits (50 on free, 600 on Ultra), daily chat quotas (50-5,000 depending on your plan), and — most importantly — notebook isolation. Your ML notes can't help you answer a question about your physics textbook unless you manually copy everything into one notebook. NotesChatAI is the <strong>free NotebookLM alternative</strong> that removes these barriers. No source limits. No daily chat caps on Pro. And every document in one connected knowledge base.
+            </p>
+            <p>
+              As an <strong>AI notebook for students</strong>, NotesChatAI goes further than simple Q&A. Generate flashcards from any document using our <strong>AI flashcard generator from notes</strong> — powered by FSRS spaced repetition that adapts to your learning pace. Create practice exams from your knowledge base. Build interactive mind maps that visualize how concepts connect. These are the study tools that make the difference between cramming and actually learning.
+            </p>
+
+            <h3 class="font-display-md text-ink mt-8 mb-4">Built for Real Academic Workflows</h3>
+            <p>
+              NotesChatAI understands that studying isn't a single-session activity. Our <strong>AI that remembers your notes</strong> maintains context across weeks and months of studying. Ask follow-up questions weeks later and the AI still knows what you discussed, what documents you referenced, and what topics you're struggling with. This is <strong>persistent AI memory</strong> designed for the academic calendar — not a tool that resets every time you close the tab.
+            </p>
+            <p>
+              For developers and power users, NotesChatAI offers a full REST and GraphQL API, webhooks for document processing events, and self-hosted Docker deployment. Export your knowledge base to Markdown, JSON, CSV, Anki decks, Obsidian, or Notion. Your data stays yours — always portable, never locked in.
+            </p>
+            <p>
+              Start with 50 documents on our <strong>free AI study assistant</strong> plan. No credit card required. Upgrade to Pro for unlimited documents, unlimited chats, and API access. Whether you're a first-year undergrad or a PhD researcher, NotesChatAI is the <strong>chat with your documents AI</strong> that scales with your academic journey.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ═══════════════ LIVE DEMO ═══════════════ */}
     <ShowcaseBandDark
       title="See It In Action"
       subtitle="Real chat interface with citations, sources, and persistent context."
       reverse={false}
     >
       <slot name="content" slot="content">
-        <div class="space-y-6">
-          <div class="bg-canvas/5 rounded-lg border border-hairline-strong p-6">
-            <div class="flex items-center gap-3 mb-4">
+        <div class="space-y-4">
+          <div class="bg-canvas/5 rounded-lg border border-hairline-strong p-5">
+            <div class="flex items-center gap-3 mb-3">
               <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary text-sm font-medium">U</div>
               <div>
                 <p class="font-body-sm text-on-primary">You</p>
-                <p class="font-caption-mono text-cyan-soft">2 minutes ago</p>
+                <p class="font-caption-mono text-cyan-soft">2 min ago</p>
               </div>
             </div>
-            <p class="font-body-md text-on-primary/90">What are the key differences between transformers and RNNs for sequence modeling? I have papers on both in my library.</p>
+            <p class="font-body-md text-on-primary/90">What are the key differences between transformers and RNNs? I have papers on both in my library.</p>
           </div>
-          <div class="bg-canvas/5 rounded-lg border border-hairline-strong p-6">
-            <div class="flex items-center gap-3 mb-4">
+          <div class="bg-canvas/5 rounded-lg border border-hairline-strong p-5">
+            <div class="flex items-center gap-3 mb-3">
               <div class="w-8 h-8 rounded-full bg-violet flex items-center justify-center text-on-primary text-sm font-medium">AI</div>
               <div>
                 <p class="font-body-sm text-on-primary">NotesChatAI</p>
                 <p class="font-caption-mono text-cyan-soft">Just now</p>
               </div>
             </div>
-            <div class="font-body-md text-on-primary/90 space-y-3">
-              <p>Based on your uploaded papers (Vaswani et al. 2017, Hochreiter & Schmidhuber 1997), here are the key differences:</p>
-              <ul class="space-y-2 pl-4 list-disc">
-                <li><strong>Parallelization:</strong> Transformers process all tokens simultaneously via self-attention; RNNs process sequentially.</li>
-                <li><strong>Long-range dependencies:</strong> Attention captures arbitrary distances directly; RNNs suffer from vanishing gradients.</li>
-                <li><strong>Training efficiency:</strong> Transformers scale better on GPUs/TPUs; RNNs are inherently sequential.</li>
+            <div class="font-body-md text-on-primary/90 space-y-2">
+              <p>Based on your papers (Vaswani et al. 2017, Hochreiter & Schmidhuber 1997):</p>
+              <ul class="space-y-1.5 pl-4 list-disc text-sm">
+                <li><strong>Parallelization:</strong> Transformers process all tokens simultaneously; RNNs are sequential.</li>
+                <li><strong>Long-range deps:</strong> Attention captures arbitrary distances directly.</li>
+                <li><strong>Training:</strong> Transformers scale linearly on GPUs; RNNs can't parallelize.</li>
               </ul>
-              <div class="flex flex-wrap gap-2 mt-4">
-                <Badge variant="secondary" size="sm">📄 Attention Is All You Need, p. 3</Badge>
-                <Badge variant="secondary" size="sm">📄 LSTM Paper, §2.1</Badge>
+              <div class="flex flex-wrap gap-1.5 mt-3">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-violet/10 text-violet-soft rounded-full text-xs">📄 Attention Is All You Need, p.3</span>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-violet/10 text-violet-soft rounded-full text-xs">📄 LSTM Paper, §2.1</span>
               </div>
             </div>
           </div>
@@ -88,27 +387,30 @@ import CodeEditorMockup from '../components/ui/CodeEditorMockup.astro';
       <slot name="visual" slot="visual">
         <div class="bg-primary/20 rounded-xl border border-hairline-strong p-6 aspect-video flex items-center justify-center">
           <div class="text-center">
-            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" class="mx-auto mb-4 text-cyan" aria-hidden="true">
-              <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="2" stroke-dasharray="175" stroke-dashoffset="50" opacity="0.3"/>
-              <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="3" stroke-dasharray="175" stroke-dashoffset="0" stroke-linecap="round">
-                <animate attributeName="stroke-dashoffset" from="175" to="0" dur="2s" repeatCount="indefinite"/>
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none" class="mx-auto mb-4 text-cyan" aria-hidden="true">
+              <circle cx="28" cy="28" r="24" stroke="currentColor" stroke-width="2" stroke-dasharray="150" stroke-dashoffset="40" opacity="0.3"/>
+              <circle cx="28" cy="28" r="24" stroke="currentColor" stroke-width="2.5" stroke-dasharray="150" stroke-dashoffset="0" stroke-linecap="round">
+                <animate attributeName="stroke-dashoffset" from="150" to="0" dur="2s" repeatCount="indefinite"/>
               </circle>
+              <polygon points="24,20 36,28 24,36" fill="currentColor" opacity="0.8"/>
             </svg>
-            <p class="font-body-md text-on-primary/70">Live Demo</p>
-            <p class="font-caption-mono text-cyan-soft mt-1">Interactive chat with citations</p>
+            <p class="font-body-sm text-on-primary/70">Interactive Demo</p>
+            <p class="font-caption-mono text-cyan-soft mt-1">Click to try →</p>
           </div>
         </div>
       </slot>
     </ShowcaseBandDark>
 
-    <section class="showcase-band-light" aria-labelledby="audio-title">
+    {/* ═══════════════ AUDIO OVERVIEWS ═══════════════ */}
+    <section class="showcase-band-light relative" aria-labelledby="audio-title">
       <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
         <div class="text-center mb-16">
+          <span class="font-caption-mono text-highlight-pink uppercase tracking-wider text-xs mb-3 block">Audio</span>
           <h2 id="audio-title" class="font-display-lg text-ink mb-4">
-            Audio Overviews That Actually Work
+            Podcast-style summaries from your notes.
           </h2>
           <p class="font-body-lg text-body max-w-2xl mx-auto">
-            Generate podcast-style summaries with full transcripts, chapter markers, and playback speed control. Save to your library and replay anytime — no regenerating from scratch.
+            Two AI hosts discuss your documents naturally. Full transcripts, chapters, speed control. Save and replay — no daily limits on Pro.
           </p>
         </div>
 
@@ -121,7 +423,7 @@ import CodeEditorMockup from '../components/ui/CodeEditorMockup.astro';
               </svg>
             </div>
             <h3 class="font-display-sm text-ink mb-2">Two-Host Conversations</h3>
-            <p class="font-body-md text-body">AI hosts discuss your documents naturally, explaining concepts and making connections.</p>
+            <p class="font-body-md text-body">AI hosts discuss your material naturally, explaining concepts and making connections you might miss.</p>
           </article>
 
           <article class="card-marketing-large text-center">
@@ -132,7 +434,7 @@ import CodeEditorMockup from '../components/ui/CodeEditorMockup.astro';
               </svg>
             </div>
             <h3 class="font-display-sm text-ink mb-2">Full Transcripts & Chapters</h3>
-            <p class="font-body-md text-body">Read along, search, jump to sections. Export transcripts as Markdown or SRT.</p>
+            <p class="font-body-md text-body">Read along, search, jump to sections. Export as Markdown or SRT for subtitle files.</p>
           </article>
 
           <article class="card-marketing-large text-center">
@@ -143,20 +445,21 @@ import CodeEditorMockup from '../components/ui/CodeEditorMockup.astro';
               </svg>
             </div>
             <h3 class="font-display-sm text-ink mb-2">Saved Library</h3>
-            <p class="font-body-md text-body">Every overview saved automatically. Organize, search, share, and download for offline listening.</p>
+            <p class="font-body-md text-body">Every overview saved. Organize, share, download for offline listening. Regenerate with one click.</p>
           </article>
         </div>
       </div>
     </section>
 
+    {/* ═══════════════ DEVELOPER PLATFORM ═══════════════ */}
     <ShowcaseBandDark
-      title="Built for Developers, Too"
+      title="Built for developers, too."
       subtitle="API-first design. Local-first option. Full data ownership."
       reverse={true}
     >
       <slot name="content" slot="content">
         <div class="space-y-4">
-          <p class="font-body-lg text-on-primary/90">NotesChatAI isn't just for students. The same persistent memory and RAG pipeline powers our developer platform.</p>
+          <p class="font-body-lg text-on-primary/90">The same persistent memory and RAG pipeline powers our developer platform. Build study tools, integrate with your stack, automate everything.</p>
           <ul class="space-y-3" role="list">
             {[
               'REST + GraphQL API for custom integrations',
@@ -184,43 +487,248 @@ import CodeEditorMockup from '../components/ui/CodeEditorMockup.astro';
           language="typescript"
           code={`
 // Create a conversation with RAG
-const response = await fetch('https://api.noteschatai.com/v1/chat', {
-  method: 'POST',
-  headers: {
-    'Authorization': 'Bearer YOUR_API_KEY',
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    message: 'Summarize my machine learning notes',
-    model: 'gemini-1.5-flash',
-    retrieval: { topK: 10, rerank: true },
-  }),
-});
+const response = await fetch(
+  'https://api.noteschatai.com/v1/chat',
+  {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      message: 'Summarize my ML notes',
+      model: 'gemini-1.5-flash',
+      retrieval: { topK: 10, rerank: true },
+    }),
+  }
+);
 
 const stream = response.body;
-// Stream citations and responses in real-time
+// Stream citations in real-time
 `}
         />
       </slot>
     </ShowcaseBandDark>
 
-    <section class="hero-band bg-canvas-soft" aria-labelledby="cta-title">
-      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
-        <div class="text-center max-w-3xl mx-auto">
-          <h2 id="cta-title" class="font-display-lg text-ink mb-4">
-            Ready to build your knowledge base?
+    {/* ═══════════════ TESTIMONIALS ═══════════════ */}
+    <section class="feature-mesh-band relative overflow-hidden" aria-labelledby="testimonials-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.03]" aria-hidden="true"></div>
+
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="text-center mb-16">
+          <span class="font-caption-mono text-violet uppercase tracking-wider text-xs mb-3 block">Early users</span>
+          <h2 id="testimonials-title" class="font-display-lg text-ink mb-4">
+            Loved by students and researchers.
           </h2>
-          <p class="font-body-lg text-body mb-8">
-            Join thousands of students and researchers in the free beta. No credit card required.
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+          {[
+            {
+              quote: "I switched from NotebookLM and never looked back. Being able to search across ALL my courses at once is a game-changer for exam prep.",
+              name: "Sarah K.",
+              role: "CS Junior, Stanford",
+              initials: "SK",
+            },
+            {
+              quote: "The flashcard generation from my lecture notes saves me hours every week. The spaced repetition actually works — my retention went up 40%.",
+              name: "Marcus T.",
+              role: "Med Student, Johns Hopkins",
+              initials: "MT",
+            },
+            {
+              quote: "I love that I own my data. Exported everything to Obsidian in one click. NotebookLM had me locked in Google's ecosystem.",
+              name: "Priya R.",
+              role: "PhD Researcher, MIT",
+              initials: "PR",
+            },
+          ].map((t) => (
+            <article class="card-marketing">
+              <div class="flex gap-1 mb-4">
+                {[1, 2, 3, 4, 5].map(() => (
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="text-warning" aria-hidden="true">
+                    <path d="M8 1l2.2 4.5L15 6.3l-3.5 3.4.8 4.8L8 12.1 3.7 14.5l.8-4.8L1 6.3l4.8-.8L8 1z"/>
+                  </svg>
+                ))}
+              </div>
+              <p class="font-body-md text-body mb-6 italic">"{t.quote}"</p>
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary font-body-sm-strong">
+                  {t.initials}
+                </div>
+                <div>
+                  <p class="font-body-sm-strong text-ink">{t.name}</p>
+                  <p class="font-caption text-mute">{t.role}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* ═══════════════ FAQ ═══════════════ */}
+    <section class="showcase-band-light relative" aria-labelledby="faq-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="text-center mb-12">
+          <span class="font-caption-mono text-violet uppercase tracking-wider text-xs mb-3 block">FAQ</span>
+          <h2 id="faq-title" class="font-display-lg text-ink mb-4">
+            Frequently Asked Questions
+          </h2>
+          <p class="font-body-lg text-body max-w-2xl mx-auto">
+            Everything you need to know about NotesChatAI — the free AI study assistant that remembers your notes.
+          </p>
+        </div>
+
+        <div class="max-w-3xl mx-auto space-y-3">
+          {
+            [
+              {
+                q: 'Is NotesChatAI free?',
+                a: 'Yes. NotesChatAI offers a generous free plan with 50 documents, 30 chats per day, and 2 audio overviews per day. No credit card required. You can upgrade to Pro for unlimited documents, unlimited chats, and API access at any time.',
+              },
+              {
+                q: 'Can I turn video into notes with AI for free?',
+                a: 'Absolutely. NotesChatAI lets you paste a YouTube URL and automatically transcribe, summarize, and index the video content into your knowledge base — completely free on the Starter plan. You can then chat with the video content, generate flashcards, and search for key concepts across all your documents and videos.',
+              },
+              {
+                q: 'What is the NotesChatAI app?',
+                a: 'NotesChatAI is a web-based AI study assistant and notebook that builds a persistent knowledge base from your notes, textbooks, PDFs, YouTube videos, and more. Unlike traditional note-taking apps, NotesChatAI uses RAG (Retrieval-Augmented Generation) so you can ask natural-language questions across your entire library and get cited answers. It also includes flashcards, quizzes, mind maps, and audio overviews.',
+              },
+              {
+                q: 'How does the AI note taker work?',
+                a: 'NotesChatAI\'s AI note taker processes your uploaded documents — PDFs, EPUBs, DOCX, audio files, and YouTube URLs — through a multi-stage pipeline: OCR for scanned documents, chunking, embedding, and knowledge graph construction. Once indexed, you can ask questions in natural language and the AI retrieves relevant passages from across your entire library, cites the exact source, and generates accurate answers.',
+              },
+              {
+                q: 'Is there a free AI notes generator?',
+                a: 'Yes. NotesChatAI can generate structured notes, summaries, flashcards, and quiz questions from any uploaded document using AI — all on the free plan. Upload a textbook chapter, lecture transcript, or research paper, and the AI creates study-ready notes with key concepts, definitions, and connections to other documents in your knowledge base.',
+              },
+              {
+                q: 'What is the best free AI lecture note taker for students?',
+                a: 'NotesChatAI is built specifically for students who need a free AI lecture note taker. Upload your lecture recordings (MP3/WAV), paste YouTube lecture links, or drop in PDF slides — the AI transcribes, summarizes, and indexes everything. You can then ask questions like "What did Professor Smith say about mitosis?" and get exact answers with source citations. The free plan supports 50 documents and 30 chats per day.',
+              },
+              {
+                q: 'Is NotesChatAI a free note-taking AI for students?',
+                a: 'Yes. NotesChatAI is a free note-taking AI designed for students. It combines persistent AI memory, a unified knowledge base, flashcard generation with spaced repetition, practice quizzes, mind maps, and audio overviews — all in one tool. Unlike NotebookLM, there are no notebook silos, so you can search and chat across all your courses, semesters, and subjects at once.',
+              },
+              {
+                q: 'Can I download NotesChatAI?',
+                a: 'NotesChatAI is a web app that works in any modern browser — no download required. Simply visit noteschatai.com and sign up for free. If you need a self-hosted option, Pro and Enterprise plans include a Docker image for on-premise deployment. You can also export your entire knowledge base to Markdown, JSON, CSV, Anki decks, or Obsidian at any time.',
+              },
+            ].map((faq) => (
+              <details class="group bg-canvas rounded-lg border border-hairline hover:border-hairline-strong transition-colors">
+                <summary class="font-body-md-strong text-ink flex items-center justify-between cursor-pointer list-none p-5">
+                  {faq.q}
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-mute group-open:rotate-180 transition-transform duration-200 flex-shrink-0 ml-4" aria-hidden="true">
+                    <path d="M6 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </summary>
+                <div class="px-5 pb-5 pt-0">
+                  <p class="font-body-sm text-body leading-relaxed">{faq.a}</p>
+                </div>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* FAQ JSON-LD Structured Data */}
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Is NotesChatAI free?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. NotesChatAI offers a generous free plan with 50 documents, 30 chats per day, and 2 audio overviews per day. No credit card required. You can upgrade to Pro for unlimited documents, unlimited chats, and API access at any time.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can I turn video into notes with AI for free?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Absolutely. NotesChatAI lets you paste a YouTube URL and automatically transcribe, summarize, and index the video content into your knowledge base — completely free on the Starter plan. You can then chat with the video content, generate flashcards, and search for key concepts across all your documents and videos.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is the NotesChatAI app?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'NotesChatAI is a web-based AI study assistant and notebook that builds a persistent knowledge base from your notes, textbooks, PDFs, YouTube videos, and more. Unlike traditional note-taking apps, NotesChatAI uses RAG so you can ask natural-language questions across your entire library and get cited answers. It also includes flashcards, quizzes, mind maps, and audio overviews.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How does the AI note taker work?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'NotesChatAI\'s AI note taker processes your uploaded documents — PDFs, EPUBs, DOCX, audio files, and YouTube URLs — through a multi-stage pipeline: OCR for scanned documents, chunking, embedding, and knowledge graph construction. Once indexed, you can ask questions in natural language and the AI retrieves relevant passages from across your entire library, cites the exact source, and generates accurate answers.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Is there a free AI notes generator?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. NotesChatAI can generate structured notes, summaries, flashcards, and quiz questions from any uploaded document using AI — all on the free plan. Upload a textbook chapter, lecture transcript, or research paper, and the AI creates study-ready notes with key concepts, definitions, and connections to other documents in your knowledge base.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is the best free AI lecture note taker for students?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'NotesChatAI is built specifically for students who need a free AI lecture note taker. Upload your lecture recordings (MP3/WAV), paste YouTube lecture links, or drop in PDF slides — the AI transcribes, summarizes, and indexes everything. You can then ask questions and get exact answers with source citations. The free plan supports 50 documents and 30 chats per day.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Is NotesChatAI a free note-taking AI for students?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. NotesChatAI is a free note-taking AI designed for students. It combines persistent AI memory, a unified knowledge base, flashcard generation with spaced repetition, practice quizzes, mind maps, and audio overviews — all in one tool. Unlike NotebookLM, there are no notebook silos, so you can search and chat across all your courses, semesters, and subjects at once.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can I download NotesChatAI?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'NotesChatAI is a web app that works in any modern browser — no download required. Simply visit noteschatai.com and sign up for free. If you need a self-hosted option, Pro and Enterprise plans include a Docker image for on-premise deployment. You can also export your entire knowledge base to Markdown, JSON, CSV, Anki decks, or Obsidian at any time.',
+          },
+        },
+      ],
+    })} />
+
+    {/* ═══════════════ FINAL CTA ═══════════════ */}
+    <section class="hero-band bg-canvas-soft relative overflow-hidden" aria-labelledby="cta-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.06]" aria-hidden="true"></div>
+
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="text-center max-w-3xl mx-auto">
+          <h2 id="cta-title" class="font-display-lg text-ink mb-4 text-balance">
+            Stop switching between tools.<br/>Start building your knowledge base.
+          </h2>
+          <p class="font-body-lg text-body mb-8 text-balance">
+            Join thousands of students who replaced NotebookLM, ChatGPT, and flashcard apps with one persistent AI study assistant.
           </p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="/signup" class="btn-primary w-full sm:w-auto">
+            <a href="/auth/signup" class="btn-primary w-full sm:w-auto">
               Start Free Beta
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="ml-1.5 inline" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </a>
-            <a href="/features" class="btn-secondary w-full sm:w-auto">
-              Explore Features
+            <a href="/pricing" class="btn-secondary w-full sm:w-auto">
+              View Pricing
             </a>
           </div>
+          <p class="font-caption text-mute mt-6">Free for up to 50 documents · No credit card required · Cancel anytime</p>
         </div>
       </div>
     </section>

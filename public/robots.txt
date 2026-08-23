@@ -1,0 +1,24 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /app/
+Disallow: /auth/
+Disallow: /api/
+
+# Allow search engines to crawl public pages
+User-agent: Googlebot
+Allow: /
+Disallow: /app/
+Disallow: /auth/
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /app/
+Disallow: /auth/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://noteschatai.com/sitemap-index.xml

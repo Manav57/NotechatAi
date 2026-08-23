@@ -1,336 +1,418 @@
+export const prerender = false;
 ---
 import AppLayout from '../../../layouts/AppLayout.astro';
 import Button from '../../../components/ui/Button.astro';
-import Card from '../../../components/ui/Card.astro';
 import Badge from '../../../components/ui/Badge.astro';
-import Input from '../../../components/ui/Input.astro';
+import Card from '../../../components/ui/Card.astro';
+
+// Fetch real document data server-side
+let docCount = 0;
+
+try {
+  const docsRes = await fetch(`${Astro.url.origin}/api/documents`, {
+    headers: { Cookie: Astro.request.headers.get('cookie') || '' },
+  });
+  if (docsRes.ok) {
+    const docsData = await docsRes.json();
+    docCount = docsData.stats?.totalDocuments || 0;
+  }
+} catch {}
 ---
 
-<AppLayout title="Study Tools — NotesChatAI" user={{ name: 'Demo User', email: 'demo@noteschatai.com', plan: 'free' }}>
+<AppLayout title="Study — NotesChatAI">
   <div class="space-y-8">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
-        <h1 class="font-display-lg text-ink">Study Tools</h1>
-        <p class="font-body-md text-body mt-1">Transform your knowledge base into active learning material.</p>
+        <h1 class="font-display-lg text-ink">Study</h1>
+        <p class="font-body-md text-body mt-1">Active recall, spaced repetition, and practice exams from your knowledge base.</p>
+      </div>
+      <div class="flex gap-3">
+        <Button variant="primary" id="generate-study-btn">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
+            <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Generate Study Set
+        </Button>
       </div>
     </div>
 
-    <div class="grid lg:grid-cols-3 gap-6">
-      <!-- Flashcards -->
-      <div class="lg:col-span-2 space-y-6">
-        <Card variant="marketing-large">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="font-display-md text-ink">Flashcards</h2>
-            <div class="flex gap-2">
-              <Button variant="secondary-sm" id="study-now">Study Now</Button>
-              <Button variant="primary" id="generate-flashcards">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M14 2v6h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M16 13H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M16 17H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M10 9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                Generate
-              </Button>
-            </div>
-          </div>
+    {/* Study Stats */}
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-canvas rounded-lg border border-hairline p-4 text-center">
+        <p class="font-display-xl text-ink">{docCount > 0 ? '0' : '0'}</p>
+        <p class="font-body-sm text-mute">Total Flashcards</p>
+      </div>
+      <div class="bg-canvas rounded-lg border border-hairline p-4 text-center">
+        <p class="font-display-xl text-cyan-deep">0</p>
+        <p class="font-body-sm text-mute">Due Today</p>
+      </div>
+      <div class="bg-canvas rounded-lg border border-hairline p-4 text-center">
+        <p class="font-display-xl text-success">—</p>
+        <p class="font-body-sm text-mute">Retention Rate</p>
+      </div>
+      <div class="bg-canvas rounded-lg border border-hairline p-4 text-center">
+        <p class="font-display-xl text-violet">0</p>
+        <p class="font-body-sm text-mute">Study Streak</p>
+      </div>
+    </div>
 
-          <div class="space-y-3 mb-6" id="flashcard-stats">
-            <div class="grid sm:grid-cols-4 gap-4">
-              <div class="p-4 bg-canvas-soft/50 rounded-lg text-center">
-                <p class="font-display-xl text-cyan">142</p>
-                <p class="font-body-sm text-mute">Total Cards</p>
-              </div>
-              <div class="p-4 bg-canvas-soft/50 rounded-lg text-center">
-                <p class="font-display-xl text-violet">23</p>
-                <p class="font-body-sm text-mute">Due Today</p>
-              </div>
-              <div class="p-4 bg-canvas-soft/50 rounded-lg text-center">
-                <p class="font-display-xl text-highlight-pink">87%</p>
-                <p class="font-body-sm text-mute">Retention Rate</p>
-              </div>
-              <div class="p-4 bg-canvas-soft/50 rounded-lg text-center">
-                <p class="font-display-xl text-warning">12 min</p>
-                <p class="font-body-sm text-mute">Avg Session</p>
-              </div>
-            </div>
-          </div>
+    {/* Quick Actions */}
+    <div class="grid sm:grid-cols-3 gap-4">
+      <button class="study-mode-btn bg-canvas rounded-lg border border-hairline p-6 text-left hover:border-cyan hover:shadow-level-2 transition-all group" data-mode="flashcards">
+        <div class="w-12 h-12 rounded-xl bg-cyan-soft flex items-center justify-center mb-4 group-hover:bg-cyan/20 transition-colors">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-cyan-deep" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+            <path d="M3 10h18" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <h3 class="font-display-sm text-ink mb-1">Flashcards</h3>
+        <p class="font-body-sm text-body">Review with spaced repetition. Flip to reveal answers.</p>
+        <div class="flex items-center gap-2 mt-3">
+          <Badge variant="secondary" size="sm">12 due</Badge>
+          <span class="font-caption text-mute">~8 min</span>
+        </div>
+      </button>
 
-          <div class="border-t border-hairline pt-6">
-            <h3 class="font-display-sm text-ink mb-4">Recent Decks</h3>
-            <div class="space-y-3" id="flashcard-decks">
-              {[
-                { title: 'Transformer Architecture', cards: 34, due: 5, mastery: 78, type: 'cloze' },
-                { title: 'Attention Mechanisms', cards: 28, due: 8, mastery: 82, type: 'basic' },
-                { title: 'RNN vs LSTM Comparison', cards: 19, due: 3, mastery: 65, type: 'reversed' },
-                { title: 'Neural Network Fundamentals', cards: 42, due: 7, mastery: 91, type: 'basic' },
-              ].map((deck) => (
-                <div class="p-4 bg-canvas-soft/50 rounded-lg hover:bg-canvas-soft transition-colors flex flex-col sm:flex-row sm:items-center gap-4">
-                  <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2 flex-wrap mb-1">
-                      <h4 class="font-body-md text-ink truncate">{deck.title}</h4>
-                      <Badge variant="secondary" size="sm">{deck.type}</Badge>
-                    </div>
-                    <div class="flex flex-wrap gap-4 font-body-sm text-mute">
-                      <span>🃏 {deck.cards} cards</span>
-                      <span>⏰ {deck.due} due today</span>
-                      <span>📊 {deck.mastery}% mastery</span>
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-2 sm:ml-auto">
-                    <Button variant="primary" size="sm">Study</Button>
-                    <Button variant="ghost" size="sm" aria-label="Deck options">
-                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                        <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
-                      </svg>
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Card>
+      <button class="study-mode-btn bg-canvas rounded-lg border border-hairline p-6 text-left hover:border-violet hover:shadow-level-2 transition-all group" data-mode="quiz">
+        <div class="w-12 h-12 rounded-xl bg-violet-soft flex items-center justify-center mb-4 group-hover:bg-violet/20 transition-colors">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-violet-deep" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+            <path d="M9 9a3 3 0 1 1 2.83 4H9V9z" fill="currentColor"/>
+            <circle cx="12" cy="17" r="1" fill="currentColor"/>
+          </svg>
+        </div>
+        <h3 class="font-display-sm text-ink mb-1">Quiz Mode</h3>
+        <p class="font-body-sm text-body">Multiple choice and short answer questions from your docs.</p>
+        <div class="flex items-center gap-2 mt-3">
+          <Badge variant="secondary" size="sm">10 questions</Badge>
+          <span class="font-caption text-mute">~15 min</span>
+        </div>
+      </button>
 
-        <Card variant="marketing-large">
-          <h2 class="font-display-md text-ink mb-6">Quiz Generator</h2>
-          <form id="quiz-form" class="space-y-5">
-            <div class="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label class="block font-body-sm-strong text-ink mb-2">Source Documents</label>
-                <div class="border border-hairline rounded-lg p-3 max-h-40 overflow-y-auto space-y-2" id="quiz-doc-selector">
-                  {[
-                    'Attention Is All You Need.pdf',
-                    'Transformer Architecture.pdf',
-                    'RNN vs LSTM Comparison.pdf',
-                    'Deep Learning Book - Chapter 6.epub',
-                  ].map((doc) => (
-                    <label class="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" name="quiz-docs" value={doc} class="w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" />
-                      <span class="font-body-sm text-body truncate">{doc}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label class="block font-body-sm-strong text-ink mb-2">Question Types</label>
-                <div class="space-y-2" id="quiz-types">
-                  {[
-                    { value: 'mcq', label: 'Multiple Choice', desc: '4 options, 1 correct' },
-                    { value: 'short', label: 'Short Answer', desc: 'Free-form response' },
-                    { value: 'explanation', label: 'Explain Concept', desc: 'Detailed explanation required' },
-                    { value: 'truefalse', label: 'True/False', desc: 'Binary choice' },
-                  ].map((type) => (
-                    <label class="flex items-start gap-2 cursor-pointer">
-                      <input type="checkbox" name="quiz-types" value={type.value} checked class="w-4 h-4 mt-0.5 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" />
-                      <div>
-                        <p class="font-body-sm text-ink">{type.label}</p>
-                        <p class="font-caption-mono text-mute">{type.desc}</p>
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
+      <button class="study-mode-btn bg-canvas rounded-lg border border-hairline p-6 text-left hover:border-highlight-pink hover:shadow-level-2 transition-all group" data-mode="exam">
+        <div class="w-12 h-12 rounded-xl bg-highlight-pink/10 flex items-center justify-center mb-4 group-hover:bg-highlight-pink/15 transition-colors">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-highlight-pink" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+            <path d="M14 2v6h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 15l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="font-display-sm text-ink mb-1">Practice Exam</h3>
+        <p class="font-body-sm text-body">Timed exam from your knowledge base with auto-grading.</p>
+        <div class="flex items-center gap-2 mt-3">
+          <Badge variant="secondary" size="sm">Customizable</Badge>
+          <span class="font-caption text-mute">~30 min</span>
+        </div>
+      </button>
+    </div>
 
-            <div class="grid sm:grid-cols-3 gap-4">
-              <div>
-                <label class="block font-body-sm-strong text-ink mb-2">Number of Questions</label>
-                <input type="number" id="quiz-count" min="5" max="50" value="10" class="input h-10" />
-              </div>
-              <div>
-                <label class="block font-body-sm-strong text-ink mb-2">Difficulty</label>
-                <select id="quiz-difficulty" class="input h-10">
-                  <option value="mixed">Mixed (Adaptive)</option>
-                  <option value="easy">Easy</option>
-                  <option value="medium">Medium</option>
-                  <option value="hard">Hard</option>
-                </select>
-              </div>
-              <div>
-                <label class="block font-body-sm-strong text-ink mb-2">Time Limit</label>
-                <select id="quiz-time" class="input h-10">
-                  <option value="0">No Limit</option>
-                  <option value="300">5 minutes</option>
-                  <option value="600">10 minutes</option>
-                  <option value="900">15 minutes</option>
-                </select>
-              </div>
-            </div>
-
-            <Button type="submit" variant="primary" class="w-full" id="generate-quiz">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
-                <path d="M9 3L3 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M15 3l-6 6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              Generate Quiz
-            </Button>
-          </form>
-        </Card>
+    {/* Flashcard Study Area (hidden by default) */}
+    <div id="flashcard-area" class="hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-display-md text-ink">Flashcard Review</h2>
+        <button id="exit-flashcards" class="btn-secondary-sm">Exit</button>
       </div>
 
-      <!-- Sidebar -->
-      <aside class="space-y-6">
-        <Card variant="marketing">
-          <h3 class="font-display-sm text-ink mb-4">Study Planner</h3>
-          <div class="space-y-4">
-            <div class="p-4 bg-cyan-soft/20 rounded-lg border border-cyan-soft">
-              <div class="flex items-center justify-between mb-2">
-                <span class="font-body-sm-strong text-cyan-deep">Next Exam</span>
-                <Badge variant="success" size="sm">In 14 days</Badge>
-              </div>
-              <p class="font-display-md text-ink">Machine Learning Final</p>
-              <p class="font-body-sm text-mute">Dec 20, 2024 · 9:00 AM</p>
-            </div>
+      <div class="max-w-xl mx-auto">
+        {/* Progress */}
+        <div class="flex items-center gap-3 mb-6">
+          <div class="flex-1 h-1.5 bg-canvas-soft-2 rounded-full overflow-hidden">
+            <div class="h-full bg-cyan rounded-full transition-all" id="flashcard-progress" style="width: 0%"></div>
+          </div>
+          <span class="font-caption-mono text-mute text-xs" id="flashcard-counter">0 / 12</span>
+        </div>
 
-            <div class="grid grid-cols-2 gap-3">
-              <div class="p-3 bg-canvas-soft/50 rounded-lg text-center">
-                <p class="font-display-lg text-violet">7</p>
-                <p class="font-caption-mono text-mute">Days Studied</p>
-              </div>
-              <div class="p-3 bg-canvas-soft/50 rounded-lg text-center">
-                <p class="font-display-lg text-highlight-pink">4h 23m</p>
-                <p class="font-caption-mono text-mute">Total Time</p>
-              </div>
+        {/* Flashcard */}
+        <div class="perspective-1000 mb-6">
+          <div id="flashcard" class="relative w-full min-h-[280px] cursor-pointer transition-transform duration-500 transform-style-preserve-3d" style="transform-style: preserve-3d;">
+            {/* Front */}
+            <div id="flashcard-front" class="absolute inset-0 bg-canvas rounded-xl border border-hairline shadow-level-3 p-8 flex flex-col items-center justify-center text-center backface-hidden">
+              <p class="font-caption-mono text-mute mb-4">QUESTION</p>
+              <p class="font-display-md text-ink" id="fc-question">What is self-attention in transformers?</p>
+              <p class="font-body-sm text-mute mt-4">Tap to reveal answer</p>
             </div>
+            {/* Back */}
+            <div id="flashcard-back" class="absolute inset-0 bg-primary rounded-xl shadow-level-3 p-8 flex flex-col items-center justify-center text-center backface-hidden" style="transform: rotateY(180deg);">
+              <p class="font-caption-mono text-cyan-soft mb-4">ANSWER</p>
+              <p class="font-body-md text-on-primary leading-relaxed" id="fc-answer">
+                Self-attention is a mechanism that allows each position in a sequence to attend to all positions in the same sequence, computing a representation as a weighted sum of all representations, where weights are computed based on compatibility between query and key vectors.
+              </p>
+            </div>
+          </div>
+        </div>
 
-            <div class="space-y-2">
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" class="w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" />
-                <span class="font-body-sm text-body">Daily study reminder (9 PM)</span>
+        {/* Rating buttons */}
+        <div id="flashcard-actions" class="hidden">
+          <p class="font-body-sm text-center text-body mb-3">How well did you know this?</p>
+          <div class="flex gap-3 justify-center">
+            <button class="fc-rate-btn flex-1 max-w-[120px] py-3 rounded-lg border-2 border-error/30 text-error font-body-sm-strong hover:bg-error-soft transition-colors" data-rating="again">
+              Again
+            </button>
+            <button class="fc-rate-btn flex-1 max-w-[120px] py-3 rounded-lg border-2 border-warning/30 text-warning-deep font-body-sm-strong hover:bg-warning-soft transition-colors" data-rating="hard">
+              Hard
+            </button>
+            <button class="fc-rate-btn flex-1 max-w-[120px] py-3 rounded-lg border-2 border-cyan/30 text-cyan-deep font-body-sm-strong hover:bg-cyan-soft transition-colors" data-rating="good">
+              Good
+            </button>
+            <button class="fc-rate-btn flex-1 max-w-[120px] py-3 rounded-lg border-2 border-success/30 text-success font-body-sm-strong hover:bg-link-bg-soft transition-colors" data-rating="easy">
+              Easy
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Quiz Area (hidden by default) */}
+    <div id="quiz-area" class="hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-display-md text-ink">Quiz Mode</h2>
+        <button id="exit-quiz" class="btn-secondary-sm">Exit</button>
+      </div>
+      <div class="max-w-2xl mx-auto">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="flex-1 h-1.5 bg-canvas-soft-2 rounded-full overflow-hidden">
+            <div class="h-full bg-violet rounded-full transition-all" id="quiz-progress" style="width: 0%"></div>
+          </div>
+          <span class="font-caption-mono text-mute text-xs" id="quiz-counter">0 / 10</span>
+        </div>
+        <div class="bg-canvas rounded-xl border border-hairline shadow-level-3 p-8" id="quiz-card">
+          <p class="font-caption-mono text-violet mb-2">QUESTION <span id="quiz-qnum">1</span> OF 10</p>
+          <p class="font-display-sm text-ink mb-6" id="quiz-question">Which mechanism allows transformers to process all tokens in parallel?</p>
+          <div class="space-y-3" id="quiz-options">
+            <button class="quiz-option w-full text-left p-4 rounded-lg border border-hairline hover:border-violet hover:bg-violet/5 transition-all font-body-md text-ink">
+              A. Recurrent processing
+            </button>
+            <button class="quiz-option w-full text-left p-4 rounded-lg border border-hairline hover:border-violet hover:bg-violet/5 transition-all font-body-md text-ink">
+              B. Self-attention
+            </button>
+            <button class="quiz-option w-full text-left p-4 rounded-lg border border-hairline hover:border-violet hover:bg-violet/5 transition-all font-body-md text-ink">
+              C. Convolution
+            </button>
+            <button class="quiz-option w-full text-left p-4 rounded-lg border border-hairline hover:border-violet hover:bg-violet/5 transition-all font-body-md text-ink">
+              D. Max pooling
+            </button>
+          </div>
+          <div id="quiz-feedback" class="hidden mt-6 p-4 rounded-lg">
+            <p class="font-body-sm-strong" id="quiz-feedback-text"></p>
+            <p class="font-body-sm text-body mt-1" id="quiz-feedback-explanation"></p>
+          </div>
+          <div class="flex justify-end mt-6">
+            <button id="quiz-next" class="btn-primary hidden">Next Question</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Study Sets */}
+    <div>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-display-md text-ink">Your Study Sets</h2>
+      </div>
+      {docCount === 0 ? (
+        <div class="text-center py-12 bg-canvas rounded-lg border border-hairline">
+          <div class="w-16 h-16 mx-auto mb-4 bg-canvas-soft rounded-2xl flex items-center justify-center">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" class="text-mute" aria-hidden="true">
+              <rect x="6" y="8" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M6 14h20" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3 class="font-display-sm text-ink mb-2">No study sets yet</h3>
+          <p class="font-body-sm text-body max-w-sm mx-auto mb-6">
+            Upload documents first, then generate flashcards, quizzes, and practice exams from your knowledge base.
+          </p>
+          <a href="/app/documents" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="mr-1.5" aria-hidden="true">
+              <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Upload Documents
+          </a>
+        </div>
+      ) : (
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[
+          { title: 'ML Fundamentals', cards: 18, due: 5, lastStudied: '2h ago', mastery: 72 },
+          { title: 'Attention & Transformers', cards: 12, due: 3, lastStudied: '1d ago', mastery: 85 },
+          { title: 'Neural Network Architectures', cards: 10, due: 2, lastStudied: '3d ago', mastery: 60 },
+          { title: 'Computer Vision Basics', cards: 7, due: 2, lastStudied: '5d ago', mastery: 45 },
+        ].map((set) => (
+          <div class="bg-canvas rounded-lg border border-hairline p-5 hover:shadow-level-2 transition-all cursor-pointer group">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-body-md-strong text-ink group-hover:text-violet transition-colors">{set.title}</h3>
+              <Badge variant="secondary" size="sm">{set.cards} cards</Badge>
+            </div>
+            <div class="h-1.5 bg-canvas-soft-2 rounded-full overflow-hidden mb-3">
+              <div class="h-full bg-cyan rounded-full" style={`width: ${set.mastery}%`}></div>
+            </div>
+            <div class="flex items-center justify-between font-caption text-mute">
+              <span>{set.mastery}% mastery</span>
+              <span>{set.due} due · {set.lastStudied}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      )}
+    </div>
+  </div>
+
+  {/* Generate Study Set Modal */}
+  <div id="generate-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm" role="dialog" aria-modal="true">
+    <div class="bg-canvas rounded-xl shadow-level-5 w-full max-w-md max-h-[90vh] overflow-y-auto animate-slide-up">
+      <div class="p-6 border-b border-hairline flex items-center justify-between">
+        <h2 class="font-display-md text-ink">Generate Study Set</h2>
+        <button id="close-generate" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-canvas-soft transition-colors text-mute hover:text-ink" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <form id="generate-form" class="p-6 space-y-5">
+        <div>
+          <label class="block font-body-sm-strong text-ink mb-2">Source Documents</label>
+          <div class="space-y-2 max-h-40 overflow-y-auto border border-hairline rounded-lg p-3">
+            {['ML Fundamentals.pdf', 'Attention Is All You Need.pdf', 'Neural Networks Overview (YouTube)', 'Deep Learning Book - Ch.6.epub'].map((doc) => (
+              <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-canvas-soft cursor-pointer transition-colors">
+                <input type="checkbox" checked class="w-4 h-4 rounded border-hairline text-primary focus:ring-link accent-primary" />
+                <span class="font-body-sm text-ink truncate">{doc}</span>
               </label>
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" class="w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" checked />
-                <span class="font-body-sm text-body">Adaptive scheduling (FSRS)</span>
-              </label>
-            </div>
-
-            <Button variant="primary" class="w-full" id="plan-study">Plan My Study</Button>
+            ))}
           </div>
-        </Card>
-
-        <Card variant="marketing">
-          <h3 class="font-display-sm text-ink mb-4">Quick Actions</h3>
-          <div class="space-y-2">
-            <Button variant="ghost" class="w-full justify-start gap-3" id="review-due">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan" aria-hidden="true">
-                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/>
-                <path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span class="font-body-md text-ink">Review Due Cards (23)</span>
-            </Button>
-            <Button variant="ghost" class="w-full justify-start gap-3" id="new-quiz">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-violet" aria-hidden="true">
-                <path d="M10 3L4 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M16 3l-6 6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span class="font-body-md text-ink">Generate New Quiz</span>
-            </Button>
-            <Button variant="ghost" class="w-full justify-start gap-3" id="export-anki">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-warning" aria-hidden="true">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M14 2v6h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span class="font-body-md text-ink">Export to Anki</span>
-            </Button>
-            <Button variant="ghost" class="w-full justify-start gap-3" id="export-obsidian">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-highlight-pink" aria-hidden="true">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M14 2v6h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M8 12h8M8 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-              <span class="font-body-md text-ink">Export to Obsidian</span>
-            </Button>
-          </div>
-        </Card>
-
-        <Card variant="marketing">
-          <h3 class="font-display-sm text-ink mb-4">Learning Progress</h3>
-          <div class="space-y-4">
-            <div>
-              <div class="flex justify-between font-body-sm mb-1">
-                <span class="text-mute">Overall Mastery</span>
-                <span class="text-ink">87%</span>
-              </div>
-              <div class="h-2 bg-canvas-soft rounded-full overflow-hidden">
-                <div class="h-full bg-gradient-to-r from-cyan to-violet rounded-full" style="width: 87%"></div>
-              </div>
-            </div>
-            <div>
-              <div class="flex justify-between font-body-sm mb-1">
-                <span class="text-mute">This Week</span>
-                <span class="text-ink">2h 15m</span>
-              </div>
-              <div class="h-2 bg-canvas-soft rounded-full overflow-hidden">
-                <div class="h-full bg-violet rounded-full" style="width: 45%"></div>
-              </div>
-            </div>
-            <div>
-              <div class="flex justify-between font-body-sm mb-1">
-                <span class="text-mute">Streak</span>
-                <span class="text-ink">7 days</span>
-              </div>
-              <div class="h-2 bg-canvas-soft rounded-full overflow-hidden">
-                <div class="h-full bg-highlight-pink rounded-full" style="width: 100%"></div>
-              </div>
-            </div>
-          </div>
-        </Card>
-      </aside>
+        </div>
+        <div>
+          <label class="block font-body-sm-strong text-ink mb-2">Number of Cards</label>
+          <select class="input h-10 w-full">
+            <option value="10">10 cards</option>
+            <option value="20" selected>20 cards</option>
+            <option value="30">30 cards</option>
+            <option value="50">50 cards</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-body-sm-strong text-ink mb-2">Focus Area <span class="font-body-sm text-mute font-normal">(optional)</span></label>
+          <input type="text" placeholder="e.g. Key concepts, formulas, definitions" class="input h-10" />
+        </div>
+        <div class="flex gap-3 pt-2">
+          <Button type="button" variant="secondary" id="cancel-generate" class="flex-1">Cancel</Button>
+          <Button type="submit" variant="primary" class="flex-1">Generate</Button>
+        </div>
+      </form>
     </div>
   </div>
 </AppLayout>
 
 <script>
-  // Study page interactions
-  const studyNowBtn = document.getElementById('study-now');
-  const generateFlashcardsBtn = document.getElementById('generate-flashcards');
-  const generateQuizBtn = document.getElementById('generate-quiz');
-  const quizForm = document.getElementById('quiz-form');
-  const planStudyBtn = document.getElementById('plan-study');
+  // Generate modal
+  const generateBtn = document.getElementById('generate-study-btn');
+  const generateModal = document.getElementById('generate-modal');
+  const closeGenerate = document.getElementById('close-generate');
+  const cancelGenerate = document.getElementById('cancel-generate');
+  const generateForm = document.getElementById('generate-form');
 
-  studyNowBtn?.addEventListener('click', () => {
-    alert('Opening spaced repetition study session...');
+  generateBtn?.addEventListener('click', () => {
+    generateModal?.classList.remove('hidden');
+    generateModal?.classList.add('flex');
+    document.body.style.overflow = 'hidden';
   });
 
-  generateFlashcardsBtn?.addEventListener('click', () => {
-    alert('Generating flashcards from selected documents...');
+  function closeModal() {
+    generateModal?.classList.add('hidden');
+    generateModal?.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  closeGenerate?.addEventListener('click', closeModal);
+  cancelGenerate?.addEventListener('click', closeModal);
+  generateModal?.addEventListener('click', (e) => { if (e.target === generateModal) closeModal(); });
+  generateForm?.addEventListener('submit', (e) => { e.preventDefault(); closeModal(); });
+
+  // Flashcard flip
+  const flashcard = document.getElementById('flashcard');
+  const flashcardFront = document.getElementById('flashcard-front');
+  const flashcardBack = document.getElementById('flashcard-back');
+  const flashcardActions = document.getElementById('flashcard-actions');
+  let isFlipped = false;
+
+  flashcard?.addEventListener('click', () => {
+    isFlipped = !isFlipped;
+    if (flashcardFront) flashcardFront.style.transform = isFlipped ? 'rotateY(180deg)' : '';
+    if (flashcardBack) flashcardBack.style.transform = isFlipped ? 'rotateY(0deg)' : 'rotateY(180deg)';
+    if (flashcardActions) flashcardActions.classList.toggle('hidden', !isFlipped);
   });
 
-  quizForm?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(quizForm);
-    const docs = formData.getAll('quiz-docs');
-    const types = formData.getAll('quiz-types');
-    
-    if (docs.length === 0) {
-      alert('Please select at least one document');
-      return;
-    }
-
-    generateQuizBtn!.disabled = true;
-    generateQuizBtn!.innerHTML = `
-      <svg class="animate-spin mr-2" width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2" stroke-dasharray="31.4" stroke-dashoffset="10" stroke-linecap="round"/>
-      </svg>
-      Generating...
-    `;
-
-    await new Promise(r => setTimeout(r, 1500));
-    
-    alert(`Quiz generated with ${formData.get('quiz-count')} questions!`);
-    
-    generateQuizBtn!.disabled = false;
-    generateQuizBtn!.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2">
-        <path d="M9 3L3 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M15 3l-6 6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      Generate Quiz
-    `;
+  // Rating buttons
+  document.querySelectorAll<HTMLElement>('.fc-rate-btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Reset flip
+      isFlipped = false;
+      if (flashcardFront) flashcardFront.style.transform = '';
+      if (flashcardBack) flashcardBack.style.transform = 'rotateY(180deg)';
+      if (flashcardActions) flashcardActions.classList.add('hidden');
+      // TODO: Update SRS interval, move to next card
+    });
   });
 
-  planStudyBtn?.addEventListener('click', () => {
-    alert('Creating personalized study plan based on your exam date and current progress...');
+  // Quiz options
+  document.querySelectorAll<HTMLElement>('.quiz-option').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      // Reset all
+      document.querySelectorAll('.quiz-option').forEach((b) => {
+        b.classList.remove('border-success', 'bg-success/5', 'border-error', 'bg-error/5', 'pointer-events-none');
+      });
+      // Mark selected
+      const isCorrect = btn.textContent?.includes('Self-attention');
+      btn.classList.add(isCorrect ? 'border-success' : 'border-error');
+      btn.classList.add(isCorrect ? 'bg-success/5' : 'bg-error/5');
+      // Show correct
+      if (!isCorrect) {
+        document.querySelectorAll('.quiz-option').forEach((b) => {
+          if (b.textContent?.includes('Self-attention')) {
+            b.classList.add('border-success', 'bg-success/5');
+          }
+        });
+      }
+      // Show feedback
+      const feedback = document.getElementById('quiz-feedback');
+      const feedbackText = document.getElementById('quiz-feedback-text');
+      const feedbackExp = document.getElementById('quiz-feedback-explanation');
+      const nextBtn = document.getElementById('quiz-next');
+      if (feedback && feedbackText) {
+        feedback.classList.remove('hidden');
+        feedback.classList.add(isCorrect ? 'bg-success/5' : 'bg-error-soft');
+        feedbackText.textContent = isCorrect ? '✓ Correct!' : '✗ Incorrect';
+        feedbackText.className = `font-body-sm-strong ${isCorrect ? 'text-success' : 'text-error'}`;
+        if (feedbackExp) feedbackExp.textContent = 'Self-attention allows transformers to process all tokens simultaneously by computing attention scores between all pairs of positions.';
+      }
+      nextBtn?.classList.remove('hidden');
+      // Disable all options
+      document.querySelectorAll('.quiz-option').forEach((b) => b.classList.add('pointer-events-none'));
+    });
+  });
+
+  // Study mode buttons
+  document.querySelectorAll<HTMLElement>('.study-mode-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const mode = btn.dataset.mode;
+      if (mode === 'flashcards') {
+        document.getElementById('flashcard-area')?.classList.remove('hidden');
+      } else if (mode === 'quiz') {
+        document.getElementById('quiz-area')?.classList.remove('hidden');
+      } else if (mode === 'exam') {
+        // TODO: Open exam mode
+      }
+    });
+  });
+
+  document.getElementById('exit-flashcards')?.addEventListener('click', () => {
+    document.getElementById('flashcard-area')?.classList.add('hidden');
+  });
+
+  document.getElementById('exit-quiz')?.addEventListener('click', () => {
+    document.getElementById('quiz-area')?.classList.add('hidden');
   });
 </script>
+
+<style>
+  .perspective-1000 { perspective: 1000px; }
+  .backface-hidden { backface-visibility: hidden; }
+  .transform-style-preserve-3d { transform-style: preserve-3d; }
+</style>

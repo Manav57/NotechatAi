@@ -1,0 +1,165 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import NavBar from '../../components/ui/NavBar.astro';
+import Footer from '../../components/ui/Footer.astro';
+---
+
+<Layout title="Contact Us — NotesChatAI" description="Get in touch with the NotesChatAI team. Questions, feedback, partnership inquiries — we'd love to hear from you." keywords="contact noteschatai, support, help, feedback, partnership">
+  <NavBar user={null} />
+
+  <main>
+    <section class="hero-band relative overflow-hidden" aria-labelledby="contact-hero">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.08]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <span class="badge-secondary inline-flex items-center gap-1.5 mb-6 font-caption-mono">
+            Get in Touch
+          </span>
+          <h1 id="contact-hero" class="font-display-xl text-ink mb-6 text-balance">
+            We'd love to hear from you.
+          </h1>
+          <p class="font-body-lg text-body text-balance max-w-2xl mx-auto">
+            Whether you have a question, feedback, or want to explore a partnership — our inbox is open.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-mesh-band relative overflow-hidden" aria-labelledby="contact-methods">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.04]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+
+          {/* Contact Form */}
+          <div>
+            <h2 id="contact-methods" class="font-display-lg text-ink mb-6">Send us a message</h2>
+            <form class="space-y-5" id="contact-form">
+              <div class="grid sm:grid-cols-2 gap-5">
+                <div>
+                  <label for="name" class="font-body-sm-strong text-ink block mb-2">Name</label>
+                  <input type="text" id="name" name="name" required class="input" placeholder="Your name" />
+                </div>
+                <div>
+                  <label for="email" class="font-body-sm-strong text-ink block mb-2">Email</label>
+                  <input type="email" id="email" name="email" required class="input" placeholder="you@example.com" />
+                </div>
+              </div>
+
+              <div>
+                <label for="subject" class="font-body-sm-strong text-ink block mb-2">Subject</label>
+                <select id="subject" name="subject" class="input">
+                  <option value="">Select a topic</option>
+                  <option value="general">General inquiry</option>
+                  <option value="support">Technical support</option>
+                  <option value="billing">Billing question</option>
+                  <option value="feedback">Feedback</option>
+                  <option value="partnership">Partnership</option>
+                  <option value="enterprise">Enterprise</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="message" class="font-body-sm-strong text-ink block mb-2">Message</label>
+                <textarea id="message" name="message" rows="5" required class="input resize-none" placeholder="Tell us what's on your mind..."></textarea>
+              </div>
+
+              <button type="submit" class="btn-primary w-full sm:w-auto">
+                Send Message
+              </button>
+            </form>
+          </div>
+
+          {/* Contact Info */}
+          <div class="space-y-6">
+            <h2 class="font-display-lg text-ink mb-6">Other ways to reach us</h2>
+
+            <div class="space-y-4">
+              {[
+                {
+                  title: 'Email',
+                  detail: 'hello@noteschatai.com',
+                  desc: 'For general questions and feedback',
+                  icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+                },
+                {
+                  title: 'Support',
+                  detail: 'support@noteschatai.com',
+                  desc: 'For technical issues and bug reports',
+                  icon: 'M18.36 9.64a9 9 0 11-12.73 0M12 2v4M12 18h.01',
+                },
+                {
+                  title: 'Enterprise',
+                  detail: 'enterprise@noteschatai.com',
+                  desc: 'For team plans and custom deployments',
+                  icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+                },
+              ].map((item) => (
+                <div class="bg-canvas rounded-xl border border-hairline shadow-level-2 p-5 flex items-start gap-4">
+                  <div class="w-10 h-10 rounded-lg bg-canvas-soft flex items-center justify-center flex-shrink-0">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="text-violet" aria-hidden="true">
+                      <path d={item.icon} stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="font-body-sm-strong text-ink">{item.title}</h3>
+                    <p class="font-body-sm text-link">{item.detail}</p>
+                    <p class="font-caption text-mute mt-1">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div class="bg-canvas-soft rounded-xl border border-hairline p-5">
+              <h3 class="font-body-sm-strong text-ink mb-2">Response time</h3>
+              <ul class="space-y-2 font-body-sm text-body">
+                <li class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-success"></span>
+                  General inquiries: within 24 hours
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-success"></span>
+                  Technical support: within 4 hours (Pro)
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-success"></span>
+                  Enterprise: within 1 hour (dedicated account manager)
+                </li>
+              </ul>
+            </div>
+
+            <div class="bg-canvas rounded-xl border border-hairline shadow-level-2 p-5">
+              <h3 class="font-body-sm-strong text-ink mb-2">Join our community</h3>
+              <p class="font-body-sm text-body mb-3">Connect with other users and the team on Discord.</p>
+              <a href="https://discord.gg/noteschatai" class="btn-secondary-sm" target="_blank" rel="noopener noreferrer">Join Discord</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  const form = document.getElementById('contact-form');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+      if (btn) {
+        btn.textContent = 'Message Sent!';
+        btn.disabled = true;
+        btn.classList.add('opacity-70');
+        setTimeout(() => {
+          btn.textContent = 'Send Message';
+          btn.disabled = false;
+          btn.classList.remove('opacity-70');
+          (form as HTMLFormElement).reset();
+        }, 3000);
+      }
+    });
+  }
+</script>

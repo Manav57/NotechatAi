@@ -1,48 +1,64 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import NavBar from '../../components/ui/NavBar.astro';
-import HeroBand from '../../components/ui/HeroBand.astro';
 import Footer from '../../components/ui/Footer.astro';
-import Button from '../../components/ui/Button.astro';
-import Card from '../../components/ui/Card.astro';
 import Badge from '../../components/ui/Badge.astro';
 ---
 
-<Layout title="Pricing — NotesChatAI" description="Simple, transparent pricing. Free beta with generous limits. Pro for power users. Team and Enterprise coming soon.">
+<Layout title="Pricing — NotesChatAI | Free AI Study Assistant" description="Simple, transparent pricing for NotesChatAI. Free beta with 50 documents. Pro for unlimited docs, chats, and API access. Better value than NotebookLM." keywords="noteschatai pricing, free notebooklm alternative, ai study assistant pricing, free ai study assistant">
   <NavBar user={null} />
 
   <main>
-    <HeroBand
-      badge="Free Beta — No Credit Card Required"
-      title="Simple, transparent pricing"
-      subtitle="Start free. Upgrade when you need more. No surprises."
-      ctaPrimary={{ text: 'Start Free Beta', href: '/signup' }}
-      ctaSecondary={{ text: 'Contact Sales', href: '/contact' }}
-    />
-
-    <section class="showcase-band-light" aria-labelledby="pricing-title">
-      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 id="pricing-title" class="font-display-lg text-ink mb-4">
-            Choose Your Plan
-          </h2>
-          <p class="font-body-lg text-body max-w-2xl mx-auto">
-            All plans include persistent memory, global search, and citations. Free beta limits are generous for individual use.
+    {/* ═══════════════ HERO ═══════════════ */}
+    <section class="hero-band relative overflow-hidden" aria-labelledby="pricing-hero">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.06]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <span class="badge-secondary inline-flex items-center gap-1.5 mb-6 font-caption-mono">
+            <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+            Free Beta
+          </span>
+          <h1 id="pricing-hero" class="font-display-xl text-ink mb-4 text-balance">
+            Simple, transparent pricing
+          </h1>
+          <p class="font-body-lg text-body mb-8 text-balance">
+            Start free. Upgrade when you need more. No surprises. All plans include persistent memory, global search, and citations.
           </p>
+
+          {/* Billing toggle */}
+          <div class="inline-flex items-center gap-3 bg-canvas-soft rounded-full p-1 border border-hairline">
+            <button id="toggle-monthly" class="pricing-toggle px-4 py-2 rounded-full font-body-sm-strong transition-all bg-primary text-on-primary" data-period="monthly">
+              Monthly
+            </button>
+            <button id="toggle-annual" class="pricing-toggle px-4 py-2 rounded-full font-body-sm-strong transition-all text-body hover:text-ink" data-period="annual">
+              Annual
+              <span class="ml-1 text-xs text-success font-caption">Save 20%</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ═══════════════ PRICING CARDS ═══════════════ */}
+    <section class="showcase-band-light relative" aria-labelledby="plans-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 id="plans-title" class="font-display-lg text-ink mb-4">Choose Your Plan</h2>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
-          <Card variant="pricing">
+        <div class="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto items-start">
+          {/* Free */}
+          <div class="bg-canvas rounded-xl border border-hairline p-8 shadow-level-2">
             <div class="mb-6">
-              <h3 class="font-display-md text-ink mb-2">Free Beta</h3>
-              <p class="font-body-md text-body">For students and casual learners</p>
+              <h3 class="font-display-md text-ink mb-1">Free</h3>
+              <p class="font-body-sm text-body">For students and casual learners</p>
             </div>
             <div class="mb-6">
               <span class="font-display-xl text-ink">$0</span>
               <span class="font-body-md text-mute ml-1">/month</span>
             </div>
-            <Badge variant="secondary" class="mb-6 inline-block">Current Beta</Badge>
-            <ul class="space-y-4 mb-8" role="list">
+            <Badge variant="secondary" class="mb-6">Current Beta</Badge>
+            <ul class="space-y-3 mb-8" role="list">
               {[
                 '50 documents',
                 '30 chats per day',
@@ -54,30 +70,33 @@ import Badge from '../../components/ui/Badge.astro';
                 'Export to Markdown, PDF, Anki',
                 'Community support',
               ].map((item) => (
-                <li class="flex items-center gap-3 font-body-md text-body">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan flex-shrink-0" aria-hidden="true">
-                    <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
-                    <path d="M7 10l3 3 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <li class="flex items-center gap-3 font-body-sm text-body">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-cyan-deep flex-shrink-0" aria-hidden="true">
+                    <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                   {item}
                 </li>
               ))}
             </ul>
-            <a href="/signup" class="btn-secondary w-full text-center">Start Free</a>
-          </Card>
+            <a href="/auth/signup" class="btn-secondary w-full text-center block h-11 leading-11">Start Free</a>
+          </div>
 
-          <Card variant="pricing-featured">
-            <div class="mb-6">
-              <Badge variant="primary" class="mb-3 inline-block">Most Popular</Badge>
-              <h3 class="font-display-md text-on-primary mb-2">Pro</h3>
-              <p class="font-body-md text-on-primary/80">For researchers and power users</p>
+          {/* Pro — Featured */}
+          <div class="bg-primary rounded-xl p-8 shadow-level-4 relative md:-mt-4 md:mb-4">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+              <span class="bg-cyan text-primary font-body-sm-strong px-4 py-1 rounded-full shadow-level-2">Most Popular</span>
             </div>
             <div class="mb-6">
-              <span class="font-display-xl text-on-primary">$15</span>
-              <span class="font-body-md text-on-primary/60 ml-1">/month</span>
+              <h3 class="font-display-md text-on-primary mb-1">Pro</h3>
+              <p class="font-body-sm text-on-primary/70">For researchers and power users</p>
             </div>
-            <p class="font-body-sm text-on-primary/60 mb-6">Billed annually ($180/yr) — save 20%</p>
-            <ul class="space-y-4 mb-8" role="list">
+            <div class="mb-2">
+              <span class="font-display-xl text-on-primary price-value" data-monthly="15" data-annual="12">$15</span>
+              <span class="font-body-md text-on-primary/50 ml-1">/month</span>
+            </div>
+            <p class="font-body-sm text-on-primary/50 mb-6 price-billed" data-monthly="Billed monthly" data-annual="Billed annually ($144/yr)">Billed monthly</p>
+            <ul class="space-y-3 mb-8" role="list">
               {[
                 'Unlimited documents',
                 'Unlimited chats',
@@ -86,110 +105,250 @@ import Badge from '../../components/ui/Badge.astro';
                 'Priority processing',
                 'API access (REST + GraphQL)',
                 'Webhooks & SDKs',
-                'Advanced export options',
+                'Advanced export (Obsidian, Notion)',
                 'Email support (24h SLA)',
                 'Self-hosted Docker option',
               ].map((item) => (
-                <li class="flex items-center gap-3 font-body-md text-on-primary/90">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan-soft flex-shrink-0" aria-hidden="true">
-                    <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
-                    <path d="M7 10l3 3 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <li class="flex items-center gap-3 font-body-sm text-on-primary/90">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-cyan-soft flex-shrink-0" aria-hidden="true">
+                    <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                   {item}
                 </li>
               ))}
             </ul>
-            <a href="/signup?plan=pro" class="btn-primary w-full text-center" style="background: white; color: #171717;">Upgrade to Pro</a>
-          </Card>
+            <a href="/signup?plan=pro" class="w-full h-11 flex items-center justify-center rounded-pill bg-on-primary text-primary font-button-lg hover:opacity-90 active:opacity-70 transition-all">Upgrade to Pro</a>
+          </div>
 
-          <Card variant="pricing">
+          {/* Team */}
+          <div class="bg-canvas rounded-xl border border-hairline p-8 shadow-level-2">
             <div class="mb-6">
-              <h3 class="font-display-md text-ink mb-2">Team</h3>
-              <p class="font-body-md text-body">For labs and study groups</p>
+              <h3 class="font-display-md text-ink mb-1">Team</h3>
+              <p class="font-body-sm text-body">For labs and study groups</p>
             </div>
             <div class="mb-6">
               <span class="font-display-xl text-ink">$30</span>
               <span class="font-body-md text-mute ml-1">/user/month</span>
             </div>
-            <Badge variant="warning" class="mb-6 inline-block">Coming Soon</Badge>
-            <ul class="space-y-4 mb-8" role="list">
+            <Badge variant="warning" class="mb-6">Coming Soon</Badge>
+            <ul class="space-y-3 mb-8" role="list">
               {[
                 'Everything in Pro',
                 'Shared knowledge bases',
                 'Real-time collaboration',
                 'Role-based permissions',
-                'Admin dashboard',
-                'Audit logs',
+                'Admin dashboard & audit logs',
                 'SSO (SAML/OIDC)',
                 '200 GB storage per user',
                 'Priority support (4h SLA)',
                 'Custom integrations',
+                'Dedicated account manager',
               ].map((item) => (
-                <li class="flex items-center gap-3 font-body-md text-body">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan flex-shrink-0" aria-hidden="true">
-                    <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
-                    <path d="M7 10l3 3 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <li class="flex items-center gap-3 font-body-sm text-body">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-cyan-deep flex-shrink-0" aria-hidden="true">
+                    <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                   {item}
                 </li>
               ))}
             </ul>
-            <button class="btn-secondary w-full text-center" disabled>Join Waitlist</button>
-          </Card>
+            <button class="btn-secondary w-full text-center h-11 leading-11" disabled>Join Waitlist</button>
+          </div>
         </div>
 
-        <div class="mt-16 text-center">
-          <p class="font-body-md text-body mb-4">Need a custom plan? <a href="/contact" class="link-inline">Contact sales</a> for Enterprise pricing.</p>
-          <p class="font-body-sm text-mute">All prices in USD. Taxes calculated at checkout. Cancel anytime.</p>
+        <p class="text-center mt-8 font-body-sm text-mute">All prices in USD. Taxes calculated at checkout. Cancel anytime.</p>
+      </div>
+    </section>
+
+    {/* ═══════════════ VS NOTEBOOKLM PRICING ═══════════════ */}
+    <section class="feature-mesh-band relative overflow-hidden" aria-labelledby="vs-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.04]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+            <span class="font-caption-mono text-violet uppercase tracking-wider text-xs mb-3 block">Value comparison</span>
+            <h2 id="vs-title" class="font-display-lg text-ink mb-4">
+              Better value than NotebookLM
+            </h2>
+            <p class="font-body-lg text-body max-w-2xl mx-auto">
+              NotesChatAI gives you more for less. Here's how the pricing stacks up.
+            </p>
+          </div>
+
+          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-3">
+            <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
+              <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Plan</span></div>
+              <div class="p-4 text-center border-x border-hairline">
+                <span class="font-body-sm-strong text-ink">NotesChatAI</span>
+              </div>
+              <div class="p-4 text-center">
+                <span class="font-body-sm-strong text-body">NotebookLM</span>
+              </div>
+            </div>
+            {[
+              { plan: 'Free', nc: '$0 — 50 docs, 30 chats/day', nlm: '$0 — 50 sources, 50 chats/day' },
+              { plan: 'Pro', nc: '$15/mo — Unlimited docs, chats, API', nlm: '$19.99/mo — 300 sources, 500 chats/day' },
+              { plan: 'Team', nc: '$30/user — Shared KB, SSO, admin', nlm: 'Google Workspace (varies)' },
+              { plan: 'Enterprise', nc: 'Custom — Self-hosted, SLA, support', nlm: 'Google Cloud (custom)' },
+            ].map((row) => (
+              <div class="grid grid-cols-3 border-b border-hairline last:border-b-0 hover:bg-canvas-soft/50 transition-colors">
+                <div class="p-4 flex items-center"><span class="font-body-sm-strong text-ink">{row.plan}</span></div>
+                <div class="p-4 flex items-center justify-center border-x border-hairline bg-violet/5">
+                  <span class="font-body-sm text-ink text-center">{row.nc}</span>
+                </div>
+                <div class="p-4 flex items-center justify-center">
+                  <span class="font-body-sm text-body text-center">{row.nlm}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div class="mt-6 bg-canvas rounded-lg border border-hairline p-5 flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center flex-shrink-0">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-success" aria-hidden="true">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                <path d="M7 10l3 3 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <p class="font-body-sm-strong text-ink">The bottom line</p>
+              <p class="font-body-sm text-body">NotesChatAI Pro at $15/mo gives you unlimited documents and chats. NotebookLM Pro at $19.99/mo still limits you to 300 sources and 500 chats/day. Plus you get API access, self-hosting, and study tools that NotebookLM doesn't offer at any price.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="showcase-band-light" aria-labelledby="faq-title">
+    {/* ═══════════════ ENTERPRISE ═══════════════ */}
+    <section class="showcase-band-dark relative overflow-hidden" aria-labelledby="enterprise-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div>
+            <span class="font-caption-mono text-cyan-soft uppercase tracking-wider text-xs mb-3 block">Enterprise</span>
+            <h2 id="enterprise-title" class="font-display-lg text-on-primary mb-4">
+              Need full control?
+            </h2>
+            <p class="font-body-lg text-cyan-soft mb-6">
+              Self-host NotesChatAI on your own infrastructure. Full data sovereignty, custom integrations, and dedicated support.
+            </p>
+            <ul class="space-y-3 mb-8">
+              {[
+                'Self-hosted Docker deployment',
+                'Custom model hosting (bring your own LLM)',
+                'SSO with SAML/OIDC',
+                'Audit logs and compliance reports',
+                'Dedicated account manager',
+                'Custom SLA (99.9%+ uptime)',
+                'On-premise option available',
+                'Training and onboarding',
+              ].map((item) => (
+                <li class="flex items-center gap-3 font-body-md text-on-primary/80">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-cyan-soft flex-shrink-0" aria-hidden="true">
+                    <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <a href="/contact" class="btn-primary" style="background: white; color: #171717;">Contact Sales</a>
+          </div>
+          <div class="hidden lg:block">
+            <div class="bg-canvas/10 rounded-xl border border-hairline-strong/20 p-8">
+              <pre class="font-code text-sm text-on-primary/80 leading-relaxed"><code>{`# Deploy with Docker
+docker pull noteschatai/server:latest
+
+docker run -d \\
+  --name noteschatai \\
+  -p 4321:4321 \\
+  -e DATABASE_URL="..." \\
+  -e AUTH_SECRET="..." \\
+  -e GEMINI_API_KEY="..." \\
+  noteschatai/server:latest
+
+# Your instance is live at
+# https://your-domain.com`}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ═══════════════ FAQ ═══════════════ */}
+    <section class="showcase-band-light relative" aria-labelledby="faq-title">
       <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 id="faq-title" class="font-display-lg text-ink mb-4">
-            Frequently Asked Questions
-          </h2>
+        <div class="text-center mb-12">
+          <h2 id="faq-title" class="font-display-lg text-ink mb-4">Frequently Asked Questions</h2>
         </div>
 
-        <div class="max-w-3xl mx-auto space-y-4">
+        <div class="max-w-3xl mx-auto space-y-3">
           {[
             {
               q: 'What happens after the free beta ends?',
-              a: 'Free tier remains free forever with the same limits. Beta users get 3 months of Pro free when we launch paid plans.'
+              a: 'Free tier remains free forever with the same limits. Beta users get 3 months of Pro free when we launch paid plans.',
             },
             {
-              q: 'Can I self-host NotesChatAI?',
-              a: 'Yes, Pro and Team plans include a Docker image for self-hosted deployment on your own infrastructure. All features work offline.'
+              q: 'Can I switch plans anytime?',
+              a: 'Yes. Upgrade or downgrade anytime. When you upgrade, you get instant access. When you downgrade, the change takes effect at the end of your billing period.',
             },
             {
               q: 'Is my data used for training?',
-              a: 'Never. Your documents, chats, and embeddings are never used to train any models. We use pre-trained models only.'
+              a: 'Never. Your documents, chats, and embeddings are never used to train any models. We use pre-trained models only. Your data stays yours.',
+            },
+            {
+              q: 'Can I self-host NotesChatAI?',
+              a: 'Yes, Pro and Team plans include a Docker image for self-hosted deployment. Enterprise customers can also get on-premise installation with dedicated support.',
             },
             {
               q: 'What file formats are supported?',
-              a: 'PDF, EPUB, TXT, MDX, YouTube URLs, web pages, MP3/WAV audio, and more. We add formats based on user demand.'
+              a: 'PDF, EPUB, DOCX, TXT, MDX, YouTube URLs, web pages, MP3/WAV audio, and more. We add formats based on user demand.',
             },
             {
-              q: 'How does the audio overview generation work?',
-              a: 'We use a two-host script generation pipeline with high-quality TTS. Each overview includes full transcripts, chapters, and is saved to your library.'
+              q: 'How does audio overview generation work?',
+              a: 'We use a two-host script generation pipeline with high-quality TTS. Each overview includes full transcripts, chapters, speed control, and is saved to your library permanently.',
             },
             {
               q: 'Can I export my data?',
-              a: 'Yes. Export to Markdown, PDF, Anki (.apkg), Obsidian vault, Notion, CSV, Zotero, Mendeley. Your data is portable.'
+              a: 'Yes. Export to Markdown, JSON, PDF, Anki (.apkg), Obsidian vault, Notion, CSV, Zotero, and Mendeley. Your data is fully portable.',
             },
-          ].map((faq, i) => (
-            <details class="group bg-canvas rounded-lg border border-hairline p-6 open:border-cyan">
-              <summary class="font-body-md-strong text-ink flex items-center justify-between cursor-pointer list-none">
+            {
+              q: 'Do you offer refunds?',
+              a: 'Yes. If you\'re not satisfied within the first 14 days of a paid plan, we\'ll give you a full refund. No questions asked.',
+            },
+          ].map((faq) => (
+            <details class="group bg-canvas rounded-lg border border-hairline hover:border-hairline-strong transition-colors">
+              <summary class="font-body-md-strong text-ink flex items-center justify-between cursor-pointer list-none p-5">
                 {faq.q}
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-mute group-open:rotate-180 transition-transform duration-200" aria-hidden="true">
-                  <path d="M7 9l3 3 3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-mute group-open:rotate-180 transition-transform duration-200 flex-shrink-0 ml-4" aria-hidden="true">
+                  <path d="M6 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </summary>
-              <p class="font-body-md text-body mt-4 pt-4 border-t border-hairline">{faq.a}</p>
+              <div class="px-5 pb-5 pt-0">
+                <p class="font-body-sm text-body leading-relaxed">{faq.a}</p>
+              </div>
             </details>
           ))}
+        </div>
+      </div>
+    </section>
+
+    {/* ═══════════════ FINAL CTA ═══════════════ */}
+    <section class="hero-band bg-canvas-soft relative overflow-hidden" aria-labelledby="pricing-cta">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.06]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="text-center max-w-2xl mx-auto">
+          <h2 id="pricing-cta" class="font-display-lg text-ink mb-4 text-balance">
+            Start building your knowledge base today
+          </h2>
+          <p class="font-body-lg text-body mb-8">
+            Free for up to 50 documents. No credit card required. Upgrade anytime.
+          </p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="/auth/signup" class="btn-primary w-full sm:w-auto">Start Free Beta</a>
+            <a href="/contact" class="btn-secondary w-full sm:w-auto">Contact Sales</a>
+          </div>
         </div>
       </div>
     </section>
@@ -197,3 +356,37 @@ import Badge from '../../components/ui/Badge.astro';
 
   <Footer />
 </Layout>
+
+<script>
+  // Monthly/Annual toggle
+  const monthlyBtn = document.getElementById('toggle-monthly');
+  const annualBtn = document.getElementById('toggle-annual');
+  const priceValues = document.querySelectorAll<HTMLElement>('.price-value');
+  const priceBilled = document.querySelectorAll<HTMLElement>('.price-billed');
+
+  function setPeriod(period: string) {
+    // Update button styles
+    [monthlyBtn, annualBtn].forEach((btn) => {
+      if (!btn) return;
+      const isCurrent = btn.dataset.period === period;
+      btn.classList.toggle('bg-primary', isCurrent);
+      btn.classList.toggle('text-on-primary', isCurrent);
+      btn.classList.toggle('text-body', !isCurrent);
+      btn.classList.toggle('hover:text-ink', !isCurrent);
+    });
+
+    // Update prices
+    priceValues.forEach((el) => {
+      const price = el.dataset[period as keyof DOMStringMap];
+      if (price) el.textContent = `$${price}`;
+    });
+
+    priceBilled.forEach((el) => {
+      const text = el.dataset[period as keyof DOMStringMap];
+      if (text) el.textContent = text;
+    });
+  }
+
+  monthlyBtn?.addEventListener('click', () => setPeriod('monthly'));
+  annualBtn?.addEventListener('click', () => setPeriod('annual'));
+</script>

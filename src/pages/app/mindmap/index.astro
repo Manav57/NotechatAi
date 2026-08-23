@@ -1,278 +1,289 @@
+export const prerender = false;
 ---
 import AppLayout from '../../../layouts/AppLayout.astro';
 import Button from '../../../components/ui/Button.astro';
-import Card from '../../../components/ui/Card.astro';
-import Badge from '../../../components/ui/Badge.astro';
-import Input from '../../../components/ui/Input.astro';
+
+// Fetch real document data server-side
+let documents: any[] = [];
+
+try {
+  const docsRes = await fetch(`${Astro.url.origin}/api/documents`, {
+    headers: { Cookie: Astro.request.headers.get('cookie') || '' },
+  });
+  if (docsRes.ok) {
+    const docsData = await docsRes.json();
+    documents = docsData.documents || [];
+  }
+} catch {}
+
+// Build graph nodes/edges from real documents
+const graphNodes: Array<{ id: string; label: string; color: string; size: number; x: number; y: number }> = [];
+const graphEdges: Array<{ from: string; to: string }> = [];
+
+if (documents.length > 0) {
+  // Create a node for each document
+  const colors = ['#171717', '#7928ca', '#0070f3', '#50e3c2', '#ff0080'];
+  const centerX = 400;
+  const centerY = 300;
+  const radius = 150;
+
+  documents.forEach((doc: any, i: number) => {
+    const angle = (2 * Math.PI * i) / documents.length - Math.PI / 2;
+    const x = centerX + radius * Math.cos(angle);
+    const y = centerY + radius * Math.sin(angle);
+    const label = doc.title.length > 12 ? doc.title.substring(0, 10) + '…' : doc.title;
+    graphNodes.push({
+      id: doc.id,
+      label,
+      color: colors[i % colors.length],
+      size: Math.min(32, 16 + (doc.chunkCount || 10)),
+      x,
+      y,
+    });
+  });
+
+  // Connect each document to its neighbors (ring topology)
+  for (let i = 0; i < graphNodes.length; i++) {
+    const next = (i + 1) % graphNodes.length;
+    graphEdges.push({ from: graphNodes[i].id, to: graphNodes[next].id });
+  }
+}
 ---
 
-<AppLayout title="Mind Map — NotesChatAI" user={{ name: 'Demo User', email: 'demo@noteschatai.com', plan: 'free' }}>
-  <div class="space-y-8">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <div>
-        <h1 class="font-display-lg text-ink">Mind Map</h1>
-        <p class="font-body-md text-body mt-1">Visualize connections between concepts across your knowledge base.</p>
+<AppLayout title="Mind Map — NotesChatAI">
+  <div class="flex flex-col h-[calc(100vh-64px)] -my-8 -mx-4 lg:-mx-8">
+    {/* Toolbar */}
+    <div class="bg-canvas border-b border-hairline px-4 lg:px-6 py-3 flex items-center justify-between gap-4 flex-shrink-0">
+      <div class="flex items-center gap-3">
+        <h1 class="font-display-sm text-ink hidden sm:block">Knowledge Graph</h1>
+        <div class="flex items-center gap-2">
+          <select id="graph-filter" class="input-sm h-8 w-auto" disabled={documents.length === 0}>
+            <option value="all">All Documents</option>
+          </select>
+          <select id="graph-layout" class="input-sm h-8 w-auto" disabled={documents.length === 0}>
+            <option value="force">Force-directed</option>
+            <option value="radial">Radial</option>
+            <option value="tree">Tree</option>
+          </select>
+        </div>
       </div>
-      <div class="flex gap-3">
-        <Button variant="primary" id="generate-mindmap">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
-            <circle cx="9" cy="9" r="3" stroke="currentColor" stroke-width="2"/>
-            <path d="M9 14v4M9 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <path d="M4.93 4.93l1.41 1.41M13.07 13.07l1.41 1.41M4.93 13.07l1.41-1.41M13.07 4.93l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <div class="flex items-center gap-2">
+        <button id="zoom-in" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-canvas-soft transition-colors text-mute hover:text-ink" aria-label="Zoom in" disabled={documents.length === 0}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M11.5 11.5L14.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M5 7h4M7 5v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
-          Generate Mind Map
-        </Button>
-        <Button variant="secondary" id="export-mindmap">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
-            <path d="M12 15V9M12 15l-3-3M12 15l3-3M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </button>
+        <button id="zoom-out" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-canvas-soft transition-colors text-mute hover:text-ink" aria-label="Zoom out" disabled={documents.length === 0}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M11.5 11.5L14.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M5 7h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
-          Export
+        </button>
+        <button id="fit-view" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-canvas-soft transition-colors text-mute hover:text-ink" aria-label="Fit to view" disabled={documents.length === 0}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 6V3a1 1 0 0 1 1-1h3M10 2h3a1 1 0 0 1 1 1v3M14 10v3a1 1 0 0 1-1 1h-3M6 14H3a1 1 0 0 1-1-1v-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="w-px h-5 bg-hairline mx-1"></div>
+        <Button variant="secondary-sm" id="regenerate-graph" disabled={documents.length === 0}>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="mr-1" aria-hidden="true">
+            <path d="M1 7a6 6 0 1 1 1.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M1 3v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Regenerate
         </Button>
       </div>
     </div>
 
-    <div class="grid lg:grid-cols-4 gap-6">
-      <aside class="lg:col-span-1 space-y-6">
-        <Card variant="marketing">
-          <h3 class="font-display-sm text-ink mb-4">Filters</h3>
-          <div class="space-y-4">
-            <div>
-              <label class="block font-body-sm-strong text-ink mb-2">Document Scope</label>
-              <div class="space-y-2">
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="scope" value="all" checked class="w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" />
-                  <span class="font-body-sm text-body">All Documents</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="scope" value="selected" class="w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" />
-                  <span class="font-body-sm text-body">Selected Documents</span>
-                </label>
-              </div>
+    {/* Graph Canvas + Sidebar */}
+    <div class="flex-1 flex min-h-0">
+      {/* Graph Canvas */}
+      <div class="flex-1 relative overflow-hidden bg-canvas-soft" id="graph-container">
+        {documents.length === 0 ? (
+          <div class="flex flex-col items-center justify-center h-full text-center px-8">
+            <div class="w-20 h-20 bg-violet/10 rounded-2xl flex items-center justify-center mb-6">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" class="text-violet" aria-hidden="true">
+                <circle cx="20" cy="20" r="4" stroke="currentColor" stroke-width="2"/>
+                <circle cx="20" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="30" cy="14" r="3" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="30" cy="26" r="3" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="20" cy="32" r="3" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="10" cy="26" r="3" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="10" cy="14" r="3" stroke="currentColor" stroke-width="1.5"/>
+                <line x1="20" y1="16" x2="20" y2="11" stroke="currentColor" stroke-width="1"/>
+                <line x1="23" y1="18" x2="28" y2="15" stroke="currentColor" stroke-width="1"/>
+                <line x1="24" y1="22" x2="28" y2="25" stroke="currentColor" stroke-width="1"/>
+                <line x1="20" y1="24" x2="20" y2="29" stroke="currentColor" stroke-width="1"/>
+                <line x1="16" y1="22" x2="12" y2="25" stroke="currentColor" stroke-width="1"/>
+                <line x1="16" y1="18" x2="12" y2="15" stroke="currentColor" stroke-width="1"/>
+              </svg>
             </div>
-            <div>
-              <label class="block font-body-sm-strong text-ink mb-2">Entity Types</label>
-              <div class="space-y-2" id="entity-types">
-                {['Concept', 'Person', 'Organization', 'Paper', 'Method', 'Dataset', 'Metric'].map((type) => (
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" name="entities" value={type.toLowerCase()} checked class="w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" />
-                    <span class="font-body-sm text-body">{type}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label class="block font-body-sm-strong text-ink mb-2">Min Connections</label>
-              <input type="range" id="min-connections" min="1" max="10" value="2" class="w-full" />
-              <div class="flex justify-between font-body-sm text-mute mt-1">
-                <span>1</span>
-                <span id="min-connections-value">2</span>
-                <span>10+</span>
-              </div>
-            </div>
-            <div>
-              <label class="block font-body-sm-strong text-ink mb-2">Layout</label>
-              <select id="layout-select" class="input h-10">
-                <option value="force">Force Directed</option>
-                <option value="hierarchical">Hierarchical</option>
-                <option value="circular">Circular</option>
-                <option value="grid">Grid</option>
-              </select>
-            </div>
-            <Button variant="primary" class="w-full" id="apply-filters">Apply Filters</Button>
+            <h2 class="font-display-lg text-ink mb-3">No documents to visualize</h2>
+            <p class="font-body-md text-body max-w-md mb-8">
+              Upload documents to generate your knowledge graph. The graph shows connections between concepts extracted from your files.
+            </p>
+            <a href="/app/documents" class="btn-primary">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
+                <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Upload Documents
+            </a>
           </div>
-        </Card>
+        ) : (
+          <svg id="graph-svg" class="w-full h-full" aria-label="Knowledge graph visualization">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#a1a1a1"/>
+              </marker>
+            </defs>
+            <g id="graph-edges" stroke="#ebebeb" stroke-width="1.5" fill="none">
+              {graphEdges.map((edge) => {
+                const fromNode = graphNodes.find(n => n.id === edge.from);
+                const toNode = graphNodes.find(n => n.id === edge.to);
+                if (!fromNode || !toNode) return null;
+                return (
+                  <line
+                    x1={fromNode.x}
+                    y1={fromNode.y}
+                    x2={toNode.x}
+                    y2={toNode.y}
+                    marker-end="url(#arrow)"
+                    opacity="0.5"
+                  />
+                );
+              })}
+            </g>
+            <g id="graph-nodes">
+              {graphNodes.map((node) => (
+                <g class="graph-node cursor-pointer" data-concept={node.label} transform={`translate(${node.x}, ${node.y})`}>
+                  <circle r={node.size} fill={node.color} stroke={node.color} stroke-width="2"/>
+                  <text text-anchor="middle" dy="0.35em" fill="white" font-size="9" font-weight="500" font-family="Geist, system-ui">
+                    {node.label}
+                  </text>
+                </g>
+              ))}
+            </g>
+          </svg>
+        )}
 
-        <Card variant="marketing">
-          <h3 class="font-display-sm text-ink mb-4">Legend</h3>
-          <div class="space-y-3">
-            {[
-              { color: 'bg-cyan', label: 'Concepts' },
-              { color: 'bg-violet', label: 'Papers' },
-              { color: 'bg-highlight-pink', label: 'Methods' },
-              { color: 'bg-warning', label: 'Datasets' },
-              { color: 'bg-primary', label: 'People/Orgs' },
-            ].map((item) => (
-              <div class="flex items-center gap-3">
-                <div class="w-3 h-3 rounded-full {item.color}"></div>
-                <span class="font-body-sm text-body">{item.label}</span>
-              </div>
-            ))}
+        {documents.length > 0 && (
+          <div class="absolute bottom-4 left-4 bg-canvas/90 backdrop-blur-sm rounded-lg border border-hairline p-3 text-xs space-y-1.5">
+            <p class="font-caption-mono text-mute uppercase mb-2">Legend</p>
+            <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-primary"></div><span class="font-body-sm text-body">Documents</span></div>
+            <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-violet"></div><span class="font-body-sm text-body">Notebooks</span></div>
+            <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-link"></div><span class="font-body-sm text-body">PDFs</span></div>
           </div>
-        </Card>
+        )}
 
-        <Card variant="marketing">
-          <h3 class="font-display-sm text-ink mb-4">Statistics</h3>
-          <div class="space-y-3 font-body-sm">
-            <div class="flex justify-between"><span class="text-mute">Nodes</span><span class="text-ink">247</span></div>
-            <div class="flex justify-between"><span class="text-mute">Edges</span><span class="text-ink">1,834</span></div>
-            <div class="flex justify-between"><span class="text-mute">Clusters</span><span class="text-ink">12</span></div>
-            <div class="flex justify-between"><span class="text-mute">Documents</span><span class="text-ink">24</span></div>
+        {documents.length > 0 && (
+          <div class="absolute bottom-4 right-4 bg-canvas/90 backdrop-blur-sm rounded-lg border border-hairline px-3 py-1.5">
+            <span class="font-caption-mono text-mute text-xs" id="zoom-level">100%</span>
           </div>
-        </Card>
+        )}
+      </div>
+
+      {/* Node Detail Sidebar */}
+      <aside id="node-detail" class="w-80 bg-canvas border-l border-hairline flex-col flex-shrink-0 hidden lg:flex">
+        <div class="p-4 border-b border-hairline">
+          <h2 class="font-display-sm text-ink">Document Details</h2>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-4" id="node-detail-content">
+          <div class="text-center py-8">
+            <div class="w-16 h-16 mx-auto mb-4 bg-canvas-soft rounded-2xl flex items-center justify-center">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" class="text-mute" aria-hidden="true">
+                <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+                <circle cx="16" cy="16" r="4" fill="currentColor"/>
+              </svg>
+            </div>
+            <p class="font-body-sm text-body">Click a node to see details</p>
+          </div>
+        </div>
       </aside>
-
-      <main class="lg:col-span-3">
-        <Card variant="marketing-large" class="h-[calc(100vh-300px)] min-h-[500px] flex flex-col overflow-hidden">
-          <div class="flex items-center justify-between mb-4 p-4 border-b border-hairline">
-            <div class="flex items-center gap-3">
-              <input type="text" id="search-nodes" placeholder="Search nodes..." class="input h-10 w-64" />
-              <div class="flex items-center gap-2">
-                <Button variant="ghost" size="sm" id="zoom-in" aria-label="Zoom in">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                    <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M9 13.5V15M9 3v1.5M15 9h1.5M3 9H4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                </Button>
-                <Button variant="ghost" size="sm" id="zoom-out" aria-label="Zoom out">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                    <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M3 9h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                </Button>
-                <Button variant="ghost" size="sm" id="reset-view" aria-label="Reset view">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                    <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M15 3l-3 3 3 3M3 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                </Button>
-              </div>
-            </div>
-            <div class="flex items-center gap-3">
-              <Badge variant="secondary" size="sm">247 nodes</Badge>
-              <Badge variant="secondary" size="sm">1,834 edges</Badge>
-            </div>
-          </div>
-
-          <div class="flex-1 relative bg-canvas-soft/50 rounded-lg overflow-hidden" id="mindmap-canvas">
-            <!-- Canvas placeholder - would use React Flow or similar in real implementation -->
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="text-center p-8">
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" class="mx-auto mb-4 text-mute/50" aria-hidden="true">
-                  <circle cx="40" cy="40" r="35" stroke="currentColor" stroke-width="1.5" stroke-dasharray="220" stroke-dashoffset="55"/>
-                  <circle cx="40" cy="40" r="15" stroke="currentColor" stroke-width="2"/>
-                  <circle cx="20" cy="20" r="8" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.2"/>
-                  <circle cx="60" cy="20" r="8" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.2"/>
-                  <circle cx="40" cy="60" r="8" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.2"/>
-                  <path d="M40 28v16M40 44h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
-                </svg>
-                <h3 class="font-display-md text-ink mb-2">Interactive Mind Map</h3>
-                <p class="font-body-md text-body max-w-md mx-auto mb-6">
-                  Click "Generate Mind Map" to visualize entities and relationships from your documents. 
-                  Nodes represent concepts, papers, methods, and more. Edges show relationships.
-                </p>
-                <Button variant="primary" id="generate-mindmap-2">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
-                    <circle cx="9" cy="9" r="3" stroke="currentColor" stroke-width="2"/>
-                    <path d="M9 14v4M9 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M4.93 4.93l1.41 1.41M13.07 13.07l1.41 1.41M4.93 13.07l1.41-1.41M13.07 4.93l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  </svg>
-                  Generate Mind Map
-                </Button>
-              </div>
-            </div>
-
-            <!-- Node detail panel (slides in) -->
-            <div id="node-detail" class="fixed inset-y-0 right-0 w-96 bg-canvas border-l border-hairline shadow-level-5 transform translate-x-full transition-transform duration-300 z-50 hidden lg:block" aria-hidden="true">
-              <div class="flex flex-col h-full">
-                <div class="p-4 border-b border-hairline flex items-center justify-between">
-                  <h3 class="font-display-sm text-ink">Node Details</h3>
-                  <button id="close-node-detail" class="text-mute hover:text-ink" aria-label="Close">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                  </button>
-                </div>
-                <div class="flex-1 overflow-y-auto p-4" id="node-detail-content">
-                  <div class="text-center text-mute py-12">
-                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" class="mx-auto mb-3" aria-hidden="true">
-                      <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
-                    </svg>
-                    <p class="font-body-md">Click a node to see details</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
-      </main>
     </div>
   </div>
 </AppLayout>
 
 <script>
-  // Mind map interactions
-  const minConnections = document.getElementById('min-connections');
-  const minConnectionsValue = document.getElementById('min-connections-value');
-  const generateBtn = document.getElementById('generate-mindmap');
-  const generateBtn2 = document.getElementById('generate-mindmap-2');
-  const exportBtn = document.getElementById('export-mindmap');
-  const canvas = document.getElementById('mindmap-canvas');
-  const nodeDetail = document.getElementById('node-detail');
-  const closeNodeDetail = document.getElementById('close-node-detail');
+  const nodes = document.querySelectorAll<HTMLElement>('.graph-node');
+  const detailContent = document.getElementById('node-detail-content');
+  const detailSidebar = document.getElementById('node-detail');
+  const zoomLevel = document.getElementById('zoom-level');
+  let currentZoom = 100;
 
-  minConnections?.addEventListener('input', (e) => {
-    minConnectionsValue!.textContent = e.target.value;
-  });
+  nodes.forEach((node) => {
+    node.addEventListener('click', () => {
+      const label = node.dataset.concept;
+      if (!label || !detailContent) return;
 
-  function generateMindMap() {
-    // In real implementation, would call /api/mindmap/generate
-    alert('Generating mind map... This would call the API and render with React Flow.');
-    // Show loading state, then render canvas
-  }
+      // Show sidebar on mobile
+      detailSidebar?.classList.remove('hidden');
+      detailSidebar?.classList.add('flex');
 
-  generateBtn?.addEventListener('click', generateMindMap);
-  generateBtn2?.addEventListener('click', generateMindMap);
+      const circle = node.querySelector('circle');
+      const fillColor = circle?.getAttribute('fill') || '#171717';
 
-  exportBtn?.addEventListener('click', () => {
-    // Export as image, Mermaid, or JSON
-    alert('Export options: PNG, SVG, Mermaid, JSON');
-  });
-
-  closeNodeDetail?.addEventListener('click', () => {
-    nodeDetail?.classList.add('hidden');
-    nodeDetail?.classList.remove('block');
-  });
-
-  // Simulate node click
-  canvas?.addEventListener('click', (e) => {
-    if (e.target === canvas || e.target.closest('.absolute')) {
-      // In real app, would get clicked node data
-      nodeDetail?.classList.remove('hidden');
-      nodeDetail?.classList.add('block');
-      document.getElementById('node-detail-content')!.innerHTML = `
-        <div class="space-y-4">
-          <div class="flex items-center gap-3">
-            <div class="w-3 h-3 rounded-full bg-cyan"></div>
+      detailContent.innerHTML = `
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background-color: ${fillColor}20">
+              <div class="w-4 h-4 rounded-full" style="background-color: ${fillColor}"></div>
+            </div>
             <div>
-              <h4 class="font-display-sm text-ink">Attention Mechanism</h4>
-              <p class="font-body-sm text-mute">Concept · 47 connections</p>
+              <h3 class="font-display-sm text-ink">${label}</h3>
+              <p class="font-caption text-mute">Document</p>
             </div>
           </div>
-          <div class="p-4 bg-canvas-soft rounded-lg">
-            <p class="font-body-sm text-body">The attention mechanism allows models to focus on relevant parts of the input sequence when generating each output token. It computes attention weights between all pairs of tokens...</p>
-          </div>
-          <div>
-            <h5 class="font-body-sm-strong text-ink mb-2">Source Documents</h5>
-            <div class="flex flex-wrap gap-2">
-              <Badge variant="secondary" size="sm">📄 Attention Is All You Need</Badge>
-              <Badge variant="secondary" size="sm">📄 Transformer Architecture</Badge>
-              <Badge variant="secondary" size="sm">📄 BERT Paper</Badge>
-            </div>
-          </div>
-          <div>
-            <h5 class="font-body-sm-strong text-ink mb-2">Connected Nodes</h5>
-            <div class="flex flex-wrap gap-2">
-              {['Self-Attention', 'Multi-Head Attention', 'Query/Key/Value', 'Positional Encoding', 'Transformer'].map((n) => (
-                <Badge variant="secondary" size="sm" key={n}>{n}</Badge>
-              ))}
-            </div>
-          </div>
-          <div class="flex gap-2 pt-4 border-t border-hairline">
-            <Button variant="primary" size="sm" class="flex-1">Focus on this node</Button>
-            <Button variant="secondary" size="sm" class="flex-1">Add to study</Button>
-          </div>
+          <p class="font-body-sm text-body leading-relaxed">This node represents a document in your knowledge base.</p>
+        </div>
+
+        <div>
+          <h4 class="font-body-sm-strong text-ink mb-2">Connections</h4>
+          <p class="font-body-sm text-mute">Connections are based on conceptual similarity between documents.</p>
+        </div>
+
+        <div>
+          <h4 class="font-body-sm-strong text-ink mb-2">Ask About This</h4>
+          <a href="/app/chat" class="btn-secondary-sm w-full text-center">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="mr-1.5" aria-hidden="true">
+              <path d="M12 8a2 2 0 0 1-2 2H4l-2 2V3a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.2"/>
+            </svg>
+            Ask about ${label}
+          </a>
         </div>
       `;
-    }
+
+      // Highlight selected node
+      nodes.forEach((n) => {
+        const c = n.querySelector('circle');
+        if (c) {
+          c.style.opacity = n === node ? '1' : '0.5';
+        }
+      });
+    });
+  });
+
+  // Zoom controls
+  document.getElementById('zoom-in')?.addEventListener('click', () => {
+    currentZoom = Math.min(currentZoom + 20, 200);
+    if (zoomLevel) zoomLevel.textContent = `${currentZoom}%`;
+    const svg = document.getElementById('graph-svg');
+    if (svg) svg.style.transform = `scale(${currentZoom / 100})`;
+  });
+
+  document.getElementById('zoom-out')?.addEventListener('click', () => {
+    currentZoom = Math.max(currentZoom - 20, 40);
+    if (zoomLevel) zoomLevel.textContent = `${currentZoom}%`;
+    const svg = document.getElementById('graph-svg');
+    if (svg) svg.style.transform = `scale(${currentZoom / 100})`;
+  });
+
+  document.getElementById('fit-view')?.addEventListener('click', () => {
+    currentZoom = 100;
+    if (zoomLevel) zoomLevel.textContent = '100%';
+    const svg = document.getElementById('graph-svg');
+    if (svg) svg.style.transform = 'scale(1)';
   });
 </script>

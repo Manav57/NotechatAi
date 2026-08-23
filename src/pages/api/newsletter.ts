@@ -1,4 +1,12 @@
+export const prerender = false;
 import type { APIRoute } from 'astro';
+
+export const GET: APIRoute = async () => {
+  return new Response(null, {
+    status: 302,
+    headers: { Location: '/blog' },
+  });
+};
 
 export const POST: APIRoute = async ({ request }) => {
   try {

@@ -24,6 +24,10 @@
     "worker:tail": "wrangler tail"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^14.2.3",
+    "@astrojs/mdx": "^7.0.7",
+    "@astrojs/node": "^11.1.4",
+    "@astrojs/sitemap": "^3.7.3",
     "@astrojs/starlight": "^0.41.7",
     "@cloudflare/workers-types": "^5.20260823.1",
     "@fontsource/geist": "^5.3.0",
@@ -33,9 +37,11 @@
     "better-auth": "^1.7.1",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.13.3",
+    "puppeteer": "^25.8.0",
     "uuid": "^14.0.2"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@astrojs/tailwind": "^6.0.2",
     "@tailwindcss/vite": "^4.3.3",
     "@types/uuid": "^10.0.0",
@@ -47,7 +53,7 @@
     "eslint-plugin-astro": "^1.7.0",
     "prettier": "^3.9.6",
     "tailwindcss": "^4.3.3",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.3",
     "wrangler": "^4.125.0"
   }
 }

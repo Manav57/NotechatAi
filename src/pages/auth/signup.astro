@@ -3,10 +3,9 @@ import Layout from '../../layouts/Layout.astro';
 import NavBar from '../../components/ui/NavBar.astro';
 import Footer from '../../components/ui/Footer.astro';
 import Button from '../../components/ui/Button.astro';
-import Input from '../../components/ui/Input.astro';
 ---
 
-<Layout title="Sign Up — NotesChatAI" description="Create your free NotesChatAI account and start building your persistent knowledge base.">
+<Layout title="Sign Up — NotesChatAI | Free AI Study Assistant" description="Create your free NotesChatAI account. Start building your persistent knowledge base with AI that remembers your notes. No credit card required." robots="noindex, nofollow">
   <NavBar user={null} />
 
   <main class="min-h-screen flex items-center justify-center py-16 lg:py-24 px-4">
@@ -23,96 +22,156 @@ import Input from '../../components/ui/Input.astro';
         <p class="font-body-md text-body">Start your free beta. No credit card required.</p>
       </div>
 
-      <div class="bg-canvas rounded-lg border border-hairline p-8 shadow-level-3">
-        <form id="signup-form" class="space-y-5" action="/api/auth/signup" method="POST">
-          <Input
-            label="Name"
-            name="name"
-            type="text"
-            placeholder="Your name"
-            required
-            autocomplete="name"
-          />
+      <div class="bg-canvas rounded-xl border border-hairline p-8 shadow-level-3">
+        {/* Error message */}
+        <div id="error-banner" class="hidden mb-5 p-3 bg-error-soft rounded-lg border border-error/20">
+          <p class="font-body-sm text-error flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="flex-shrink-0" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 5v4M8 11h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span id="error-text">Something went wrong. Please try again.</span>
+          </p>
+        </div>
 
-          <Input
-            label="Email"
-            name="email"
-            type="email"
-            placeholder="you@example.com"
-            required
-            autocomplete="email"
-          />
+        {/* Google OAuth */}
+        <a
+          href="/api/auth/signin/google"
+          class="flex items-center justify-center gap-3 w-full h-11 bg-canvas border border-hairline rounded-lg font-body-md-strong text-ink hover:bg-canvas-soft hover:border-hairline-strong transition-all duration-150 mb-5"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          Continue with Google
+        </a>
 
-          <Input
-            label="Password"
-            name="password"
-            type="password"
-            placeholder="At least 8 characters"
-            required
-            autocomplete="new-password"
-            helperText="Must be at least 8 characters"
-          />
+        {/* GitHub OAuth */}
+        <a
+          href="/api/auth/signin/github"
+          class="flex items-center justify-center gap-3 w-full h-11 bg-canvas border border-hairline rounded-lg font-body-md-strong text-ink hover:bg-canvas-soft hover:border-hairline-strong transition-all duration-150 mb-6"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+          </svg>
+          Continue with GitHub
+        </a>
 
-          <Input
-            label="Confirm Password"
-            name="confirmPassword"
-            type="password"
-            placeholder="Confirm your password"
-            required
-            autocomplete="new-password"
-          />
+        {/* Divider */}
+        <div class="relative mb-6">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-hairline"></div>
+          </div>
+          <div class="relative flex justify-center">
+            <span class="px-4 bg-canvas font-body-sm text-mute">or sign up with email</span>
+          </div>
+        </div>
+
+        {/* Email/Password Form */}
+        <form id="signup-form" class="space-y-4">
+          <div>
+            <label for="name" class="block font-body-sm-strong text-ink mb-1.5">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Your name"
+              required
+              autocomplete="name"
+              class="input h-11"
+            />
+          </div>
+
+          <div>
+            <label for="email" class="block font-body-sm-strong text-ink mb-1.5">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@example.com"
+              required
+              autocomplete="email"
+              class="input h-11"
+            />
+            <p id="email-error" class="font-caption text-error mt-1 hidden"></p>
+          </div>
+
+          <div>
+            <label for="password" class="block font-body-sm-strong text-ink mb-1.5">Password</label>
+            <div class="relative">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="At least 8 characters"
+                required
+                autocomplete="new-password"
+                minlength="8"
+                class="input h-11 pr-10"
+              />
+              <button type="button" id="toggle-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-mute hover:text-ink transition-colors" aria-label="Toggle password visibility">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="show-icon" aria-hidden="true">
+                  <path d="M1.5 9.5C1.5 14 5 17 9 17S16.5 14 16.5 9.5C16.5 5 13 2 9 2S1.5 5 1.5 9.5Z" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="9" cy="9.5" r="3" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="hide-icon hidden" aria-hidden="true">
+                  <path d="M15.5 15.5L2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <path d="M1.5 9.5C1.5 14 5 17 9 17S16.5 14 16.5 9.5C16.5 5 13 2 9 2S1.5 5 1.5 9.5Z" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="9" cy="9.5" r="3" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </button>
+            </div>
+            {/* Password strength */}
+            <div id="password-strength" class="mt-2">
+              <div class="flex gap-1 mb-1">
+                <div id="str-1" class="h-1 flex-1 bg-canvas-soft-2 rounded-full transition-colors"></div>
+                <div id="str-2" class="h-1 flex-1 bg-canvas-soft-2 rounded-full transition-colors"></div>
+                <div id="str-3" class="h-1 flex-1 bg-canvas-soft-2 rounded-full transition-colors"></div>
+                <div id="str-4" class="h-1 flex-1 bg-canvas-soft-2 rounded-full transition-colors"></div>
+              </div>
+              <p id="str-label" class="font-caption text-mute"></p>
+            </div>
+            <p id="password-error" class="font-caption text-error mt-1 hidden"></p>
+          </div>
+
+          <div>
+            <label for="confirmPassword" class="block font-body-sm-strong text-ink mb-1.5">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              required
+              autocomplete="new-password"
+              class="input h-11"
+            />
+            <p id="confirm-error" class="font-caption text-error mt-1 hidden"></p>
+          </div>
 
           <div class="flex items-start gap-3">
-            <input type="checkbox" id="terms" name="terms" required class="mt-1 w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" />
-            <label for="terms" class="font-body-sm text-body">
+            <input type="checkbox" id="terms" name="terms" required class="mt-1 w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-0 accent-primary" />
+            <label for="terms" class="font-body-sm text-body cursor-pointer">
               I agree to the <a href="/terms" class="link-inline">Terms of Service</a> and <a href="/privacy" class="link-inline">Privacy Policy</a>
             </label>
           </div>
 
-          <Button type="submit" variant="primary" size="lg" class="w-full">
-            Create Account
-          </Button>
+          <button
+            type="submit"
+            id="submit-btn"
+            class="w-full h-11 bg-primary text-on-primary font-button-lg rounded-pill hover:opacity-90 active:opacity-70 transition-all duration-150 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+          >
+            <span id="btn-text">Create Account</span>
+            <svg id="btn-spinner" class="hidden animate-spin" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2" stroke-dasharray="35" stroke-dashoffset="10" stroke-linecap="round"/>
+            </svg>
+          </button>
         </form>
-
-        <div class="mt-6 text-center">
-          <p class="font-body-sm text-body">
-            Already have an account? <a href="/auth/login" class="link-inline">Sign in</a>
-          </p>
-        </div>
-
-        <div class="mt-6">
-          <div class="relative">
-            <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-hairline"></div>
-            </div>
-            <div class="relative flex justify-center text-mute">
-              <span class="px-4 bg-canvas font-body-sm">Or continue with</span>
-            </div>
-          </div>
-          
-          <div class="mt-4 grid grid-cols-2 gap-3">
-            <a href="/api/auth/signin/google" class="btn-secondary justify-center gap-2">
-              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              Google
-            </a>
-            
-            <a href="/api/auth/signin/github" class="btn-secondary justify-center gap-2">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-              </svg>
-              GitHub
-            </a>
-          </div>
-        </div>
       </div>
 
       <p class="text-center mt-6 font-body-sm text-mute">
-        By signing up, you agree to our <a href="/terms" class="link-inline">Terms</a> and <a href="/privacy" class="link-inline">Privacy Policy</a>.
+        Already have an account? <a href="/auth/login" class="link-inline font-body-sm-strong">Sign in</a>
       </p>
     </div>
   </main>
@@ -121,41 +180,165 @@ import Input from '../../components/ui/Input.astro';
 </Layout>
 
 <script>
-  // Client-side form validation
-  document.getElementById('signup-form')?.addEventListener('submit', async (e) => {
+  const form = document.getElementById('signup-form') as HTMLFormElement | null;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+  const btnText = document.getElementById('btn-text');
+  const btnSpinner = document.getElementById('btn-spinner');
+  const errorBanner = document.getElementById('error-banner');
+  const errorText = document.getElementById('error-text');
+  const toggleBtn = document.getElementById('toggle-password');
+  const passwordInput = document.getElementById('password') as HTMLInputElement | null;
+  const confirmPassword = document.getElementById('confirmPassword') as HTMLInputElement | null;
+
+  // Toggle password visibility
+  toggleBtn?.addEventListener('click', () => {
+    if (!passwordInput) return;
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    toggleBtn.querySelector('.show-icon')?.classList.toggle('hidden', isPassword);
+    toggleBtn.querySelector('.hide-icon')?.classList.toggle('hidden', !isPassword);
+  });
+
+  // Password strength
+  passwordInput?.addEventListener('input', () => {
+    const val = passwordInput.value;
+    const score = calcStrength(val);
+    updateStrengthUI(score);
+  });
+
+  function calcStrength(pw: string): number {
+    let score = 0;
+    if (pw.length >= 8) score++;
+    if (pw.length >= 12) score++;
+    if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    return Math.min(score, 4);
+  }
+
+  function updateStrengthUI(score: number) {
+    const bars = [
+      document.getElementById('str-1'),
+      document.getElementById('str-2'),
+      document.getElementById('str-3'),
+      document.getElementById('str-4'),
+    ];
+    const label = document.getElementById('str-label');
+    const colors = ['bg-error', 'bg-warning', 'bg-cyan', 'bg-success'];
+    const labels = ['Weak', 'Fair', 'Good', 'Strong'];
+    const textColors = ['text-error', 'text-warning-deep', 'text-cyan-deep', 'text-success'];
+
+    bars.forEach((bar, i) => {
+      if (!bar) return;
+      bar.className = 'h-1 flex-1 rounded-full transition-colors ';
+      if (i < score) {
+        bar.classList.add(colors[score - 1]);
+      } else {
+        bar.classList.add('bg-canvas-soft-2');
+      }
+    });
+
+    if (label && score > 0) {
+      label.textContent = labels[score - 1];
+      label.className = `font-caption ${textColors[score - 1]}`;
+    } else if (label) {
+      label.textContent = '';
+    }
+  }
+
+  // Confirm password live validation
+  confirmPassword?.addEventListener('input', () => {
+    const err = document.getElementById('confirm-error');
+    if (confirmPassword.value && passwordInput?.value !== confirmPassword.value) {
+      if (err) { err.textContent = 'Passwords do not match'; err.classList.remove('hidden'); }
+    } else {
+      err?.classList.add('hidden');
+    }
+  });
+
+  // Form submission
+  form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const form = e.target;
     const formData = new FormData(form);
-    
-    const password = formData.get('password');
-    const confirmPassword = formData.get('confirmPassword');
-    
-    if (password !== confirmPassword) {
-      alert('Passwords do not match');
-      return;
+
+    // Reset errors
+    errorBanner?.classList.add('hidden');
+    document.querySelectorAll('[id$="-error"]').forEach((el) => el.classList.add('hidden'));
+
+    const name = formData.get('name')?.toString().trim();
+    const email = formData.get('email')?.toString().trim();
+    const password = formData.get('password')?.toString() || '';
+    const confirm = formData.get('confirmPassword')?.toString() || '';
+    const terms = formData.get('terms');
+
+    // Validate
+    let valid = true;
+    if (!name) { valid = false; }
+    if (!email) { showFieldError('email-error', 'Please enter your email'); valid = false; }
+    if (password.length < 8) { showFieldError('password-error', 'Password must be at least 8 characters'); valid = false; }
+    if (password !== confirm) { showFieldError('confirm-error', 'Passwords do not match'); valid = false; }
+    if (!terms) {
+      errorBanner?.classList.remove('hidden');
+      if (errorText) errorText.textContent = 'Please accept the Terms of Service and Privacy Policy.';
+      valid = false;
     }
-    
-    if (password.length < 8) {
-      alert('Password must be at least 8 characters');
-      return;
-    }
-    
+    if (!valid) return;
+
+    // Loading state
+    setLoading(true);
+
     try {
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(formData)),
+        body: JSON.stringify({ name, email, password }),
       });
-      
+
       const data = await response.json();
-      
+
       if (response.ok) {
         window.location.href = '/app';
       } else {
-        alert(data.error || 'Signup failed');
+        errorBanner?.classList.remove('hidden');
+        if (errorText) errorText.textContent = data.error || 'Signup failed. Please try again.';
       }
-    } catch (error) {
-      alert('An error occurred. Please try again.');
+    } catch {
+      errorBanner?.classList.remove('hidden');
+      if (errorText) errorText.textContent = 'Network error. Please check your connection and try again.';
+    } finally {
+      setLoading(false);
     }
   });
+
+  function showFieldError(id: string, msg: string) {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = msg; el.classList.remove('hidden'); }
+  }
+
+  function setLoading(loading: boolean) {
+    if (submitBtn) submitBtn.disabled = loading;
+    btnText?.classList.toggle('hidden', loading);
+    btnSpinner?.classList.toggle('hidden', !loading);
+  }
+
+  // Handle OAuth error redirect params
+  (function checkOAuthError() {
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get('error');
+    if (error && errorBanner && errorText) {
+      const messages: Record<string, string> = {
+        'google_not_configured': 'Google sign-up is not configured. Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables.',
+        'github_not_configured': 'GitHub sign-up is not configured. Please set GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET environment variables.',
+        'oauth_failed': 'OAuth authentication failed. Please try again or sign up with email.',
+        'oauth_user_info_failed': 'Could not retrieve your profile from the OAuth provider. Please try again.',
+        'no_email': 'No verified email found. Please ensure your account has a verified email address.',
+        'missing_code': 'OAuth authentication was incomplete. Please try again.',
+        'network_error': 'A network error occurred during sign-up. Please try again.',
+      };
+      errorText.textContent = messages[error] || 'An error occurred during sign-up. Please try again.';
+      errorBanner.classList.remove('hidden');
+      // Clean the URL so the error doesn't reappear on refresh
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  })();
 </script>

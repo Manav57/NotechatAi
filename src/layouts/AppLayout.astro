@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import ThemeToggle from '../components/ui/ThemeToggle.astro';
 
 interface Props {
   title?: string;
@@ -12,8 +13,26 @@ interface Props {
   } | null;
 }
 
-const { title = 'Dashboard — NotesChatAI', description = 'Your NotesChatAI dashboard', user = null } = Astro.props;
+const { title = 'Dashboard — NotesChatAI', description = 'Your NotesChatAI dashboard', user: userProp = null } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, 'https://noteschatai.com');
+
+// Use authenticated user from middleware, fallback to prop
+const user = (Astro.locals as any)?.user || userProp;
+
+const navItems = [
+  { href: '/app', label: 'Dashboard', icon: 'grid' },
+  { href: '/app/documents', label: 'Documents', icon: 'file' },
+  { href: '/app/chat', label: 'Chat', icon: 'chat' },
+  { href: '/app/audio', label: 'Audio', icon: 'audio' },
+  { href: '/app/mindmap', label: 'Mind Map', icon: 'graph' },
+  { href: '/app/study', label: 'Study', icon: 'study' },
+];
+
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) => {
+  if (href === '/app') return currentPath === '/app' || currentPath === '/app/';
+  return currentPath.startsWith(href);
+};
 ---
 
 <!doctype html>
@@ -21,6 +40,14 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://noteschatai.com');
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (function() {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
@@ -36,7 +63,7 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://noteschatai.com');
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
   </head>
-  <body class="bg-canvas-soft text-ink antialiased">
+  <body class="bg-canvas-soft text-ink antialiased dark:bg-[#111111] dark:text-[#ededed]">
     <header class="nav-bar sticky top-0 z-50 bg-canvas/80 backdrop-blur-md border-b border-hairline">
       <div class="max-w-[1400px] mx-auto px-4 lg:px-8 h-16 flex items-center justify-between gap-4">
         <a href="/app" class="nav-link flex items-center gap-2 shrink-0" aria-label="NotesChatAI Dashboard">
@@ -48,21 +75,37 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://noteschatai.com');
         </a>
 
         <nav class="hidden md:flex items-center gap-1 flex-1 justify-center" aria-label="App navigation">
-          <a href="/app" class="nav-link">Dashboard</a>
-          <a href="/app/documents" class="nav-link">Documents</a>
-          <a href="/app/chat" class="nav-link">Chat</a>
-          <a href="/app/audio" class="nav-link">Audio</a>
-          <a href="/app/mindmap" class="nav-link">Mind Map</a>
-          <a href="/app/study" class="nav-link">Study</a>
+          {navItems.map((item) => (
+            <a
+              href={item.href}
+              class:list={['nav-link', { 'bg-canvas-soft text-ink font-body-sm-strong': isActive(item.href) }]}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          ))}
         </nav>
 
-        <div class="flex items-center gap-2 shrink-0">
+        {/* Mobile hamburger */}
+        <button
+          id="mobile-menu-btn"
+          class="md:hidden flex items-center justify-center w-10 h-10 rounded-full hover:bg-canvas-soft transition-colors"
+          aria-label="Open menu"
+          aria-expanded="false"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-ink" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <div class="hidden md:flex items-center gap-2 shrink-0">
+          <ThemeToggle />
           {user ? (
             <>
-              <span class="hidden sm:block font-body-sm text-body mr-2">{user.plan === 'free' ? 'Free Beta' : user.plan === 'pro' ? 'Pro' : 'Team'}</span>
+              <span class="hidden sm:block font-body-sm text-body mr-2">{user.plan === 'free' ? 'Free Beta' : user.plan === 'pro' ? 'Pro' : user.plan === 'team' ? 'Team' : 'Free Beta'}</span>
               <div class="relative group">
                 <button class="flex items-center gap-2 px-3 py-1.5 bg-canvas-soft rounded-full hover:bg-canvas-soft-2 transition-colors" aria-expanded="false" aria-haspopup="true">
-                  <img src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`} alt="" class="w-6 h-6 rounded-full" />
+                  <img src={user.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`} alt="" class="w-6 h-6 rounded-full" />
                   <span class="text-body-sm text-ink">{user.name}</span>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="text-mute" aria-hidden="true">
                     <path d="M5 6l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -86,6 +129,64 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://noteschatai.com');
       </div>
     </header>
 
+    {/* Mobile menu overlay */}
+    <div id="mobile-menu" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-label="Navigation">
+      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="mobile-menu-backdrop"></div>
+      <div class="absolute right-0 top-0 h-full w-72 bg-canvas shadow-level-5 flex flex-col animate-slide-in-right">
+        <div class="flex items-center justify-between p-4 border-b border-hairline">
+          <a href="/app" class="flex items-center gap-2">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="text-primary">
+              <rect width="28" height="28" rx="6" fill="currentColor"/>
+              <path d="M8 10h12M8 14h12M8 18h8" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <span class="font-display-sm text-ink">NotesChatAI</span>
+          </a>
+          <button id="mobile-menu-close" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-canvas-soft transition-colors" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-ink" aria-hidden="true">
+              <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <nav class="flex-1 p-4 space-y-1" aria-label="Mobile navigation">
+          {navItems.map((item) => (
+            <a
+              href={item.href}
+              class:list={[
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg font-body-md transition-colors',
+                isActive(item.href)
+                  ? 'bg-primary text-on-primary'
+                  : 'text-body hover:bg-canvas-soft hover:text-ink'
+              ]}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+        <div class="p-4 border-t border-hairline">
+          {user ? (
+            <div class="space-y-2">
+              <div class="flex items-center gap-3 px-3 py-2">
+                <img src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`} alt="" class="w-8 h-8 rounded-full" />
+                <div class="min-w-0">
+                  <p class="font-body-sm-strong text-ink truncate">{user.name}</p>
+                  <p class="font-caption text-mute truncate">{user.email}</p>
+                </div>
+              </div>
+              <a href="/app/settings" class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-md text-body hover:bg-canvas-soft">Settings</a>
+              <a href="/app/settings/billing" class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-md text-body hover:bg-canvas-soft">Billing</a>
+              <button class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-md text-error hover:bg-error-soft w-full text-left">Sign out</button>
+            </div>
+          ) : (
+            <div class="flex gap-2">
+              <a href="/auth/login" class="nav-cta-login flex-1 text-center">Log in</a>
+              <a href="/auth/signup" class="nav-cta-signup flex-1 text-center">Sign up</a>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+
     <main class="min-h-[calc(100vh-64px)]">
       <div class="max-w-[1400px] mx-auto px-4 lg:px-8 py-8">
         <slot />
@@ -100,7 +201,7 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://noteschatai.com');
   </body>
 </html>
 
-<script type="module">
+<script>
   // Sign out handler
   document.getElementById('signout-btn')?.addEventListener('click', async () => {
     try {
@@ -110,4 +211,26 @@ const canonicalURL = new URL(Astro.url.pathname, 'https://noteschatai.com');
       console.error('Sign out failed:', e);
     }
   });
+
+  // Mobile menu
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const menuBackdrop = document.getElementById('mobile-menu-backdrop');
+  const menuClose = document.getElementById('mobile-menu-close');
+
+  function openMenu() {
+    menu?.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    menuBtn?.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeMenu() {
+    menu?.classList.add('hidden');
+    document.body.style.overflow = '';
+    menuBtn?.setAttribute('aria-expanded', 'false');
+  }
+
+  menuBtn?.addEventListener('click', openMenu);
+  menuBackdrop?.addEventListener('click', closeMenu);
+  menuClose?.addEventListener('click', closeMenu);
 </script>

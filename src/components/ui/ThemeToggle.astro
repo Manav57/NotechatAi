@@ -1,0 +1,48 @@
+---
+// Theme toggle — no props needed
+---
+
+<button
+  id="theme-toggle"
+  class="w-11 h-11 flex items-center justify-center rounded-full hover:bg-canvas-soft transition-colors text-mute hover:text-ink"
+  aria-label="Toggle dark mode"
+  title="Toggle dark mode"
+>
+  {/* Sun icon (shown in dark mode) */}
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="dark-icon hidden" aria-hidden="true">
+    <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/>
+    <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  {/* Moon icon (shown in light mode) */}
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="light-icon" aria-hidden="true">
+    <path d="M13.5 8.5a5.5 5.5 0 0 1-7-7 5.5 5.5 0 1 0 7 7z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script is:inline>
+  function getTheme() {
+    const stored = localStorage.getItem('theme');
+    if (stored) return stored;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    localStorage.setItem('theme', theme);
+    // Update icon visibility
+    const lightIcon = document.querySelector('.light-icon');
+    const darkIcon = document.querySelector('.dark-icon');
+    if (lightIcon && darkIcon) {
+      lightIcon.classList.toggle('hidden', theme === 'dark');
+      darkIcon.classList.toggle('hidden', theme !== 'dark');
+    }
+  }
+
+  // Apply theme immediately to prevent flash
+  applyTheme(getTheme());
+
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const current = getTheme();
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  });
+</script>

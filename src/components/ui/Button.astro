@@ -6,6 +6,7 @@ interface Props {
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
   class?: string;
+  id?: string;
   'aria-label'?: string;
 }
 
@@ -16,18 +17,22 @@ const {
   type = 'button',
   disabled = false,
   class: className = '',
+  id,
   'aria-label': ariaLabel,
   ...attrs
 } = Astro.props;
 
-const baseClasses = 'inline-flex items-center justify-center font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+const baseClasses =
+  'inline-flex items-center justify-center font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
 
 const variantClasses = {
   primary: 'bg-primary text-on-primary rounded-pill px-3 py-2 hover:opacity-90 active:opacity-70',
-  secondary: 'bg-canvas text-ink rounded-pill px-3 py-2 border border-hairline hover:bg-canvas-soft active:bg-canvas-soft-2',
+  secondary:
+    'bg-canvas text-ink rounded-pill px-3 py-2 border border-hairline hover:bg-canvas-soft active:bg-canvas-soft-2',
   ghost: 'bg-canvas text-ink rounded-pill-sm px-4 py-1.5 hover:bg-canvas-soft active:bg-canvas-soft-2',
   'primary-sm': 'bg-primary text-on-primary rounded-pill px-2 py-1 hover:opacity-90 active:opacity-70',
-  'secondary-sm': 'bg-canvas text-ink rounded-pill px-2 py-1 border border-hairline hover:bg-canvas-soft active:bg-canvas-soft-2',
+  'secondary-sm':
+    'bg-canvas text-ink rounded-pill px-2 py-1 border border-hairline hover:bg-canvas-soft active:bg-canvas-soft-2',
 };
 
 const sizeClasses = {
@@ -37,16 +42,16 @@ const sizeClasses = {
 };
 
 const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
-
-const Tag = href ? 'a' : 'button';
 ---
 
-<{Tag} class={classes} href={href} type={Tag === 'button' ? type : undefined} disabled={disabled && Tag === 'button'} aria-disabled={disabled} aria-label={ariaLabel} {...attrs}>
-  <slot />
-</{Tag}>
-
-<style>
-  :host {
-    display: inline-flex;
-  }
-</style>
+{
+  href ? (
+    <a class={classes} href={href} aria-label={ariaLabel} aria-disabled={disabled ? 'true' : undefined} {...attrs}>
+      <slot />
+    </a>
+  ) : (
+    <button class={classes} type={type} disabled={disabled} aria-label={ariaLabel} {...attrs}>
+      <slot />
+    </button>
+  )
+}

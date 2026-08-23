@@ -10,10 +10,10 @@ interface Props {
 const { title, subtitle, children, class: className = '', reverse = false } = Astro.props;
 ---
 
-<section class="showcase-band-dark relative overflow-hidden {className}" aria-labelledby="showcase-title">
+<section class:list={['showcase-band-dark relative overflow-hidden', className]} aria-labelledby="showcase-title">
   <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
-    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center {reverse ? 'lg:col-start-2' : ''}">
-      <div class="{reverse ? 'lg:col-start-1' : ''}">
+    <div class:list={['grid lg:grid-cols-2 gap-12 lg:gap-16 items-center', reverse && 'lg:grid-flow-dense']}>
+      <div class="min-w-0">
         <h2 id="showcase-title" class="font-display-lg text-on-primary mb-4 text-balance">
           {title}
         </h2>
@@ -24,7 +24,7 @@ const { title, subtitle, children, class: className = '', reverse = false } = As
         )}
         <slot name="content" />
       </div>
-      <div class="{reverse ? 'lg:col-start-2' : ''}">
+      <div class="min-w-0 overflow-hidden">
         <slot name="visual" />
       </div>
     </div>

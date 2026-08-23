@@ -1,133 +1,169 @@
+export const prerender = false;
 ---
 import AppLayout from '../../../layouts/AppLayout.astro';
 import Button from '../../../components/ui/Button.astro';
-import Input from '../../../components/ui/Input.astro';
-import Card from '../../../components/ui/Card.astro';
 import Badge from '../../../components/ui/Badge.astro';
+import Card from '../../../components/ui/Card.astro';
 ---
 
-<AppLayout title="Settings — NotesChatAI" user={{ name: 'Demo User', email: 'demo@noteschatai.com', plan: 'free' }}>
-  <div class="max-w-4xl mx-auto space-y-8">
+<AppLayout title="Settings — NotesChatAI">
+  <div class="max-w-3xl mx-auto space-y-8">
     <div>
       <h1 class="font-display-lg text-ink">Settings</h1>
-      <p class="font-body-md text-body mt-1">Manage your account, preferences, and billing.</p>
+      <p class="font-body-md text-body mt-1">Manage your account, preferences, and API access.</p>
     </div>
 
-    <nav class="flex flex-wrap gap-2 bg-canvas rounded-lg border border-hairline p-1" aria-label="Settings sections">
+    {/* Settings Tabs */}
+    <div class="flex gap-1 border-b border-hairline" role="tablist">
       {[
-        { id: 'profile', label: 'Profile', icon: '👤' },
-        { id: 'notifications', label: 'Notifications', icon: '🔔' },
-        { id: 'api', label: 'API Keys', icon: '🔑' },
-        { id: 'billing', label: 'Billing', icon: '💳' },
-        { id: 'integrations', label: 'Integrations', icon: '🔌' },
-        { id: 'privacy', label: 'Privacy & Security', icon: '🔒' },
-        { id: 'appearance', label: 'Appearance', icon: '🎨' },
-      ].map((section) => (
-        <button class="tab-btn px-4 py-2 rounded-md font-body-sm text-body hover:bg-canvas-soft transition-colors {section.id === 'profile' ? 'bg-primary text-on-primary' : ''}" data-tab={section.id}>
-          <span class="mr-2">{section.icon}</span>
-          {section.label}
+        { id: 'profile', label: 'Profile' },
+        { id: 'preferences', label: 'Preferences' },
+        { id: 'billing', label: 'Billing' },
+        { id: 'api', label: 'API Keys' },
+        { id: 'data', label: 'Data & Export' },
+      ].map((tab, i) => (
+        <button
+          role="tab"
+          class:list={[
+            'settings-tab px-4 py-2.5 font-body-sm transition-colors -mb-px',
+            i === 0
+              ? 'text-ink border-b-2 border-primary font-body-sm-strong'
+              : 'text-body hover:text-ink border-b-2 border-transparent'
+          ]}
+          data-tab={tab.id}
+          aria-selected={i === 0 ? 'true' : 'false'}
+        >
+          {tab.label}
         </button>
       ))}
-    </nav>
+    </div>
 
-    <!-- Profile -->
-    <div id="tab-profile" class="tab-panel">
+    {/* Profile Tab */}
+    <div id="tab-profile" class="settings-panel space-y-6" role="tabpanel">
       <Card variant="marketing-large">
-        <h2 class="font-display-md text-ink mb-6">Profile</h2>
-        <form id="profile-form" class="space-y-5">
-          <div class="flex items-center gap-6">
-            <div class="relative">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Demo%20User" alt="" class="w-24 h-24 rounded-full border-4 border-canvas shadow-level-2" />
-              <button type="button" class="absolute bottom-0 right-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-on-primary hover:opacity-90 transition-opacity" aria-label="Change avatar">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                  <path d="M13.5 4.5L9 9l-4.5-4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M9 9v7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M4.5 13.5h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-              </button>
-            </div>
-            <div class="flex-1">
-              <Input label="Name" name="name" value="Demo User" required />
-              <Input label="Email" name="email" type="email" value="demo@noteschatai.com" required />
-            </div>
+        <h2 class="font-display-md text-ink mb-6">Profile Information</h2>
+        <div class="flex items-center gap-6 mb-6">
+          <div class="relative">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Demo User" alt="Avatar" class="w-20 h-20 rounded-full" />
+            <button class="absolute -bottom-1 -right-1 w-7 h-7 bg-primary text-on-primary rounded-full flex items-center justify-center hover:opacity-90 transition-opacity" aria-label="Change avatar">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M10 2l2 2-7 7H3v-2l7-7z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
           </div>
-          <Input label="Bio" name="bio" placeholder="Tell others about yourself" />
+          <div>
+            <p class="font-body-md text-ink font-medium">Demo User</p>
+            <p class="font-body-sm text-mute">demo@noteschatai.com</p>
+          </div>
+        </div>
+
+        <form class="space-y-4">
           <div class="grid sm:grid-cols-2 gap-4">
-            <Input label="Institution" name="institution" placeholder="University, company, etc." />
-            <Input label="Role" name="role" placeholder="Student, researcher, engineer, etc." />
+            <div>
+              <label class="block font-body-sm-strong text-ink mb-1.5">Full Name</label>
+              <input type="text" value="Demo User" class="input h-10" />
+            </div>
+            <div>
+              <label class="block font-body-sm-strong text-ink mb-1.5">Email</label>
+              <input type="email" value="demo@noteschatai.com" class="input h-10" disabled />
+              <p class="font-caption text-mute mt-1">Contact support to change your email</p>
+            </div>
           </div>
-          <Button type="submit" variant="primary">Save Changes</Button>
+          <div>
+            <label class="block font-body-sm-strong text-ink mb-1.5">Display Name</label>
+            <input type="text" value="Demo User" class="input h-10" />
+          </div>
+          <div class="flex justify-end pt-2">
+            <Button type="submit" variant="primary">Save Changes</Button>
+          </div>
         </form>
       </Card>
 
       <Card variant="marketing-large">
-        <h2 class="font-display-md text-ink mb-6">Account</h2>
-        <div class="space-y-4">
-          <div class="p-4 bg-canvas-soft/50 rounded-lg">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-body-md text-ink">Current Plan</p>
-                <p class="font-body-sm text-mute">Free Beta</p>
-              </div>
-              <Badge variant="secondary">Beta User</Badge>
-            </div>
-            <div class="grid sm:grid-cols-3 gap-4 text-center">
-              <div class="p-4 bg-canvas-soft/50 rounded-lg">
-                <p class="font-display-xl text-ink">50</p>
-                <p class="font-caption-mono text-mute">Documents</p>
-              </div>
-              <div class="p-4 bg-canvas-soft/50 rounded-lg">
-                <p class="font-display-xl text-ink">30</p>
-                <p class="font-caption-mono text-mute">Chats/Day</p>
-              </div>
-              <div class="p-4 bg-canvas-soft/50 rounded-lg">
-                <p class="font-display-xl text-ink">2</p>
-                <p class="font-caption-mono text-mute">Audio/Day</p>
-              </div>
-            </div>
-            <a href="/pricing" class="btn-primary w-full sm:w-auto">Upgrade to Pro</a>
+        <h2 class="font-display-md text-ink mb-4">Danger Zone</h2>
+        <div class="flex items-center justify-between p-4 border border-error/20 rounded-lg bg-error-soft/30">
+          <div>
+            <p class="font-body-md-strong text-ink">Delete Account</p>
+            <p class="font-body-sm text-body">Permanently delete your account and all data.</p>
           </div>
-        </div>
-      </Card>
-
-      <Card variant="marketing-large">
-        <h2 class="font-display-md text-ink mb-6">Danger Zone</h2>
-        <div class="space-y-4">
-          <div class="p-4 bg-error-soft/20 border border-error-soft rounded-lg">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-body-md text-error">Delete Account</p>
-                <p class="font-body-sm text-mute">Permanently delete your account and all data. This cannot be undone.</p>
-              </div>
-              <Button variant="secondary" class="text-error border-error hover:bg-error-soft" id="delete-account">Delete Account</Button>
-            </div>
-          </div>
+          <Button variant="secondary-sm" class="text-error border-error hover:bg-error-soft">Delete Account</Button>
         </div>
       </Card>
     </div>
 
-    <!-- Notifications -->
-    <div id="tab-notifications" class="tab-panel hidden">
+    {/* Preferences Tab */}
+    <div id="tab-preferences" class="settings-panel hidden space-y-6" role="tabpanel">
       <Card variant="marketing-large">
-        <h2 class="font-display-md text-ink mb-6">Notification Preferences</h2>
+        <h2 class="font-display-md text-ink mb-6">AI Preferences</h2>
+        <div class="space-y-6">
+          <div>
+            <label class="block font-body-sm-strong text-ink mb-1.5">Default Model</label>
+            <select class="input h-10 w-full sm:w-auto">
+              <option value="gemini-flash" selected>⚡ Gemini Flash (Fast)</option>
+              <option value="gemini-pro">🧠 Gemini Pro (Best)</option>
+              <option value="gemini-ultra">🚀 Gemini Ultra (Reasoning)</option>
+            </select>
+            <p class="font-caption text-mute mt-1">Used for new conversations. Can be changed per chat.</p>
+          </div>
+
+          <div>
+            <label class="block font-body-sm-strong text-ink mb-1.5">Retrieval Settings</label>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="font-body-sm text-body mb-1 block">Top K Results</label>
+                <input type="number" value="10" min="1" max="50" class="input h-10 w-full" />
+              </div>
+              <div>
+                <label class="font-body-sm text-body mb-1 block">Reranking</label>
+                <select class="input h-10 w-full">
+                  <option value="on" selected>Enabled</option>
+                  <option value="off">Disabled</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between p-4 bg-canvas-soft rounded-lg">
+            <div>
+              <p class="font-body-sm-strong text-ink">Citations</p>
+              <p class="font-body-sm text-body">Show source citations in chat responses</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" checked class="sr-only peer" />
+              <div class="w-11 h-6 bg-hairline peer-focus:ring-2 peer-focus:ring-link-bg-0 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+            </label>
+          </div>
+
+          <div class="flex items-center justify-between p-4 bg-canvas-soft rounded-lg">
+            <div>
+              <p class="font-body-sm-strong text-ink">Streaming Responses</p>
+              <p class="font-body-sm text-body">Show AI responses as they are generated</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" checked class="sr-only peer" />
+              <div class="w-11 h-6 bg-hairline peer-focus:ring-2 peer-focus:ring-link-bg-0 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+            </label>
+          </div>
+        </div>
+      </Card>
+
+      <Card variant="marketing-large">
+        <h2 class="font-display-md text-ink mb-6">Notifications</h2>
         <div class="space-y-4">
           {[
-            { title: 'Email Notifications', desc: 'Receive email updates about your account', enabled: true },
-            { title: 'Study Reminders', desc: 'Daily reminders to review flashcards', enabled: true },
-            { title: 'Processing Complete', desc: 'Notify when document processing finishes', enabled: true },
-            { title: 'Audio Overview Ready', desc: 'Notify when audio generation completes', enabled: true },
-            { title: 'Weekly Digest', desc: 'Summary of your learning progress', enabled: false },
-            { title: 'Product Updates', desc: 'New features and announcements', enabled: true },
-            { title: 'Security Alerts', desc: 'Important security notifications', enabled: true },
-          ].map((notif) => (
-            <div class="flex items-center justify-between p-4 bg-canvas-soft/50 rounded-lg">
+            { label: 'Document processing complete', desc: 'When an upload finishes processing', checked: true },
+            { label: 'Weekly study digest', desc: 'Summary of your learning activity', checked: true },
+            { label: 'New connections found', desc: 'When AI discovers links between documents', checked: false },
+            { label: 'Pro tips & updates', desc: 'Product announcements and features', checked: false },
+          ].map((item) => (
+            <div class="flex items-center justify-between p-4 bg-canvas-soft rounded-lg">
               <div>
-                <p class="font-body-md text-ink">{notif.title}</p>
-                <p class="font-body-sm text-mute">{notif.desc}</p>
+                <p class="font-body-sm-strong text-ink">{item.label}</p>
+                <p class="font-body-sm text-body">{item.desc}</p>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" class="sr-only peer" checked={notif.enabled} />
-                <div class="w-11 h-6 bg-canvas-soft peer-focus:ring-2 peer-focus:ring-link peer-focus:ring-offset-2 rounded-full peer peer-checked:bg-primary after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-hairline after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                <input type="checkbox" checked={item.checked} class="sr-only peer" />
+                <div class="w-11 h-6 bg-hairline peer-focus:ring-2 peer-focus:ring-link-bg-0 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
               </label>
             </div>
           ))}
@@ -135,230 +171,145 @@ import Badge from '../../../components/ui/Badge.astro';
       </Card>
     </div>
 
-    <!-- API Keys -->
-    <div id="tab-api" class="tab-panel hidden">
+    {/* Billing Tab */}
+    <div id="tab-billing" class="settings-panel hidden space-y-6" role="tabpanel">
+      <Card variant="marketing-large">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="font-display-md text-ink">Current Plan</h2>
+          <Badge variant="secondary" size="sm">Free Beta</Badge>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-4 mb-6">
+          <div class="text-center p-4 bg-canvas-soft rounded-lg">
+            <p class="font-display-xl text-ink">50</p>
+            <p class="font-body-sm text-mute">Documents</p>
+            <p class="font-caption text-mute">0 used</p>
+          </div>
+          <div class="text-center p-4 bg-canvas-soft rounded-lg">
+            <p class="font-display-xl text-ink">30</p>
+            <p class="font-body-sm text-mute">Chats / day</p>
+            <p class="font-caption text-mute">7 used</p>
+          </div>
+          <div class="text-center p-4 bg-canvas-soft rounded-lg">
+            <p class="font-display-xl text-ink">2</p>
+            <p class="font-body-sm text-mute">Audio / day</p>
+            <p class="font-caption text-mute">1 used</p>
+          </div>
+        </div>
+        <a href="/pricing" class="btn-primary inline-flex">Upgrade to Pro</a>
+      </Card>
+
+      <Card variant="marketing-large">
+        <h2 class="font-display-md text-ink mb-4">Payment Method</h2>
+        <div class="p-4 bg-canvas-soft rounded-lg text-center">
+          <p class="font-body-sm text-body">No payment method on file</p>
+          <p class="font-caption text-mute mt-1">Add a payment method to upgrade to Pro</p>
+        </div>
+      </Card>
+
+      <Card variant="marketing-large">
+        <h2 class="font-display-md text-ink mb-4">Billing History</h2>
+        <div class="p-4 bg-canvas-soft rounded-lg text-center">
+          <p class="font-body-sm text-body">No billing history yet</p>
+        </div>
+      </Card>
+    </div>
+
+    {/* API Keys Tab */}
+    <div id="tab-api" class="settings-panel hidden space-y-6" role="tabpanel">
       <Card variant="marketing-large">
         <div class="flex items-center justify-between mb-6">
           <h2 class="font-display-md text-ink">API Keys</h2>
-          <Button variant="primary" id="create-api-key">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
-              <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <Button variant="primary-sm" id="create-key-btn">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="mr-1" aria-hidden="true">
+              <path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>
-            Create API Key
+            Create Key
           </Button>
         </div>
+        <p class="font-body-sm text-body mb-4">API keys give you programmatic access to your knowledge base.</p>
+
         <div class="space-y-3" id="api-keys-list">
-          {[
-            { name: 'Research Script', key: 'nc_sk_live_abc123...', created: '2 days ago', lastUsed: '1 hour ago' },
-            { name: 'Obsidian Plugin', key: 'nc_sk_live_def456...', created: '1 week ago', lastUsed: '3 days ago' },
-          ].map((key) => (
-            <div class="p-4 bg-canvas-soft/50 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-3 mb-1">
-                  <h4 class="font-body-md text-ink">{key.name}</h4>
-                  <Badge variant="success" size="sm">Active</Badge>
-                </div>
-                <div class="flex items-center gap-2 font-body-sm text-mute">
-                  <code class="font-code bg-canvas px-2 py-1 rounded">{key.key}</code>
-                  <span>Created {key.created}</span>
-                  <span>·</span>
-                  <span>Last used {key.lastUsed}</span>
-                </div>
+          <div class="flex items-center justify-between p-4 bg-canvas-soft rounded-lg">
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <p class="font-body-sm-strong text-ink">Production Key</p>
+                <Badge variant="success" size="sm">Active</Badge>
               </div>
-              <div class="flex items-center gap-2">
-                <Button variant="ghost" size="sm" aria-label="Copy key">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                    <rect x="2" y="2" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M6 6h8v8H6z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                </Button>
-                <Button variant="ghost" size="sm" class="text-error hover:text-error-deep" aria-label="Revoke key">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                    <path d="M12 6L6 12M6 6l6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                </Button>
-              </div>
+              <p class="font-caption-mono text-mute text-xs">nca_live_••••••••••••••••k4f2</p>
+              <p class="font-caption text-mute mt-1">Created Aug 15, 2026 · Last used 2 hours ago</p>
             </div>
-          ))}
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-canvas transition-colors text-mute hover:text-ink" aria-label="Copy key" title="Copy key">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M3 11V3.5A1.5 1.5 0 0 1 4.5 2H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-canvas transition-colors text-mute hover:text-error" aria-label="Revoke key">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M2 4h12M5.33 4V2.67a1.33 1.33 0 0 1 1.34-1.34h2.66a1.33 1.33 0 0 1 1.34 1.34V4M12.67 4v9.33a1.33 1.33 0 0 1-1.34 1.34H4.67a1.33 1.33 0 0 1-1.34-1.34V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
-        <p class="font-body-sm text-mute mt-4">API keys provide access to your knowledge base. Keep them secure. <a href="/docs/api/authentication" class="link-inline">Read the docs</a></p>
-      </Card>
-    </div>
 
-    <!-- Billing -->
-    <div id="tab-billing" class="tab-panel hidden">
-      <Card variant="marketing-large">
-        <h2 class="font-display-md text-ink mb-6">Billing</h2>
-        <div class="space-y-6">
-          <div class="p-4 bg-canvas-soft/50 rounded-lg">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-body-md text-ink">Current Plan</p>
-                <p class="font-body-sm text-mute">Free Beta</p>
-              </div>
-              <Badge variant="secondary">No billing info</Badge>
-            </div>
-            <a href="/pricing" class="btn-primary w-full sm:w-auto">Upgrade to Pro</a>
-          </div>
-          <div class="pt-6 border-t border-hairline">
-            <h3 class="font-display-sm text-ink mb-4">Billing History</h3>
-            <p class="font-body-sm text-mute text-center py-8">No billing history yet</p>
-          </div>
+        <div class="mt-4 p-4 bg-canvas-soft rounded-lg">
+          <h3 class="font-body-sm-strong text-ink mb-2">Quick Start</h3>
+          <pre class="font-code text-sm bg-primary text-on-primary rounded-md p-3 overflow-x-auto"><code>// Search your knowledge base
+curl -X POST https://api.noteschatai.com/v1/search \
+  -H "Authorization: Bearer nca_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{'{'}"query": "transformers vs RNNs", "topK": 5{'}'}'</code></pre>
+          <a href="/docs/api" class="font-body-sm link-inline mt-2 inline-block">Read full API documentation →</a>
         </div>
       </Card>
     </div>
 
-    <!-- Integrations -->
-    <div id="tab-integrations" class="tab-panel hidden">
+    {/* Data & Export Tab */}
+    <div id="tab-data" class="settings-panel hidden space-y-6" role="tabpanel">
       <Card variant="marketing-large">
-        <h2 class="font-display-md text-ink mb-6">Integrations</h2>
-        <div class="grid sm:grid-cols-2 gap-4" id="integrations-list">
+        <h2 class="font-display-md text-ink mb-6">Export Data</h2>
+        <p class="font-body-sm text-body mb-4">Export your knowledge base, conversations, and study sets.</p>
+        <div class="grid sm:grid-cols-2 gap-3">
           {[
-            { name: 'Zotero', desc: 'Sync references and PDFs', connected: false, icon: '📚' },
-            { name: 'Mendeley', desc: 'Import papers and annotations', connected: false, icon: '📖' },
-            { name: 'Notion', desc: 'Export notes and flashcards', connected: false, icon: '📝' },
-            { name: 'Obsidian', desc: 'Bidirectional sync with vault', connected: false, icon: '🔗' },
-            { name: 'Readwise', desc: 'Import highlights and notes', connected: false, icon: '✨' },
-            { name: 'Google Drive', desc: 'Import documents from Drive', connected: false, icon: '☁️' },
-            { name: 'OneDrive', desc: 'Import documents from OneDrive', connected: false, icon: '☁️' },
-            { name: 'Anki', desc: 'Export flashcards as .apkg', connected: false, icon: '🃏' },
-          ].map((integration) => (
-            <div class="p-4 bg-canvas-soft/50 rounded-lg border border-hairline hover:border-primary transition-colors flex items-center gap-4">
-              <span class="text-3xl">{integration.icon}</span>
-              <div class="flex-1 min-w-0">
-                <p class="font-body-md text-ink">{integration.name}</p>
-                <p class="font-body-sm text-mute">{integration.desc}</p>
+            { format: 'Markdown', ext: '.zip', desc: 'Documents + metadata as .md files' },
+            { format: 'JSON', ext: '.json', desc: 'Full knowledge base with embeddings' },
+            { format: 'CSV', ext: '.csv', desc: 'Document metadata and tags' },
+            { format: 'Anki', ext: '.apkg', desc: 'Flashcards for Anki import' },
+          ].map((item) => (
+            <button class="flex items-center gap-3 p-4 bg-canvas-soft rounded-lg hover:bg-canvas-soft-2 transition-colors text-left group">
+              <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-primary" aria-hidden="true">
+                  <path d="M10 3v10M6 9l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
               </div>
-              <Button variant={integration.connected ? 'secondary' : 'primary'} size="sm" class="whitespace-nowrap">
-                {integration.connected ? 'Connected' : 'Connect'}
-              </Button>
-            </div>
+              <div class="min-w-0">
+                <p class="font-body-sm-strong text-ink">{item.format} <span class="font-caption text-mute">({item.ext})</span></p>
+                <p class="font-caption text-mute">{item.desc}</p>
+              </div>
+            </button>
           ))}
         </div>
       </Card>
-    </div>
 
-    <!-- Privacy & Security -->
-    <div id="tab-privacy" class="tab-panel hidden">
       <Card variant="marketing-large">
-        <h2 class="font-display-md text-ink mb-6">Privacy & Security</h2>
-        <div class="space-y-6">
-          <div>
-            <h3 class="font-display-sm text-ink mb-4">Password</h3>
-            <form id="password-form" class="space-y-4 max-w-md">
-              <Input label="Current Password" name="currentPassword" type="password" required />
-              <Input label="New Password" name="newPassword" type="password" required helperText="At least 8 characters" />
-              <Input label="Confirm New Password" name="confirmPassword" type="password" required />
-              <Button type="submit" variant="primary">Update Password</Button>
-            </form>
-          </div>
-
-          <div class="pt-6 border-t border-hairline">
-            <h3 class="font-display-sm text-ink mb-4">Two-Factor Authentication</h3>
-            <div class="p-4 bg-canvas-soft/50 rounded-lg">
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="font-body-md text-ink">Two-Factor Authentication</p>
-                  <p class="font-body-sm text-mute">Add an extra layer of security to your account</p>
-                </div>
-                <Button variant="primary" id="enable-2fa">Enable 2FA</Button>
-              </div>
+        <h2 class="font-display-md text-ink mb-4">Knowledge Base</h2>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between p-4 bg-canvas-soft rounded-lg">
+            <div>
+              <p class="font-body-sm-strong text-ink">Re-index Documents</p>
+              <p class="font-body-sm text-body">Rebuild search embeddings for all documents</p>
             </div>
+            <Button variant="secondary-sm">Re-index</Button>
           </div>
-
-          <div class="pt-6 border-t border-hairline">
-            <h3 class="font-display-sm text-ink mb-4">Active Sessions</h3>
-            <div class="space-y-3" id="sessions-list">
-              {[
-                { device: 'Chrome on Windows', location: 'San Francisco, CA', current: true, lastActive: 'Now' },
-                { device: 'Safari on iPhone', location: 'San Francisco, CA', current: false, lastActive: '2 hours ago' },
-                { device: 'Firefox on Linux', location: 'Unknown', current: false, lastActive: '3 days ago' },
-              ].map((session) => (
-                <div class="p-4 bg-canvas-soft/50 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2 mb-1">
-                      <p class="font-body-md text-ink">{session.device}</p>
-                      {session.current && <Badge variant="primary" size="sm">Current</Badge>}
-                    </div>
-                    <p class="font-body-sm text-mute">{session.location} · {session.lastActive}</p>
-                  </div>
-                  {!session.current && (
-                    <Button variant="ghost" size="sm" class="text-error hover:text-error-deep">Revoke</Button>
-                  )}
-                </div>
-              ))}
+          <div class="flex items-center justify-between p-4 bg-canvas-soft rounded-lg">
+            <div>
+              <p class="font-body-sm-strong text-ink">Clear Chat History</p>
+              <p class="font-body-sm text-body">Delete all conversation history</p>
             </div>
-          </div>
-
-          <div class="pt-6 border-t border-hairline">
-            <h3 class="font-display-sm text-ink mb-4">Data & Privacy</h3>
-            <div class="space-y-3">
-              <Button variant="secondary" class="w-full sm:w-auto justify-start gap-3" id="export-data">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
-                  <path d="M12 15V9M12 15l-3-3M12 15l3-3M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Export All Data
-              </Button>
-              <Button variant="secondary" class="w-full sm:w-auto justify-start gap-3" id="delete-data">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2 text-error" aria-hidden="true">
-                  <path d="M6 6l6 6M12 6l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                Delete All Data
-              </Button>
-            </div>
-            <p class="font-body-sm text-mute">Your data is never used for training. <a href="/privacy" class="link-inline">Read our privacy policy</a></p>
-          </div>
-        </div>
-      </Card>
-    </div>
-
-    <!-- Appearance -->
-    <div id="tab-appearance" class="tab-panel hidden">
-      <Card variant="marketing-large">
-        <h2 class="font-display-md text-ink mb-6">Appearance</h2>
-        <div class="space-y-6">
-          <div>
-            <h3 class="font-display-sm text-ink mb-4">Theme</h3>
-            <div class="grid grid-cols-3 gap-4" id="theme-options">
-              {[
-                { id: 'light', name: 'Light', desc: 'Always light mode', icon: '☀️' },
-                { id: 'dark', name: 'Dark', desc: 'Always dark mode', icon: '🌙' },
-                { id: 'system', name: 'System', desc: 'Match system preference', icon: '💻' },
-              ].map((theme) => (
-                <button class="theme-option p-4 border-2 border-hairline rounded-lg hover:border-primary transition-all {theme.id === 'system' ? 'border-primary' : ''}" data-theme={theme.id} role="radio" aria-checked={theme.id === 'system'}>
-                  <span class="text-3xl block mb-2">{theme.icon}</span>
-                  <p class="font-body-md text-ink">{theme.name}</p>
-                  <p class="font-body-sm text-mute">{theme.desc}</p>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div class="pt-6 border-t border-hairline">
-            <h3 class="font-display-sm text-ink mb-4">Density</h3>
-            <div class="flex gap-4" id="density-options">
-              {[
-                { id: 'comfortable', name: 'Comfortable', desc: 'More spacing' },
-                { id: 'compact', name: 'Compact', desc: 'Less spacing' },
-              ].map((density) => (
-                <button class="density-option flex-1 p-4 border-2 border-hairline rounded-lg hover:border-primary transition-all {density.id === 'comfortable' ? 'border-primary' : ''}" data-density={density.id} role="radio" aria-checked={density.id === 'comfortable'}>
-                  <p class="font-body-md text-ink">{density.name}</p>
-                  <p class="font-body-sm text-mute">{density.desc}</p>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div class="pt-6 border-t border-hairline">
-            <h3 class="font-display-sm text-ink mb-4">Language</h3>
-            <select id="language-select" class="input h-10 w-full sm:w-64">
-              <option value="en">English</option>
-              <option value="es">Spanish</option>
-              <option value="fr">French</option>
-              <option value="de">German</option>
-              <option value="ja">Japanese</option>
-              <option value="zh">Chinese</option>
-            </select>
+            <Button variant="secondary-sm" class="text-error border-error hover:bg-error-soft">Clear</Button>
           </div>
         </div>
       </Card>
@@ -368,54 +319,28 @@ import Badge from '../../../components/ui/Badge.astro';
 
 <script>
   // Tab switching
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  const tabPanels = document.querySelectorAll('.tab-panel');
+  const tabs = document.querySelectorAll<HTMLElement>('.settings-tab');
+  const panels = document.querySelectorAll<HTMLElement>('.settings-panel');
 
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const tabId = btn.dataset.tab;
-      
-      tabBtns.forEach(b => {
-        b.classList.remove('bg-primary', 'text-on-primary');
-        b.classList.add('text-body');
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      if (!target) return;
+
+      // Update tab states
+      tabs.forEach((t) => {
+        t.classList.remove('text-ink', 'border-b-2', 'border-primary', 'font-body-sm-strong');
+        t.classList.add('text-body', 'border-b-2', 'border-transparent');
+        t.setAttribute('aria-selected', 'false');
       });
-      btn.classList.add('bg-primary', 'text-on-primary');
-      btn.classList.remove('text-body');
+      tab.classList.add('text-ink', 'border-b-2', 'border-primary', 'font-body-sm-strong');
+      tab.classList.remove('text-body', 'border-b-2', 'border-transparent');
+      tab.setAttribute('aria-selected', 'true');
 
-      tabPanels.forEach(panel => {
-        panel.classList.add('hidden');
+      // Show/hide panels
+      panels.forEach((p) => {
+        p.classList.toggle('hidden', p.id !== `tab-${target}`);
       });
-      document.getElementById(`tab-${tabId}`)?.classList.remove('hidden');
     });
-  });
-
-  // Theme selection
-  document.querySelectorAll('.theme-option').forEach(opt => {
-    opt.addEventListener('click', () => {
-      document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('border-primary'));
-      opt.classList.add('border-primary');
-      // Apply theme
-      document.documentElement.setAttribute('data-theme', opt.dataset.theme);
-    });
-  });
-
-  // Density selection
-  document.querySelectorAll('.density-option').forEach(opt => {
-    opt.addEventListener('click', () => {
-      document.querySelectorAll('.density-option').forEach(o => o.classList.remove('border-primary'));
-      opt.classList.add('border-primary');
-    });
-  });
-
-  // Delete account confirmation
-  document.getElementById('delete-account')?.addEventListener('click', () => {
-    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-      if (confirm('This will permanently delete all your documents, chats, audio overviews, and study materials. Type "DELETE" to confirm.')) {
-        const input = prompt('Type "DELETE" to confirm:');
-        if (input === 'DELETE') {
-          alert('Account deletion initiated. You will be signed out.');
-        }
-      }
-    }
   });
 </script>

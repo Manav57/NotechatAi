@@ -1,151 +1,290 @@
+export const prerender = false;
 ---
 import AppLayout from '../../../layouts/AppLayout.astro';
 import Button from '../../../components/ui/Button.astro';
-import Input from '../../../components/ui/Input.astro';
 import Badge from '../../../components/ui/Badge.astro';
-import Card from '../../../components/ui/Card.astro';
 ---
 
-<AppLayout title="Documents — NotesChatAI" user={{ name: 'Demo User', email: 'demo@noteschatai.com', plan: 'free' }}>
+<AppLayout title="Documents — NotesChatAI">
   <div class="space-y-8">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
         <h1 class="font-display-lg text-ink">Documents</h1>
         <p class="font-body-md text-body mt-1">Manage your knowledge base. Upload PDFs, EPUBs, YouTube links, and more.</p>
       </div>
-      <Button variant="primary" id="upload-btn">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
-          <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        Upload Document
-      </Button>
+      <div class="flex gap-3">
+        <button id="upload-btn" class="btn-primary inline-flex items-center">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
+            <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Upload Document
+        </button>
+      </div>
     </div>
 
-    <div class="bg-canvas rounded-lg border border-hairline overflow-hidden">
-      <div class="p-4 border-b border-hairline">
-        <div class="flex flex-col sm:flex-row gap-4">
-          <Input
-            id="search-input"
-            placeholder="Search documents..."
-            size="md"
-            class="flex-1"
-          />
-          <select id="type-filter" class="input h-10 w-full sm:w-auto">
-            <option value="">All Types</option>
-            <option value="pdf">PDF</option>
-            <option value="epub">EPUB</option>
-            <option value="youtube">YouTube</option>
-            <option value="web">Web Page</option>
-            <option value="audio">Audio</option>
-          </select>
-          <select id="status-filter" class="input h-10 w-full sm:w-auto">
-            <option value="">All Status</option>
-            <option value="ready">Ready</option>
-            <option value="processing">Processing</option>
-            <option value="error">Error</option>
-          </select>
+    {/* Upload Progress Banner */}
+    <div id="upload-progress" class="hidden bg-canvas rounded-lg border border-hairline p-4">
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 rounded-lg bg-violet-soft flex items-center justify-center flex-shrink-0">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-violet animate-spin" aria-hidden="true">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" stroke-dasharray="40" stroke-dashoffset="10" stroke-linecap="round"/>
+          </svg>
         </div>
-      </div>
-
-      <div class="divide-y divide-hairline">
-        {[
-          { id: '1', title: 'Machine Learning Fundamentals.pdf', type: 'pdf', status: 'ready', pages: 142, size: '8.2 MB', uploaded: '2 hours ago', chunks: 284 },
-          { id: '2', title: 'Neural Networks Overview (YouTube)', type: 'youtube', status: 'processing', duration: '45:23', uploaded: '3 hours ago' },
-          { id: '3', title: 'Attention Is All You Need.pdf', type: 'pdf', status: 'ready', pages: 15, size: '2.1 MB', uploaded: '1 day ago', chunks: 42 },
-          { id: '4', title: 'Deep Learning Book - Chapter 6.epub', type: 'epub', status: 'ready', pages: 34, size: '4.7 MB', uploaded: '2 days ago', chunks: 89 },
-          { id: '5', title: 'Transformer Architecture Explained (Web)', type: 'web', status: 'ready', size: '1.2 MB', uploaded: '3 days ago', chunks: 56 },
-          { id: '6', title: 'RNN vs LSTM Comparison.pdf', type: 'pdf', status: 'error', pages: 8, size: '1.5 MB', uploaded: '4 days ago', error: 'Failed to extract text from scanned pages' },
-        ].map((doc) => (
-          <div class="p-4 hover:bg-canvas-soft/50 transition-colors flex flex-col sm:flex-row sm:items-center gap-4">
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-3 flex-wrap">
-                <h3 class="font-body-md text-ink truncate">{doc.title}</h3>
-                <Badge variant="secondary" size="sm">{doc.type.toUpperCase()}</Badge>
-                <Badge variant={doc.status === 'ready' ? 'success' : doc.status === 'processing' ? 'warning' : 'error'} size="sm">
-                  {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
-                </Badge>
-              </div>
-              <div class="flex flex-wrap gap-4 mt-2 font-body-sm text-mute">
-                {doc.pages && <span>{doc.pages} pages</span>}
-                {doc.size && <span>{doc.size}</span>}
-                {doc.duration && <span>{doc.duration}</span>}
-                {doc.chunks && <span>{doc.chunks} chunks</span>}
-                <span>{doc.uploaded}</span>
-              </div>
-              {doc.error && <p class="font-body-sm text-error mt-2">{doc.error}</p>}
-            </div>
-            <div class="flex items-center gap-2 sm:ml-auto">
-              {doc.status === 'ready' && (
-                <>
-                  <a href={`/app/documents/${doc.id}`} class="btn-secondary-sm">View</a>
-                  <Button variant="ghost" size="sm" aria-label="More options">
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                      <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
-                    </svg>
-                  </Button>
-                </>
-              )}
-              {doc.status === 'error' && (
-                <Button variant="secondary-sm" class="text-error border-error hover:bg-error-soft">Retry</Button>
-              )}
-              {doc.status === 'processing' && (
-                <Badge variant="warning" size="sm">Processing...</Badge>
-              )}
-            </div>
+        <div class="flex-1 min-w-0">
+          <p class="font-body-sm-strong text-ink truncate" id="upload-filename">Uploading...</p>
+          <div class="mt-2 h-1.5 bg-canvas-soft-2 rounded-full overflow-hidden">
+            <div id="upload-bar" class="h-full bg-violet rounded-full transition-all duration-300" style="width: 0%"></div>
           </div>
-        ))}
+        </div>
+        <span class="font-caption-mono text-mute" id="upload-percent">0%</span>
       </div>
+    </div>
 
-      <div class="p-4 border-t border-hairline flex items-center justify-between">
-        <p class="font-body-sm text-mute">Showing 6 of 24 documents</p>
-        <div class="flex gap-2">
-          <Button variant="secondary-sm" disabled>Previous</Button>
-          <Button variant="secondary-sm">Next</Button>
+    {/* Storage Usage */}
+    <div class="bg-canvas rounded-lg border border-hairline p-4" id="storage-bar">
+      <div class="flex items-center justify-between mb-2">
+        <span class="font-body-sm text-body">Documents</span>
+        <span class="font-caption-mono text-mute" id="storage-label">Loading...</span>
+      </div>
+      <div class="h-1.5 bg-canvas-soft-2 rounded-full overflow-hidden">
+        <div id="storage-fill" class="h-full bg-primary rounded-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+    </div>
+
+    {/* Document List */}
+    <div class="bg-canvas rounded-lg border border-hairline overflow-hidden">
+      <div id="document-list" class="divide-y divide-hairline">
+        <div class="p-8 text-center" id="empty-state">
+          <div class="w-16 h-16 mx-auto mb-4 bg-canvas-soft rounded-2xl flex items-center justify-center">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" class="text-mute" aria-hidden="true">
+              <path d="M8 6h12l6 6v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="2"/>
+              <path d="M20 6v6h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 18h8M12 22h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="font-display-sm text-ink mb-2">No documents yet</h3>
+          <p class="font-body-sm text-body mb-6 max-w-sm mx-auto">
+            Upload PDFs, EPUBs, text files, or paste a URL to start building your knowledge base.
+          </p>
+          <button id="upload-btn-empty" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="mr-1.5" aria-hidden="true">
+              <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Upload your first document
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Upload Modal -->
-  <div id="upload-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-    <div class="bg-canvas rounded-lg shadow-level-5 w-full max-w-md max-h-[90vh] overflow-y-auto">
+  {/* Upload Modal */}
+  <div id="upload-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Upload document">
+    <div class="bg-canvas rounded-xl shadow-level-5 w-full max-w-lg max-h-[90vh] overflow-y-auto animate-slide-up">
       <div class="p-6 border-b border-hairline flex items-center justify-between">
         <h2 class="font-display-md text-ink">Upload Document</h2>
-        <button id="close-modal" class="text-mute hover:text-ink transition-colors" aria-label="Close">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <button id="close-modal" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-canvas-soft transition-colors text-mute hover:text-ink" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </button>
       </div>
+
       <form id="upload-form" class="p-6 space-y-5">
         <div>
-          <label class="block font-body-sm-strong text-ink mb-2">Upload File or Enter URL</label>
-          <div class="border-2 border-dashed border-hairline rounded-lg p-8 text-center hover:border-primary hover:bg-canvas-soft transition-colors" id="drop-zone">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" class="mx-auto mb-3 text-mute" aria-hidden="true">
-              <path d="M24 8v24M8 24h24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <p class="font-body-md text-body mb-1">Drag & drop a file here, or click to browse</p>
-            <p class="font-body-sm text-mute">PDF, EPUB, TXT, MDX, MP3, WAV (max 100MB)</p>
-            <input type="file" id="file-input" class="hidden" accept=".pdf,.epub,.txt,.mdx,.mp3,.wav" />
+          <label class="block font-body-sm-strong text-ink mb-2">Upload File</label>
+          <div class="border-2 border-dashed border-hairline rounded-lg p-8 text-center hover:border-violet hover:bg-violet/5 transition-all cursor-pointer group" id="drop-zone" role="button" tabindex="0">
+            <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-canvas-soft group-hover:bg-violet-soft flex items-center justify-center transition-colors">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="text-mute group-hover:text-violet transition-colors" aria-hidden="true">
+                <path d="M14 6v16M6 14h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <p class="font-body-md text-body mb-1">
+              <span class="text-violet font-body-md-strong">Click to browse</span> or drag and drop
+            </p>
+            <p class="font-body-sm text-mute">PDF, EPUB, TXT, MDX, DOCX, MP3, WAV — max 100 MB</p>
+            <input type="file" id="file-input" class="hidden" accept=".pdf,.epub,.txt,.mdx,.docx,.mp3,.wav" multiple />
           </div>
+          <div id="file-preview" class="hidden mt-3 space-y-2"></div>
         </div>
+
         <div>
-          <label class="block font-body-sm-strong text-ink mb-2">Or enter a URL</label>
-          <Input
-            id="url-input"
-            placeholder="https://youtube.com/watch?v=... or https://example.com/article"
-            helperText="Supports YouTube, web pages, and direct file links"
-          />
+          <label class="block font-body-sm-strong text-ink mb-2">Document Title</label>
+          <input type="text" id="title-input" placeholder="e.g. ML Lecture Notes Week 5" class="input h-10" />
         </div>
-        <div class="flex gap-3 pt-4">
-          <Button type="button" variant="secondary" id="cancel-upload" class="flex-1">Cancel</Button>
-          <Button type="submit" variant="primary" class="flex-1" id="submit-upload">Upload & Process</Button>
+
+        <div>
+          <label class="block font-body-sm-strong text-ink mb-2">Tags <span class="font-body-sm text-mute font-normal">(optional)</span></label>
+          <input type="text" id="tags-input" placeholder="e.g. ML, Coursework, Research" class="input h-10" />
+          <p class="font-caption text-mute mt-1.5">Comma-separated tags help organize your knowledge base</p>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button type="button" id="cancel-upload" class="flex-1 btn-secondary">Cancel</button>
+          <button type="submit" id="submit-upload" class="flex-1 btn-primary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="mr-1.5" aria-hidden="true">
+              <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Upload &amp; Process
+          </button>
         </div>
       </form>
     </div>
   </div>
-</AppLayout>
 
-<script type="module">
-  import { DocumentsClient } from '../../../components/DocumentsClient/DocumentsClient.tsx';
-</script>
+  <script>
+    const uploadBtns = [document.getElementById('upload-btn'), document.getElementById('upload-btn-empty')];
+    const modal = document.getElementById('upload-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+    const cancelUpload = document.getElementById('cancel-upload');
+    const dropZone = document.getElementById('drop-zone') as HTMLDivElement;
+    const fileInput = document.getElementById('file-input') as HTMLInputElement;
+    const uploadForm = document.getElementById('upload-form') as HTMLFormElement;
+    const titleInput = document.getElementById('title-input') as HTMLInputElement;
+    const tagsInput = document.getElementById('tags-input') as HTMLInputElement;
+    const submitUpload = document.getElementById('submit-upload') as HTMLButtonElement;
+    const filePreview = document.getElementById('file-preview');
+
+    function openModal() {
+      modal?.classList.remove('hidden');
+      modal?.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModalFn() {
+      modal?.classList.add('hidden');
+      modal?.classList.remove('flex');
+      document.body.style.overflow = '';
+      uploadForm?.reset();
+      if (filePreview) { filePreview.innerHTML = ''; filePreview.classList.add('hidden'); }
+    }
+
+    uploadBtns.forEach(btn => btn?.addEventListener('click', openModal));
+    closeModalBtn?.addEventListener('click', closeModalFn);
+    cancelUpload?.addEventListener('click', closeModalFn);
+    modal?.addEventListener('click', (e) => { if (e.target === modal) closeModalFn(); });
+
+    dropZone?.addEventListener('click', () => fileInput?.click());
+    dropZone?.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-violet', 'bg-violet/5'); });
+    dropZone?.addEventListener('dragleave', () => { dropZone.classList.remove('border-violet', 'bg-violet/5'); });
+    dropZone?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-violet', 'bg-violet/5');
+      if (e.dataTransfer?.files.length && fileInput) { fileInput.files = e.dataTransfer.files; updateFilePreview(); }
+    });
+    fileInput?.addEventListener('change', updateFilePreview);
+
+    function updateFilePreview() {
+      if (!fileInput?.files?.length || !filePreview) return;
+      filePreview.classList.remove('hidden');
+      filePreview.innerHTML = Array.from(fileInput.files).map(file => {
+        const size = file.size < 1024*1024 ? `${(file.size/1024).toFixed(1)} KB` : `${(file.size/(1024*1024)).toFixed(1)} MB`;
+        return `<div class="flex items-center gap-3 p-2 bg-canvas-soft rounded-lg">
+          <div class="w-8 h-8 rounded bg-canvas-soft-2 flex items-center justify-center flex-shrink-0">
+            <span class="font-caption-mono text-[10px] text-mute uppercase">${file.name.split('.').pop()}</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-body-sm text-ink truncate">${file.name}</p>
+            <p class="font-caption text-mute">${size}</p>
+          </div>
+        </div>`;
+      }).join('');
+      if (!titleInput?.value && fileInput.files[0]) {
+        titleInput.value = fileInput.files[0].name.replace(/\.[^.]+$/, '');
+      }
+    }
+
+    uploadForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const file = fileInput?.files?.[0];
+      const title = titleInput?.value || file?.name || 'Untitled';
+      const tags = tagsInput?.value?.split(',').map(t => t.trim()).filter(Boolean) || [];
+
+      if (!file) { alert('Please select a file'); return; }
+
+      submitUpload.disabled = true;
+      submitUpload.innerHTML = '<span class="animate-spin inline-block mr-1.5">⏳</span>Uploading...';
+
+      try {
+        const res = await fetch('/api/documents', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename: title, tags, size: file.size }),
+        });
+
+        if (!res.ok) throw new Error('Upload failed');
+        closeModalFn();
+        loadDocuments();
+      } catch { alert('Upload failed. Please try again.'); }
+      finally {
+        submitUpload.disabled = false;
+        submitUpload.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="mr-1.5" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Upload & Process';
+      }
+    });
+
+    const fileTypeIcons: Record<string, { bg: string; label: string }> = {
+      pdf: { bg: 'bg-error/10 text-error', label: 'PDF' },
+      epub: { bg: 'bg-cyan-soft text-cyan-deep', label: 'EPUB' },
+      mdx: { bg: 'bg-canvas-soft-2 text-body', label: 'MDX' },
+      txt: { bg: 'bg-canvas-soft-2 text-body', label: 'TXT' },
+      other: { bg: 'bg-canvas-soft-2 text-body', label: 'FILE' },
+    };
+
+    async function loadDocuments() {
+      try {
+        const res = await fetch('/api/documents');
+        if (!res.ok) throw new Error('Failed');
+        const data = await res.json();
+        const docs = data.documents || [];
+        const list = document.getElementById('document-list');
+        const empty = document.getElementById('empty-state');
+
+        if (docs.length === 0) {
+          if (empty) empty.style.display = '';
+          return;
+        }
+        if (empty) empty.style.display = 'none';
+
+        const html = docs.map((doc: any) => {
+          const icon = fileTypeIcons[doc.type] || fileTypeIcons.other;
+          const statusColors: Record<string, string> = { ready: 'success', processing: 'warning', error: 'error' };
+          return `<div class="p-4 hover:bg-canvas-soft/50 transition-colors flex items-center gap-4 group">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${icon.bg}">
+              <span class="font-caption-mono text-xs font-medium">${icon.label}</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2">
+                <h3 class="font-body-md text-ink truncate">${doc.title}</h3>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${doc.status === 'ready' ? 'bg-success/10 text-success' : doc.status === 'processing' ? 'bg-warning/10 text-warning-deep' : 'bg-error/10 text-error'}">${doc.status}</span>
+              </div>
+              <p class="font-body-sm text-mute mt-1">${doc.chunkCount} chunks · ${new Date(doc.createdAt).toLocaleDateString()}</p>
+            </div>
+            <button onclick="deleteDoc('${doc.id}')" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-error-soft transition-colors text-mute hover:text-error opacity-0 group-hover:opacity-100" aria-label="Delete">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M5 4V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1M11 4v7a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+          </div>`;
+        }).join('');
+
+        // Keep empty state element but hide it
+        if (empty) empty.style.display = 'none';
+        // Insert document list after empty state
+        const existingDocs = list?.querySelectorAll('.doc-item');
+        existingDocs?.forEach(el => el.remove());
+        if (list) list.insertAdjacentHTML('beforeend', html);
+
+        // Update storage bar
+        const label = document.getElementById('storage-label');
+        const fill = document.getElementById('storage-fill');
+        if (label) label.textContent = `${docs.length} document${docs.length !== 1 ? 's' : ''}`;
+        if (fill) fill.style.width = `${Math.min(docs.length * 2, 100)}%`;
+      } catch {}
+    }
+
+    (window as any).deleteDoc = async (id: string) => {
+      if (!confirm('Delete this document?')) return;
+      await fetch(`/api/documents/${id}`, { method: 'DELETE' });
+      loadDocuments();
+    };
+
+    loadDocuments();
+  </script>
+</AppLayout>

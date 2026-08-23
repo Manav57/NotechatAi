@@ -1,15 +1,14 @@
 import { defineConfig } from 'astro/config';
-import tailwindcss from '@tailwindcss/vite';
+import mdx from '@astrojs/mdx';
+import node from '@astrojs/node';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [],
+  site: 'https://noteschatai.com',
+  integrations: [mdx(), sitemap()],
   output: 'static',
-  adapter: undefined,
-  vite: {
-    plugins: [tailwindcss()],
-    ssr: {
-      external: ['@cloudflare/workers-types'],
-    },
-  },
+  adapter: node({
+    mode: 'standalone',
+  }),
 });

@@ -8,10 +8,6 @@ compatibility_flags = ["nodejs_compat"]
 command = "npm run build"
 watch_dir = "src"
 
-# Pages
-[build.upload]
-format = "modules"
-
 # Environment variables (set via wrangler secret put)
 [vars]
 BETTER_AUTH_URL = "https://noteschatai.com"
@@ -19,6 +15,8 @@ BETTER_AUTH_URL = "https://noteschatai.com"
 # GEMINI_API_KEY = "set via wrangler secret put"
 # GOOGLE_CLIENT_ID = "set via wrangler secret put"
 # GOOGLE_CLIENT_SECRET = "set via wrangler secret put"
+# GITHUB_CLIENT_ID = "set via wrangler secret put"
+# GITHUB_CLIENT_SECRET = "set via wrangler secret put"
 
 # D1 Database
 [[d1_databases]]
@@ -37,7 +35,7 @@ binding = "R2"
 bucket_name = "noteschatai-files"
 
 # Queues
-[[queues]]
+[queues]
 binding = "QUEUE"
 queue_name = "document-processing"
 
@@ -57,10 +55,6 @@ binding = "AI"
 
 # Observability
 [observability]
-enabled = true
-
-# Tail workers for logging
-[tail]
 enabled = true
 
 # Dev

@@ -1,0 +1,140 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import NavBar from '../../components/ui/NavBar.astro';
+import Footer from '../../components/ui/Footer.astro';
+---
+
+<Layout title="About Us — NotesChatAI | Our Mission" description="Learn about NotesChatAI's mission to make studying smarter with AI. We're building a persistent AI study assistant that remembers everything across sessions." keywords="about noteschatai, noteschatai team, ai study assistant mission, our story">
+  <NavBar user={null} />
+
+  <main>
+    <section class="hero-band relative overflow-hidden" aria-labelledby="about-hero">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.08]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <span class="badge-secondary inline-flex items-center gap-1.5 mb-6 font-caption-mono">
+            Our Story
+          </span>
+          <h1 id="about-hero" class="font-display-xl text-ink mb-6 text-balance">
+            We believe studying should be smarter, not harder.
+          </h1>
+          <p class="font-body-lg text-body text-balance max-w-2xl mx-auto">
+            NotesChatAI was born from a simple frustration: why can't your AI assistant remember what you've already taught it?
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-mesh-band relative overflow-hidden" aria-labelledby="mission-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.04]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div>
+            <span class="font-caption-mono text-cyan-deep uppercase tracking-wider text-xs mb-3 block">Mission</span>
+            <h2 id="mission-title" class="font-display-lg text-ink mb-4">
+              Make knowledge persistent.
+            </h2>
+            <p class="font-body-lg text-body mb-6">
+              Every semester, students lose context. Notes from last year don't connect to this year's material. PDFs pile up. Audio lectures are forgotten. The knowledge is there — it's just not connected.
+            </p>
+            <p class="font-body-md text-body mb-6">
+              We're building a study assistant that learns alongside you. One that remembers every document you've uploaded, every conversation you've had, and finds the connections you might miss. Not a chatbot that forgets — a knowledge base that grows.
+            </p>
+          </div>
+          <div class="relative">
+            <div class="bg-canvas rounded-xl border border-hairline shadow-level-3 p-8 space-y-4">
+              {[
+                { icon: '📚', stat: '50+', label: 'Supported document formats' },
+                { icon: '🧠', stat: '∞', label: 'Persistent AI memory' },
+                { icon: '🔗', stat: '100%', label: 'Cross-document citations' },
+                { icon: '⚡', stat: '<2s', label: 'Average response time' },
+              ].map((item) => (
+                <div class="flex items-center gap-4 p-3 bg-canvas-soft rounded-lg">
+                  <span class="text-2xl">{item.icon}</span>
+                  <div>
+                    <span class="font-display-sm text-ink">{item.stat}</span>
+                    <span class="font-body-sm text-body ml-2">{item.label}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="showcase-band-light relative" aria-labelledby="values-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="text-center mb-12">
+          <span class="font-caption-mono text-violet uppercase tracking-wider text-xs mb-3 block">Values</span>
+          <h2 id="values-title" class="font-display-lg text-ink mb-4">
+            What drives us
+          </h2>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {[
+            {
+              title: 'Student-first',
+              desc: 'Every feature we build starts with a student\'s problem. Not a business metric. If it doesn\'t help you learn, we don\'t ship it.',
+              color: 'text-violet',
+            },
+            {
+              title: 'Transparent',
+              desc: 'Open about what we can and can\'t do. Honest about where competitors are better. Trust is earned through honesty, not marketing.',
+              color: 'text-cyan-deep',
+            },
+            {
+              title: 'Privacy by design',
+              desc: 'Your study materials are yours. We don\'t train on your data, we don\'t sell your information, and you can export everything.',
+              color: 'text-highlight-pink',
+            },
+          ].map((item) => (
+            <div class="bg-canvas rounded-xl border border-hairline shadow-level-2 p-6">
+              <h3 class={`font-display-md ${item.color} mb-3`}>{item.title}</h3>
+              <p class="font-body-md text-body">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="showcase-band-dark relative overflow-hidden" aria-labelledby="open-source-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <span class="font-caption-mono text-cyan-soft uppercase tracking-wider text-xs mb-3 block">Open Source</span>
+          <h2 id="open-source-title" class="font-display-lg text-on-primary mb-4">
+            Built in the open.
+          </h2>
+          <p class="font-body-lg text-cyan-soft mb-8">
+            We believe in building with our community. Our SDKs, documentation, and core integrations are open source. Contribute, fork, and build with us.
+          </p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="https://github.com/noteschatai" class="btn-primary" style="background: white; color: #171717;" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+            <a href="/docs" class="btn-secondary" style="border-color: rgba(255,255,255,0.2); color: white;">Read the Docs</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero-band bg-canvas-soft relative overflow-hidden" aria-labelledby="about-cta">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.06]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="text-center max-w-2xl mx-auto">
+          <h2 id="about-cta" class="font-display-lg text-ink mb-4 text-balance">
+            Join us in building the future of studying
+          </h2>
+          <p class="font-body-lg text-body mb-8">
+            Start with the free beta. No credit card required. Be part of the community shaping NotesChatAI.
+          </p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="/auth/signup" class="btn-primary w-full sm:w-auto">Start Free Beta</a>
+            <a href="/contact" class="btn-secondary w-full sm:w-auto">Get in Touch</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
