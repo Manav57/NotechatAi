@@ -1,0 +1,56 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title = 'NotesChatAI — Your Persistent AI Study Assistant', description = 'Upload notes, textbooks, and PDFs once. Chat with an AI that remembers everything across sessions. Build your personal knowledge base that grows with you.', ogImage = '/og-image.png' } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, 'https://noteschatai.com');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#171717" />
+
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage, 'https://noteschatai.com')} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, 'https://noteschatai.com')} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'NotesChatAI',
+      url: 'https://noteschatai.com',
+      description: description,
+      applicationCategory: 'EducationalApplication',
+      operatingSystem: 'Cloud',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock'
+      }
+    })} />
+  </head>
+  <body class="bg-canvas-soft text-ink antialiased">
+    <slot />
+  </body>
+</html>

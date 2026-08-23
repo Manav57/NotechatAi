@@ -1,0 +1,81 @@
+---
+import { sortedPosts } from '../../data/blog-posts.ts';
+import Layout from '../../layouts/Layout.astro';
+import NavBar from '../../components/ui/NavBar.astro';
+import HeroBand from '../../components/ui/HeroBand.astro';
+import Footer from '../../components/ui/Footer.astro';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+---
+
+<Layout title="Blog — NotesChatAI" description="Updates, guides, and insights from the NotesChatAI team.">
+  <NavBar user={null} />
+
+  <main>
+    <HeroBand
+      badge="Latest Updates"
+      title="NotesChatAI Blog"
+      subtitle="Product updates, tutorials, comparisons, and insights on AI-powered learning."
+      ctaPrimary={{ text: "Start Free Beta", href: "/signup" }}
+      ctaSecondary={{ text: "Join Discord", href: "https://discord.gg/noteschatai" }}
+    />
+
+    <section class="showcase-band-light" aria-labelledby="posts-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="mb-12">
+          <h2 id="posts-title" class="font-display-lg text-ink mb-4">Latest Posts</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {sortedPosts.map((post) => (
+            <Card variant="marketing" class="flex flex-col h-full">
+              <div class="flex items-center gap-2 mb-3">
+                {post.data.tags.map((tag) => (
+                  <span key={tag} class="badge-secondary text-xs">{tag}</span>
+                ))}
+              </div>
+              <h3 class="font-display-sm text-ink mb-2 line-clamp-2">
+                <a href={`/blog/${post.slug}/`} class="hover:text-link transition-colors">{post.data.title}</a>
+              </h3>
+              <p class="font-body-md text-body mb-4 flex-1 line-clamp-3">{post.data.description}</p>
+              <div class="flex items-center justify-between pt-4 border-t border-hairline">
+                <div class="flex items-center gap-2">
+                  <span class="font-caption-mono text-mute">{post.data.pubDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                  <span class="font-caption-mono text-mute">·</span>
+                  <span class="font-caption-mono text-mute">{post.data.author}</span>
+                </div>
+                <a href={`/blog/${post.slug}/`} class="btn-primary-sm">Read</a>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {sortedPosts.length === 0 && (
+          <div class="text-center py-16">
+            <p class="font-body-lg text-body">No posts yet. Check back soon!</p>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <section class="hero-band bg-canvas-soft" aria-labelledby="newsletter-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto">
+          <h2 id="newsletter-title" class="font-display-lg text-ink mb-4">
+            Stay Updated
+          </h2>
+          <p class="font-body-lg text-body mb-8">
+            Get product updates, tutorials, and AI learning tips delivered to your inbox.
+          </p>
+          <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto" action="/api/newsletter" method="POST">
+            <input type="email" name="email" placeholder="your@email.com" class="input-lg flex-1" required />
+            <button type="submit" class="btn-primary whitespace-nowrap">Subscribe</button>
+          </form>
+          <p class="font-caption text-mute mt-4">No spam. Unsubscribe anytime.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

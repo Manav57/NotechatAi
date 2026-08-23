@@ -1,0 +1,199 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import NavBar from '../../components/ui/NavBar.astro';
+import HeroBand from '../../components/ui/HeroBand.astro';
+import Footer from '../../components/ui/Footer.astro';
+import Button from '../../components/ui/Button.astro';
+import Card from '../../components/ui/Card.astro';
+import Badge from '../../components/ui/Badge.astro';
+---
+
+<Layout title="Pricing — NotesChatAI" description="Simple, transparent pricing. Free beta with generous limits. Pro for power users. Team and Enterprise coming soon.">
+  <NavBar user={null} />
+
+  <main>
+    <HeroBand
+      badge="Free Beta — No Credit Card Required"
+      title="Simple, transparent pricing"
+      subtitle="Start free. Upgrade when you need more. No surprises."
+      ctaPrimary={{ text: 'Start Free Beta', href: '/signup' }}
+      ctaSecondary={{ text: 'Contact Sales', href: '/contact' }}
+    />
+
+    <section class="showcase-band-light" aria-labelledby="pricing-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 id="pricing-title" class="font-display-lg text-ink mb-4">
+            Choose Your Plan
+          </h2>
+          <p class="font-body-lg text-body max-w-2xl mx-auto">
+            All plans include persistent memory, global search, and citations. Free beta limits are generous for individual use.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+          <Card variant="pricing">
+            <div class="mb-6">
+              <h3 class="font-display-md text-ink mb-2">Free Beta</h3>
+              <p class="font-body-md text-body">For students and casual learners</p>
+            </div>
+            <div class="mb-6">
+              <span class="font-display-xl text-ink">$0</span>
+              <span class="font-body-md text-mute ml-1">/month</span>
+            </div>
+            <Badge variant="secondary" class="mb-6 inline-block">Current Beta</Badge>
+            <ul class="space-y-4 mb-8" role="list">
+              {[
+                '50 documents',
+                '30 chats per day',
+                '2 audio overviews per day',
+                '1 GB storage',
+                'Global semantic search',
+                'Cross-document citations',
+                'Mind maps & flashcards',
+                'Export to Markdown, PDF, Anki',
+                'Community support',
+              ].map((item) => (
+                <li class="flex items-center gap-3 font-body-md text-body">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan flex-shrink-0" aria-hidden="true">
+                    <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                    <path d="M7 10l3 3 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <a href="/signup" class="btn-secondary w-full text-center">Start Free</a>
+          </Card>
+
+          <Card variant="pricing-featured">
+            <div class="mb-6">
+              <Badge variant="primary" class="mb-3 inline-block">Most Popular</Badge>
+              <h3 class="font-display-md text-on-primary mb-2">Pro</h3>
+              <p class="font-body-md text-on-primary/80">For researchers and power users</p>
+            </div>
+            <div class="mb-6">
+              <span class="font-display-xl text-on-primary">$15</span>
+              <span class="font-body-md text-on-primary/60 ml-1">/month</span>
+            </div>
+            <p class="font-body-sm text-on-primary/60 mb-6">Billed annually ($180/yr) — save 20%</p>
+            <ul class="space-y-4 mb-8" role="list">
+              {[
+                'Unlimited documents',
+                'Unlimited chats',
+                '20 audio overviews per day',
+                '50 GB storage',
+                'Priority processing',
+                'API access (REST + GraphQL)',
+                'Webhooks & SDKs',
+                'Advanced export options',
+                'Email support (24h SLA)',
+                'Self-hosted Docker option',
+              ].map((item) => (
+                <li class="flex items-center gap-3 font-body-md text-on-primary/90">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan-soft flex-shrink-0" aria-hidden="true">
+                    <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                    <path d="M7 10l3 3 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <a href="/signup?plan=pro" class="btn-primary w-full text-center" style="background: white; color: #171717;">Upgrade to Pro</a>
+          </Card>
+
+          <Card variant="pricing">
+            <div class="mb-6">
+              <h3 class="font-display-md text-ink mb-2">Team</h3>
+              <p class="font-body-md text-body">For labs and study groups</p>
+            </div>
+            <div class="mb-6">
+              <span class="font-display-xl text-ink">$30</span>
+              <span class="font-body-md text-mute ml-1">/user/month</span>
+            </div>
+            <Badge variant="warning" class="mb-6 inline-block">Coming Soon</Badge>
+            <ul class="space-y-4 mb-8" role="list">
+              {[
+                'Everything in Pro',
+                'Shared knowledge bases',
+                'Real-time collaboration',
+                'Role-based permissions',
+                'Admin dashboard',
+                'Audit logs',
+                'SSO (SAML/OIDC)',
+                '200 GB storage per user',
+                'Priority support (4h SLA)',
+                'Custom integrations',
+              ].map((item) => (
+                <li class="flex items-center gap-3 font-body-md text-body">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan flex-shrink-0" aria-hidden="true">
+                    <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                    <path d="M7 10l3 3 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <button class="btn-secondary w-full text-center" disabled>Join Waitlist</button>
+          </Card>
+        </div>
+
+        <div class="mt-16 text-center">
+          <p class="font-body-md text-body mb-4">Need a custom plan? <a href="/contact" class="link-inline">Contact sales</a> for Enterprise pricing.</p>
+          <p class="font-body-sm text-mute">All prices in USD. Taxes calculated at checkout. Cancel anytime.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="showcase-band-light" aria-labelledby="faq-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 id="faq-title" class="font-display-lg text-ink mb-4">
+            Frequently Asked Questions
+          </h2>
+        </div>
+
+        <div class="max-w-3xl mx-auto space-y-4">
+          {[
+            {
+              q: 'What happens after the free beta ends?',
+              a: 'Free tier remains free forever with the same limits. Beta users get 3 months of Pro free when we launch paid plans.'
+            },
+            {
+              q: 'Can I self-host NotesChatAI?',
+              a: 'Yes, Pro and Team plans include a Docker image for self-hosted deployment on your own infrastructure. All features work offline.'
+            },
+            {
+              q: 'Is my data used for training?',
+              a: 'Never. Your documents, chats, and embeddings are never used to train any models. We use pre-trained models only.'
+            },
+            {
+              q: 'What file formats are supported?',
+              a: 'PDF, EPUB, TXT, MDX, YouTube URLs, web pages, MP3/WAV audio, and more. We add formats based on user demand.'
+            },
+            {
+              q: 'How does the audio overview generation work?',
+              a: 'We use a two-host script generation pipeline with high-quality TTS. Each overview includes full transcripts, chapters, and is saved to your library.'
+            },
+            {
+              q: 'Can I export my data?',
+              a: 'Yes. Export to Markdown, PDF, Anki (.apkg), Obsidian vault, Notion, CSV, Zotero, Mendeley. Your data is portable.'
+            },
+          ].map((faq, i) => (
+            <details class="group bg-canvas rounded-lg border border-hairline p-6 open:border-cyan">
+              <summary class="font-body-md-strong text-ink flex items-center justify-between cursor-pointer list-none">
+                {faq.q}
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-mute group-open:rotate-180 transition-transform duration-200" aria-hidden="true">
+                  <path d="M7 9l3 3 3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </summary>
+              <p class="font-body-md text-body mt-4 pt-4 border-t border-hairline">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

@@ -1,0 +1,61 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  features: Array<{
+    icon?: string;
+    title: string;
+    description: string;
+  }>;
+  class?: string;
+}
+
+const { title, subtitle, features, class: className = '' } = Astro.props;
+---
+
+<section class="feature-mesh-band relative overflow-hidden {className}" aria-labelledby="feature-title">
+  <div class="absolute inset-0 mesh-gradient-bg opacity-5" aria-hidden="true"></div>
+
+  <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+    <div class="text-center mb-16 lg:mb-20">
+      <h2 id="feature-title" class="font-display-lg text-ink mb-4 text-balance">
+        {title}
+      </h2>
+      {subtitle && (
+        <p class="font-body-lg text-body max-w-2xl mx-auto text-balance">
+          {subtitle}
+        </p>
+      )}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+      {features.map((feature) => (
+        <article class="card-marketing group">
+          {feature.icon && (
+            <div class="w-12 h-12 mb-4 bg-canvas-soft rounded-lg flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors duration-200">
+              <span class="text-2xl" aria-hidden="true">{feature.icon}</span>
+            </div>
+          )}
+          <h3 class="font-display-sm text-ink mb-2">
+            {feature.title}
+          </h3>
+          <p class="font-body-md text-body">
+            {feature.description}
+          </p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .feature-mesh-band {
+    padding: 96px 24px;
+  }
+
+  @media (min-width: 1024px) {
+    .feature-mesh-band {
+      padding: 128px 24px;
+    }
+  }
+</style>

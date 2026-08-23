@@ -1,0 +1,44 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  children?: any;
+  class?: string;
+  reverse?: boolean;
+}
+
+const { title, subtitle, children, class: className = '', reverse = false } = Astro.props;
+---
+
+<section class="showcase-band-dark relative overflow-hidden {className}" aria-labelledby="showcase-title">
+  <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center {reverse ? 'lg:col-start-2' : ''}">
+      <div class="{reverse ? 'lg:col-start-1' : ''}">
+        <h2 id="showcase-title" class="font-display-lg text-on-primary mb-4 text-balance">
+          {title}
+        </h2>
+        {subtitle && (
+          <p class="font-body-lg text-cyan-soft mb-8 text-balance max-w-xl">
+            {subtitle}
+          </p>
+        )}
+        <slot name="content" />
+      </div>
+      <div class="{reverse ? 'lg:col-start-2' : ''}">
+        <slot name="visual" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .showcase-band-dark {
+    padding: 96px 24px;
+  }
+
+  @media (min-width: 1024px) {
+    .showcase-band-dark {
+      padding: 128px 24px;
+    }
+  }
+</style>

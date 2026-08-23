@@ -1,0 +1,113 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  user?: {
+    name: string;
+    email: string;
+    avatar?: string;
+    plan: string;
+  } | null;
+}
+
+const { title = 'Dashboard — NotesChatAI', description = 'Your NotesChatAI dashboard', user = null } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, 'https://noteschatai.com');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#171717" />
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+  </head>
+  <body class="bg-canvas-soft text-ink antialiased">
+    <header class="nav-bar sticky top-0 z-50 bg-canvas/80 backdrop-blur-md border-b border-hairline">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <a href="/app" class="nav-link flex items-center gap-2 shrink-0" aria-label="NotesChatAI Dashboard">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="text-primary">
+            <rect width="28" height="28" rx="6" fill="currentColor"/>
+            <path d="M8 10h12M8 14h12M8 18h8" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <span class="font-display-sm text-ink">NotesChatAI</span>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-1 flex-1 justify-center" aria-label="App navigation">
+          <a href="/app" class="nav-link">Dashboard</a>
+          <a href="/app/documents" class="nav-link">Documents</a>
+          <a href="/app/chat" class="nav-link">Chat</a>
+          <a href="/app/audio" class="nav-link">Audio</a>
+          <a href="/app/mindmap" class="nav-link">Mind Map</a>
+          <a href="/app/study" class="nav-link">Study</a>
+        </nav>
+
+        <div class="flex items-center gap-2 shrink-0">
+          {user ? (
+            <>
+              <span class="hidden sm:block font-body-sm text-body mr-2">{user.plan === 'free' ? 'Free Beta' : user.plan === 'pro' ? 'Pro' : 'Team'}</span>
+              <div class="relative group">
+                <button class="flex items-center gap-2 px-3 py-1.5 bg-canvas-soft rounded-full hover:bg-canvas-soft-2 transition-colors" aria-expanded="false" aria-haspopup="true">
+                  <img src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`} alt="" class="w-6 h-6 rounded-full" />
+                  <span class="text-body-sm text-ink">{user.name}</span>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="text-mute" aria-hidden="true">
+                    <path d="M5 6l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <div class="absolute right-0 mt-2 w-48 bg-canvas rounded-lg border border-hairline shadow-level-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 py-2 z-50">
+                  <a href="/app/settings" class="block px-4 py-2 font-body-sm text-body hover:bg-canvas-soft">Settings</a>
+                  <a href="/app/settings/billing" class="block px-4 py-2 font-body-sm text-body hover:bg-canvas-soft">Billing</a>
+                  <hr class="border-hairline my-2" />
+                  <button id="signout-btn" class="block w-full text-left px-4 py-2 font-body-sm text-error hover:bg-error-soft">Sign out</button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <a href="/auth/login" class="nav-cta-login">Log in</a>
+              <a href="/auth/signup" class="nav-cta-signup">Sign up</a>
+            </>
+          )}
+        </div>
+      </div>
+    </header>
+
+    <main class="min-h-[calc(100vh-64px)]">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 py-8">
+        <slot />
+      </div>
+    </main>
+
+    <footer class="border-t border-hairline py-8">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 text-center font-body-sm text-mute">
+        <p>© {new Date().getFullYear()} NotesChatAI. <a href="/privacy" class="link-inline">Privacy</a> · <a href="/terms" class="link-inline">Terms</a></p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<script type="module">
+  // Sign out handler
+  document.getElementById('signout-btn')?.addEventListener('click', async () => {
+    try {
+      await fetch('/api/auth/signout', { method: 'POST' });
+      window.location.href = '/';
+    } catch (e) {
+      console.error('Sign out failed:', e);
+    }
+  });
+</script>

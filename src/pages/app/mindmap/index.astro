@@ -1,0 +1,278 @@
+---
+import AppLayout from '../../../layouts/AppLayout.astro';
+import Button from '../../../components/ui/Button.astro';
+import Card from '../../../components/ui/Card.astro';
+import Badge from '../../../components/ui/Badge.astro';
+import Input from '../../../components/ui/Input.astro';
+---
+
+<AppLayout title="Mind Map — NotesChatAI" user={{ name: 'Demo User', email: 'demo@noteschatai.com', plan: 'free' }}>
+  <div class="space-y-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="font-display-lg text-ink">Mind Map</h1>
+        <p class="font-body-md text-body mt-1">Visualize connections between concepts across your knowledge base.</p>
+      </div>
+      <div class="flex gap-3">
+        <Button variant="primary" id="generate-mindmap">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
+            <circle cx="9" cy="9" r="3" stroke="currentColor" stroke-width="2"/>
+            <path d="M9 14v4M9 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M4.93 4.93l1.41 1.41M13.07 13.07l1.41 1.41M4.93 13.07l1.41-1.41M13.07 4.93l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Generate Mind Map
+        </Button>
+        <Button variant="secondary" id="export-mindmap">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
+            <path d="M12 15V9M12 15l-3-3M12 15l3-3M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Export
+        </Button>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-4 gap-6">
+      <aside class="lg:col-span-1 space-y-6">
+        <Card variant="marketing">
+          <h3 class="font-display-sm text-ink mb-4">Filters</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block font-body-sm-strong text-ink mb-2">Document Scope</label>
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="scope" value="all" checked class="w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" />
+                  <span class="font-body-sm text-body">All Documents</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="scope" value="selected" class="w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" />
+                  <span class="font-body-sm text-body">Selected Documents</span>
+                </label>
+              </div>
+            </div>
+            <div>
+              <label class="block font-body-sm-strong text-ink mb-2">Entity Types</label>
+              <div class="space-y-2" id="entity-types">
+                {['Concept', 'Person', 'Organization', 'Paper', 'Method', 'Dataset', 'Metric'].map((type) => (
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" name="entities" value={type.toLowerCase()} checked class="w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" />
+                    <span class="font-body-sm text-body">{type}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label class="block font-body-sm-strong text-ink mb-2">Min Connections</label>
+              <input type="range" id="min-connections" min="1" max="10" value="2" class="w-full" />
+              <div class="flex justify-between font-body-sm text-mute mt-1">
+                <span>1</span>
+                <span id="min-connections-value">2</span>
+                <span>10+</span>
+              </div>
+            </div>
+            <div>
+              <label class="block font-body-sm-strong text-ink mb-2">Layout</label>
+              <select id="layout-select" class="input h-10">
+                <option value="force">Force Directed</option>
+                <option value="hierarchical">Hierarchical</option>
+                <option value="circular">Circular</option>
+                <option value="grid">Grid</option>
+              </select>
+            </div>
+            <Button variant="primary" class="w-full" id="apply-filters">Apply Filters</Button>
+          </div>
+        </Card>
+
+        <Card variant="marketing">
+          <h3 class="font-display-sm text-ink mb-4">Legend</h3>
+          <div class="space-y-3">
+            {[
+              { color: 'bg-cyan', label: 'Concepts' },
+              { color: 'bg-violet', label: 'Papers' },
+              { color: 'bg-highlight-pink', label: 'Methods' },
+              { color: 'bg-warning', label: 'Datasets' },
+              { color: 'bg-primary', label: 'People/Orgs' },
+            ].map((item) => (
+              <div class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full {item.color}"></div>
+                <span class="font-body-sm text-body">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card variant="marketing">
+          <h3 class="font-display-sm text-ink mb-4">Statistics</h3>
+          <div class="space-y-3 font-body-sm">
+            <div class="flex justify-between"><span class="text-mute">Nodes</span><span class="text-ink">247</span></div>
+            <div class="flex justify-between"><span class="text-mute">Edges</span><span class="text-ink">1,834</span></div>
+            <div class="flex justify-between"><span class="text-mute">Clusters</span><span class="text-ink">12</span></div>
+            <div class="flex justify-between"><span class="text-mute">Documents</span><span class="text-ink">24</span></div>
+          </div>
+        </Card>
+      </aside>
+
+      <main class="lg:col-span-3">
+        <Card variant="marketing-large" class="h-[calc(100vh-300px)] min-h-[500px] flex flex-col overflow-hidden">
+          <div class="flex items-center justify-between mb-4 p-4 border-b border-hairline">
+            <div class="flex items-center gap-3">
+              <input type="text" id="search-nodes" placeholder="Search nodes..." class="input h-10 w-64" />
+              <div class="flex items-center gap-2">
+                <Button variant="ghost" size="sm" id="zoom-in" aria-label="Zoom in">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                    <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M9 13.5V15M9 3v1.5M15 9h1.5M3 9H4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </Button>
+                <Button variant="ghost" size="sm" id="zoom-out" aria-label="Zoom out">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                    <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M3 9h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </Button>
+                <Button variant="ghost" size="sm" id="reset-view" aria-label="Reset view">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                    <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M15 3l-3 3 3 3M3 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </Button>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <Badge variant="secondary" size="sm">247 nodes</Badge>
+              <Badge variant="secondary" size="sm">1,834 edges</Badge>
+            </div>
+          </div>
+
+          <div class="flex-1 relative bg-canvas-soft/50 rounded-lg overflow-hidden" id="mindmap-canvas">
+            <!-- Canvas placeholder - would use React Flow or similar in real implementation -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="text-center p-8">
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none" class="mx-auto mb-4 text-mute/50" aria-hidden="true">
+                  <circle cx="40" cy="40" r="35" stroke="currentColor" stroke-width="1.5" stroke-dasharray="220" stroke-dashoffset="55"/>
+                  <circle cx="40" cy="40" r="15" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="20" cy="20" r="8" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.2"/>
+                  <circle cx="60" cy="20" r="8" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.2"/>
+                  <circle cx="40" cy="60" r="8" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.2"/>
+                  <path d="M40 28v16M40 44h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                </svg>
+                <h3 class="font-display-md text-ink mb-2">Interactive Mind Map</h3>
+                <p class="font-body-md text-body max-w-md mx-auto mb-6">
+                  Click "Generate Mind Map" to visualize entities and relationships from your documents. 
+                  Nodes represent concepts, papers, methods, and more. Edges show relationships.
+                </p>
+                <Button variant="primary" id="generate-mindmap-2">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
+                    <circle cx="9" cy="9" r="3" stroke="currentColor" stroke-width="2"/>
+                    <path d="M9 14v4M9 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M4.93 4.93l1.41 1.41M13.07 13.07l1.41 1.41M4.93 13.07l1.41-1.41M13.07 4.93l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  Generate Mind Map
+                </Button>
+              </div>
+            </div>
+
+            <!-- Node detail panel (slides in) -->
+            <div id="node-detail" class="fixed inset-y-0 right-0 w-96 bg-canvas border-l border-hairline shadow-level-5 transform translate-x-full transition-transform duration-300 z-50 hidden lg:block" aria-hidden="true">
+              <div class="flex flex-col h-full">
+                <div class="p-4 border-b border-hairline flex items-center justify-between">
+                  <h3 class="font-display-sm text-ink">Node Details</h3>
+                  <button id="close-node-detail" class="text-mute hover:text-ink" aria-label="Close">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="flex-1 overflow-y-auto p-4" id="node-detail-content">
+                  <div class="text-center text-mute py-12">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" class="mx-auto mb-3" aria-hidden="true">
+                      <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
+                    </svg>
+                    <p class="font-body-md">Click a node to see details</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </main>
+    </div>
+  </div>
+</AppLayout>
+
+<script>
+  // Mind map interactions
+  const minConnections = document.getElementById('min-connections');
+  const minConnectionsValue = document.getElementById('min-connections-value');
+  const generateBtn = document.getElementById('generate-mindmap');
+  const generateBtn2 = document.getElementById('generate-mindmap-2');
+  const exportBtn = document.getElementById('export-mindmap');
+  const canvas = document.getElementById('mindmap-canvas');
+  const nodeDetail = document.getElementById('node-detail');
+  const closeNodeDetail = document.getElementById('close-node-detail');
+
+  minConnections?.addEventListener('input', (e) => {
+    minConnectionsValue!.textContent = e.target.value;
+  });
+
+  function generateMindMap() {
+    // In real implementation, would call /api/mindmap/generate
+    alert('Generating mind map... This would call the API and render with React Flow.');
+    // Show loading state, then render canvas
+  }
+
+  generateBtn?.addEventListener('click', generateMindMap);
+  generateBtn2?.addEventListener('click', generateMindMap);
+
+  exportBtn?.addEventListener('click', () => {
+    // Export as image, Mermaid, or JSON
+    alert('Export options: PNG, SVG, Mermaid, JSON');
+  });
+
+  closeNodeDetail?.addEventListener('click', () => {
+    nodeDetail?.classList.add('hidden');
+    nodeDetail?.classList.remove('block');
+  });
+
+  // Simulate node click
+  canvas?.addEventListener('click', (e) => {
+    if (e.target === canvas || e.target.closest('.absolute')) {
+      // In real app, would get clicked node data
+      nodeDetail?.classList.remove('hidden');
+      nodeDetail?.classList.add('block');
+      document.getElementById('node-detail-content')!.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-3 h-3 rounded-full bg-cyan"></div>
+            <div>
+              <h4 class="font-display-sm text-ink">Attention Mechanism</h4>
+              <p class="font-body-sm text-mute">Concept · 47 connections</p>
+            </div>
+          </div>
+          <div class="p-4 bg-canvas-soft rounded-lg">
+            <p class="font-body-sm text-body">The attention mechanism allows models to focus on relevant parts of the input sequence when generating each output token. It computes attention weights between all pairs of tokens...</p>
+          </div>
+          <div>
+            <h5 class="font-body-sm-strong text-ink mb-2">Source Documents</h5>
+            <div class="flex flex-wrap gap-2">
+              <Badge variant="secondary" size="sm">📄 Attention Is All You Need</Badge>
+              <Badge variant="secondary" size="sm">📄 Transformer Architecture</Badge>
+              <Badge variant="secondary" size="sm">📄 BERT Paper</Badge>
+            </div>
+          </div>
+          <div>
+            <h5 class="font-body-sm-strong text-ink mb-2">Connected Nodes</h5>
+            <div class="flex flex-wrap gap-2">
+              {['Self-Attention', 'Multi-Head Attention', 'Query/Key/Value', 'Positional Encoding', 'Transformer'].map((n) => (
+                <Badge variant="secondary" size="sm" key={n}>{n}</Badge>
+              ))}
+            </div>
+          </div>
+          <div class="flex gap-2 pt-4 border-t border-hairline">
+            <Button variant="primary" size="sm" class="flex-1">Focus on this node</Button>
+            <Button variant="secondary" size="sm" class="flex-1">Add to study</Button>
+          </div>
+        </div>
+      `;
+    }
+  });
+</script>

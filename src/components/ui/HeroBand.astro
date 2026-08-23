@@ -1,0 +1,68 @@
+---
+interface Props {
+  badge?: string;
+  title: string;
+  subtitle?: string;
+  ctaPrimary?: { text: string; href: string };
+  ctaSecondary?: { text: string; href: string };
+  class?: string;
+}
+
+const {
+  badge,
+  title,
+  subtitle,
+  ctaPrimary,
+  ctaSecondary,
+  class: className = '',
+} = Astro.props;
+---
+
+<section class="hero-band relative overflow-hidden {className}" aria-labelledby="hero-title">
+  <div class="absolute inset-0 mesh-gradient-bg opacity-10" aria-hidden="true"></div>
+
+  <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+    <div class="max-w-3xl mx-auto text-center">
+      {badge && (
+        <span class="badge-secondary inline-block mb-6 font-caption-mono uppercase tracking-wider">
+          {badge}
+        </span>
+      )}
+
+      <h1 id="hero-title" class="font-display-xl text-ink mb-6 text-balance">
+        {title}
+      </h1>
+
+      {subtitle && (
+        <p class="font-body-lg text-body mb-8 text-balance max-w-xl mx-auto">
+          {subtitle}
+        </p>
+      )}
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        {ctaPrimary && (
+          <a href={ctaPrimary.href} class="btn-primary w-full sm:w-auto">
+            {ctaPrimary.text}
+          </a>
+        )}
+        {ctaSecondary && (
+          <a href={ctaSecondary.href} class="btn-secondary w-full sm:w-auto">
+            {ctaSecondary.text}
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-band {
+    padding: 96px 24px;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-band {
+      padding: 128px 24px;
+    }
+  }
+</style>

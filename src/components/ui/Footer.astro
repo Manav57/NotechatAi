@@ -1,0 +1,110 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const currentYear = new Date().getFullYear();
+
+const footerLinks = {
+  Product: [
+    { label: 'Features', href: '/features' },
+    { label: 'Pricing', href: '/pricing' },
+    { label: 'Docs', href: '/docs' },
+    { label: 'Changelog', href: '/changelog' },
+    { label: 'Roadmap', href: '/roadmap' },
+  ],
+  Company: [
+    { label: 'About', href: '/about' },
+    { label: 'Blog', href: '/blog' },
+    { label: 'Careers', href: '/careers' },
+    { label: 'Press', href: '/press' },
+    { label: 'Contact', href: '/contact' },
+  ],
+  Resources: [
+    { label: 'Community', href: '/community' },
+    { label: 'Templates', href: '/templates' },
+    { label: 'Integrations', href: '/integrations' },
+    { label: 'API Reference', href: '/docs/api' },
+    { label: 'Status', href: '/status' },
+  ],
+  Legal: [
+    { label: 'Privacy', href: '/privacy' },
+    { label: 'Terms', href: '/terms' },
+    { label: 'Security', href: '/security' },
+    { label: 'Cookies', href: '/cookies' },
+  ],
+};
+
+const socialLinks = [
+  { label: 'Twitter', href: 'https://twitter.com/noteschatai', icon: '𝕏' },
+  { label: 'GitHub', href: 'https://github.com/noteschatai', icon: '⌘' },
+  { label: 'Discord', href: 'https://discord.gg/noteschatai', icon: '💬' },
+];
+---
+
+<footer class="footer border-t border-hairline {className}" role="contentinfo">
+  <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12 mb-12 lg:mb-16">
+      <div class="col-span-2 lg:col-span-1">
+        <a href="/" class="flex items-center gap-2 mb-6" aria-label="NotesChatAI Home">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="text-primary">
+            <rect width="28" height="28" rx="6" fill="currentColor"/>
+            <path d="M8 10h12M8 14h12M8 18h8" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <span class="font-display-sm text-ink">NotesChatAI</span>
+        </a>
+        <p class="font-body-sm text-body max-w-xs">
+          Your persistent AI study assistant. Upload once, remember forever.
+        </p>
+      </div>
+
+      {Object.entries(footerLinks).map(([columnTitle, links]) => (
+        <nav aria-label={columnTitle}>
+          <h3 class="font-caption-mono uppercase tracking-wider text-mute mb-4">
+            {columnTitle}
+          </h3>
+          <ul class="space-y-3" role="list">
+            {links.map((link) => (
+              <li>
+                <a href={link.href} class="font-body-sm text-body hover:text-ink transition-colors duration-150">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))}
+    </div>
+
+    <div class="pt-8 lg:pt-12 border-t border-hairline">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
+        <p class="font-body-sm text-mute">
+          © {currentYear} NotesChatAI. All rights reserved.
+        </p>
+
+        <div class="flex items-center gap-6">
+          {socialLinks.map((social) => (
+            <a href={social.href} class="font-body-sm text-body hover:text-ink transition-colors duration-150 flex items-center gap-1.5" aria-label={social.label} target="_blank" rel="noopener noreferrer">
+              <span aria-hidden="true">{social.icon}</span>
+              <span class="hidden sm:inline">{social.label}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding: 96px 24px;
+  }
+
+  @media (min-width: 1024px) {
+    .footer {
+      padding: 128px 24px;
+    }
+  }
+</style>

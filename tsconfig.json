@@ -1,0 +1,10 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "src/**/*", "astro.config.mjs", "tailwind.config.mjs"],
+  "exclude": ["dist", "src/worker", "node_modules"],
+  "skipLibCheck": true,
+  "compilerOptions": {
+    "types": ["astro/client"],
+    "moduleResolution": "bundler"
+  }
+}

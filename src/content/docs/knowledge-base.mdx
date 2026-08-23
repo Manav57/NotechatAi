@@ -1,0 +1,74 @@
+---
+title: Knowledge Base
+description: How NotesChatAI's persistent, unified knowledge base works
+---
+
+# Knowledge Base
+
+The **knowledge base** is the heart of NotesChatAI. It's a unified, persistent store of all your documents, conversations, and derived knowledge.
+
+## How It Works
+
+### 1. Document Ingestion
+
+When you upload a document:
+1. **Text extraction** — PDF, EPUB, YouTube, web, audio → plain text
+2. **Semantic chunking** — Split by headings, sections, natural boundaries
+3. **Embedding generation** — Vector embeddings via `bge-base-en-v1.5` (768-dim)
+4. **Vector storage** — Stored in Cloudflare Vectorize with metadata
+5. **Metadata indexing** — Document info stored in D1 (SQLite)
+
+### 2. Unified Search
+
+Unlike NotebookLM's per-notebook search, NotesChatAI searches **across everything**:
+
+```
+Your Query → Embedding → Vectorize (top-k) → Rerank → Context Assembly → LLM
+```
+
+- **Hybrid retrieval**: Vector similarity + BM25 keyword search
+- **Cross-encoder reranking**: Cohere rerank for precision
+- **Recursive retrieval**: Follow citation chains for deep context
+- **Hierarchical summaries**: Document → section → chunk summaries for efficiency
+
+### 3. Persistent Conversation Memory
+
+Conversations don't disappear:
+- Each conversation is **summarized and embedded**
+- Summaries stored alongside document chunks
+- Future queries retrieve relevant past conversations
+- Context window effectively unlimited via recursive retrieval
+
+### 4. Data Model
+
+```
+User
+  └── Documents (unlimited)
+       └── Chunks (vector embeddings + metadata)
+  └── Conversations
+       └── Messages (with citations)
+       └── Summary (embedded for retrieval)
+  └── Audio Overviews
+       └── Transcript, chapters, audio file
+  └── Mind Maps
+       └── Entities, relationships, clusters
+```
+
+## Key Differences
+
+| Aspect | NotebookLM | NotesChatAI |
+|--------|-----------|-------------|
+| Scope | Per notebook | Global (all docs) |
+| Document limit | 50/notebook | Unlimited |
+| Cross-notebook search | ❌ | ✅ |
+| Conversation persistence | Session only | Forever (embedded) |
+| Conversation retrieval | Manual | Automatic (RAG) |
+| Export | Limited | Full (MD, Anki, Obsidian, etc.) |
+
+## Best Practices
+
+1. **Upload liberally** — No penalty for more documents
+2. **Use descriptive titles** — Helps retrieval and organization
+3. **Tag documents** — Add topics/courses for filtering
+4. **Review citations** — Click through to verify sources
+5. **Export regularly** — Backup your knowledge base

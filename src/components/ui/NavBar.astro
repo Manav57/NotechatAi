@@ -1,0 +1,62 @@
+---
+interface Props {
+  user?: {
+    name: string;
+    avatar?: string;
+  } | null;
+}
+
+const { user = null } = Astro.props;
+---
+
+<header class="nav-bar sticky top-0 z-50 bg-canvas/80 backdrop-blur-md border-b border-hairline">
+  <div class="max-w-[1400px] mx-auto px-4 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <a href="/" class="nav-link flex items-center gap-2 shrink-0" aria-label="NotesChatAI Home">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="text-primary">
+        <rect width="28" height="28" rx="6" fill="currentColor"/>
+        <path d="M8 10h12M8 14h12M8 18h8" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <span class="font-display-sm text-ink">NotesChatAI</span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-1" aria-label="Main navigation">
+      <a href="/features" class="nav-link">Features</a>
+      <a href="/pricing" class="nav-link">Pricing</a>
+      <a href="/docs" class="nav-link">Docs</a>
+      <a href="/blog" class="nav-link">Blog</a>
+    </nav>
+
+    <div class="flex items-center gap-2 shrink-0">
+      {user ? (
+        <>
+          <a href="/app" class="btn-primary-sm">Dashboard</a>
+          <div class="flex items-center gap-2 px-3 py-1.5 bg-canvas-soft rounded-full">
+            <img src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`} alt="" class="w-6 h-6 rounded-full" />
+            <span class="text-body-sm text-ink">{user.name}</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="text-mute" aria-hidden="true">
+              <path d="M5 6l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </>
+      ) : (
+        <>
+          <a href="/login" class="nav-cta-login">Log in</a>
+          <a href="/signup" class="nav-cta-signup">Sign up</a>
+        </>
+      )}
+    </div>
+  </div>
+</header>
+
+<style>
+  .nav-bar {
+    height: 64px;
+    padding: 12px 24px;
+  }
+
+  @media (max-width: 768px) {
+    .nav-bar {
+      padding: 12px 16px;
+    }
+  }
+</style>

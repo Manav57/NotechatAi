@@ -1,0 +1,84 @@
+---
+interface Props {
+  type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search';
+  size?: 'sm' | 'md' | 'lg';
+  label?: string;
+  placeholder?: string;
+  value?: string;
+  name?: string;
+  id?: string;
+  required?: boolean;
+  disabled?: boolean;
+  error?: string;
+  helperText?: string;
+  class?: string;
+  autocomplete?: string;
+}
+
+const {
+  type = 'text',
+  size = 'md',
+  label,
+  placeholder,
+  value,
+  name,
+  id = name || `input-${Math.random().toString(36).slice(2, 9)}`,
+  required = false,
+  disabled = false,
+  error,
+  helperText,
+  class: className = '',
+  autocomplete,
+  ...attrs
+} = Astro.props;
+
+const sizeClasses = {
+  sm: 'h-8 text-body-sm px-3',
+  md: 'h-10 text-body-sm px-3',
+  lg: 'h-12 text-body-md px-3',
+};
+
+const inputClasses = `bg-canvas text-ink border rounded-sm w-full transition-all duration-150 placeholder:text-mute focus:outline-none focus:ring-2 focus:ring-link-bg-soft disabled:bg-canvas-soft disabled:cursor-not-allowed ${sizeClasses[size]} ${error ? 'border-error focus:border-error focus:ring-error-soft' : 'border-hairline focus:border-link'} ${className}`;
+
+const labelClasses = 'block text-body-sm-strong text-ink mb-1.5';
+const errorClasses = 'text-body-sm text-error mt-1.5';
+const helperClasses = 'text-body-sm text-mute mt-1.5';
+---
+
+<div class="w-full">
+  {label && <label for={id} class={labelClasses}>{label} {required && <span class="text-error" aria-hidden="true">*</span>}</label>}
+  <input
+    type={type}
+    id={id}
+    name={name}
+    value={value}
+    placeholder={placeholder}
+    required={required}
+    disabled={disabled}
+    class={inputClasses}
+    autocomplete={autocomplete}
+    aria-invalid={error ? 'true' : 'false'}
+    aria-describedby={error ? `${id}-error` : helperText ? `${id}-helper` : undefined}
+    {...attrs}
+  />
+  {error && <p id={`${id}-error`} class={errorClasses} role="alert">{error}</p>}
+  {helperText && !error && <p id={`${id}-helper`} class={helperClasses}>{helperText}</p>}
+</div>
+
+<style>
+  :host {
+    display: block;
+  }
+
+  input::placeholder {
+    color: #888888;
+  }
+
+  input:focus {
+    box-shadow: 0 0 0 2px #d3e5ff;
+  }
+
+  input:focus:where(:not(:focus-visible)) {
+    box-shadow: none;
+  }
+</style>

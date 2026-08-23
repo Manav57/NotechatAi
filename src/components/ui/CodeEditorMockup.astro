@@ -1,0 +1,43 @@
+---
+interface Props {
+  title?: string;
+  language?: string;
+  code: string;
+  lines?: number[];
+  class?: string;
+}
+
+const { title, language, code, lines = [], class: className = '' } = Astro.props;
+---
+
+<div class="code-editor-mockup overflow-hidden {className}" role="region" aria-label={title || 'Code example'}>
+  {title && (
+    <div class="flex items-center justify-between mb-4 px-1">
+      <div class="flex items-center gap-2">
+        <div class="flex gap-1.5">
+          <span class="w-3 h-3 rounded-full bg-error-soft"></span>
+          <span class="w-3 h-3 rounded-full bg-warning-soft"></span>
+          <span class="w-3 h-3 rounded-full bg-cyan-soft"></span>
+        </div>
+        {language && <span class="font-caption-mono text-cyan-soft ml-2">{language}</span>}
+      </div>
+      {title && <span class="font-caption-mono text-mute">{title}</span>}
+    </div>
+  )}
+  <pre class="font-code text-on-primary/90 overflow-x-auto tab-size-4"><code>{code}</code></pre>
+</div>
+
+<style>
+  :host {
+    display: block;
+  }
+
+  .code-editor-mockup {
+    padding: 24px;
+  }
+
+  .code-editor-mockup code {
+    display: block;
+    line-height: 1.6;
+  }
+</style>

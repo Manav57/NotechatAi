@@ -1,0 +1,336 @@
+---
+import AppLayout from '../../../layouts/AppLayout.astro';
+import Button from '../../../components/ui/Button.astro';
+import Card from '../../../components/ui/Card.astro';
+import Badge from '../../../components/ui/Badge.astro';
+import Input from '../../../components/ui/Input.astro';
+---
+
+<AppLayout title="Study Tools — NotesChatAI" user={{ name: 'Demo User', email: 'demo@noteschatai.com', plan: 'free' }}>
+  <div class="space-y-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="font-display-lg text-ink">Study Tools</h1>
+        <p class="font-body-md text-body mt-1">Transform your knowledge base into active learning material.</p>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6">
+      <!-- Flashcards -->
+      <div class="lg:col-span-2 space-y-6">
+        <Card variant="marketing-large">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="font-display-md text-ink">Flashcards</h2>
+            <div class="flex gap-2">
+              <Button variant="secondary-sm" id="study-now">Study Now</Button>
+              <Button variant="primary" id="generate-flashcards">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M14 2v6h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M16 13H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M16 17H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M10 9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Generate
+              </Button>
+            </div>
+          </div>
+
+          <div class="space-y-3 mb-6" id="flashcard-stats">
+            <div class="grid sm:grid-cols-4 gap-4">
+              <div class="p-4 bg-canvas-soft/50 rounded-lg text-center">
+                <p class="font-display-xl text-cyan">142</p>
+                <p class="font-body-sm text-mute">Total Cards</p>
+              </div>
+              <div class="p-4 bg-canvas-soft/50 rounded-lg text-center">
+                <p class="font-display-xl text-violet">23</p>
+                <p class="font-body-sm text-mute">Due Today</p>
+              </div>
+              <div class="p-4 bg-canvas-soft/50 rounded-lg text-center">
+                <p class="font-display-xl text-highlight-pink">87%</p>
+                <p class="font-body-sm text-mute">Retention Rate</p>
+              </div>
+              <div class="p-4 bg-canvas-soft/50 rounded-lg text-center">
+                <p class="font-display-xl text-warning">12 min</p>
+                <p class="font-body-sm text-mute">Avg Session</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="border-t border-hairline pt-6">
+            <h3 class="font-display-sm text-ink mb-4">Recent Decks</h3>
+            <div class="space-y-3" id="flashcard-decks">
+              {[
+                { title: 'Transformer Architecture', cards: 34, due: 5, mastery: 78, type: 'cloze' },
+                { title: 'Attention Mechanisms', cards: 28, due: 8, mastery: 82, type: 'basic' },
+                { title: 'RNN vs LSTM Comparison', cards: 19, due: 3, mastery: 65, type: 'reversed' },
+                { title: 'Neural Network Fundamentals', cards: 42, due: 7, mastery: 91, type: 'basic' },
+              ].map((deck) => (
+                <div class="p-4 bg-canvas-soft/50 rounded-lg hover:bg-canvas-soft transition-colors flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap mb-1">
+                      <h4 class="font-body-md text-ink truncate">{deck.title}</h4>
+                      <Badge variant="secondary" size="sm">{deck.type}</Badge>
+                    </div>
+                    <div class="flex flex-wrap gap-4 font-body-sm text-mute">
+                      <span>🃏 {deck.cards} cards</span>
+                      <span>⏰ {deck.due} due today</span>
+                      <span>📊 {deck.mastery}% mastery</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 sm:ml-auto">
+                    <Button variant="primary" size="sm">Study</Button>
+                    <Button variant="ghost" size="sm" aria-label="Deck options">
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                        <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+                      </svg>
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Card>
+
+        <Card variant="marketing-large">
+          <h2 class="font-display-md text-ink mb-6">Quiz Generator</h2>
+          <form id="quiz-form" class="space-y-5">
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block font-body-sm-strong text-ink mb-2">Source Documents</label>
+                <div class="border border-hairline rounded-lg p-3 max-h-40 overflow-y-auto space-y-2" id="quiz-doc-selector">
+                  {[
+                    'Attention Is All You Need.pdf',
+                    'Transformer Architecture.pdf',
+                    'RNN vs LSTM Comparison.pdf',
+                    'Deep Learning Book - Chapter 6.epub',
+                  ].map((doc) => (
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="quiz-docs" value={doc} class="w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" />
+                      <span class="font-body-sm text-body truncate">{doc}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label class="block font-body-sm-strong text-ink mb-2">Question Types</label>
+                <div class="space-y-2" id="quiz-types">
+                  {[
+                    { value: 'mcq', label: 'Multiple Choice', desc: '4 options, 1 correct' },
+                    { value: 'short', label: 'Short Answer', desc: 'Free-form response' },
+                    { value: 'explanation', label: 'Explain Concept', desc: 'Detailed explanation required' },
+                    { value: 'truefalse', label: 'True/False', desc: 'Binary choice' },
+                  ].map((type) => (
+                    <label class="flex items-start gap-2 cursor-pointer">
+                      <input type="checkbox" name="quiz-types" value={type.value} checked class="w-4 h-4 mt-0.5 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" />
+                      <div>
+                        <p class="font-body-sm text-ink">{type.label}</p>
+                        <p class="font-caption-mono text-mute">{type.desc}</p>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block font-body-sm-strong text-ink mb-2">Number of Questions</label>
+                <input type="number" id="quiz-count" min="5" max="50" value="10" class="input h-10" />
+              </div>
+              <div>
+                <label class="block font-body-sm-strong text-ink mb-2">Difficulty</label>
+                <select id="quiz-difficulty" class="input h-10">
+                  <option value="mixed">Mixed (Adaptive)</option>
+                  <option value="easy">Easy</option>
+                  <option value="medium">Medium</option>
+                  <option value="hard">Hard</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-body-sm-strong text-ink mb-2">Time Limit</label>
+                <select id="quiz-time" class="input h-10">
+                  <option value="0">No Limit</option>
+                  <option value="300">5 minutes</option>
+                  <option value="600">10 minutes</option>
+                  <option value="900">15 minutes</option>
+                </select>
+              </div>
+            </div>
+
+            <Button type="submit" variant="primary" class="w-full" id="generate-quiz">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
+                <path d="M9 3L3 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M15 3l-6 6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Generate Quiz
+            </Button>
+          </form>
+        </Card>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="space-y-6">
+        <Card variant="marketing">
+          <h3 class="font-display-sm text-ink mb-4">Study Planner</h3>
+          <div class="space-y-4">
+            <div class="p-4 bg-cyan-soft/20 rounded-lg border border-cyan-soft">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-body-sm-strong text-cyan-deep">Next Exam</span>
+                <Badge variant="success" size="sm">In 14 days</Badge>
+              </div>
+              <p class="font-display-md text-ink">Machine Learning Final</p>
+              <p class="font-body-sm text-mute">Dec 20, 2024 · 9:00 AM</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-3 bg-canvas-soft/50 rounded-lg text-center">
+                <p class="font-display-lg text-violet">7</p>
+                <p class="font-caption-mono text-mute">Days Studied</p>
+              </div>
+              <div class="p-3 bg-canvas-soft/50 rounded-lg text-center">
+                <p class="font-display-lg text-highlight-pink">4h 23m</p>
+                <p class="font-caption-mono text-mute">Total Time</p>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" class="w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" />
+                <span class="font-body-sm text-body">Daily study reminder (9 PM)</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" class="w-4 h-4 rounded border-hairline text-primary focus:ring-2 focus:ring-link-bg-soft" checked />
+                <span class="font-body-sm text-body">Adaptive scheduling (FSRS)</span>
+              </label>
+            </div>
+
+            <Button variant="primary" class="w-full" id="plan-study">Plan My Study</Button>
+          </div>
+        </Card>
+
+        <Card variant="marketing">
+          <h3 class="font-display-sm text-ink mb-4">Quick Actions</h3>
+          <div class="space-y-2">
+            <Button variant="ghost" class="w-full justify-start gap-3" id="review-due">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan" aria-hidden="true">
+                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/>
+                <path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="font-body-md text-ink">Review Due Cards (23)</span>
+            </Button>
+            <Button variant="ghost" class="w-full justify-start gap-3" id="new-quiz">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-violet" aria-hidden="true">
+                <path d="M10 3L4 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M16 3l-6 6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="font-body-md text-ink">Generate New Quiz</span>
+            </Button>
+            <Button variant="ghost" class="w-full justify-start gap-3" id="export-anki">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-warning" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 2v6h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="font-body-md text-ink">Export to Anki</span>
+            </Button>
+            <Button variant="ghost" class="w-full justify-start gap-3" id="export-obsidian">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-highlight-pink" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 2v6h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 12h8M8 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <span class="font-body-md text-ink">Export to Obsidian</span>
+            </Button>
+          </div>
+        </Card>
+
+        <Card variant="marketing">
+          <h3 class="font-display-sm text-ink mb-4">Learning Progress</h3>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between font-body-sm mb-1">
+                <span class="text-mute">Overall Mastery</span>
+                <span class="text-ink">87%</span>
+              </div>
+              <div class="h-2 bg-canvas-soft rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-cyan to-violet rounded-full" style="width: 87%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between font-body-sm mb-1">
+                <span class="text-mute">This Week</span>
+                <span class="text-ink">2h 15m</span>
+              </div>
+              <div class="h-2 bg-canvas-soft rounded-full overflow-hidden">
+                <div class="h-full bg-violet rounded-full" style="width: 45%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between font-body-sm mb-1">
+                <span class="text-mute">Streak</span>
+                <span class="text-ink">7 days</span>
+              </div>
+              <div class="h-2 bg-canvas-soft rounded-full overflow-hidden">
+                <div class="h-full bg-highlight-pink rounded-full" style="width: 100%"></div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </aside>
+    </div>
+  </div>
+</AppLayout>
+
+<script>
+  // Study page interactions
+  const studyNowBtn = document.getElementById('study-now');
+  const generateFlashcardsBtn = document.getElementById('generate-flashcards');
+  const generateQuizBtn = document.getElementById('generate-quiz');
+  const quizForm = document.getElementById('quiz-form');
+  const planStudyBtn = document.getElementById('plan-study');
+
+  studyNowBtn?.addEventListener('click', () => {
+    alert('Opening spaced repetition study session...');
+  });
+
+  generateFlashcardsBtn?.addEventListener('click', () => {
+    alert('Generating flashcards from selected documents...');
+  });
+
+  quizForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(quizForm);
+    const docs = formData.getAll('quiz-docs');
+    const types = formData.getAll('quiz-types');
+    
+    if (docs.length === 0) {
+      alert('Please select at least one document');
+      return;
+    }
+
+    generateQuizBtn!.disabled = true;
+    generateQuizBtn!.innerHTML = `
+      <svg class="animate-spin mr-2" width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2" stroke-dasharray="31.4" stroke-dashoffset="10" stroke-linecap="round"/>
+      </svg>
+      Generating...
+    `;
+
+    await new Promise(r => setTimeout(r, 1500));
+    
+    alert(`Quiz generated with ${formData.get('quiz-count')} questions!`);
+    
+    generateQuizBtn!.disabled = false;
+    generateQuizBtn!.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2">
+        <path d="M9 3L3 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15 3l-6 6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Generate Quiz
+    `;
+  });
+
+  planStudyBtn?.addEventListener('click', () => {
+    alert('Creating personalized study plan based on your exam date and current progress...');
+  });
+</script>

@@ -1,0 +1,186 @@
+---
+import AppLayout from '../../layouts/AppLayout.astro';
+import Button from '../../components/ui/Button.astro';
+import Card from '../../components/ui/Card.astro';
+import Badge from '../../components/ui/Badge.astro';
+---
+
+<AppLayout title="Dashboard — NotesChatAI" user={{ name: 'Demo User', email: 'demo@noteschatai.com', plan: 'free' }}>
+  <div class="space-y-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="font-display-lg text-ink">Dashboard</h1>
+        <p class="font-body-md text-body mt-1">Welcome back! Here's what's happening with your knowledge base.</p>
+      </div>
+      <div class="flex gap-3">
+        <a href="/app/documents" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
+            <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Add Document
+        </a>
+        <a href="/app/chat" class="btn-secondary">Start Chat</a>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <Card variant="marketing">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-caption-mono text-mute uppercase tracking-wider">Documents</span>
+          <Badge variant="secondary">12</Badge>
+        </div>
+        <p class="font-display-xl text-ink">24</p>
+        <p class="font-body-sm text-mute mt-1">Total in knowledge base</p>
+      </Card>
+
+      <Card variant="marketing">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-caption-mono text-mute uppercase tracking-wider">Chats Today</span>
+          <Badge variant="secondary">30/day</Badge>
+        </div>
+        <p class="font-display-xl text-ink">7</p>
+        <p class="font-body-sm text-mute mt-1">Used this period</p>
+      </Card>
+
+      <Card variant="marketing">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-caption-mono text-mute uppercase tracking-wider">Audio Overviews</span>
+          <Badge variant="secondary">2/day</Badge>
+        </div>
+        <p class="font-display-xl text-ink">1</p>
+        <p class="font-body-sm text-mute mt-1">Generated this period</p>
+      </Card>
+
+      <Card variant="marketing">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-caption-mono text-mute uppercase tracking-wider">Storage Used</span>
+          <Badge variant="secondary">1 GB</Badge>
+        </div>
+        <p class="font-display-xl text-ink">342 MB</p>
+        <p class="font-body-sm text-mute mt-1">Of 1 GB limit</p>
+      </Card>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-6">
+      <Card variant="marketing-large">
+        <h2 class="font-display-md text-ink mb-6">Quick Actions</h2>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <a href="/app/documents" class="card-marketing p-6 hover:shadow-level-4 transition-shadow group">
+            <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-4 group-hover:bg-violet transition-colors">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-on-primary" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 2v6h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M16 13H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M16 17H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M10 9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-1">Upload Document</h3>
+            <p class="font-body-sm text-body">Add PDFs, EPUBs, YouTube links, or web pages to your knowledge base.</p>
+          </a>
+
+          <a href="/app/chat" class="card-marketing p-6 hover:shadow-level-4 transition-shadow group">
+            <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-4 group-hover:bg-violet transition-colors">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-on-primary" aria-hidden="true">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-1">Start Chatting</h3>
+            <p class="font-body-sm text-body">Ask questions across your entire knowledge base with citations.</p>
+          </a>
+
+          <a href="/app/audio" class="card-marketing p-6 hover:shadow-level-4 transition-shadow group">
+            <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-4 group-hover:bg-violet transition-colors">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-on-primary" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <polygon points="10,8 16,12 10,16" fill="currentColor"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-1">Generate Audio</h3>
+            <p class="font-body-sm text-body">Create podcast-style summaries with transcripts and chapters.</p>
+          </a>
+
+          <a href="/app/mindmap" class="card-marketing p-6 hover:shadow-level-4 transition-shadow group">
+            <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-4 group-hover:bg-violet transition-colors">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-on-primary" aria-hidden="true">
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 2v2m0 16v2M2 12h2m16 0h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M4.93 4.93l1.41 1.41m10.24 10.24l1.41 1.41M4.93 19.07l1.41-1.41m10.24-10.24l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-1">View Mind Map</h3>
+            <p class="font-body-sm text-body">Explore connections between concepts across your documents.</p>
+          </a>
+        </div>
+      </Card>
+
+      <Card variant="marketing-large">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="font-display-md text-ink">Recent Activity</h2>
+          <a href="/app/activity" class="font-body-sm link-inline">View all</a>
+        </div>
+        <div class="space-y-4">
+          {[
+            { type: 'document', title: 'Machine Learning Fundamentals.pdf', time: '2 hours ago', status: 'Ready' },
+            { type: 'chat', title: 'Conversation: Transformer architectures', time: '4 hours ago', messages: 12 },
+            { type: 'audio', title: 'Audio Overview: Attention Mechanisms', time: '1 day ago', duration: '12:34' },
+            { type: 'document', title: 'Neural Networks Overview (YouTube)', time: '2 days ago', status: 'Processing' },
+          ].map((activity) => (
+            <div class="flex items-center gap-4 p-4 bg-canvas-soft/50 rounded-lg hover:bg-canvas-soft transition-colors">
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center 
+                {activity.type === 'document' ? 'bg-cyan-soft text-cyan-deep' : 
+                 activity.type === 'chat' ? 'bg-violet-soft text-violet-deep' : 
+                 'bg-highlight-pink/10 text-highlight-pink'}">
+                {activity.type === 'document' && (
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan-deep" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M14 2v6h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                )}
+                {activity.type === 'chat' && (
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-violet-deep" aria-hidden="true">
+                    <path d="M17.5 13.5a2 2 0 0 1-2 2H4.5l-3 3V4.5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                )}
+                {activity.type === 'audio' && (
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-highlight-pink" aria-hidden="true">
+                    <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+                    <polygon points="8,7 13,10 8,13" fill="currentColor"/>
+                  </svg>
+                )}
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-body-md text-ink truncate">{activity.title}</p>
+                <p class="font-body-sm text-mute">{activity.time} · {activity.status || activity.messages ? `${activity.messages} messages` : activity.duration || activity.status}</p>
+              </div>
+              <Badge variant="secondary" size="sm" class="whitespace-nowrap">
+                {activity.type === 'document' ? 'Document' : activity.type === 'chat' ? 'Chat' : 'Audio'}
+              </Badge>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+
+    <Card variant="marketing-large">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="font-display-md text-ink">Your Plan: Free Beta</h2>
+        <a href="/pricing" class="btn-secondary-sm">Upgrade to Pro</a>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-6">
+        <div class="text-center p-4 bg-canvas-soft/50 rounded-lg">
+          <p class="font-display-xl text-ink">50</p>
+          <p class="font-body-sm text-mute">Documents</p>
+        </div>
+        <div class="text-center p-4 bg-canvas-soft/50 rounded-lg">
+          <p class="font-display-xl text-ink">30</p>
+          <p class="font-body-sm text-mute">Chats / day</p>
+        </div>
+        <div class="text-center p-4 bg-canvas-soft/50 rounded-lg">
+          <p class="font-display-xl text-ink">2</p>
+          <p class="font-body-sm text-mute">Audio / day</p>
+        </div>
+      </div>
+    </Card>
+  </div>
+</AppLayout>

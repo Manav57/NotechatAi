@@ -1,0 +1,50 @@
+---
+interface Props {
+  variant?: 'marketing' | 'marketing-large' | 'soft' | 'template' | 'pricing' | 'pricing-featured' | 'code-editor';
+  class?: string;
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+  hover?: boolean;
+}
+
+const {
+  variant = 'marketing',
+  class: className = '',
+  padding,
+  hover = true,
+  ...attrs
+} = Astro.props;
+
+const variantClasses = {
+  marketing: 'bg-canvas text-ink rounded-md shadow-level-3',
+  'marketing-large': 'bg-canvas text-ink rounded-lg shadow-level-4',
+  soft: 'bg-canvas-soft text-ink rounded-md shadow-level-2',
+  template: 'bg-canvas text-ink rounded-md shadow-level-2',
+  pricing: 'bg-canvas text-ink rounded-lg shadow-level-4',
+  'pricing-featured': 'bg-primary text-on-primary rounded-lg shadow-level-4',
+  'code-editor': 'bg-primary text-on-primary rounded-md',
+};
+
+const paddingClasses = {
+  none: '',
+  sm: 'p-4',
+  md: 'p-6',
+  lg: 'p-8',
+  xl: 'p-10',
+};
+
+const hoverClass = hover && variant !== 'code-editor' ? 'transition-shadow duration-200 hover:shadow-level-4' : 'transition-shadow duration-200';
+
+const defaultPadding = padding || (variant === 'marketing-large' ? 'lg' : variant === 'pricing' || variant === 'pricing-featured' ? 'xl' : 'md');
+
+const classes = `${variantClasses[variant]} ${paddingClasses[defaultPadding]} ${hoverClass} ${className}`;
+---
+
+<div class={classes} {...attrs}>
+  <slot />
+</div>
+
+<style>
+  :host {
+    display: block;
+  }
+</style>

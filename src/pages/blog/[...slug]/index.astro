@@ -1,0 +1,74 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import NavBar from '../../../components/ui/NavBar.astro';
+import Footer from '../../../components/ui/Footer.astro';
+import Button from '../../../components/ui/Button.astro';
+import { slugify } from '../../../utils/slugify';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<Layout title={`${post.data.title} — NotesChatAI Blog`} description={post.data.description} ogImage={post.data.heroImage}>
+  <NavBar user={null} />
+
+  <main>
+    <article class="max-w-3xl mx-auto px-4 lg:px-8 py-16 lg:py-24">
+      <header class="mb-12">
+        <div class="flex flex-wrap gap-2 mb-4">
+          {post.data.tags.map((tag) => (
+            <a href={`/blog?tag=${slugify(tag)}`} class="badge-secondary text-sm hover:bg-canvas-soft transition-colors">{tag}</a>
+          ))}
+        </div>
+        <h1 class="font-display-xl text-ink mb-4 text-balance">{post.data.title}</h1>
+        <div class="flex items-center gap-4 font-body-sm text-mute">
+          <time dateTime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</time>
+          <span>·</span>
+          <span>{post.data.author}</span>
+          <span>·</span>
+          <span>{Math.ceil(post.data.description.length / 100)} min read</span>
+        </div>
+      </header>
+
+      {post.data.heroImage && (
+        <div class="mb-12 rounded-xl overflow-hidden">
+          <img src={post.data.heroImage} alt="" class="w-full h-auto" />
+        </div>
+      )}
+
+      <div class="prose prose-invert max-w-none font-body-md text-body/90" style="--tw-prose-body: #4d4d4d; --tw-prose-headings: #171717; --tw-prose-links: #0070f3;">
+        <Content />
+      </div>
+
+      <footer class="mt-16 pt-8 border-t border-hairline">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" class="text-primary" aria-hidden="true">
+              <rect width="40" height="40" rx="8" fill="currentColor"/>
+              <path d="M12 14h16M12 20h16M12 26h10" stroke="white" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <div>
+              <p class="font-body-md-strong text-ink">NotesChatAI Team</p>
+              <p class="font-body-sm text-mute">Building persistent AI memory for learners</p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <a href="/signup" class="btn-primary">Start Free Beta</a>
+            <a href="/blog" class="btn-secondary">More Posts</a>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </main>
+
+  <Footer />
+</Layout>

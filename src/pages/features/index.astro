@@ -1,0 +1,254 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import NavBar from '../../components/ui/NavBar.astro';
+import HeroBand from '../../components/ui/HeroBand.astro';
+import FeatureMeshBand from '../../components/ui/FeatureMeshBand.astro';
+import ShowcaseBandDark from '../../components/ui/ShowcaseBandDark.astro';
+import Footer from '../../components/ui/Footer.astro';
+import Badge from '../../components/ui/Badge.astro';
+import Button from '../../components/ui/Button.astro';
+import Card from '../../components/ui/Card.astro';
+---
+
+<Layout title="Features — NotesChatAI" description="Explore all features of NotesChatAI: persistent memory, global search, audio overviews, mind maps, study tools, and developer API.">
+  <NavBar user={null} />
+
+  <main>
+    <HeroBand
+      badge="Free Beta Available"
+      title="Features that make learning stick"
+      subtitle="Every feature is designed around one principle: your knowledge should compound, not disappear when a chat ends."
+      ctaPrimary={{ text: 'Start Free Beta', href: '/signup' }}
+      ctaSecondary={{ text: 'View Pricing', href: '/pricing' }}
+    />
+
+    <FeatureMeshBand
+      title="Core Features"
+      subtitle="The foundation of persistent, cross-document intelligence."
+      features={[
+        {
+          icon: '♾️',
+          title: 'Unlimited Documents',
+          description: 'No 50-source caps. Upload PDFs, EPUBs, YouTube links, web pages, audio files. Your library grows with you.'
+        },
+        {
+          icon: '🌐',
+          title: 'Global Semantic Search',
+          description: 'Vector-powered search across your entire knowledge base. Find concepts, not just keywords. Filter by source, date, type.'
+        },
+        {
+          icon: '🔗',
+          title: 'Cross-Document Citations',
+          description: 'Every answer cites exact passages from your sources. Hover to preview. Click to jump. Works across multiple documents.'
+        },
+        {
+          icon: '🧠',
+          title: 'Persistent Conversation Memory',
+          description: 'Conversations are summarized and embedded. Context from past chats informs future answers — even weeks later.'
+        },
+        {
+          icon: '⚡',
+          title: 'Multi-Model Support',
+          description: 'Choose Gemini 1.5 Flash/Pro, Claude 3.5 Sonnet, GPT-4o, or local models. Optimize for speed, cost, or reasoning.'
+        },
+        {
+          icon: '🔒',
+          title: 'Privacy-First Architecture',
+          description: 'Your data is never used for training. End-to-end encryption optional. Self-hosted deployment available for teams.'
+        },
+      ]}
+    />
+
+    <section class="showcase-band-light" aria-labelledby="audio-features-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 id="audio-features-title" class="font-display-lg text-ink mb-4">
+            Audio Overviews — Reimagined
+          </h2>
+          <p class="font-body-lg text-body max-w-2xl mx-auto">
+            NotebookLM's audio feature is great. We made it better: transcripts, chapters, saved library, speed control, and offline download.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card variant="marketing">
+            <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-on-primary" aria-hidden="true">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                <polygon points="7,7 13,10 7,13" fill="currentColor"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-2">Two-Host Dialogue</h3>
+            <p class="font-body-md text-body">Natural conversation between AI hosts explaining your documents with examples and analogies.</p>
+          </Card>
+
+          <Card variant="marketing">
+            <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-on-primary" aria-hidden="true">
+                <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M5 10h10M5 13h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-2">Full Transcripts</h3>
+            <p class="font-body-md text-body">Word-level timestamps. Search within audio. Jump to any sentence. Export as Markdown, SRT, or VTT.</p>
+          </Card>
+
+          <Card variant="marketing">
+            <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-on-primary" aria-hidden="true">
+                <path d="M10 3L4 7v6l6 4 6-4V7L10 3z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <circle cx="10" cy="10" r="3" fill="currentColor"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-2">Smart Chapters</h3>
+            <p class="font-body-md text-body">Auto-generated chapters with timestamps. Navigate by topic. Rename or regenerate chapters.</p>
+          </Card>
+
+          <Card variant="marketing">
+            <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center mb-4">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-on-primary" aria-hidden="true">
+                <rect x="3" y="3" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M7 10h6M10 7v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="font-display-sm text-ink mb-2">Saved Library</h3>
+            <p class="font-body-md text-body">Every overview saved forever. Organize into playlists. Share via link. Download for offline.</p>
+          </Card>
+        </div>
+      </div>
+    </section>
+
+    <FeatureMeshBand
+      title="Study Tools That Work"
+      subtitle="Transform your library into active learning material."
+      features={[
+        {
+          icon: '🗺️',
+          title: 'Interactive Mind Maps',
+          description: 'Visual knowledge graph of entities and relationships. Click nodes to explore. Query subgraphs. Export as image or Mermaid.'
+        },
+        {
+          icon: '🃏',
+          title: 'Spaced Repetition Flashcards',
+          description: 'Auto-generate cloze, basic, and reversed cards. FSRS algorithm schedules reviews. Sync with Anki (.apkg export).'
+        },
+        {
+          icon: '❓',
+          title: 'Quiz Generator',
+          description: 'Create MCQs, short answer, and explanation questions from any document subset. Timed practice modes. Detailed explanations.'
+        },
+        {
+          icon: '📅',
+          title: 'Study Planner',
+          description: 'Set exam dates. Daily goals. Progress tracking. Adaptive scheduling based on retention scores.'
+        },
+        {
+          icon: '📤',
+          title: 'Universal Export',
+          description: 'Export to Markdown, PDF, Obsidian vault, Notion, Anki, CSV, Zotero, Mendeley. Your data, your format.'
+        },
+        {
+          icon: '🔌',
+          title: 'Integrations',
+          description: 'Zotero, Mendeley, Notion, Obsidian, Readwise, Google Drive, OneDrive. Sync bidirectionally.'
+        },
+      ]}
+    />
+
+    <ShowcaseBandDark
+      title="Developer Platform"
+      subtitle="Build custom workflows on top of persistent RAG."
+      reverse={false}
+    >
+      <slot name="content" slot="content">
+        <div class="space-y-6">
+          <div class="grid sm:grid-cols-2 gap-4">
+            <Badge variant="primary" size="md" class="text-sm">REST API</Badge>
+            <Badge variant="primary" size="md" class="text-sm">GraphQL</Badge>
+            <Badge variant="primary" size="md" class="text-sm">Webhooks</Badge>
+            <Badge variant="primary" size="md" class="text-sm">SDKs</Badge>
+            <Badge variant="secondary" size="md" class="text-sm">TypeScript</Badge>
+            <Badge variant="secondary" size="md" class="text-sm">Python</Badge>
+            <Badge variant="secondary" size="md" class="text-sm">Go</Badge>
+            <Badge variant="secondary" size="md" class="text-sm">Rust</Badge>
+          </div>
+          <ul class="space-y-3" role="list">
+            {[
+              'POST /v1/documents — Upload and process documents',
+              'POST /v1/chat — Streaming RAG chat with citations',
+              'GET /v1/search — Semantic search across knowledge base',
+              'POST /v1/audio — Generate audio overviews programmatically',
+              'GET /v1/mindmap — Fetch knowledge graph as nodes/edges',
+              'POST /v1/export — Export to any supported format',
+              'Webhooks: document.processed, chat.completed, audio.ready',
+            ].map((item) => (
+              <li class="flex items-center gap-3 font-body-md text-on-primary/80">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan flex-shrink-0" aria-hidden="true">
+                  <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                  <path d="M7 10l3 3 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <code class="font-code bg-canvas/10 px-2 py-0.5 rounded">{item}</code>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </slot>
+
+      <slot name="visual" slot="visual">
+        <div class="bg-canvas/5 rounded-xl border border-hairline-strong p-6">
+          <pre class="font-code text-on-primary/90 overflow-x-auto"><code>{`// TypeScript SDK example
+import { NotesChatAI } from '@noteschatai/sdk';
+
+const client = new NotesChatAI({
+  apiKey: process.env.NOTESCHATAI_API_KEY,
+});
+
+// Upload a document
+const doc = await client.documents.upload({
+  file: fs.createReadStream('./notes.pdf'),
+  title: 'ML Lecture Notes',
+});
+
+// Chat with RAG
+const stream = await client.chat.stream({
+  message: 'What are the key concepts in my ML notes?',
+  model: 'gemini-1.5-flash',
+  retrieval: { topK: 10, rerank: true },
+});
+
+for await (const chunk of stream) {
+  if (chunk.type === 'citation') {
+    console.log('Source:', chunk.documentTitle, chunk.page);
+  } else if (chunk.type === 'text') {
+    process.stdout.write(chunk.text);
+  }
+}`}
+          </code></pre>
+        </div>
+      </slot>
+    </ShowcaseBandDark>
+
+    <section class="hero-band bg-canvas-soft" aria-labelledby="features-cta-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto">
+          <h2 id="features-cta-title" class="font-display-lg text-ink mb-4">
+            See it in action
+          </h2>
+          <p class="font-body-lg text-body mb-8">
+            Join the free beta and experience persistent AI memory for yourself.
+          </p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="/signup" class="btn-primary w-full sm:w-auto">
+              Start Free Beta
+            </a>
+            <a href="/docs" class="btn-secondary w-full sm:w-auto">
+              Read the Docs
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

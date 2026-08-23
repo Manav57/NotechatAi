@@ -1,0 +1,36 @@
+---
+interface Props {
+  text?: string;
+  href?: string;
+  dismissible?: boolean;
+  class?: string;
+}
+
+const { text, href, dismissible = false, class: className = '', ...attrs } = Astro.props;
+---
+
+<div class="banner-marketing flex items-center justify-center gap-3 {className}" role="status" aria-live="polite" {...attrs}>
+  {text && <span class="font-body-sm text-body">{text}</span>}
+  {href && (
+    <a href={href} class="font-body-sm-strong text-link hover:text-link-deep underline underline-offset-2 whitespace-nowrap">
+      Learn more →
+    </a>
+  )}
+  {dismissible && (
+    <button type="button" class="text-mute hover:text-ink transition-colors p-1" aria-label="Dismiss announcement">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+  )}
+</div>
+
+<style>
+  :host {
+    display: block;
+  }
+
+  .banner-marketing {
+    padding: 8px 16px;
+  }
+</style>

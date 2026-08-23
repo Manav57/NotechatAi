@@ -1,0 +1,53 @@
+{
+  "name": "noteschatai",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "NotesChatAI — Your Persistent AI Study Assistant",
+  "author": "NotesChatAI Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint src --ext .ts,.tsx,.astro",
+    "format": "prettier --write src/",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "worker:dev": "wrangler dev",
+    "worker:deploy": "wrangler deploy",
+    "worker:tail": "wrangler tail"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.41.7",
+    "@cloudflare/workers-types": "^5.20260823.1",
+    "@fontsource/geist": "^5.3.0",
+    "@fontsource/geist-mono": "^5.3.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "astro": "^7.2.4",
+    "better-auth": "^1.7.1",
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.13.3",
+    "uuid": "^14.0.2"
+  },
+  "devDependencies": {
+    "@astrojs/tailwind": "^6.0.2",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/uuid": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.67.0",
+    "@typescript-eslint/parser": "^8.67.0",
+    "drizzle-kit": "^0.20.18",
+    "eslint": "^10.9.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^1.7.0",
+    "prettier": "^3.9.6",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.125.0"
+  }
+}
