@@ -5,7 +5,7 @@ import Footer from '../../components/ui/Footer.astro';
 import Badge from '../../components/ui/Badge.astro';
 ---
 
-<Layout title="Pricing — NotesChatAI | Free AI Study Assistant" description="Simple, transparent pricing for NotesChatAI. Free beta with 50 documents. Pro for unlimited docs, chats, and API access. Better value than NotebookLM." keywords="noteschatai pricing, free notebooklm alternative, ai study assistant pricing, free ai study assistant">
+<Layout title="Pricing — NotesChatAI | Free AI Study Assistant" description="Simple, transparent pricing for NotesChatAI. Free beta with 50 documents. Pro for unlimited docs and chats. Better value than NotebookLM." keywords="noteschatai pricing, free notebooklm alternative, ai study assistant pricing, free ai study assistant">
   <NavBar user={null} />
 
   <main>
@@ -103,11 +103,11 @@ import Badge from '../../components/ui/Badge.astro';
                 '20 audio overviews per day',
                 '50 GB storage',
                 'Priority processing',
-                'API access (REST + GraphQL)',
-                'Webhooks & SDKs',
+                'API access (coming soon)',
+                'Webhooks & SDKs (coming soon)',
                 'Advanced export (Obsidian, Notion)',
                 'Email support (24h SLA)',
-                'Self-hosted Docker option',
+                'Self-hosted Docker (coming soon)',
               ].map((item) => (
                 <li class="flex items-center gap-3 font-body-sm text-on-primary/90">
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="text-cyan-soft flex-shrink-0" aria-hidden="true">
@@ -118,7 +118,7 @@ import Badge from '../../components/ui/Badge.astro';
                 </li>
               ))}
             </ul>
-            <a href="/signup?plan=pro" class="w-full h-11 flex items-center justify-center rounded-pill bg-on-primary text-primary font-button-lg hover:opacity-90 active:opacity-70 transition-all">Upgrade to Pro</a>
+            <a href="/auth/signup?plan=pro" class="w-full h-11 flex items-center justify-center rounded-pill bg-on-primary text-primary font-button-lg hover:opacity-90 active:opacity-70 transition-all">Upgrade to Pro</a>
           </div>
 
           {/* Team */}
@@ -168,7 +168,7 @@ import Badge from '../../components/ui/Badge.astro';
       <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
         <div class="max-w-4xl mx-auto">
           <div class="text-center mb-12">
-            <span class="font-caption-mono text-violet uppercase tracking-wider text-xs mb-3 block">Value comparison</span>
+            <span class="font-caption-mono text-violet-soft uppercase tracking-wider text-xs mb-3 block">Value comparison</span>
             <h2 id="vs-title" class="font-display-lg text-ink mb-4">
               Better value than NotebookLM
             </h2>
@@ -177,7 +177,7 @@ import Badge from '../../components/ui/Badge.astro';
             </p>
           </div>
 
-          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-3">
+          <div class="bg-canvas rounded-xl border border-hairline shadow-level-3 table-responsive">
             <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
               <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Plan</span></div>
               <div class="p-4 text-center border-x border-hairline">
@@ -189,7 +189,7 @@ import Badge from '../../components/ui/Badge.astro';
             </div>
             {[
               { plan: 'Free', nc: '$0 — 50 docs, 30 chats/day', nlm: '$0 — 50 sources, 50 chats/day' },
-              { plan: 'Pro', nc: '$15/mo — Unlimited docs, chats, API', nlm: '$19.99/mo — 300 sources, 500 chats/day' },
+              { plan: 'Pro', nc: '$15/mo — Unlimited docs & chats, API (coming soon)', nlm: '$19.99/mo — 300 sources, 500 chats/day' },
               { plan: 'Team', nc: '$30/user — Shared KB, SSO, admin', nlm: 'Google Workspace (varies)' },
               { plan: 'Enterprise', nc: 'Custom — Self-hosted, SLA, support', nlm: 'Google Cloud (custom)' },
             ].map((row) => (
@@ -214,7 +214,7 @@ import Badge from '../../components/ui/Badge.astro';
             </div>
             <div>
               <p class="font-body-sm-strong text-ink">The bottom line</p>
-              <p class="font-body-sm text-body">NotesChatAI Pro at $15/mo gives you unlimited documents and chats. NotebookLM Pro at $19.99/mo still limits you to 300 sources and 500 chats/day. Plus you get API access, self-hosting, and study tools that NotebookLM doesn't offer at any price.</p>
+              <p class="font-body-sm text-body">NotesChatAI Pro at $15/mo gives you unlimited documents and chats. NotebookLM Pro at $19.99/mo still limits you to 300 sources and 500 chats/day. Plus you get study tools NotebookLM doesn't offer at any price, with API access and self-hosting on the way.</p>
             </div>
           </div>
         </div>
@@ -257,19 +257,14 @@ import Badge from '../../components/ui/Badge.astro';
           </div>
           <div class="hidden lg:block">
             <div class="bg-canvas/10 rounded-xl border border-hairline-strong/20 p-8">
-              <pre class="font-code text-sm text-on-primary/80 leading-relaxed"><code>{`# Deploy with Docker
-docker pull noteschatai/server:latest
-
-docker run -d \\
-  --name noteschatai \\
-  -p 4321:4321 \\
-  -e DATABASE_URL="..." \\
-  -e AUTH_SECRET="..." \\
-  -e GEMINI_API_KEY="..." \\
-  noteschatai/server:latest
-
-# Your instance is live at
-# https://your-domain.com`}</code></pre>
+              <div class="text-center py-8">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" class="mx-auto mb-4 text-cyan-soft" aria-hidden="true">
+                  <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2"/>
+                  <path d="M18 20h12M18 24h8M18 28h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <p class="font-body-sm-strong text-on-primary mb-1">Self-hosted Docker</p>
+                <p class="font-caption text-cyan-soft">Coming soon for Pro & Enterprise plans</p>
+              </div>
             </div>
           </div>
         </div>
@@ -311,7 +306,7 @@ docker run -d \\
             },
             {
               q: 'Can I export my data?',
-              a: 'Yes. Export to Markdown, JSON, PDF, Anki (.apkg), Obsidian vault, Notion, CSV, Zotero, and Mendeley. Your data is fully portable.',
+              a: 'Yes. Export to Markdown, PDF, JSON, Anki (.apkg), Obsidian vault, Notion, and CSV. Your data is fully portable.',
             },
             {
               q: 'Do you offer refunds?',

@@ -1,23 +1,45 @@
 import { Hono } from 'hono';
 import { getDb } from '../db';
 import { conversations, messages, documents } from '../db/schema';
-import { eq, and, desc, inArray } from 'drizzle-orm';
+import { eq, and, desc, count, notInArray } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 
 interface Env {
   DB: D1Database;
   VECTORIZE: VectorizeIndex;
   AI: Ai;
-  GEMINI_API_KEY: string;
+  OPENROUTER_API_KEY: string;
 }
 
 const chatRoutes = new Hono<{ Bindings: Env }>();
 
-const RAG_SYSTEM_PROMPT = `You are NotesChatAI, an AI study assistant with access to the user's personal knowledge base. 
-Answer questions based ONLY on the provided context from their documents.
-Always cite your sources using the format [doc_id:chunk_index].
-If the context doesn't contain the answer, say so honestly.
-Be concise but thorough. Use markdown for formatting.`;
+// CTO decision: Using openai/gpt-4o-mini via OpenRouter
+// Cost: $0.15/1M input, $0.60/1M output — excellent quality for the price
+// Supports function calling and handles RAG context well
+const DEFAULT_MODEL = 'openai/gpt-4o-mini';
+
+const CASUAL_SYSTEM_PROMPT = `You are NotesChatAI, a friendly AI study assistant. You help students learn, study, and understand their materials.
+
+You can:
+- Answer questions about uploaded documents (PDFs, notes, textbooks)
+- Have casual conversations about any topic
+- Help with studying, flashcards, and exam prep
+- Explain concepts in simple terms
+- Generate study questions and summaries
+
+Be warm, helpful, and conversational. Keep responses concise but thorough. Use markdown formatting when it helps readability.`;
+
+const RAG_SYSTEM_PROMPT = `You are NotesChatAI, an AI study assistant with access to the user's personal knowledge base.
+
+When context from documents is provided below, answer based on that context. Cite your sources using the format [Source N] where N matches the context number.
+
+Rules:
+- Answer based on the provided context when it's relevant to the question
+- If the context doesn't contain the answer, say so honestly — don't make things up
+- Be concise but thorough
+- Use markdown for formatting when helpful
+- If the user asks a casual or off-topic question, respond naturally even if the context is provided
+- Never fabricate citations or sources that aren't in the provided context`;
 
 async function generateEmbedding(env: Env, text: string): Promise<number[]> {
   const result = await env.AI.run('@cf/baai/bge-base-en-v1.5', {
@@ -36,11 +58,54 @@ async function searchVectorize(env: Env, embedding: number[], userId: string, to
   return results.matches;
 }
 
-// POST /chat - Streaming chat with RAG
+async function userHasDocuments(env: Env, userId: string): Promise<boolean> {
+  const db = getDb(env);
+  const result = await db.select({ value: count() }).from(documents)
+    .where(and(
+      eq(documents.userId, userId),
+      notInArray(documents.status, ['pending_upload', 'failed']),
+    ))
+    .get();
+  return (result?.value ?? 0) > 0;
+}
+
+async function callOpenRouter(
+  env: Env,
+  messages: Array<{ role: string; content: string }>,
+  model = DEFAULT_MODEL,
+): Promise<string> {
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${env.OPENROUTER_API_KEY}`,
+      'HTTP-Referer': 'https://noteschatai.com',
+      'X-Title': 'NotesChatAI',
+    },
+    body: JSON.stringify({
+      model,
+      messages,
+      temperature: 0.7,
+      top_p: 0.9,
+      max_tokens: 4096,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('OpenRouter API error:', response.status, errorText);
+    throw new Error(`OpenRouter API error: ${response.status}`);
+  }
+
+  const data = await response.json() as any;
+  return data.choices?.[0]?.message?.content || 'No response generated.';
+}
+
+// POST /chat - Chat with AI (RAG when documents exist, casual chat otherwise)
 chatRoutes.post('/', async (c) => {
   const user = c.get('user');
   const body = await c.req.json();
-  const { message, conversationId, model = 'gemini-1.5-flash', retrieval = { topK: 10, rerank: true } } = body;
+  const { message, conversationId, model = DEFAULT_MODEL } = body;
 
   if (!message) {
     return c.json({ error: 'message required' }, 400);
@@ -77,18 +142,37 @@ chatRoutes.post('/', async (c) => {
     model,
   });
 
-  // 1. Embed query
-  const queryEmbedding = await generateEmbedding(c.env, message);
+  // Check if user has documents for RAG
+  let hasDocuments = false;
+  let context = '';
+  let vectorResults: any[] = [];
 
-  // 2. Vector search
-  const vectorResults = await searchVectorize(c.env, queryEmbedding, user.id, retrieval.topK);
+  try {
+    hasDocuments = await userHasDocuments(c.env, user.id);
+  } catch (e) {
+    // If query fails, assume no documents
+    console.error('Failed to check documents:', e);
+  }
 
-  // 3. Build context from vector results
-  const context = vectorResults
-    .map((match, i) => `[${i + 1}] ${match.metadata?.content || '[Content]'}`)
-    .join('\n\n');
+  // If user has documents, do RAG
+  if (hasDocuments) {
+    try {
+      const queryEmbedding = await generateEmbedding(c.env, message);
+      vectorResults = await searchVectorize(c.env, queryEmbedding, user.id, 10);
 
-  // 4. Get recent conversation history
+      if (vectorResults.length > 0) {
+        context = vectorResults
+          .map((match, i) => `[Source ${i + 1}] ${match.metadata?.content || '[Content]'}`)
+          .join('\n\n');
+      }
+    } catch (e) {
+      // If vector search fails, proceed without RAG
+      console.error('Vector search failed:', e);
+      hasDocuments = false;
+    }
+  }
+
+  // Get recent conversation history
   const recentMessages = await db.select().from(messages).where(
     eq(messages.conversationId, conversation.id)
   ).orderBy(desc(messages.createdAt)).limit(10).all();
@@ -98,65 +182,61 @@ chatRoutes.post('/', async (c) => {
     content: m.content,
   }));
 
-  // 5. Build full message array
-  const fullMessages = [
-    { role: 'system', content: RAG_SYSTEM_PROMPT },
-    ...history.slice(-6),
-    { role: 'user', content: `Context from your knowledge base:\n\n${context}\n\nQuestion: ${message}` },
-  ];
+  // Build the message array for OpenRouter
+  const fullMessages: Array<{ role: string; content: string }> = [];
 
-  // 6. Stream response from Gemini
-  const stream = await callGeminiStream(c.env, fullMessages, model);
+  // Choose system prompt based on whether we have document context
+  if (context) {
+    fullMessages.push({ role: 'system', content: RAG_SYSTEM_PROMPT });
+    fullMessages.push({
+      role: 'user',
+      content: `Context from your knowledge base:\n\n${context}\n\nQuestion: ${message}`,
+    });
+  } else {
+    fullMessages.push({ role: 'system', content: CASUAL_SYSTEM_PROMPT });
+    // Add conversation history
+    for (const m of history.slice(-8)) {
+      fullMessages.push({ role: m.role, content: m.content });
+    }
+    // Add the current user message
+    fullMessages.push({ role: 'user', content: message });
+  }
 
-  // Save assistant message placeholder
+  // Call OpenRouter
+  let assistantContent: string;
+  try {
+    assistantContent = await callOpenRouter(c.env, fullMessages, model);
+  } catch (e) {
+    console.error('OpenRouter call failed:', e);
+    assistantContent = 'I apologize, but I encountered an error processing your request. Please try again.';
+  }
+
+  // Save assistant message
   const assistantMessageId = uuidv4();
   await db.insert(messages).values({
     id: assistantMessageId,
     conversationId: conversation.id,
     role: 'assistant',
-    content: '',
+    content: assistantContent,
     model,
-    citations: JSON.stringify(vectorResults.map(m => ({ id: m.id, score: m.score }))),
+    citations: vectorResults.length > 0
+      ? JSON.stringify(vectorResults.map(m => ({ id: m.id, score: m.score })))
+      : null,
   });
 
-  // Return streaming response
-  return new Response(stream, {
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive',
-      'X-Conversation-Id': conversation.id,
-      'X-Message-Id': assistantMessageId,
-    },
+  // Return JSON response (matches frontend expectations)
+  return c.json({
+    message: assistantContent,
+    conversationId: conversation.id,
+    citations: vectorResults.length > 0
+      ? vectorResults.map(m => ({
+          id: m.id,
+          title: m.metadata?.documentId || 'Document',
+          score: m.score,
+        }))
+      : [],
   });
 });
-
-async function callGeminiStream(env: Env, messages: Array<{ role: string; content: string }>, model = 'gemini-1.5-flash') {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${env.GEMINI_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: messages.map(m => ({
-          role: m.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: m.content }],
-        })),
-        generationConfig: {
-          temperature: 0.3,
-          topP: 0.9,
-          maxOutputTokens: 4096,
-        },
-      }),
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(`Gemini API error: ${response.statusText}`);
-  }
-
-  return response.body;
-}
 
 // GET /chat/:id - Get conversation
 chatRoutes.get('/:id', async (c) => {

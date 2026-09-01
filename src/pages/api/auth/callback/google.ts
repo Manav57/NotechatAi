@@ -1,13 +1,19 @@
 export const prerender = false;
 
+import { env } from "cloudflare:workers";
 import type { APIRoute } from 'astro';
+import { dbGetUserByEmail, dbCreateUser, dbCreateSession, dbUpsertOAuthAccount } from '../../../../lib/db-auth';
 import { devCreateUser, devCreateSession, devGetUserByEmail } from '../../../../lib/dev-auth';
-
-const GOOGLE_CLIENT_ID = import.meta.env.GOOGLE_CLIENT_ID || '';
-const GOOGLE_CLIENT_SECRET = import.meta.env.GOOGLE_CLIENT_SECRET || '';
 
 export const GET: APIRoute = async ({ url, cookies, redirect }) => {
   try {
+    const GOOGLE_CLIENT_ID = env.GOOGLE_CLIENT_ID || '';
+    const GOOGLE_CLIENT_SECRET = env.GOOGLE_CLIENT_SECRET || '';
+
+    if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+      return redirect('/auth/login?error=google_not_configured');
+    }
+
     const code = url.searchParams.get('code');
     if (!code) {
       return redirect('/auth/login?error=missing_code');
@@ -44,19 +50,44 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
 
     const googleUser = await userResponse.json();
 
-    // Find or create user
-    let user = devGetUserByEmail(googleUser.email);
-    if (!user) {
-      user = devCreateUser(
-        googleUser.name || googleUser.email.split('@')[0],
-        googleUser.email,
-        'oauth-no-password-' + Math.random().toString(36).slice(2),
+    // Try D1 first, fall back to dev-auth
+    let sessionToken: string;
+    try {
+      // D1 path
+      let user = await dbGetUserByEmail(googleUser.email);
+      if (!user) {
+        user = await dbCreateUser(
+          googleUser.name || googleUser.email.split('@')[0],
+          googleUser.email,
+          'oauth-no-password-' + Math.random().toString(36).slice(2),
+        );
+      }
+      // Record OAuth account linkage
+      await dbUpsertOAuthAccount(
+        user.id,
+        'google',
+        googleUser.id,
+        tokens.access_token,
+        tokens.refresh_token,
+        'openid email profile',
       );
+      const session = await dbCreateSession(user.id);
+      sessionToken = session.token;
+    } catch {
+      // D1 unavailable — fall back to in-memory dev-auth
+      let user = devGetUserByEmail(googleUser.email);
+      if (!user) {
+        user = devCreateUser(
+          googleUser.name || googleUser.email.split('@')[0],
+          googleUser.email,
+          'oauth-no-password-' + Math.random().toString(36).slice(2),
+        );
+      }
+      const session = devCreateSession(user.id);
+      sessionToken = session.token;
     }
 
-    // Create session
-    const session = devCreateSession(user.id);
-    cookies.set('session', session.token, {
+    cookies.set('session', sessionToken, {
       path: '/',
       httpOnly: true,
       secure: import.meta.env.PROD,

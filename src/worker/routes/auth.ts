@@ -39,7 +39,7 @@ function getAuth(env: Env) {
     },
     secret: env.BETTER_AUTH_SECRET,
     baseURL: env.BETTER_AUTH_URL,
-    trustedOrigins: ['https://noteschatai.com', 'http://localhost:4321'],
+    trustedOrigins: ['https://noteschatai.com', 'https://www.noteschatai.com', 'http://localhost:4321'],
   });
 }
 

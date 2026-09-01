@@ -1,8 +1,7 @@
 export const prerender = false;
 import type { APIRoute } from 'astro';
+import { dbGetUserByEmail, dbCreateUser, dbCreateSession } from '../../../lib/db-auth';
 import { devCreateUser, devCreateSession, devGetUserByEmail } from '../../../lib/dev-auth';
-
-const WORKER_URL = import.meta.env.WORKER_URL || '';
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
@@ -23,16 +22,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       );
     }
 
-    // Dev mode: use in-memory auth
-    if (!WORKER_URL) {
-      if (devGetUserByEmail(email)) {
+    // Try D1-backed auth first
+    try {
+      const existing = await dbGetUserByEmail(email);
+      if (existing) {
         return new Response(
           JSON.stringify({ error: 'An account with this email already exists' }),
           { status: 409, headers: { 'Content-Type': 'application/json' } }
         );
       }
-      const user = devCreateUser(name || email.split('@')[0], email, password);
-      const session = devCreateSession(user.id);
+      const user = await dbCreateUser(name || email.split('@')[0], email, password);
+      const session = await dbCreateSession(user.id);
       cookies.set('session', session.token, {
         path: '/',
         httpOnly: true,
@@ -44,46 +44,28 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         JSON.stringify({ success: true, user: { id: user.id, email: user.email, name: user.name, plan: user.plan } }),
         { status: 200, headers: { 'Content-Type': 'application/json' } }
       );
+    } catch {
+      // D1 unavailable — fall back to in-memory dev-auth
     }
 
-    // Production: proxy to worker
-    const response = await fetch(`${WORKER_URL}/api/auth/signup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
+    // Fallback: in-memory dev-auth
+    if (devGetUserByEmail(email)) {
       return new Response(
-        JSON.stringify({ error: data.error || 'Signup failed' }),
-        { status: response.status, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'An account with this email already exists' }),
+        { status: 409, headers: { 'Content-Type': 'application/json' } }
       );
     }
-
-    if (data.token) {
-      cookies.set('session', data.token, {
-        path: '/',
-        httpOnly: true,
-        secure: import.meta.env.PROD,
-        sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 30,
-      });
-    }
-
-    const setCookies = response.headers.getSetCookie?.() || [];
-    for (const cookie of setCookies) {
-      cookies.set(cookie.split('=')[0].trim(), cookie.split('=')[1]?.split(';')[0], {
-        path: '/',
-        httpOnly: true,
-        secure: import.meta.env.PROD,
-        sameSite: 'lax',
-      });
-    }
-
+    const user = devCreateUser(name || email.split('@')[0], email, password);
+    const session = devCreateSession(user.id);
+    cookies.set('session', session.token, {
+      path: '/',
+      httpOnly: true,
+      secure: import.meta.env.PROD,
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 30,
+    });
     return new Response(
-      JSON.stringify({ success: true, user: data.user }),
+      JSON.stringify({ success: true, user: { id: user.id, email: user.email, name: user.name, plan: user.plan } }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {

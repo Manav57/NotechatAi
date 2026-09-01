@@ -33,7 +33,7 @@ import Footer from '../../components/ui/Footer.astro';
           {/* Contact Form */}
           <div>
             <h2 id="contact-methods" class="font-display-lg text-ink mb-6">Send us a message</h2>
-            <form class="space-y-5" id="contact-form">
+            <form class="space-y-5" id="contact-form" action="/api/contact" method="POST">
               <div class="grid sm:grid-cols-2 gap-5">
                 <div>
                   <label for="name" class="font-body-sm-strong text-ink block mb-2">Name</label>
@@ -67,6 +67,7 @@ import Footer from '../../components/ui/Footer.astro';
               <button type="submit" class="btn-primary w-full sm:w-auto">
                 Send Message
               </button>
+              <p id="form-status" class="font-body-sm text-mute hidden" role="status" aria-live="polite"></p>
             </form>
           </div>
 
@@ -129,9 +130,9 @@ import Footer from '../../components/ui/Footer.astro';
             </div>
 
             <div class="bg-canvas rounded-xl border border-hairline shadow-level-2 p-5">
-              <h3 class="font-body-sm-strong text-ink mb-2">Join our community</h3>
-              <p class="font-body-sm text-body mb-3">Connect with other users and the team on Discord.</p>
-              <a href="https://discord.gg/noteschatai" class="btn-secondary-sm" target="_blank" rel="noopener noreferrer">Join Discord</a>
+              <h3 class="font-body-sm-strong text-ink mb-2">Open Source</h3>
+              <p class="font-body-sm text-body mb-3">View our code and contribute on GitHub.</p>
+              <a href="https://github.com/noteschatai" class="btn-secondary-sm" target="_blank" rel="noopener noreferrer">View on GitHub</a>
             </div>
           </div>
 
@@ -144,21 +145,54 @@ import Footer from '../../components/ui/Footer.astro';
 </Layout>
 
 <script>
-  const form = document.getElementById('contact-form');
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const statusEl = document.getElementById('form-status');
   if (form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+      const originalText = btn.textContent;
       if (btn) {
-        btn.textContent = 'Message Sent!';
+        btn.textContent = 'Sending…';
         btn.disabled = true;
-        btn.classList.add('opacity-70');
-        setTimeout(() => {
-          btn.textContent = 'Send Message';
+      }
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: form.name.value,
+            email: form.email.value,
+            subject: form.subject.value,
+            message: form.message.value,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok) {
+          form.reset();
+          if (statusEl) {
+            statusEl.textContent = data.message || 'Thanks — we\'ll get back to you soon!';
+            statusEl.classList.remove('hidden', 'text-error');
+            statusEl.classList.add('text-success');
+          }
+        } else {
+          if (statusEl) {
+            statusEl.textContent = data.error || 'Something went wrong. Please try again.';
+            statusEl.classList.remove('hidden', 'text-success');
+            statusEl.classList.add('text-error');
+          }
+        }
+      } catch {
+        if (statusEl) {
+          statusEl.textContent = 'Network error. Please try again.';
+          statusEl.classList.remove('hidden', 'text-success');
+          statusEl.classList.add('text-error');
+        }
+      } finally {
+        if (btn) {
+          btn.textContent = originalText;
           btn.disabled = false;
-          btn.classList.remove('opacity-70');
-          (form as HTMLFormElement).reset();
-        }, 3000);
+        }
       }
     });
   }

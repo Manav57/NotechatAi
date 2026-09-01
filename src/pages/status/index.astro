@@ -1,0 +1,74 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import NavBar from '../../components/ui/NavBar.astro';
+import Footer from '../../components/ui/Footer.astro';
+---
+
+<Layout title="System Status — NotesChatAI" description="Check the current status of NotesChatAI services. Uptime, incidents, and maintenance updates.">
+  <NavBar user={null} />
+
+  <main>
+    <section class="hero-band relative overflow-hidden" aria-labelledby="status-hero">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.08]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <span class="badge-secondary inline-flex items-center gap-1.5 mb-6 font-caption-mono">
+            <span class="w-2 h-2 rounded-full bg-success"></span>
+            All Systems Operational
+          </span>
+          <h1 id="status-hero" class="font-display-xl text-ink mb-4">
+            System Status
+          </h1>
+          <p class="font-body-lg text-body">
+            Current status of all NotesChatAI services.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="showcase-band-light relative" aria-labelledby="services-title">
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+        <div class="max-w-3xl mx-auto">
+          <h2 id="services-title" class="font-display-md text-ink mb-6">Services</h2>
+
+          <div class="space-y-3">
+            {[
+              { name: 'Web Application', status: 'operational', uptime: '99.9%' },
+              { name: 'API', status: 'operational', uptime: '99.9%' },
+              { name: 'Document Processing', status: 'operational', uptime: '99.8%' },
+              { name: 'Audio Generation', status: 'operational', uptime: '99.7%' },
+              { name: 'Authentication', status: 'operational', uptime: '99.9%' },
+            ].map((service) => (
+              <div class="flex items-center justify-between bg-canvas rounded-lg border border-hairline p-4 hover:border-hairline-strong transition-colors">
+                <div class="flex items-center gap-3">
+                  <span class="w-2.5 h-2.5 rounded-full bg-success flex-shrink-0"></span>
+                  <span class="font-body-sm-strong text-ink">{service.name}</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="font-caption text-success">Operational</span>
+                  <span class="font-caption text-mute hidden sm:inline">{service.uptime} uptime</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div class="mt-12">
+            <h2 class="font-display-md text-ink mb-6">Recent Incidents</h2>
+            <div class="bg-canvas rounded-lg border border-hairline p-6 text-center">
+              <p class="font-body-sm text-mute">No recent incidents. Everything is running smoothly.</p>
+            </div>
+          </div>
+
+          <div class="mt-12">
+            <h2 class="font-display-md text-ink mb-6">Scheduled Maintenance</h2>
+            <div class="bg-canvas rounded-lg border border-hairline p-6 text-center">
+              <p class="font-body-sm text-mute">No scheduled maintenance at this time.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

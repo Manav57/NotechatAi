@@ -41,7 +41,7 @@ const allTags = [...new Set(sortedPosts.flatMap((p) => p.data.tags))].sort();
     {featuredPost && (
       <section class="showcase-band-light" aria-labelledby="featured-title">
         <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
-          <span class="font-caption-mono text-violet uppercase tracking-wider text-xs mb-6 block">Featured</span>
+          <span class="font-caption-mono text-violet-soft uppercase tracking-wider text-xs mb-6 block">Featured</span>
           <a href={`/blog/${featuredPost.id}/`} class="group block bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-3 hover:shadow-level-4 transition-all duration-200">
             <div class="grid md:grid-cols-5 gap-0">
               {/* Gradient visual */}
@@ -132,7 +132,7 @@ const allTags = [...new Set(sortedPosts.flatMap((p) => p.data.tags))].sort();
                     <span>·</span>
                     <span>{Math.ceil(post.data.description.length / 100)} min</span>
                   </div>
-                  <a href={`/blog/${post.id}/`} class="font-body-sm-strong text-violet hover:text-violet-deep transition-colors">
+                  <a href={`/blog/${post.id}/`} class="font-body-sm-strong text-violet-bright hover:text-violet-soft transition-colors">
                     Read →
                   </a>
                 </div>

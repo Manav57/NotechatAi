@@ -1,10 +1,9 @@
 export const prerender = false;
 import type { APIRoute } from 'astro';
+import { dbGetSession } from '../../../lib/db-auth';
 import { devGetSession } from '../../../lib/dev-auth';
 
-const WORKER_URL = import.meta.env.WORKER_URL || '';
-
-export const GET: APIRoute = async ({ request, cookies }) => {
+export const GET: APIRoute = async ({ cookies }) => {
   try {
     const sessionToken = cookies.get('session')?.value || cookies.get('better-auth.session_token')?.value;
 
@@ -15,9 +14,9 @@ export const GET: APIRoute = async ({ request, cookies }) => {
       );
     }
 
-    // Dev mode: use in-memory auth
-    if (!WORKER_URL) {
-      const result = devGetSession(sessionToken);
+    // Try D1-backed session store first
+    try {
+      const result = await dbGetSession(sessionToken);
       if (!result) {
         cookies.delete('session', { path: '/' });
         return new Response(
@@ -26,23 +25,25 @@ export const GET: APIRoute = async ({ request, cookies }) => {
         );
       }
       return new Response(
-        JSON.stringify({ session: { user: { id: result.session.user.id, email: result.session.user.email, name: result.session.user.name, plan: result.session.user.plan } } }),
+        JSON.stringify({
+          session: {
+            user: {
+              id: result.session.user.id,
+              email: result.session.user.email,
+              name: result.session.user.name,
+              plan: result.session.user.plan,
+            },
+          },
+        }),
         { status: 200, headers: { 'Content-Type': 'application/json' } }
       );
+    } catch {
+      // D1 unavailable — fall back to in-memory dev-auth
     }
 
-    // Production: proxy to worker
-    const response = await fetch(`${WORKER_URL}/api/auth/session`, {
-      headers: {
-        Cookie: `session=${sessionToken}; better-auth.session_token=${sessionToken}`,
-      },
-    });
-
-    const data = await response.json();
-
-    if (!response.ok || !data.session) {
+    const result = devGetSession(sessionToken);
+    if (!result) {
       cookies.delete('session', { path: '/' });
-      cookies.delete('better-auth.session_token', { path: '/' });
       return new Response(
         JSON.stringify({ session: null }),
         { status: 200, headers: { 'Content-Type': 'application/json' } }
@@ -50,7 +51,16 @@ export const GET: APIRoute = async ({ request, cookies }) => {
     }
 
     return new Response(
-      JSON.stringify({ session: data.session }),
+      JSON.stringify({
+        session: {
+          user: {
+            id: result.session.user.id,
+            email: result.session.user.email,
+            name: result.session.user.name,
+            plan: result.session.user.plan,
+          },
+        },
+      }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {

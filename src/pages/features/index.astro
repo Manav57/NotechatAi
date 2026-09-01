@@ -10,7 +10,7 @@ import Button from '../../components/ui/Button.astro';
 import Card from '../../components/ui/Card.astro';
 ---
 
-<Layout title="Features — NotesChatAI vs NotebookLM | AI Study Assistant" description="Full feature comparison: why NotesChatAI is the better AI study assistant and free NotebookLM alternative. Persistent memory, unlimited sources, API access, flashcard generator, and more." keywords="notebooklm alternative, ai study assistant, features, persistent ai memory, chat with pdf ai, ai flashcard generator, api access">
+<Layout title="Features — NotesChatAI vs NotebookLM | AI Study Assistant" description="Full feature comparison: why NotesChatAI is the better AI study assistant and free NotebookLM alternative. Persistent memory, flashcards, citations, and study tools." keywords="notebooklm alternative, ai study assistant, features, persistent ai memory, chat with pdf ai, ai flashcard generator">
   <NavBar user={null} />
 
   <main>
@@ -40,7 +40,7 @@ import Card from '../../components/ui/Card.astro';
     <section id="comparison-table" class="showcase-band-light relative scroll-mt-20" aria-labelledby="table-title">
       <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
         <div class="text-center mb-12">
-          <span class="font-caption-mono text-violet uppercase tracking-wider text-xs mb-3 block">Head to head</span>
+          <span class="font-caption-mono text-violet-soft uppercase tracking-wider text-xs mb-3 block">Head to head</span>
           <h2 id="table-title" class="font-display-lg text-ink mb-4 text-balance">
             NotesChatAI vs NotebookLM
           </h2>
@@ -50,7 +50,7 @@ import Card from '../../components/ui/Card.astro';
         </div>
 
         {/* Category: Knowledge Base */}
-        <div class="max-w-5xl mx-auto mb-12">
+        <div class="max-w-5xl mx-auto mb-12 table-responsive">
           <h3 class="font-display-sm text-ink mb-4 flex items-center gap-2">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-violet" aria-hidden="true">
               <rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
@@ -58,7 +58,7 @@ import Card from '../../components/ui/Card.astro';
             </svg>
             Knowledge Base & Sources
           </h3>
-          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-2">
+          <div class="bg-canvas rounded-xl border border-hairline shadow-level-2">
             <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
               <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Feature</span></div>
               <div class="p-4 text-center border-x border-hairline">
@@ -73,10 +73,10 @@ import Card from '../../components/ui/Card.astro';
               { f: 'Cross-notebook search', nc: true, nlm: 'Not possible' },
               { f: 'Source limit per project', nc: 'Unlimited', nlm: '50 (Free) → 600 (Ultra)' },
               { f: 'Max words per source', nc: 'No limit', nlm: '500,000 words' },
-              { f: 'Max file size', nc: '200 MB', nlm: '200 MB' },
+              { f: 'Max file size', nc: '100 MB', nlm: '200 MB' },
               { f: 'Supported formats', nc: 'PDF, EPUB, DOCX, TXT, MDX, MP3, WAV, YouTube, URLs', nlm: 'PDF, DOCX, Google Docs, YouTube, audio, URLs' },
               { f: 'Import from', nc: 'Obsidian, Roam, Notion, Anki, GitHub', nlm: 'Google Drive only' },
-              { f: 'OCR (scanned PDFs)', nc: true, nlm: true },
+              { f: 'OCR (scanned PDFs)', nc: 'Planned', nlm: true },
               { f: 'Auto-indexing', nc: 'Real-time vector embeddings', nlm: 'Batch processing' },
             ].map((row) => (
               <div class="grid grid-cols-3 border-b border-hairline last:border-b-0 hover:bg-canvas-soft/50 transition-colors">
@@ -107,14 +107,14 @@ import Card from '../../components/ui/Card.astro';
         </div>
 
         {/* Category: Chat & AI */}
-        <div class="max-w-5xl mx-auto mb-12">
+        <div class="max-w-5xl mx-auto mb-12 table-responsive">
           <h3 class="font-display-sm text-ink mb-4 flex items-center gap-2">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan-deep" aria-hidden="true">
               <path d="M17 10a7 7 0 0 1-7 7H4l-2 2V3a7 7 0 0 1 14 0z" stroke="currentColor" stroke-width="1.5"/>
             </svg>
             Chat & AI Capabilities
           </h3>
-          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-2">
+          <div class="bg-canvas rounded-xl border border-hairline shadow-level-2">
             <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
               <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Feature</span></div>
               <div class="p-4 text-center border-x border-hairline"><span class="font-body-sm-strong text-ink">NotesChatAI</span></div>
@@ -126,7 +126,7 @@ import Card from '../../components/ui/Card.astro';
               { f: 'Cross-session context', nc: true, nlm: 'Per-notebook only' },
               { f: 'Citations', nc: 'Page + paragraph + confidence', nlm: 'Source-level only' },
               { f: 'Citation verification', nc: 'Confidence scores + exact location', nlm: 'Click to source' },
-              { f: 'Model choice', nc: 'Gemini, Claude, GPT, local', nlm: 'Gemini only' },
+              { f: 'Model choice', nc: 'Gemini (Claude & GPT on roadmap)', nlm: 'Gemini only' },
               { f: 'Streaming responses', nc: true, nlm: true },
               { f: 'Custom personas/goals', nc: 'Global + per-conversation', nlm: 'Per-notebook (5,000 chars)' },
               { f: 'Multi-language', nc: true, nlm: true },
@@ -153,7 +153,7 @@ import Card from '../../components/ui/Card.astro';
         </div>
 
         {/* Category: Study Tools */}
-        <div class="max-w-5xl mx-auto mb-12">
+        <div class="max-w-5xl mx-auto mb-12 table-responsive">
           <h3 class="font-display-sm text-ink mb-4 flex items-center gap-2">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-highlight-pink" aria-hidden="true">
               <rect x="3" y="4" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
@@ -161,7 +161,7 @@ import Card from '../../components/ui/Card.astro';
             </svg>
             Study Tools
           </h3>
-          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-2">
+          <div class="bg-canvas rounded-xl border border-hairline shadow-level-2">
             <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
               <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Feature</span></div>
               <div class="p-4 text-center border-x border-hairline"><span class="font-body-sm-strong text-ink">NotesChatAI</span></div>
@@ -191,7 +191,7 @@ import Card from '../../components/ui/Card.astro';
         </div>
 
         {/* Category: Audio & Media */}
-        <div class="max-w-5xl mx-auto mb-12">
+        <div class="max-w-5xl mx-auto mb-12 table-responsive">
           <h3 class="font-display-sm text-ink mb-4 flex items-center gap-2">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-warning" aria-hidden="true">
               <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
@@ -199,7 +199,7 @@ import Card from '../../components/ui/Card.astro';
             </svg>
             Audio & Media
           </h3>
-          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-2">
+          <div class="bg-canvas rounded-xl border border-hairline shadow-level-2">
             <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
               <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Feature</span></div>
               <div class="p-4 text-center border-x border-hairline"><span class="font-body-sm-strong text-ink">NotesChatAI</span></div>
@@ -231,27 +231,27 @@ import Card from '../../components/ui/Card.astro';
         </div>
 
         {/* Category: Platform & API */}
-        <div class="max-w-5xl mx-auto mb-12">
+        <div class="max-w-5xl mx-auto mb-12 table-responsive">
           <h3 class="font-display-sm text-ink mb-4 flex items-center gap-2">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-success" aria-hidden="true">
               <path d="M16 8a8 8 0 0 1-8 8H2l-1 1V2a8 8 0 0 1 15-1z" stroke="currentColor" stroke-width="1.5" fill="none"/>
             </svg>
             Platform & Developer
           </h3>
-          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-2">
+          <div class="bg-canvas rounded-xl border border-hairline shadow-level-2">
             <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
               <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Feature</span></div>
               <div class="p-4 text-center border-x border-hairline"><span class="font-body-sm-strong text-ink">NotesChatAI</span></div>
               <div class="p-4 text-center"><span class="font-body-sm-strong text-body">NotebookLM</span></div>
             </div>
             {[
-              { f: 'REST API', nc: true, nlm: 'Not available' },
-              { f: 'GraphQL API', nc: true, nlm: 'Not available' },
-              { f: 'Webhooks', nc: true, nlm: 'Not available' },
-              { f: 'SDKs', nc: 'TypeScript, Python, Go', nlm: 'Not available' },
-              { f: 'Self-hosted option', nc: 'Docker (Pro/Enterprise)', nlm: 'Not available' },
+              { f: 'REST API', nc: 'Coming soon', nlm: 'Not available' },
+              { f: 'GraphQL API', nc: 'Coming soon', nlm: 'Not available' },
+              { f: 'Webhooks', nc: 'Coming soon', nlm: 'Not available' },
+              { f: 'SDKs', nc: 'Coming soon', nlm: 'Not available' },
+              { f: 'Self-hosted option', nc: 'Coming soon', nlm: 'Not available' },
               { f: 'Export formats', nc: 'MD, JSON, CSV, Anki, Notion, Obsidian', nlm: 'Notes text only' },
-              { f: 'Embeddings API', nc: true, nlm: 'Not available' },
+              { f: 'Embeddings API', nc: 'Coming soon', nlm: 'Not available' },
               { f: 'Custom model hosting', nc: 'Workers AI, local', nlm: 'Not available' },
             ].map((row) => (
               <div class="grid grid-cols-3 border-b border-hairline last:border-b-0 hover:bg-canvas-soft/50 transition-colors">
@@ -276,7 +276,7 @@ import Card from '../../components/ui/Card.astro';
         </div>
 
         {/* Category: Pricing */}
-        <div class="max-w-5xl mx-auto mb-12">
+        <div class="max-w-5xl mx-auto mb-12 table-responsive">
           <h3 class="font-display-sm text-ink mb-4 flex items-center gap-2">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-link" aria-hidden="true">
               <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
@@ -284,7 +284,7 @@ import Card from '../../components/ui/Card.astro';
             </svg>
             Pricing & Limits
           </h3>
-          <div class="bg-canvas rounded-xl border border-hairline overflow-hidden shadow-level-2">
+          <div class="bg-canvas rounded-xl border border-hairline shadow-level-2">
             <div class="grid grid-cols-3 bg-canvas-soft border-b border-hairline">
               <div class="p-4"><span class="font-caption-mono text-mute uppercase text-xs tracking-wider">Feature</span></div>
               <div class="p-4 text-center border-x border-hairline"><span class="font-body-sm-strong text-ink">NotesChatAI</span></div>
@@ -292,10 +292,10 @@ import Card from '../../components/ui/Card.astro';
             </div>
             {[
               { f: 'Free tier', nc: '50 docs, 30 chats/day, 2 audio/day', nlm: '50 sources, 50 chats/day, 3 audio/day' },
-              { f: 'Pro price', nc: '$9.99/mo', nlm: '$19.99/mo (AI Pro)' },
+              { f: 'Pro price', nc: '$15/mo', nlm: '$19.99/mo (AI Pro)' },
               { f: 'Enterprise', nc: 'Self-hosted, custom limits', nlm: 'Google Workspace' },
-              { f: 'API included', nc: 'All paid plans', nlm: 'Not available' },
-              { f: 'Storage', nc: 'Unlimited (Pro)', nlm: '2 TB (Pro) → 5 TB (Ultra)' },
+              { f: 'API included', nc: 'Coming soon', nlm: 'Not available' },
+              { f: 'Storage', nc: '1 GB (Free) / 50 GB (Pro)', nlm: '2 TB (Pro) → 5 TB (Ultra)' },
               { f: 'Team features', nc: 'Shared KB, roles, audit log', nlm: 'Basic sharing' },
               { f: 'Data portability', nc: 'Full export, any format', nlm: 'Limited notes export' },
               { f: 'Uptime SLA', nc: '99.9% (Enterprise)', nlm: 'Google SLA' },
@@ -418,18 +418,18 @@ import Card from '../../components/ui/Card.astro';
                 <div class="grid grid-cols-3 gap-3">
                   <div class="bg-error-soft/50 border border-error/20 rounded-lg p-3 text-center">
                     <p class="font-body-sm text-error font-medium">Biology</p>
-                    <p class="font-caption text-error/60">12 sources</p>
-                    <p class="font-caption text-error/60 mt-1">🔒 Can't search Physics</p>
+                    <p class="font-caption text-error">12 sources</p>
+                    <p class="font-caption text-error mt-1">🔒 Can't search Physics</p>
                   </div>
                   <div class="bg-error-soft/50 border border-error/20 rounded-lg p-3 text-center">
                     <p class="font-body-sm text-error font-medium">Physics</p>
-                    <p class="font-caption text-error/60">8 sources</p>
-                    <p class="font-caption text-error/60 mt-1">🔒 Can't search Bio</p>
+                    <p class="font-caption text-error">8 sources</p>
+                    <p class="font-caption text-error mt-1">🔒 Can't search Bio</p>
                   </div>
                   <div class="bg-error-soft/50 border border-error/20 rounded-lg p-3 text-center">
                     <p class="font-body-sm text-error font-medium">Chem</p>
-                    <p class="font-caption text-error/60">15 sources</p>
-                    <p class="font-caption text-error/60 mt-1">🔒 Can't search either</p>
+                    <p class="font-caption text-error">15 sources</p>
+                    <p class="font-caption text-error mt-1">🔒 Can't search either</p>
                   </div>
                 </div>
                 <div class="text-center py-3">
@@ -506,73 +506,52 @@ import Card from '../../components/ui/Card.astro';
       </div>
     </section>
 
-    {/* Deep Dive: Developer Platform */}
-    <ShowcaseBandDark
-      title="An API that opens possibilities."
-      subtitle="Everything NotesChatAI does is available via API. Build custom study tools, automate workflows, integrate with your stack."
-      reverse={true}
-    >
-      <slot name="content" slot="content">
-        <div class="space-y-4">
-          <div class="grid grid-cols-2 gap-3">
-            {['REST API', 'GraphQL', 'Webhooks', 'SDKs'].map((label) => (
-              <div class="bg-canvas/10 rounded-lg px-4 py-2.5 text-center border border-hairline-strong/20">
-                <span class="font-body-sm-strong text-on-primary">{label}</span>
-              </div>
-            ))}
+    {/* Deep Dive: Data Export */}
+    <section class="feature-mesh-band relative overflow-hidden" aria-labelledby="export-title">
+      <div class="absolute inset-0 mesh-gradient-bg opacity-[0.04]" aria-hidden="true"></div>
+      <div class="max-w-[1400px] mx-auto px-4 lg:px-8 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div>
+            <span class="font-caption-mono text-cyan-deep uppercase tracking-wider text-xs mb-3 block">Data Portability</span>
+            <h2 id="export-title" class="font-display-lg text-ink mb-4">
+              Your data is always yours.
+            </h2>
+            <p class="font-body-lg text-body mb-6">
+              Export your entire knowledge base — documents, flashcards, chat history, and knowledge graph — in any format you need.
+            </p>
+            <ul class="space-y-3 mb-8">
+              {[
+                'Markdown & PDF for note-sharing',
+                'Anki (.apkg) for flashcard review',
+                'Obsidian vault for local-first workflows',
+                'CSV & JSON for data analysis',
+                'Notion export for team collaboration',
+              ].map((item) => (
+                <li class="flex items-start gap-3 font-body-md text-ink">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-cyan-deep flex-shrink-0 mt-0.5" aria-hidden="true">
+                    <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                    <path d="M7 10l3 3 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul class="space-y-3" role="list">
-            {[
-              'POST /v1/documents — Upload and process documents',
-              'POST /v1/chat — Streaming RAG chat with citations',
-              'GET /v1/search — Semantic search across knowledge base',
-              'POST /v1/flashcards — Generate study cards from documents',
-              'GET /v1/mindmap — Fetch knowledge graph as nodes/edges',
-              'POST /v1/export — Export to any supported format',
-            ].map((item) => (
-              <li class="flex items-center gap-3 font-body-sm text-on-primary/80">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="text-cyan flex-shrink-0" aria-hidden="true">
-                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
-                  <path d="M5.5 8l2 2 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <code class="font-code text-xs">{item}</code>
-              </li>
-            ))}
-          </ul>
+          <div class="relative">
+            <div class="bg-canvas rounded-xl border border-hairline shadow-level-3 p-6">
+              <p class="font-caption-mono text-mute text-xs mb-4 uppercase">Supported Formats</p>
+              <div class="grid grid-cols-2 gap-3">
+                {['Markdown', 'PDF', 'Anki (.apkg)', 'Obsidian', 'Notion', 'CSV', 'JSON', 'Zotero'].map((fmt) => (
+                  <div class="bg-canvas-soft rounded-lg px-4 py-2.5 text-center border border-hairline">
+                    <span class="font-body-sm-strong text-ink">{fmt}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      </slot>
-
-      <slot name="visual" slot="visual">
-        <div class="bg-primary text-on-primary rounded-md p-6 overflow-x-auto">
-          <p class="font-caption-mono text-cyan-soft text-xs mb-4">SDK Example</p>
-          <pre class="font-code text-xs leading-relaxed"><code>{`import { NotesChatAI } from '@noteschatai/sdk';
-
-const client = new NotesChatAI({
-  apiKey: process.env.NOTESCHATAI_API_KEY,
-});
-
-// Upload a document
-const doc = await client.documents.upload({
-  file: fs.createReadStream('./notes.pdf'),
-  tags: ['ML', 'Coursework'],
-});
-
-// Chat with RAG across entire KB
-const stream = await client.chat.stream({
-  message: 'Compare my ML and physics notes',
-  model: 'gemini-1.5-flash',
-  retrieval: { topK: 10, rerank: true },
-});
-
-// Generate flashcards
-const cards = await client.study.flashcards({
-  sourceIds: [doc.id],
-  count: 20,
-  focusArea: 'key concepts',
-});`}</code></pre>
-        </div>
-      </slot>
-    </ShowcaseBandDark>
+      </div>
+    </section>
 
     {/* ═══════════════ FINAL CTA ═══════════════ */}
     <section class="hero-band bg-canvas-soft relative overflow-hidden" aria-labelledby="features-cta-title">

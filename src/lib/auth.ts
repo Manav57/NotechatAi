@@ -1,6 +1,8 @@
 /**
  * Server-side auth helper.
  * Used in Astro pages/layouts to get the current user from the session cookie.
+ * Uses D1 directly via cloudflare:workers env.DB for persistent sessions.
+ * Falls back to in-memory dev-auth when D1 is unavailable (local dev without workerd).
  */
 
 import { devGetSession } from './dev-auth';
@@ -12,8 +14,6 @@ export interface User {
   image?: string;
   plan: string;
 }
-
-const WORKER_URL = import.meta.env.WORKER_URL || '';
 
 /**
  * Get the current user from the session cookie.
@@ -28,8 +28,26 @@ export async function getUser(cookies: {
     return null;
   }
 
-  // Dev mode: use in-memory auth
-  if (!WORKER_URL) {
+  // Try D1-backed session store (production / cloudflare dev)
+  try {
+    const { dbGetSession } = await import('./db-auth');
+    const result = await dbGetSession(sessionToken);
+    if (!result) {
+      return null;
+    }
+    return {
+      id: result.session.user.id,
+      email: result.session.user.email,
+      name: result.session.user.name,
+      plan: result.session.user.plan,
+      image: result.session.user.image,
+    };
+  } catch {
+    // D1 not available — fall back to in-memory dev-auth
+  }
+
+  // Fallback: in-memory dev-auth (local dev without cloudflare workerd)
+  try {
     const result = devGetSession(sessionToken);
     if (!result) return null;
     return {
@@ -38,35 +56,7 @@ export async function getUser(cookies: {
       name: result.session.user.name,
       plan: result.session.user.plan,
     };
-  }
-
-  // Production: call worker
-  try {
-    const response = await fetch(`${WORKER_URL}/api/auth/session`, {
-      headers: {
-        Cookie: `session=${sessionToken}; better-auth.session_token=${sessionToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      return null;
-    }
-
-    const data = await response.json();
-
-    if (!data.session?.user) {
-      return null;
-    }
-
-    return {
-      id: data.session.user.id,
-      email: data.session.user.email,
-      name: data.session.user.name || data.session.user.email.split('@')[0],
-      image: data.session.user.image,
-      plan: data.session.user.plan || 'free',
-    };
-  } catch (error) {
-    console.error('Failed to get user session:', error);
+  } catch {
     return null;
   }
 }

@@ -1,11 +1,12 @@
 export const prerender = false;
 
+import { env } from "cloudflare:workers";
 import type { APIRoute } from 'astro';
 
-const GOOGLE_CLIENT_ID = import.meta.env.GOOGLE_CLIENT_ID || '';
-const BASE_URL = import.meta.env.BETTER_AUTH_URL || 'http://localhost:4321';
-
 export const GET: APIRoute = async ({ redirect }) => {
+  const GOOGLE_CLIENT_ID = env.GOOGLE_CLIENT_ID || '';
+  const BASE_URL = env.BETTER_AUTH_URL || 'https://noteschatai.com';
+
   if (!GOOGLE_CLIENT_ID) {
     return redirect('/auth/login?error=google_not_configured');
   }

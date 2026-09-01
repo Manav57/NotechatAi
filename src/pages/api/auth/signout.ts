@@ -1,24 +1,18 @@
 export const prerender = false;
 import type { APIRoute } from 'astro';
+import { dbDeleteSession } from '../../../lib/db-auth';
 import { devDeleteSession } from '../../../lib/dev-auth';
 
-const WORKER_URL = import.meta.env.WORKER_URL || '';
-
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ cookies }) => {
   try {
     const sessionToken = cookies.get('session')?.value;
 
-    // Dev mode: invalidate in-memory session
-    if (!WORKER_URL) {
+    // Try D1-backed session store first
+    try {
+      if (sessionToken) await dbDeleteSession(sessionToken);
+    } catch {
+      // D1 unavailable — fall back to in-memory dev-auth
       if (sessionToken) devDeleteSession(sessionToken);
-    } else {
-      // Production: invalidate on worker
-      if (sessionToken) {
-        await fetch(`${WORKER_URL}/api/auth/signout`, {
-          method: 'POST',
-          headers: { Cookie: `session=${sessionToken}` },
-        }).catch(() => {});
-      }
     }
 
     cookies.delete('session', { path: '/' });

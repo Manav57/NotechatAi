@@ -20,6 +20,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "worker:dev": "wrangler dev",
+    "deploy": "wrangler types && astro build && wrangler deploy",
     "worker:deploy": "wrangler deploy",
     "worker:tail": "wrangler tail"
   },

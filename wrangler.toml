@@ -1,17 +1,18 @@
 name = "noteschatai"
-main = "src/worker/index.ts"
-compatibility_date = "2024-12-01"
-compatibility_flags = ["nodejs_compat"]
+main = "@astrojs/cloudflare/entrypoints/server"
+compatibility_date = "2025-08-24"
+compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 
-# Build
-[build]
-command = "npm run build"
-watch_dir = "src"
+# Assets
+[assets]
+binding = "ASSETS"
+directory = "./dist"
 
 # Environment variables (set via wrangler secret put)
 [vars]
 BETTER_AUTH_URL = "https://noteschatai.com"
 # BETTER_AUTH_SECRET = "set via wrangler secret put"
+# OPENROUTER_API_KEY = "set via wrangler secret put"
 # GEMINI_API_KEY = "set via wrangler secret put"
 # GOOGLE_CLIENT_ID = "set via wrangler secret put"
 # GOOGLE_CLIENT_SECRET = "set via wrangler secret put"
@@ -22,7 +23,7 @@ BETTER_AUTH_URL = "https://noteschatai.com"
 [[d1_databases]]
 binding = "DB"
 database_name = "noteschatai-db"
-database_id = "your-database-id-here"
+database_id = "dbec39b9-89ea-458a-91e5-50efb8d036ad"
 
 # Vectorize
 [[vectorize]]
@@ -34,10 +35,10 @@ index_name = "document-chunks"
 binding = "R2"
 bucket_name = "noteschatai-files"
 
-# Queues
-[queues]
-binding = "QUEUE"
-queue_name = "document-processing"
+# Queues (configured via Cloudflare dashboard)
+# [queues]
+# binding = "QUEUE"
+# queue_name = "document-processing"
 
 # Workers AI
 [ai]
@@ -47,11 +48,6 @@ binding = "AI"
 # [[kv_namespaces]]
 # binding = "KV"
 # id = "your-kv-namespace-id"
-
-# Durable Objects (for real-time features later)
-# [[durable_objects.bindings]]
-# name = "COLLABORATION"
-# class_name = "CollaborationRoom"
 
 # Observability
 [observability]
