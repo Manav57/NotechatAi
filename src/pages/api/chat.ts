@@ -4,7 +4,7 @@ import type { APIRoute } from 'astro';
 import { dbGetSession } from '../../lib/db-auth';
 import { devGetSession } from '../../lib/dev-auth';
 
-// ─── Env bindings (lazy import from cloudflare:workers) ───
+// ─── Env bindings ───
 
 async function getEnv() {
   try {
@@ -124,6 +124,7 @@ async function getUser(cookies: { get: (name: string) => { value: string } | und
 // ─── POST /api/chat — Send a message ───
 
 export const POST: APIRoute = async ({ request, cookies }) => {
+  try {
   const user = await getUser(cookies);
   if (!user) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -132,8 +133,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
   }
 
-  const env = await getEnv();
-  if (!env) {
+  const bindings = await getEnv();
+  if (!bindings) {
     return new Response(JSON.stringify({ error: 'Environment not available' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
@@ -150,8 +151,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
   }
 
-  const db = env.DB;
-  const OPENROUTER_API_KEY = env.OPENROUTER_API_KEY;
+  const db = bindings.DB;
+  const OPENROUTER_API_KEY = bindings.OPENROUTER_API_KEY;
 
   if (!OPENROUTER_API_KEY) {
     return new Response(JSON.stringify({ error: 'OpenRouter API key not configured' }), {
@@ -187,15 +188,15 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   let vectorResults: any[] = [];
 
   try {
-    hasDocs = await userHasDocuments(env, user.id);
+    hasDocs = await userHasDocuments(bindings, user.id);
   } catch (e) {
     console.error('Failed to check documents:', e);
   }
 
   if (hasDocs) {
     try {
-      const queryEmbedding = await generateEmbedding(env, message);
-      vectorResults = await searchVectorize(env, queryEmbedding, user.id, 10);
+      const queryEmbedding = await generateEmbedding(bindings, message);
+      vectorResults = await searchVectorize(bindings, queryEmbedding, user.id, 10);
       if (vectorResults.length > 0) {
         context = vectorResults
           .map((match: any, i: number) => `[Source ${i + 1}] ${match.metadata?.content || '[Content]'}`)
@@ -208,10 +209,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   // Get recent conversation history
-  const historyRows = await db.prepare(
+  const historyResult = await db.prepare(
     `SELECT role, content FROM messages WHERE conversation_id = ?1 ORDER BY created_at DESC LIMIT 10`
   ).bind(conv.id).all();
-  const history = historyRows.reverse();
+  const history = (historyResult.results || historyResult).reverse();
 
   // Build message array for OpenRouter
   const fullMessages: Array<{ role: string; content: string }> = [];
@@ -263,6 +264,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
   });
+  } catch (e) {
+    console.error('Chat POST error:', e);
+    return new Response(JSON.stringify({ error: 'Internal server error: ' + (e instanceof Error ? e.message : String(e)) }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 };
 
 // ─── GET /api/chat — List conversations or get single conversation ───
@@ -276,15 +284,15 @@ export const GET: APIRoute = async ({ request, cookies }) => {
     });
   }
 
-  const env = await getEnv();
-  if (!env) {
+  const bindings = await getEnv();
+  if (!bindings) {
     return new Response(JSON.stringify({ error: 'Environment not available' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
   }
 
-  const db = env.DB;
+  const db = bindings.DB;
   const url = new URL(request.url);
   const pathParts = url.pathname.split('/').filter(Boolean);
   const conversationId = pathParts.length > 2 ? pathParts[2] : null;
@@ -337,15 +345,15 @@ export const DELETE: APIRoute = async ({ request, cookies }) => {
     });
   }
 
-  const env = await getEnv();
-  if (!env) {
+  const bindings = await getEnv();
+  if (!bindings) {
     return new Response(JSON.stringify({ error: 'Environment not available' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
   }
 
-  const db = env.DB;
+  const db = bindings.DB;
   const url = new URL(request.url);
   const pathParts = url.pathname.split('/').filter(Boolean);
   const conversationId = pathParts.length > 2 ? pathParts[2] : null;
