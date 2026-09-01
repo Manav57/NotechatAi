@@ -1,0 +1,367 @@
+- generic [active] [ref=f75e1]:
+  - banner [ref=f75e2]:
+    - generic [ref=f75e3]:
+      - link "NotesChatAI Home" [ref=f75e4] [cursor=pointer]:
+        - /url: /
+        - img "NotesChatAI" [ref=f75e5]
+        - generic [ref=f75e6]: NotesChatAI
+      - navigation "Main navigation" [ref=f75e7]:
+        - link "Features" [ref=f75e8] [cursor=pointer]:
+          - /url: /features
+        - link "Pricing" [ref=f75e9] [cursor=pointer]:
+          - /url: /pricing
+        - link "Docs" [ref=f75e10] [cursor=pointer]:
+          - /url: /free-beta
+        - link "Blog" [ref=f75e11] [cursor=pointer]:
+          - /url: /blog
+      - generic [ref=f75e12]:
+        - button "Toggle dark mode" [ref=f75e13]
+        - link "Log in" [ref=f75e17] [cursor=pointer]:
+          - /url: /auth/login
+        - link "Sign up" [ref=f75e18] [cursor=pointer]:
+          - /url: /auth/signup
+  - main [ref=f75e19]:
+    - region [ref=f75e20]:
+      - generic [ref=f75e23]:
+        - generic [ref=f75e24]: Now in Free Beta
+        - heading "Your entire library, one AI that remembers it all." [level=1] [ref=f75e26]
+        - paragraph [ref=f75e27]:
+          - text: NotesChatAI builds a
+          - strong [ref=f75e28]: persistent knowledge base
+          - text: across all your documents. Upload notes, textbooks, and PDFs once — then ask questions across your
+          - emphasis [ref=f75e29]: entire
+          - text: library. No notebook isolation. No source limits. No forgetting.
+        - generic [ref=f75e30]:
+          - link "Start Free Beta" [ref=f75e31] [cursor=pointer]:
+            - /url: /auth/signup
+          - link "See How It Works" [ref=f75e32] [cursor=pointer]:
+            - /url: /features
+        - generic [ref=f75e33]:
+          - generic [ref=f75e34]: No credit card required
+          - generic [ref=f75e38]: 50 documents free
+          - generic [ref=f75e42]: Export anytime
+    - region [ref=f75e46]:
+      - generic [ref=f75e47]:
+        - generic [ref=f75e48]:
+          - generic [ref=f75e49]: Why switch
+          - heading "NotesChatAI vs NotebookLM" [level=2] [ref=f75e50]
+          - paragraph [ref=f75e51]: Both let you chat with your documents. Here's why students are switching.
+        - generic [ref=f75e52]:
+          - generic [ref=f75e53]:
+            - generic [ref=f75e54]:
+              - generic [ref=f75e55]: Feature
+              - generic [ref=f75e56]: NotesChatAI
+              - generic [ref=f75e62]: NotebookLM
+            - generic [ref=f75e63]:
+              - generic [ref=f75e64]: Cross-document search
+              - generic [ref=f75e66]: unlimited
+              - generic [ref=f75e71]: per-notebook only
+            - generic [ref=f75e73]:
+              - generic [ref=f75e74]: Source limit per project
+              - generic [ref=f75e76]: Unlimited
+              - generic [ref=f75e81]: 50–600
+            - generic [ref=f75e83]:
+              - generic [ref=f75e84]: Daily chat limit
+              - generic [ref=f75e86]: Unlimited (Pro)
+              - generic [ref=f75e91]: 50–5,000
+            - generic [ref=f75e93]:
+              - generic [ref=f75e94]: API access
+              - generic [ref=f75e96]: Coming soon
+              - generic [ref=f75e98]: None
+            - generic [ref=f75e100]:
+              - generic [ref=f75e101]: Spaced repetition & quizzes
+              - generic [ref=f75e103]: Built-in
+              - generic [ref=f75e108]: None
+            - generic [ref=f75e110]:
+              - generic [ref=f75e111]: Knowledge graph visualization
+              - generic [ref=f75e113]: Interactive mind map
+              - generic [ref=f75e118]: Basic only
+            - generic [ref=f75e120]:
+              - generic [ref=f75e121]: Multi-model choice
+              - generic [ref=f75e123]: Gemini, Claude, GPT
+              - generic [ref=f75e128]: Gemini only
+            - generic [ref=f75e130]:
+              - generic [ref=f75e131]: Export formats
+              - generic [ref=f75e133]: MD, JSON, CSV, Anki, Notion
+              - generic [ref=f75e138]: Limited
+            - generic [ref=f75e140]:
+              - generic [ref=f75e141]: Self-hosted option
+              - generic [ref=f75e143]: Coming soon
+              - generic [ref=f75e145]: None
+            - generic [ref=f75e147]:
+              - generic [ref=f75e148]: Collaborative study groups
+              - generic [ref=f75e150]: Real-time sharing
+              - generic [ref=f75e155]: Basic sharing
+            - generic [ref=f75e157]:
+              - generic [ref=f75e158]: Audio overviews
+              - generic [ref=f75e160]: Unlimited (Pro)
+              - generic [ref=f75e162]: 3–200/day
+            - generic [ref=f75e164]:
+              - generic [ref=f75e165]: Video generation
+              - generic [ref=f75e167]: Coming soon
+              - generic [ref=f75e169]: Veo 3 (Ultra only)
+          - link "See Full Feature Comparison" [ref=f75e172] [cursor=pointer]:
+            - /url: /features
+    - region [ref=f75e175]:
+      - generic [ref=f75e177]:
+        - generic [ref=f75e178]:
+          - generic [ref=f75e179]: Built different
+          - heading "What makes NotesChatAI the better choice." [level=2] [ref=f75e180]
+          - paragraph [ref=f75e181]: We studied every limitation of existing tools and built the study assistant students actually need.
+        - generic [ref=f75e182]:
+          - article [ref=f75e183]:
+            - heading "Unified Knowledge Base" [level=3] [ref=f75e189]
+            - paragraph [ref=f75e190]: No notebook silos. Every document lives in one connected knowledge base. Ask questions that span your entire library — across courses, semesters, and years.
+          - article [ref=f75e191]:
+            - heading "Unlimited Growth" [level=3] [ref=f75e196]
+            - paragraph [ref=f75e197]: No per-notebook source caps. Add documents forever. Your knowledge base compounds over your entire academic career — the more you add, the smarter it gets.
+          - article [ref=f75e198]:
+            - heading "Active Recall & Quizzes" [level=3] [ref=f75e203]
+            - paragraph [ref=f75e204]: Built-in flashcards with spaced repetition, multiple-choice quizzes, and practice exams. NotebookLM has nothing like this — you need separate apps.
+          - article [ref=f75e205]:
+            - heading "API-First Platform" [level=3] [ref=f75e209]
+            - paragraph [ref=f75e210]: Full REST + GraphQL API. Build custom study tools, integrate with your workflow, automate document processing. NotebookLM is a closed garden.
+          - article [ref=f75e211]:
+            - heading "Choose Your AI Model" [level=3] [ref=f75e215]
+            - paragraph [ref=f75e216]: Use Gemini, Claude, or GPT — pick the model that works best for your subject. NotebookLM locks you into Google's ecosystem.
+          - article [ref=f75e217]:
+            - heading "Own Your Data" [level=3] [ref=f75e222]
+            - paragraph [ref=f75e223]: Export everything as Markdown, JSON, CSV, or Anki decks. Self-host on your own server. Your knowledge base is yours — not locked in Google's cloud.
+    - region [ref=f75e224]:
+      - generic [ref=f75e225]:
+        - generic [ref=f75e226]:
+          - generic [ref=f75e227]: Simple workflow
+          - heading "Three steps to your personal AI tutor." [level=2] [ref=f75e228]
+          - paragraph [ref=f75e229]: Upload your materials once. Then just ask questions — the AI remembers everything.
+        - generic [ref=f75e230]:
+          - generic [ref=f75e231]:
+            - generic [ref=f75e235]: Step 1
+            - heading "Upload your documents" [level=3] [ref=f75e236]
+            - paragraph [ref=f75e237]: PDFs, EPUBs, YouTube videos, web pages, audio files, and more. Drag and drop or paste a URL.
+          - generic [ref=f75e238]:
+            - generic [ref=f75e243]: Step 2
+            - heading "AI builds your knowledge graph" [level=3] [ref=f75e244]
+            - paragraph [ref=f75e245]: Our RAG pipeline indexes everything, finds connections, and builds a semantic map of your entire library.
+          - generic [ref=f75e246]:
+            - generic [ref=f75e250]: Step 3
+            - heading "Ask anything, get citations" [level=3] [ref=f75e251]
+            - paragraph [ref=f75e252]: Chat across your entire library. Every answer links back to the exact source. Generate quizzes, audio summaries, and mind maps.
+    - region [ref=f75e253]:
+      - generic [ref=f75e255]:
+        - heading "The AI Study Assistant That Actually Remembers Your Notes" [level=2] [ref=f75e256]
+        - generic [ref=f75e257]:
+          - paragraph [ref=f75e258]:
+            - text: NotesChatAI is a
+            - strong [ref=f75e259]: free NotebookLM alternative
+            - text: built for students, researchers, and lifelong learners who need more than a basic note-taking app. Unlike traditional AI chatbots that forget everything between sessions, NotesChatAI gives you
+            - strong [ref=f75e260]: persistent AI memory
+            - text: — a knowledge base that grows smarter with every document you upload. Whether you're studying for finals, writing a thesis, or organizing your professional development materials, NotesChatAI is the
+            - strong [ref=f75e261]: AI study assistant for students
+            - text: that keeps up with you.
+          - heading "Chat With Your Documents — Not Just One at a Time" [level=3] [ref=f75e262]
+          - paragraph [ref=f75e263]:
+            - text: Most AI tools force you into isolated notebooks. You upload PDFs to one project, notes to another, and never the twain shall meet. NotesChatAI eliminates that problem entirely. Our unified knowledge base means you can
+            - strong [ref=f75e264]: chat with PDF AI
+            - text: across your entire library. Ask a question like "What connects my biology notes to my chemistry textbook?" and get a real, cited answer that pulls from both sources. No other tool lets you
+            - strong [ref=f75e265]: chat with your notes
+            - text: across courses, semesters, and years — all in one place.
+          - paragraph [ref=f75e266]:
+            - text: Upload notes, ask questions, AI — that's the core workflow. Drop in your PDFs, EPUBs, lecture transcripts, YouTube video links, web pages, or audio files. NotesChatAI processes everything through our advanced RAG pipeline, building semantic embeddings and a knowledge graph that connects ideas across your entire collection. When you
+            - strong [ref=f75e267]: upload notes and ask questions
+            - text: ", the AI doesn't just search for keywords — it understands context, finds relationships, and delivers precise answers with page-level citations."
+          - heading "Why Students Are Switching from NotebookLM" [level=3] [ref=f75e268]
+          - paragraph [ref=f75e269]:
+            - text: Google's NotebookLM has strict source limits (50 on free, 600 on Ultra), daily chat quotas (50-5,000 depending on your plan), and — most importantly — notebook isolation. Your ML notes can't help you answer a question about your physics textbook unless you manually copy everything into one notebook. NotesChatAI is the
+            - strong [ref=f75e270]: free NotebookLM alternative
+            - text: that removes these barriers. No source limits. No daily chat caps on Pro. And every document in one connected knowledge base.
+          - paragraph [ref=f75e271]:
+            - text: As an
+            - strong [ref=f75e272]: AI notebook for students
+            - text: ", NotesChatAI goes further than simple Q&A. Generate flashcards from any document using our"
+            - strong [ref=f75e273]: AI flashcard generator from notes
+            - text: — powered by FSRS spaced repetition that adapts to your learning pace. Create practice exams from your knowledge base. Build interactive mind maps that visualize how concepts connect. These are the study tools that make the difference between cramming and actually learning.
+          - heading "Built for Real Academic Workflows" [level=3] [ref=f75e274]
+          - paragraph [ref=f75e275]:
+            - text: NotesChatAI understands that studying isn't a single-session activity. Our
+            - strong [ref=f75e276]: AI that remembers your notes
+            - text: maintains context across weeks and months of studying. Ask follow-up questions weeks later and the AI still knows what you discussed, what documents you referenced, and what topics you're struggling with. This is
+            - strong [ref=f75e277]: persistent AI memory
+            - text: designed for the academic calendar — not a tool that resets every time you close the tab.
+          - paragraph [ref=f75e278]: Export your knowledge base to Markdown, JSON, CSV, Anki decks, Obsidian, or Notion. Your data stays yours — always portable, never locked in. API access and self-hosted Docker deployment are coming soon.
+          - paragraph [ref=f75e279]:
+            - text: Start with 50 documents on our
+            - strong [ref=f75e280]: free AI study assistant
+            - text: plan. No credit card required. Upgrade to Pro for unlimited documents, unlimited chats, and API access. Whether you're a first-year undergrad or a PhD researcher, NotesChatAI is the
+            - strong [ref=f75e281]: chat with your documents AI
+            - text: that scales with your academic journey.
+    - region [ref=f75e282]:
+      - generic [ref=f75e284]:
+        - generic [ref=f75e285]:
+          - heading "See It In Action" [level=2] [ref=f75e286]
+          - paragraph [ref=f75e287]: Real chat interface with citations, sources, and persistent context.
+          - generic [ref=f75e288]:
+            - generic [ref=f75e289]:
+              - generic [ref=f75e290]:
+                - generic [ref=f75e291]: U
+                - generic [ref=f75e292]:
+                  - paragraph [ref=f75e293]: You
+                  - paragraph [ref=f75e294]: 2 min ago
+              - paragraph [ref=f75e295]: What are the key differences between transformers and RNNs? I have papers on both in my library.
+            - generic [ref=f75e296]:
+              - generic [ref=f75e297]:
+                - generic [ref=f75e298]: AI
+                - generic [ref=f75e299]:
+                  - paragraph [ref=f75e300]: NotesChatAI
+                  - paragraph [ref=f75e301]: Just now
+              - generic [ref=f75e302]:
+                - paragraph [ref=f75e303]: "Based on your papers (Vaswani et al. 2017, Hochreiter & Schmidhuber 1997):"
+                - list [ref=f75e304]:
+                  - listitem [ref=f75e305]:
+                    - strong [ref=f75e306]: "Parallelization:"
+                    - text: Transformers process all tokens simultaneously; RNNs are sequential.
+                  - listitem [ref=f75e307]:
+                    - strong [ref=f75e308]: "Long-range deps:"
+                    - text: Attention captures arbitrary distances directly.
+                  - listitem [ref=f75e309]:
+                    - strong [ref=f75e310]: "Training:"
+                    - text: Transformers scale linearly on GPUs; RNNs can't parallelize.
+                - generic [ref=f75e311]:
+                  - generic [ref=f75e312]: 📄 Attention Is All You Need, p.3
+                  - generic [ref=f75e313]: 📄 LSTM Paper, §2.1
+        - generic [ref=f75e316]:
+          - paragraph [ref=f75e321]: Interactive Demo
+          - paragraph [ref=f75e322]: Click to try →
+    - region [ref=f75e323]:
+      - generic [ref=f75e324]:
+        - generic [ref=f75e325]:
+          - generic [ref=f75e326]: Audio
+          - heading "Podcast-style summaries from your notes." [level=2] [ref=f75e327]
+          - paragraph [ref=f75e328]: Two AI hosts discuss your documents naturally. Full transcripts, chapters, speed control. Save and replay — no daily limits on Pro.
+        - generic [ref=f75e329]:
+          - article [ref=f75e330]:
+            - heading "Two-Host Conversations" [level=3] [ref=f75e335]
+            - paragraph [ref=f75e336]: AI hosts discuss your material naturally, explaining concepts and making connections you might miss.
+          - article [ref=f75e337]:
+            - heading "Full Transcripts & Chapters" [level=3] [ref=f75e342]
+            - paragraph [ref=f75e343]: Read along, search, jump to sections. Export as Markdown or SRT for subtitle files.
+          - article [ref=f75e344]:
+            - heading "Saved Library" [level=3] [ref=f75e349]
+            - paragraph [ref=f75e350]: Every overview saved. Organize, share, download for offline listening. Regenerate with one click.
+    - region "See It In Action" [ref=f75e351]:
+      - generic [ref=f75e353]:
+        - generic [ref=f75e354]:
+          - heading "Own your data." [level=2] [ref=f75e355]
+          - paragraph [ref=f75e356]: Export everything. Your knowledge base is fully portable.
+          - generic [ref=f75e357]:
+            - paragraph [ref=f75e358]: Every document, conversation, and flashcard is yours. Export to any format you need — Obsidian, Notion, Anki, or raw data.
+            - list [ref=f75e359]:
+              - listitem [ref=f75e360]: Export to Markdown, Obsidian, Anki, Notion, CSV
+              - listitem [ref=f75e364]: Local embeddings via Workers AI (bge-base-en-v1.5)
+              - listitem [ref=f75e368]: Full data ownership — we never train on your content
+              - listitem [ref=f75e372]: API & self-hosting coming soon
+        - generic [ref=f75e377]:
+          - paragraph [ref=f75e378]: Supported Export Formats
+          - generic [ref=f75e379]:
+            - generic [ref=f75e380]: Markdown
+            - generic [ref=f75e381]: PDF
+            - generic [ref=f75e382]: Anki (.apkg)
+            - generic [ref=f75e383]: Obsidian
+            - generic [ref=f75e384]: Notion
+            - generic [ref=f75e385]: CSV
+            - generic [ref=f75e386]: JSON
+            - generic [ref=f75e387]: Zotero
+    - region [ref=f75e388]:
+      - generic [ref=f75e389]:
+        - generic [ref=f75e390]:
+          - generic [ref=f75e391]: FAQ
+          - heading "Frequently Asked Questions" [level=2] [ref=f75e392]
+          - paragraph [ref=f75e393]: Everything you need to know about NotesChatAI — the free AI study assistant that remembers your notes.
+        - generic [ref=f75e394]:
+          - group [ref=f75e395]:
+            - generic "Is NotesChatAI free?" [ref=f75e396] [cursor=pointer]
+          - group [ref=f75e399]:
+            - generic "Can I turn video into notes with AI for free?" [ref=f75e400] [cursor=pointer]
+          - group [ref=f75e403]:
+            - generic "What is the NotesChatAI app?" [ref=f75e404] [cursor=pointer]
+          - group [ref=f75e407]:
+            - generic "How does the AI note taker work?" [ref=f75e408] [cursor=pointer]
+          - group [ref=f75e411]:
+            - generic "Is there a free AI notes generator?" [ref=f75e412] [cursor=pointer]
+          - group [ref=f75e415]:
+            - generic "What is the best free AI lecture note taker for students?" [ref=f75e416] [cursor=pointer]
+          - group [ref=f75e419]:
+            - generic "Is NotesChatAI a free note-taking AI for students?" [ref=f75e420] [cursor=pointer]
+          - group [ref=f75e423]:
+            - generic "Can I download NotesChatAI?" [ref=f75e424] [cursor=pointer]
+    - region [ref=f75e427]:
+      - generic [ref=f75e430]:
+        - heading "Stop switching between tools. Start building your knowledge base." [level=2] [ref=f75e431]: Stop switching between tools.Start building your knowledge base.
+        - paragraph [ref=f75e432]: Replace NotebookLM, ChatGPT, and flashcard apps with one persistent AI study assistant.
+        - generic [ref=f75e433]:
+          - link "Start Free Beta" [ref=f75e434] [cursor=pointer]:
+            - /url: /auth/signup
+          - link "View Pricing" [ref=f75e437] [cursor=pointer]:
+            - /url: /pricing
+        - paragraph [ref=f75e438]: Free for up to 50 documents · No credit card required · Cancel anytime
+  - contentinfo [ref=f75e439]:
+    - generic [ref=f75e440]:
+      - generic [ref=f75e441]:
+        - generic [ref=f75e442]:
+          - link "NotesChatAI Home" [ref=f75e443] [cursor=pointer]:
+            - /url: /
+            - img "NotesChatAI" [ref=f75e444]
+            - generic [ref=f75e445]: NotesChatAI
+          - paragraph [ref=f75e446]: Your persistent AI study assistant. Upload once, remember forever.
+        - navigation "Product" [ref=f75e447]:
+          - heading "Product" [level=3] [ref=f75e448]
+          - list [ref=f75e449]:
+            - listitem [ref=f75e450]:
+              - link "Features" [ref=f75e451] [cursor=pointer]:
+                - /url: /features
+            - listitem [ref=f75e452]:
+              - link "Pricing" [ref=f75e453] [cursor=pointer]:
+                - /url: /pricing
+            - listitem [ref=f75e454]:
+              - link "Docs" [ref=f75e455] [cursor=pointer]:
+                - /url: /free-beta
+            - listitem [ref=f75e456]:
+              - link "Blog" [ref=f75e457] [cursor=pointer]:
+                - /url: /blog
+        - navigation "Company" [ref=f75e458]:
+          - heading "Company" [level=3] [ref=f75e459]
+          - list [ref=f75e460]:
+            - listitem [ref=f75e461]:
+              - link "About" [ref=f75e462] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=f75e463]:
+              - link "Contact" [ref=f75e464] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=f75e465]:
+              - link "Blog" [ref=f75e466] [cursor=pointer]:
+                - /url: /blog
+        - navigation "Resources" [ref=f75e467]:
+          - heading "Resources" [level=3] [ref=f75e468]
+          - list [ref=f75e469]:
+            - listitem [ref=f75e470]:
+              - link "Community" [ref=f75e471] [cursor=pointer]:
+                - /url: https://github.com/noteschatai
+            - listitem [ref=f75e472]:
+              - link "Status" [ref=f75e473] [cursor=pointer]:
+                - /url: /status
+        - navigation "Legal" [ref=f75e474]:
+          - heading "Legal" [level=3] [ref=f75e475]
+          - list [ref=f75e476]:
+            - listitem [ref=f75e477]:
+              - link "Privacy" [ref=f75e478] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=f75e479]:
+              - link "Terms" [ref=f75e480] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=f75e481]:
+              - link "Cookies" [ref=f75e482] [cursor=pointer]:
+                - /url: /cookies
+      - generic [ref=f75e484]:
+        - paragraph [ref=f75e485]: © 2026 NotesChatAI. All rights reserved.
+        - link "GitHub" [ref=f75e487] [cursor=pointer]:
+          - /url: https://github.com/noteschatai
+          - generic [aria-hidden] [ref=f75e488]: ⌘

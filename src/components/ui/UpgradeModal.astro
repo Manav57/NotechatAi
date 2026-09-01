@@ -1,0 +1,74 @@
+---
+/**
+ * UpgradeModal — shown when a logged-in user clicks "Upgrade to Pro"
+ * but no payment gateway is configured yet.
+ *
+ * Include this component in any app page, then call
+ * `window.showUpgradeModal()` from buttons/links.
+ */
+---
+
+<div id="upgrade-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Upgrade to Pro">
+  <div class="bg-canvas rounded-xl shadow-level-5 w-full max-w-md overflow-y-auto animate-slide-up">
+    <div class="p-6 text-center">
+      {/* Icon */}
+      <div class="w-16 h-16 mx-auto mb-5 bg-violet/10 rounded-2xl flex items-center justify-center">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" class="text-violet" aria-hidden="true">
+          <path d="M16 4l3.09 6.26L26 11.27l-5 4.87 1.18 6.88L16 19.77l-6.18 3.25L11 16.14l-5-4.87 6.91-1.01L16 4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <h2 class="font-display-md text-ink mb-2">Pro Tier — Private Beta</h2>
+      <p class="font-body-md text-body mb-6">
+        Pro tier is currently in private beta. Early access billing is opening soon. Join the waitlist to be notified when it launches.
+      </p>
+
+      <div class="bg-canvas-soft rounded-lg p-4 mb-6 text-left">
+        <p class="font-body-sm-strong text-ink mb-2">Pro includes:</p>
+        <ul class="space-y-1.5">
+          {['Unlimited documents & chats', '20 audio overviews/day', '50 GB storage', 'Priority processing', 'API access (coming soon)'].map((item) => (
+            <li class="flex items-center gap-2 font-body-sm text-body">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-success flex-shrink-0" aria-hidden="true">
+                <circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M5 7l2 2 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="flex gap-3">
+        <button id="upgrade-modal-close" class="flex-1 btn-secondary">Maybe Later</button>
+        <a href="/contact" class="flex-1 btn-primary text-center">Join Waitlist</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  window.showUpgradeModal = function () {
+    var modal = document.getElementById('upgrade-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  };
+
+  function closeUpgradeModal() {
+    var modal = document.getElementById('upgrade-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var closeBtn = document.getElementById('upgrade-modal-close');
+    var modal = document.getElementById('upgrade-modal');
+    closeBtn?.addEventListener('click', closeUpgradeModal);
+    modal?.addEventListener('click', function (e) {
+      if (e.target === modal) closeUpgradeModal();
+    });
+  });
+</script>

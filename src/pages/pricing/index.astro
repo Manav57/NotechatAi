@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import NavBar from '../../components/ui/NavBar.astro';
 import Footer from '../../components/ui/Footer.astro';
 import Badge from '../../components/ui/Badge.astro';
+import UpgradeModal from '../../components/ui/UpgradeModal.astro';
 ---
 
 <Layout title="Pricing — NotesChatAI | Free AI Study Assistant" description="Simple, transparent pricing for NotesChatAI. Free beta with 50 documents. Pro for unlimited docs and chats. Better value than NotebookLM." keywords="noteschatai pricing, free notebooklm alternative, ai study assistant pricing, free ai study assistant">
@@ -118,7 +119,7 @@ import Badge from '../../components/ui/Badge.astro';
                 </li>
               ))}
             </ul>
-            <a href="/auth/signup?plan=pro" class="w-full h-11 flex items-center justify-center rounded-pill bg-on-primary text-primary font-button-lg hover:opacity-90 active:opacity-70 transition-all">Upgrade to Pro</a>
+            <button onclick="handleUpgrade()" class="w-full h-11 flex items-center justify-center rounded-pill bg-on-primary text-primary font-button-lg hover:opacity-90 active:opacity-70 transition-all">Upgrade to Pro</button>
           </div>
 
           {/* Team */}
@@ -350,6 +351,7 @@ import Badge from '../../components/ui/Badge.astro';
   </main>
 
   <Footer />
+  <UpgradeModal />
 </Layout>
 
 <script>
@@ -384,4 +386,26 @@ import Badge from '../../components/ui/Badge.astro';
 
   monthlyBtn?.addEventListener('click', () => setPeriod('monthly'));
   annualBtn?.addEventListener('click', () => setPeriod('annual'));
+
+  // Check auth state and route upgrade button accordingly
+  async function handleUpgrade() {
+    try {
+      const res = await fetch('/api/auth/session');
+      const data = await res.json();
+      if (data.session?.user) {
+        // User is logged in — show upgrade modal (no payment keys yet)
+        var showUpgrade = (window as any).showUpgradeModal;
+        if (typeof showUpgrade === 'function') showUpgrade();
+        else window.location.href = '/app/settings/billing';
+      } else {
+        // User is not logged in — send to signup
+        window.location.href = '/auth/signup?plan=pro';
+      }
+    } catch {
+      // On error, default to signup
+      window.location.href = '/auth/signup?plan=pro';
+    }
+  }
+  // Expose to onclick handlers
+  (window as any).handleUpgrade = handleUpgrade;
 </script>

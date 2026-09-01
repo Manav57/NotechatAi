@@ -1,0 +1,40 @@
+- generic [active] [ref=f147e1]:
+  - generic [ref=f147e3]:
+    - generic [ref=f147e4]:
+      - generic [aria-hidden] [ref=f147e6]:
+        - generic [ref=f147e7]: Loading
+        - progressbar [aria-hidden] [ref=f147e8]
+      - main [ref=f147e15]:
+        - generic [ref=f147e16]:
+          - generic [ref=f147e17]: Sign in with Google
+          - generic [ref=f147e23]:
+            - heading "Choose an account" [level=1] [ref=f147e24]
+            - generic [ref=f147e26]:
+              - text: to continue to
+              - button "noteschatai.com" [ref=f147e27] [cursor=pointer]
+        - list [ref=f147e38]:
+          - listitem [ref=f147e39]:
+            - link "Manav Patidar manavpatidar2311@gmail.com" [ref=f147e40] [cursor=pointer]:
+              - generic [ref=f147e44]:
+                - generic [ref=f147e45]: Manav Patidar
+                - generic [ref=f147e46]: manavpatidar2311@gmail.com
+          - listitem [ref=f147e47]:
+            - link "Use another account" [ref=f147e48] [cursor=pointer]
+    - contentinfo [ref=f147e59]:
+      - combobox "Change language English (United States)" [ref=f147e63] [cursor=pointer]:
+        - generic [aria-hidden]:
+          - generic: English (United States)
+      - list [ref=f147e65]:
+        - listitem [ref=f147e66]:
+          - link "Open Google Account Help Center (external, opens in a new window)" [ref=f147e67] [cursor=pointer]:
+            - /url: https://support.google.com/accounts?hl=en&p=account_iph
+            - text: Help
+        - listitem [ref=f147e68]:
+          - link "Privacy Policy (external, opens in a new window)" [ref=f147e69] [cursor=pointer]:
+            - /url: https://accounts.google.com/TOS?loc=IN&hl=en&privacy=true
+            - text: Privacy
+        - listitem [ref=f147e70]:
+          - link "Google Terms of Service (external, opens in a new window)" [ref=f147e71] [cursor=pointer]:
+            - /url: https://accounts.google.com/TOS?loc=IN&hl=en
+            - text: Terms
+  - iframe [ref=f147e72]

@@ -4,6 +4,12 @@ import AppLayout from '../../../layouts/AppLayout.astro';
 import Button from '../../../components/ui/Button.astro';
 import Badge from '../../../components/ui/Badge.astro';
 import Card from '../../../components/ui/Card.astro';
+import UpgradeModal from '../../../components/ui/UpgradeModal.astro';
+
+const user = (Astro.locals as any)?.user;
+const userName = user?.name || '';
+const userEmail = user?.email || '';
+const userImage = user?.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userName}`;
 ---
 
 <AppLayout title="Settings — NotesChatAI">
@@ -44,7 +50,7 @@ import Card from '../../../components/ui/Card.astro';
         <h2 class="font-display-md text-ink mb-6">Profile Information</h2>
         <div class="flex items-center gap-6 mb-6">
           <div class="relative">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Demo User" alt="Avatar" class="w-20 h-20 rounded-full" />
+            <img src={userImage} alt="Avatar" class="w-20 h-20 rounded-full" />
             <button class="absolute -bottom-1 -right-1 w-7 h-7 bg-primary text-on-primary rounded-full flex items-center justify-center hover:opacity-90 transition-opacity" aria-label="Change avatar">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                 <path d="M10 2l2 2-7 7H3v-2l7-7z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -52,8 +58,8 @@ import Card from '../../../components/ui/Card.astro';
             </button>
           </div>
           <div>
-            <p class="font-body-md text-ink font-medium">Demo User</p>
-            <p class="font-body-sm text-mute">demo@noteschatai.com</p>
+            <p class="font-body-md text-ink font-medium">{userName || 'User'}</p>
+            <p class="font-body-sm text-mute">{userEmail}</p>
           </div>
         </div>
 
@@ -61,17 +67,17 @@ import Card from '../../../components/ui/Card.astro';
           <div class="grid sm:grid-cols-2 gap-4">
             <div>
               <label class="block font-body-sm-strong text-ink mb-1.5">Full Name</label>
-              <input type="text" value="Demo User" class="input h-10" />
+              <input type="text" value={userName} class="input h-10" />
             </div>
             <div>
               <label class="block font-body-sm-strong text-ink mb-1.5">Email</label>
-              <input type="email" value="demo@noteschatai.com" class="input h-10" disabled />
+              <input type="email" value={userEmail} class="input h-10" disabled />
               <p class="font-caption text-mute mt-1">Contact support to change your email</p>
             </div>
           </div>
           <div>
             <label class="block font-body-sm-strong text-ink mb-1.5">Display Name</label>
-            <input type="text" value="Demo User" class="input h-10" />
+            <input type="text" value={userName} class="input h-10" />
           </div>
           <div class="flex justify-end pt-2">
             <Button type="submit" variant="primary">Save Changes</Button>
@@ -176,7 +182,7 @@ import Card from '../../../components/ui/Card.astro';
       <Card variant="marketing-large">
         <div class="flex items-center justify-between mb-6">
           <h2 class="font-display-md text-ink">Current Plan</h2>
-          <Badge variant="secondary" size="sm">Free Beta</Badge>
+          <Badge variant="secondary" size="sm">{user?.plan === 'pro' ? 'Pro' : user?.plan === 'team' ? 'Team' : 'Free Beta'}</Badge>
         </div>
         <div class="grid sm:grid-cols-3 gap-4 mb-6">
           <div class="text-center p-4 bg-canvas-soft rounded-lg">
@@ -195,7 +201,7 @@ import Card from '../../../components/ui/Card.astro';
             <p class="font-caption text-mute">1 used</p>
           </div>
         </div>
-        <a href="/pricing" class="btn-primary inline-flex">Upgrade to Pro</a>
+        <button onclick="showUpgradeModal()" class="btn-primary inline-flex">Upgrade to Pro</button>
       </Card>
 
       <Card variant="marketing-large">
@@ -311,6 +317,8 @@ import Card from '../../../components/ui/Card.astro';
       </Card>
     </div>
   </div>
+
+  <UpgradeModal />
 </AppLayout>
 
 <script>

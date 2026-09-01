@@ -1,0 +1,66 @@
+export const prerender = false;
+---
+import AppLayout from '../../../layouts/AppLayout.astro';
+import Badge from '../../../components/ui/Badge.astro';
+import Card from '../../../components/ui/Card.astro';
+import UpgradeModal from '../../../components/ui/UpgradeModal.astro';
+
+const user = (Astro.locals as any)?.user;
+---
+
+<AppLayout title="Billing — NotesChatAI">
+  <div class="max-w-3xl mx-auto space-y-8">
+    <div>
+      <div class="flex items-center gap-3 mb-1">
+        <a href="/app/settings" class="font-body-sm text-mute hover:text-ink transition-colors">Settings</a>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-mute" aria-hidden="true">
+          <path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="font-body-sm text-ink font-medium">Billing</span>
+      </div>
+      <h1 class="font-display-lg text-ink">Billing</h1>
+      <p class="font-body-md text-body mt-1">Manage your subscription, payment method, and billing history.</p>
+    </div>
+
+    {/* Current Plan */}
+    <Card variant="marketing-large">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="font-display-md text-ink">Current Plan</h2>
+        <Badge variant="secondary" size="sm">{user?.plan === 'pro' ? 'Pro' : user?.plan === 'team' ? 'Team' : 'Free Beta'}</Badge>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-4 mb-6">
+        <div class="text-center p-4 bg-canvas-soft rounded-lg">
+          <p class="font-display-xl text-ink">50</p>
+          <p class="font-body-sm text-mute">Documents</p>
+        </div>
+        <div class="text-center p-4 bg-canvas-soft rounded-lg">
+          <p class="font-display-xl text-ink">30</p>
+          <p class="font-body-sm text-mute">Chats / day</p>
+        </div>
+        <div class="text-center p-4 bg-canvas-soft rounded-lg">
+          <p class="font-display-xl text-ink">2</p>
+          <p class="font-body-sm text-mute">Audio / day</p>
+        </div>
+      </div>
+      <button onclick="showUpgradeModal()" class="btn-primary inline-flex">Upgrade to Pro</button>
+    </Card>
+
+    {/* Payment Method */}
+    <Card variant="marketing-large">
+      <h2 class="font-display-md text-ink mb-4">Payment Method</h2>
+      <div class="p-4 bg-canvas-soft rounded-lg text-center">
+        <p class="font-body-sm text-body">No payment method on file</p>
+        <p class="font-caption text-mute mt-1">Add a payment method to upgrade to Pro</p>
+      </div>
+    </Card>
+
+    {/* Billing History */}
+    <Card variant="marketing-large">
+      <h2 class="font-display-md text-ink mb-4">Billing History</h2>
+      <div class="p-4 bg-canvas-soft rounded-lg text-center">
+        <p class="font-body-sm text-body">No billing history yet</p>
+      </div>
+    </Card>
+  </div>
+  <UpgradeModal />
+</AppLayout>

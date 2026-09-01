@@ -1,0 +1,46 @@
+- generic [ref=f137e2]:
+  - generic [ref=f137e3]:
+    - link "Skip to content" [ref=f137e4] [cursor=pointer]:
+      - /url: "#start-of-content"
+    - banner [ref=f137e6]
+  - main [ref=f137e9]:
+    - generic [ref=f137e10]:
+      - generic [ref=f137e12]:
+        - img "Noteschatai logo" [ref=f137e14]
+        - paragraph [ref=f137e15]:
+          - text: Sign in to
+          - strong [ref=f137e16]: GitHub
+          - text: to continue to
+          - strong [ref=f137e17]: Noteschatai
+      - generic [ref=f137e19]:
+        - generic [ref=f137e20]:
+          - generic [ref=f137e21]: Username or email address
+          - textbox "Username or email address" [active] [ref=f137e22]
+        - generic [ref=f137e23]:
+          - generic [ref=f137e24]: Password
+          - textbox "Password" [ref=f137e25]
+          - link "Forgot password?" [ref=f137e26] [cursor=pointer]:
+            - /url: /password_reset
+        - button "Sign in" [ref=f137e28] [cursor=pointer]
+      - paragraph [ref=f137e31]:
+        - text: New to GitHub?
+        - link "Create an account" [ref=f137e32] [cursor=pointer]:
+          - /url: /join?return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23liTgnfvbXLdiaZMX%26redirect_uri%3Dhttps%253A%252F%252Fnoteschatai.com%252Fapi%252Fauth%252Fcallback%252Fgithub%26scope%3Dread%253Auser%2Buser%253Aemail&source=oauth
+  - contentinfo [ref=f137e33]:
+    - list [ref=f137e34]:
+      - listitem [ref=f137e35]:
+        - link "Terms" [ref=f137e36] [cursor=pointer]:
+          - /url: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+      - listitem [ref=f137e37]:
+        - link "Privacy" [ref=f137e38] [cursor=pointer]:
+          - /url: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+      - listitem [ref=f137e39]:
+        - link "Docs" [ref=f137e40] [cursor=pointer]:
+          - /url: https://docs.github.com
+      - listitem [ref=f137e41]:
+        - link "Contact GitHub Support" [ref=f137e42] [cursor=pointer]:
+          - /url: https://support.github.com
+      - listitem [ref=f137e43]:
+        - button "Manage cookies" [ref=f137e45] [cursor=pointer]
+      - listitem [ref=f137e46]:
+        - button "Do not share my personal information" [ref=f137e48] [cursor=pointer]

@@ -1,0 +1,746 @@
+- generic [active] [ref=f36e8]:
+  - generic [ref=f36e13]:
+    - complementary [ref=f36e15]:
+      - generic [ref=f36e17]:
+        - generic [ref=f36e19]:
+          - link [ref=f36e20] [cursor=pointer]:
+            - /url: /
+          - button "Switch Account" [ref=f36e27] [cursor=pointer]:
+            - generic "Mp7015559@gmail.com's Account" [ref=f36e29]
+        - navigation [ref=f36e32]:
+          - generic [ref=f36e36]:
+            - button "Quick search..." [ref=f36e38] [cursor=pointer]:
+              - generic [ref=f36e40]:
+                - generic [ref=f36e43]: Quick search...
+                - generic [ref=f36e44]: Ctrl K
+            - list [ref=f36e45]:
+              - listitem [ref=f36e46]:
+                - link "Account home" [ref=f36e47] [cursor=pointer]:
+                  - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/home
+              - listitem [ref=f36e54]:
+                - generic [ref=f36e55]:
+                  - button "Recents" [ref=f36e56] [cursor=pointer]
+                  - list [ref=f36e65]:
+                    - listitem [ref=f36e67]:
+                      - link [ref=f36e68] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/domains/overview
+                        - generic [ref=f36e69]:
+                          - generic [ref=f36e70]: Overview
+                          - generic [ref=f36e71]: Domains
+                      - button [ref=f36e74] [cursor=pointer]
+                    - listitem [ref=f36e83]:
+                      - link [ref=f36e84] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/services/view/noteschatai/production
+                        - generic [ref=f36e85]:
+                          - generic [ref=f36e86]: noteschatai
+                          - generic [ref=f36e87]: Workers
+                      - button [ref=f36e90] [cursor=pointer]
+                    - listitem [ref=f36e99]:
+                      - link [ref=f36e100] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/dns/records
+                        - generic [ref=f36e101]:
+                          - generic [ref=f36e102]: Records
+                          - generic [ref=f36e103]:
+                            - generic [ref=f36e104]: noteschatai.com
+                            - generic [ref=f36e105]: /
+                            - generic [ref=f36e106]: DNS
+                      - button [ref=f36e108] [cursor=pointer]
+                    - listitem [ref=f36e117]:
+                      - link [ref=f36e118] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers-and-pages
+                        - generic [ref=f36e119]:
+                          - generic [ref=f36e120]: Workers & Pages
+                          - generic [ref=f36e121]: Compute
+                      - button [ref=f36e124] [cursor=pointer]
+                    - listitem [ref=f36e133]:
+                      - link [ref=f36e134] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/domains/registrations
+                        - generic [ref=f36e135]:
+                          - generic [ref=f36e136]: Registrations
+                          - generic [ref=f36e137]: Domains
+                      - button [ref=f36e140] [cursor=pointer]
+              - listitem [ref=f36e149]:
+                - generic [ref=f36e150]:
+                  - button "Domains" [ref=f36e151] [cursor=pointer]
+                  - list [ref=f36e159]:
+                    - listitem [ref=f36e161]:
+                      - link [ref=f36e162] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/domains/overview
+                        - generic [ref=f36e163]: Overview
+                    - listitem [ref=f36e165]:
+                      - link [ref=f36e166] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/domains/registrations
+                        - generic [ref=f36e167]: Registrations
+                    - listitem [ref=f36e169]:
+                      - link [ref=f36e170] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/domains/transfers
+                        - generic [ref=f36e171]: Transfers
+              - generic [ref=f36e173]:
+                - generic [ref=f36e174]: Observe
+                - list [ref=f36e177]:
+                  - listitem [ref=f36e178]:
+                    - generic [ref=f36e179]:
+                      - button "Investigate" [ref=f36e180] [cursor=pointer]
+                      - list [ref=f36e189]:
+                        - generic [ref=f36e191]:
+                          - listitem [ref=f36e192]:
+                            - button [ref=f36e193] [cursor=pointer]:
+                              - generic [ref=f36e194]: Log Explorer
+                          - list [ref=f36e198]:
+                            - listitem [ref=f36e200]:
+                              - link [ref=f36e201] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/log-explorer/log-search
+                                - generic [ref=f36e202]: Log search
+                        - listitem [ref=f36e204]:
+                          - link [ref=f36e205] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/trace
+                            - generic [ref=f36e206]:
+                              - generic [ref=f36e207]: Trace
+                              - generic [ref=f36e208]: Beta
+                        - listitem [ref=f36e210]:
+                          - link [ref=f36e211] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/logs
+                            - generic [ref=f36e212]: Logpush
+                  - listitem [ref=f36e214]:
+                    - generic [ref=f36e215]:
+                      - button "Analytics" [ref=f36e216] [cursor=pointer]
+                      - list [ref=f36e225]:
+                        - listitem [ref=f36e227]:
+                          - link [ref=f36e228] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/dashboards
+                            - generic [ref=f36e229]:
+                              - generic [ref=f36e230]: Dashboards
+                              - generic [ref=f36e231]: New
+                        - listitem [ref=f36e233]:
+                          - link [ref=f36e234] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/analytics
+                            - generic [ref=f36e235]: Account analytics
+                        - listitem [ref=f36e237]:
+                          - link [ref=f36e238] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/web-analytics
+                            - generic [ref=f36e239]: Web analytics
+              - generic [ref=f36e241]:
+                - generic [ref=f36e242]: Build
+                - list [ref=f36e245]:
+                  - listitem [ref=f36e246]:
+                    - generic [ref=f36e247]:
+                      - button "Compute" [expanded] [ref=f36e248] [cursor=pointer]
+                      - region [ref=f36e258]:
+                        - list [ref=f36e260]:
+                          - listitem [ref=f36e262]:
+                            - link "Workers & Pages" [ref=f36e263] [cursor=pointer]:
+                              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers-and-pages
+                          - listitem [ref=f36e266]:
+                            - link "Observability" [ref=f36e267] [cursor=pointer]:
+                              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/observability
+                          - listitem [ref=f36e270]:
+                            - link "Workers for Platforms" [ref=f36e271] [cursor=pointer]:
+                              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers-for-platforms
+                          - listitem [ref=f36e274]:
+                            - link "Containers" [ref=f36e275] [cursor=pointer]:
+                              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/containers
+                          - listitem [ref=f36e278]:
+                            - link "Durable Objects" [ref=f36e279] [cursor=pointer]:
+                              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/durable-objects
+                          - listitem [ref=f36e282]:
+                            - link "Queues" [ref=f36e283] [cursor=pointer]:
+                              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/queues
+                          - listitem [ref=f36e286]:
+                            - link "Workflows" [ref=f36e287] [cursor=pointer]:
+                              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/workflows
+                          - listitem [ref=f36e290]:
+                            - link "Browser Run" [ref=f36e291] [cursor=pointer]:
+                              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/browser-run
+                          - listitem [ref=f36e294]:
+                            - link "VPC Beta" [ref=f36e295] [cursor=pointer]:
+                              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/vpc
+                              - generic [ref=f36e296]:
+                                - generic [ref=f36e297]: VPC
+                                - generic [ref=f36e298]: Beta
+                          - generic [ref=f36e300]:
+                            - listitem [ref=f36e301]:
+                              - button "Email Service" [ref=f36e302] [cursor=pointer]
+                            - list [ref=f36e307]:
+                              - listitem [ref=f36e309]:
+                                - link [ref=f36e310] [cursor=pointer]:
+                                  - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/email-service/sending
+                                  - generic [ref=f36e311]:
+                                    - generic [ref=f36e312]: Email Sending
+                                    - generic [ref=f36e313]: Beta
+                              - listitem [ref=f36e315]:
+                                - link [ref=f36e316] [cursor=pointer]:
+                                  - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/email-service/routing
+                                  - generic [ref=f36e317]: Email Routing
+                          - listitem [ref=f36e319]:
+                            - link "Workers plans" [ref=f36e320] [cursor=pointer]:
+                              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/plans
+                          - listitem [ref=f36e323]:
+                            - link "Flagship Beta" [ref=f36e324] [cursor=pointer]:
+                              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/flagship
+                              - generic [ref=f36e325]:
+                                - generic [ref=f36e326]: Flagship
+                                - generic [ref=f36e327]: Beta
+                  - listitem [ref=f36e329]:
+                    - generic [ref=f36e330]:
+                      - button "AI" [ref=f36e331] [cursor=pointer]
+                      - list [ref=f36e339]:
+                        - listitem [ref=f36e341]:
+                          - link [ref=f36e342] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ai/models
+                            - generic [ref=f36e343]: Models
+                        - listitem [ref=f36e345]:
+                          - link [ref=f36e346] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ai/workers-ai
+                            - generic [ref=f36e347]: Workers AI
+                        - listitem [ref=f36e349]:
+                          - link [ref=f36e350] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ai/ai-gateway
+                            - generic [ref=f36e351]: AI Gateway
+                        - listitem [ref=f36e353]:
+                          - link [ref=f36e354] [cursor=pointer]:
+                            - /url: https://dash.cloudflare.com/a04e4b0093d43062ab43d1cda7c1a7c2/one/access-controls/ai-controls/mcp-server-portal
+                            - generic [ref=f36e355]: MCP Portals
+                        - listitem [ref=f36e357]:
+                          - link [ref=f36e358] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ai/vectorize
+                            - generic [ref=f36e359]: Vectorize
+                        - listitem [ref=f36e361]:
+                          - link [ref=f36e362] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ai/ai-search
+                            - generic [ref=f36e363]:
+                              - generic [ref=f36e364]: AI Search
+                              - generic [ref=f36e365]: Beta
+                        - listitem [ref=f36e367]:
+                          - link [ref=f36e368] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/agents
+                            - generic [ref=f36e369]: Agents
+                  - listitem [ref=f36e371]:
+                    - generic [ref=f36e372]:
+                      - button "Storage & databases" [ref=f36e373] [cursor=pointer]
+                      - list [ref=f36e382]:
+                        - listitem [ref=f36e384]:
+                          - link [ref=f36e385] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/r2/overview
+                            - generic [ref=f36e386]: R2 Object Storage
+                        - listitem [ref=f36e388]:
+                          - link [ref=f36e389] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/data-catalog
+                            - generic [ref=f36e390]:
+                              - generic [ref=f36e391]: R2 Data Catalog
+                              - generic [ref=f36e392]: Beta
+                        - listitem [ref=f36e394]:
+                          - link [ref=f36e395] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/hyperdrive
+                            - generic [ref=f36e396]: Postgres & MySQL (Hyperdrive)
+                        - listitem [ref=f36e398]:
+                          - link [ref=f36e399] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/kv/namespaces
+                            - generic [ref=f36e400]: Workers KV
+                        - listitem [ref=f36e402]:
+                          - link [ref=f36e403] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/d1
+                            - generic [ref=f36e404]: D1 SQLite Database
+                        - listitem [ref=f36e406]:
+                          - link [ref=f36e407] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/analytics-engine
+                            - generic [ref=f36e408]: Analytics Engine
+                        - generic [ref=f36e410]:
+                          - listitem [ref=f36e411]:
+                            - button [ref=f36e412] [cursor=pointer]:
+                              - generic [ref=f36e413]:
+                                - generic [ref=f36e414]: Pipelines
+                                - generic [ref=f36e415]: Beta
+                          - list [ref=f36e419]:
+                            - listitem [ref=f36e421]:
+                              - link [ref=f36e422] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/pipelines/overview
+                                - generic [ref=f36e423]: Pipelines
+                        - listitem [ref=f36e425]:
+                          - link [ref=f36e426] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/secrets-store
+                            - generic [ref=f36e427]:
+                              - generic [ref=f36e428]: Secrets Store
+                              - generic [ref=f36e429]: New
+                  - listitem [ref=f36e431]:
+                    - generic [ref=f36e432]:
+                      - button "Media" [ref=f36e433] [cursor=pointer]
+                      - list [ref=f36e442]:
+                        - generic [ref=f36e444]:
+                          - listitem [ref=f36e445]:
+                            - button [ref=f36e446] [cursor=pointer]:
+                              - generic [ref=f36e447]: Stream
+                          - list [ref=f36e451]:
+                            - listitem [ref=f36e453]:
+                              - link [ref=f36e454] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/stream/plans
+                                - generic [ref=f36e455]: Plans
+                        - generic [ref=f36e457]:
+                          - listitem [ref=f36e458]:
+                            - button [ref=f36e459] [cursor=pointer]:
+                              - generic [ref=f36e460]: Images
+                          - list [ref=f36e464]:
+                            - listitem [ref=f36e466]:
+                              - link [ref=f36e467] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/images/transformations
+                                - generic [ref=f36e468]: Transformations
+                            - listitem [ref=f36e470]:
+                              - link [ref=f36e471] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/images/hosted
+                                - generic [ref=f36e472]: Hosted images
+                            - listitem [ref=f36e474]:
+                              - link [ref=f36e475] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/images/plans
+                                - generic [ref=f36e476]: Plans
+                        - generic [ref=f36e478]:
+                          - listitem [ref=f36e479]:
+                            - button [ref=f36e480] [cursor=pointer]:
+                              - generic [ref=f36e481]: Realtime
+                          - list [ref=f36e485]:
+                            - listitem [ref=f36e487]:
+                              - link [ref=f36e488] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/realtime/kit
+                                - generic [ref=f36e489]: RealtimeKit
+                            - listitem [ref=f36e491]:
+                              - link [ref=f36e492] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/realtime/turn
+                                - generic [ref=f36e493]: TURN Server
+                            - listitem [ref=f36e495]:
+                              - link [ref=f36e496] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/realtime/sfu
+                                - generic [ref=f36e497]: Serverless SFU
+                            - listitem [ref=f36e499]:
+                              - link [ref=f36e500] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/realtime/moq
+                                - generic [ref=f36e501]:
+                                  - generic [ref=f36e502]: MoQ Relay
+                                  - generic [ref=f36e503]: Beta
+              - generic [ref=f36e505]:
+                - generic [ref=f36e506]: Protect & connect
+                - list [ref=f36e509]:
+                  - listitem [ref=f36e510]:
+                    - generic [ref=f36e511]:
+                      - button "Application security" [ref=f36e512] [cursor=pointer]
+                      - list [ref=f36e521]:
+                        - listitem [ref=f36e523]:
+                          - link [ref=f36e524] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/security-center
+                            - generic [ref=f36e525]: Security insights
+                        - listitem [ref=f36e527]:
+                          - link [ref=f36e528] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/application-security/waf
+                            - generic [ref=f36e529]: WAF
+                        - listitem [ref=f36e531]:
+                          - link [ref=f36e532] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/application-security/botbase
+                            - generic [ref=f36e533]: BotBase
+                        - listitem [ref=f36e535]:
+                          - link [ref=f36e536] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/application-security/investigate
+                            - generic [ref=f36e537]: Investigate
+                        - listitem [ref=f36e539]:
+                          - link [ref=f36e540] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/security-center/inventory
+                            - generic [ref=f36e541]: Infrastructure
+                        - listitem [ref=f36e543]:
+                          - link [ref=f36e544] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/turnstile
+                            - generic [ref=f36e545]: Turnstile
+                  - listitem [ref=f36e547]:
+                    - link "Zero Trust" [ref=f36e548] [cursor=pointer]:
+                      - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/zero-trust/landing-page
+                  - listitem [ref=f36e555]:
+                    - generic [ref=f36e556]:
+                      - button "Networking" [ref=f36e557] [cursor=pointer]
+                      - list [ref=f36e565]:
+                        - listitem [ref=f36e567]:
+                          - link [ref=f36e568] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/magic-networks/overview
+                            - generic [ref=f36e569]:
+                              - generic [ref=f36e570]: Overview
+                              - generic [ref=f36e571]: New
+                        - generic [ref=f36e573]:
+                          - listitem [ref=f36e574]:
+                            - button [ref=f36e575] [cursor=pointer]:
+                              - generic [ref=f36e576]: Insights
+                          - list [ref=f36e580]:
+                            - listitem [ref=f36e582]:
+                              - link [ref=f36e583] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/networking-insights/analytics/network-analytics/flow-analytics
+                                - generic [ref=f36e584]: Network flow
+                        - listitem [ref=f36e586]:
+                          - link [ref=f36e587] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/tunnels
+                            - generic [ref=f36e588]: Tunnels
+                        - listitem [ref=f36e590]:
+                          - link [ref=f36e591] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/mesh
+                            - generic [ref=f36e592]:
+                              - generic [ref=f36e593]: Mesh
+                              - generic [ref=f36e594]: Beta
+                        - listitem [ref=f36e596]:
+                          - link [ref=f36e597] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/magic-networks/routes
+                            - generic [ref=f36e598]:
+                              - generic [ref=f36e599]: Routes
+                              - generic [ref=f36e600]: New
+                        - generic [ref=f36e602]:
+                          - listitem [ref=f36e603]:
+                            - button [ref=f36e604] [cursor=pointer]:
+                              - generic [ref=f36e605]: IP addresses
+                          - list [ref=f36e609]:
+                            - listitem [ref=f36e611]:
+                              - link [ref=f36e612] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ip-addresses/address-space
+                                - generic [ref=f36e613]: Address space
+                            - listitem [ref=f36e615]:
+                              - link [ref=f36e616] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ip-addresses/proxy-ips
+                                - generic [ref=f36e617]: Address maps
+                  - listitem [ref=f36e619]:
+                    - generic [ref=f36e620]:
+                      - button "Delivery & performance" [ref=f36e621] [cursor=pointer]
+                      - list [ref=f36e629]:
+                        - listitem [ref=f36e631]:
+                          - link [ref=f36e632] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/bulk-redirects
+                            - generic [ref=f36e633]: Bulk redirects
+                        - listitem [ref=f36e635]:
+                          - link [ref=f36e636] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/load-balancing
+                            - generic [ref=f36e637]: Load Balancing
+                        - listitem [ref=f36e639]:
+                          - link [ref=f36e640] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/tag-management/zaraz
+                            - generic [ref=f36e641]: Web tag management
+              - listitem [ref=f36e645]:
+                - generic [ref=f36e646]:
+                  - button "Manage account" [ref=f36e647] [cursor=pointer]
+                  - list [ref=f36e656]:
+                    - listitem [ref=f36e658]:
+                      - link [ref=f36e659] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/members
+                        - generic [ref=f36e660]: Members
+                    - listitem [ref=f36e662]:
+                      - link [ref=f36e663] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/billing
+                        - generic [ref=f36e664]: Billing
+                    - listitem [ref=f36e666]:
+                      - link [ref=f36e667] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/api-tokens
+                        - generic [ref=f36e668]: Account API tokens
+                    - listitem [ref=f36e670]:
+                      - link [ref=f36e671] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/oauth-clients
+                        - generic [ref=f36e672]: OAuth clients
+                    - listitem [ref=f36e674]:
+                      - link [ref=f36e675] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/audit-log
+                        - generic [ref=f36e676]: Audit logs
+                    - listitem [ref=f36e678]:
+                      - link [ref=f36e679] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/notifications
+                        - generic [ref=f36e680]: Notifications
+                    - listitem [ref=f36e682]:
+                      - link [ref=f36e683] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/shared-configurations
+                        - generic [ref=f36e684]:
+                          - generic [ref=f36e685]: Shared config
+                          - generic [ref=f36e686]: Alpha
+                    - listitem [ref=f36e688]:
+                      - link [ref=f36e689] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/blocked-content
+                        - generic [ref=f36e690]: Blocked content
+                    - listitem [ref=f36e692]:
+                      - link [ref=f36e693] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/abuse-reports
+                        - generic [ref=f36e694]: Abuse reports
+                    - listitem [ref=f36e696]:
+                      - link [ref=f36e697] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/carbon
+                        - generic [ref=f36e698]: Carbon Impact Report
+                    - listitem [ref=f36e700]:
+                      - link [ref=f36e701] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/configurations
+                        - generic [ref=f36e702]: Configurations
+                    - listitem [ref=f36e704]:
+                      - link [ref=f36e705] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/tags
+                        - generic [ref=f36e706]:
+                          - generic [ref=f36e707]: Tagged Resources
+                          - generic [ref=f36e708]: Beta
+        - button "Collapse sidebar" [expanded] [ref=f36e714] [cursor=pointer]
+    - generic [ref=f36e717]:
+      - banner [ref=f36e718]:
+        - navigation "breadcrumb" [ref=f36e798]:
+          - generic [ref=f36e799]:
+            - link "Workers & Pages" [ref=f36e800] [cursor=pointer]:
+              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers-and-pages
+            - generic [ref=f36e812]: noteschatai
+        - generic [ref=f36e719]:
+          - button "Ask AI" [ref=f36e720] [cursor=pointer]
+          - link "Support" [ref=f36e726] [cursor=pointer]:
+            - /url: /?to=/:account/support
+          - button "User menu" [ref=f36e731] [cursor=pointer]
+      - generic [ref=f36e734]:
+        - navigation [ref=f36e814]:
+          - generic [ref=f36e815]:
+            - tablist [ref=f36e817]:
+              - tab "Overview" [selected] [ref=f36e818] [cursor=pointer]
+              - tab "Metrics" [ref=f36e819] [cursor=pointer]
+              - tab "Deployments" [ref=f36e820] [cursor=pointer]
+              - tab "Bindings" [ref=f36e821] [cursor=pointer]
+              - tab "Observability" [ref=f36e822] [cursor=pointer]
+              - tab "Domains" [ref=f36e823] [cursor=pointer]
+              - tab "Access" [ref=f36e824] [cursor=pointer]
+              - tab "Settings" [ref=f36e825] [cursor=pointer]
+            - button [aria-hidden]
+            - button "Scroll tabs right" [ref=f36e826] [cursor=pointer]
+          - generic [ref=f36e830]:
+            - link "Edit code" [ref=f36e831] [cursor=pointer]:
+              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/services/edit/noteschatai/production
+            - link "Visit ↗" [ref=f36e836] [cursor=pointer]:
+              - /url: https://noteschatai.com
+              - generic [ref=f36e841]:
+                - generic [ref=f36e842]: Visit
+                - text: ↗
+        - generic [ref=f36e844]:
+          - generic [ref=f36e846]:
+            - link "noteschatai.com" [ref=f36e850] [cursor=pointer]:
+              - /url: https://noteschatai.com
+            - generic [ref=f36e852]:
+              - generic [ref=f36e853]: by mp7015559
+              - time [ref=f36e856]: 8 days ago
+          - generic [ref=f36e858]:
+            - generic [ref=f36e861]:
+              - list:
+                - listitem:
+                  - button "Domains 3" [ref=f36e863] [cursor=pointer]:
+                    - generic [ref=f36e866]:
+                      - generic [ref=f36e867]: Domains
+                      - generic [ref=f36e868]: "3"
+                  - button "Workers 0" [ref=f36e873] [cursor=pointer]:
+                    - generic [ref=f36e876]:
+                      - generic [ref=f36e877]: Workers
+                      - generic [ref=f36e878]: "0"
+                  - button "Queues 0" [ref=f36e883] [cursor=pointer]:
+                    - generic [ref=f36e886]:
+                      - generic [ref=f36e887]: Queues
+                      - generic [ref=f36e888]: "0"
+                - listitem [ref=f36e892]:
+                  - generic [ref=f36e895]:
+                    - banner [ref=f36e896]:
+                      - paragraph [ref=f36e902]: noteschatai
+                    - link "Observability Workers Logs Enabled Workers Traces Disabled" [ref=f36e905] [cursor=pointer]:
+                      - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/services/view/noteschatai/production/settings?setupObservability=true
+                      - generic [ref=f36e906]:
+                        - heading "Observability" [level=3] [ref=f36e908]
+                        - generic [ref=f36e914]:
+                          - generic [ref=f36e915]:
+                            - paragraph [ref=f36e916]: Workers Logs
+                            - generic [ref=f36e918]: Enabled
+                          - generic [ref=f36e921]:
+                            - paragraph [ref=f36e922]: Workers Traces
+                            - generic [ref=f36e924]: Disabled
+                - listitem:
+                  - generic [ref=f36e926]:
+                    - button "Bindings 7" [ref=f36e927] [cursor=pointer]:
+                      - generic [ref=f36e930]:
+                        - generic [ref=f36e931]: Bindings
+                        - generic [ref=f36e932]: "7"
+                    - generic [ref=f36e936]:
+                      - link "Add a binding" [ref=f36e938] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/services/view/noteschatai/production/bindings
+                      - generic [ref=f36e942]:
+                        - heading "Workers AI" [level=3] [ref=f36e944]
+                        - list [ref=f36e945]:
+                          - listitem [ref=f36e946]:
+                            - generic [ref=f36e947]:
+                              - generic [ref=f36e948]: AI
+                              - link [ref=f36e951] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ai/workers-ai/models
+                                - paragraph [ref=f36e956]: Workers AI
+                      - generic [ref=f36e957]:
+                        - heading "Assets" [level=3] [ref=f36e959]
+                        - list [ref=f36e960]:
+                          - listitem [ref=f36e961]:
+                            - generic [ref=f36e962]: ASSETS
+                      - generic [ref=f36e964]:
+                        - heading "D1 database" [level=3] [ref=f36e966]
+                        - list [ref=f36e967]:
+                          - listitem [ref=f36e968]:
+                            - generic [ref=f36e969]:
+                              - generic [ref=f36e970]: DB
+                              - link [ref=f36e973] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/d1/databases/dbec39b9-89ea-458a-91e5-50efb8d036ad/metrics
+                                - paragraph [ref=f36e979]: noteschatai-db
+                      - generic [ref=f36e980]:
+                        - heading "Images" [level=3] [ref=f36e982]
+                        - list [ref=f36e983]:
+                          - listitem [ref=f36e984]:
+                            - generic [ref=f36e985]: IMAGES
+                      - generic [ref=f36e987]:
+                        - heading "R2 bucket" [level=3] [ref=f36e989]
+                        - list [ref=f36e990]:
+                          - listitem [ref=f36e991]:
+                            - generic [ref=f36e992]:
+                              - generic [ref=f36e993]: R2
+                              - link [ref=f36e996] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/r2/default/buckets/noteschatai-files
+                                - paragraph [ref=f36e1001]: noteschatai-files
+                      - generic [ref=f36e1002]:
+                        - heading "KV namespace" [level=3] [ref=f36e1004]
+                        - list [ref=f36e1005]:
+                          - listitem [ref=f36e1006]:
+                            - generic [ref=f36e1007]:
+                              - generic [ref=f36e1008]: SESSION
+                              - link [ref=f36e1011] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/kv/namespaces/cb8a875581944182a33accae41138582
+                                - paragraph [ref=f36e1017]: noteschatai-session
+                      - generic [ref=f36e1018]:
+                        - heading "Vectorize index" [level=3] [ref=f36e1020]
+                        - list [ref=f36e1021]:
+                          - listitem [ref=f36e1022]:
+                            - generic [ref=f36e1023]:
+                              - generic [ref=f36e1024]: VECTORIZE
+                              - link [ref=f36e1027] [cursor=pointer]:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ai/vectorize
+                                - paragraph [ref=f36e1032]: document-chunks
+            - button "Expand diagram" [ref=f36e1038]
+          - generic [ref=f36e1042]:
+            - generic [ref=f36e1043]:
+              - generic [ref=f36e1044]:
+                - link "Metrics Last 24 hours" [ref=f36e1045] [cursor=pointer]:
+                  - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/services/view/noteschatai/production/metrics
+                  - generic [ref=f36e1047]:
+                    - generic [ref=f36e1048]: Metrics
+                    - generic [ref=f36e1049]: Last 24 hours
+                - generic [ref=f36e1053]:
+                  - link "Invocations 581 ↗ 100.0%" [ref=f36e1054] [cursor=pointer]:
+                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/services/view/noteschatai/production/metrics/charts/invocations
+                    - generic [ref=f36e1056]:
+                      - generic [ref=f36e1057]: Invocations
+                      - generic [ref=f36e1064]:
+                        - generic [ref=f36e1065]: "581"
+                        - generic [ref=f36e1066]: ↗ 100.0%
+                  - link "CPU Time 2 ms ↗ 100.0%" [ref=f36e1071] [cursor=pointer]:
+                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/services/view/noteschatai/production/metrics/charts/cpu-time
+                    - generic [ref=f36e1073]:
+                      - generic [ref=f36e1074]: CPU Time
+                      - generic [ref=f36e1081]:
+                        - generic [ref=f36e1082]: 2 ms
+                        - generic [ref=f36e1083]: ↗ 100.0%
+                  - link "Errors 0" [ref=f36e1088] [cursor=pointer]:
+                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/services/view/noteschatai/production/metrics/charts/errors
+                    - generic [ref=f36e1090]:
+                      - generic [ref=f36e1091]: Errors
+                      - generic [ref=f36e1094]: "0"
+              - generic [ref=f36e1105]:
+                - link "Versions" [ref=f36e1106] [cursor=pointer]:
+                  - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/services/view/noteschatai/production/deployments
+                - generic [ref=f36e1113]:
+                  - generic [ref=f36e1116]:
+                    - meter [ref=f36e1118]
+                    - generic [ref=f36e1121]:
+                      - generic "Preview version" [ref=f36e1122]:
+                        - link "6510ea77" [ref=f36e1123] [cursor=pointer]:
+                          - /url: https://6510ea77-noteschatai.snapvisa.workers.dev
+                      - button "Copy" [ref=f36e1124] [cursor=pointer]
+                    - generic [ref=f36e1128]: Manually deployed
+                    - paragraph [ref=f36e1133]: Wrangler
+                    - generic [ref=f36e1134]:
+                      - generic [ref=f36e1135]: by mp7015559
+                      - time [ref=f36e1139]: 8d ago
+                  - generic [ref=f36e1142]:
+                    - generic [ref=f36e1144]:
+                      - generic "Preview version" [ref=f36e1145]:
+                        - link "123532ef" [ref=f36e1146] [cursor=pointer]:
+                          - /url: https://123532ef-noteschatai.snapvisa.workers.dev
+                      - button "Copy" [ref=f36e1147] [cursor=pointer]
+                    - generic [ref=f36e1151]: Manually deployed
+                    - paragraph [ref=f36e1156]: Wrangler
+                    - generic [ref=f36e1157]:
+                      - generic [ref=f36e1158]: by mp7015559
+                      - time [ref=f36e1162]: 8d ago
+                  - generic [ref=f36e1165]:
+                    - generic [ref=f36e1167]:
+                      - generic "Preview version" [ref=f36e1168]:
+                        - link "4058f4e9" [ref=f36e1169] [cursor=pointer]:
+                          - /url: https://4058f4e9-noteschatai.snapvisa.workers.dev
+                      - button "Copy" [ref=f36e1170] [cursor=pointer]
+                    - generic [ref=f36e1174]: Manually deployed
+                    - paragraph [ref=f36e1179]: Wrangler
+                    - generic [ref=f36e1180]:
+                      - generic [ref=f36e1181]: by mp7015559
+                      - time [ref=f36e1185]: 8d ago
+                  - generic [ref=f36e1188]:
+                    - generic [ref=f36e1190]:
+                      - generic "Preview version" [ref=f36e1191]:
+                        - link "7cfc31ae" [ref=f36e1192] [cursor=pointer]:
+                          - /url: https://7cfc31ae-noteschatai.snapvisa.workers.dev
+                      - button "Copy" [ref=f36e1193] [cursor=pointer]
+                    - generic [ref=f36e1197]: Manually deployed
+                    - paragraph [ref=f36e1202]: Wrangler
+                    - generic [ref=f36e1203]:
+                      - generic [ref=f36e1204]: by mp7015559
+                      - time [ref=f36e1208]: 8d ago
+            - generic [ref=f36e1209]:
+              - generic [ref=f36e1210]:
+                - link "Domains and routes" [ref=f36e1211] [cursor=pointer]:
+                  - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/services/view/noteschatai/production/domains
+                - list [ref=f36e1218]:
+                  - listitem [ref=f36e1219]:
+                    - generic [ref=f36e1220]: workers.dev
+                    - paragraph [ref=f36e1222]:
+                      - generic [ref=f36e1223]: noteschatai.snapvisa.workers.dev
+                  - listitem [ref=f36e1224]:
+                    - generic [ref=f36e1225]: Custom domains
+                    - paragraph [ref=f36e1227]:
+                      - generic [ref=f36e1228]: noteschatai.com
+                      - generic [ref=f36e1231]: "+1"
+                  - listitem [ref=f36e1232]:
+                    - generic [ref=f36e1233]: Routes
+                    - paragraph [ref=f36e1235]:
+                      - generic [ref=f36e1236]: —
+              - generic [ref=f36e1237]:
+                - generic [ref=f36e1238]: Next steps
+                - generic [ref=f36e1242]:
+                  - generic [ref=f36e1244] [cursor=pointer]:
+                    - paragraph [ref=f36e1245]:
+                      - generic [ref=f36e1249]: Automate your CI
+                    - paragraph [ref=f36e1250]: Connect your Git repository to enable continuous deployment.
+                  - generic [ref=f36e1255] [cursor=pointer]:
+                    - paragraph [ref=f36e1256]:
+                      - generic [ref=f36e1260]: Automate with Workflows
+                    - paragraph [ref=f36e1261]: Build reliable multi-step applications with Workflows for complex business logic.
+                  - generic [ref=f36e1266] [cursor=pointer]:
+                    - paragraph [ref=f36e1267]:
+                      - generic [ref=f36e1272]: Collaborate in real time
+                    - paragraph [ref=f36e1273]: Add Durable Objects for real-time collaboration and coordination.
+      - contentinfo [ref=f36e736]:
+        - list [ref=f36e738]:
+          - listitem [ref=f36e739]:
+            - link "Support" [ref=f36e740] [cursor=pointer]:
+              - /url: https://support.cloudflare.com
+          - listitem [ref=f36e741]:
+            - link "System status" [ref=f36e742] [cursor=pointer]:
+              - /url: https://www.cloudflarestatus.com
+          - listitem [ref=f36e743]:
+            - link "Careers" [ref=f36e744] [cursor=pointer]:
+              - /url: https://www.cloudflare.com/careers/
+          - listitem [ref=f36e745]:
+            - link "Terms of Use" [ref=f36e746] [cursor=pointer]:
+              - /url: https://www.cloudflare.com/website-terms/
+          - listitem [ref=f36e747]:
+            - link "Report Security Issues" [ref=f36e748] [cursor=pointer]:
+              - /url: https://www.cloudflare.com/disclosure/
+          - listitem [ref=f36e749]:
+            - link "Privacy Policy" [ref=f36e750] [cursor=pointer]:
+              - /url: https://www.cloudflare.com/privacypolicy/
+          - listitem [ref=f36e751]:
+            - button [ref=f36e752] [cursor=pointer]:
+              - img "A blue and white pill with a checkmark and an x, representing privacy choices" [ref=f36e753]
+              - text: Cookie Preferences
+          - listitem [ref=f36e754]:
+            - generic [ref=f36e755]: © 2026 Cloudflare, Inc.
+  - generic:
+    - region "Notifications"

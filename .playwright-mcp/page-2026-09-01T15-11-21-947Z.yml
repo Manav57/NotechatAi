@@ -1,0 +1,1258 @@
+- generic [ref=f69e8]:
+  - generic [ref=f69e13]:
+    - complementary [ref=f69e15]:
+      - generic [ref=f69e17]:
+        - generic [ref=f69e19]:
+          - link [ref=f69e20] [cursor=pointer]:
+            - /url: /
+          - button "Switch Account" [ref=f69e27] [cursor=pointer]:
+            - generic "Mp7015559@gmail.com's Account" [ref=f69e29]
+        - navigation [ref=f69e32]:
+          - generic [ref=f69e34]:
+            - generic [aria-hidden]:
+              - generic:
+                - generic:
+                  - button:
+                    - generic:
+                      - generic:
+                        - generic: Quick search...
+                        - generic: Ctrl K
+                - list:
+                  - listitem:
+                    - link:
+                      - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/home
+                      - generic: Account home
+                  - listitem:
+                    - generic:
+                      - button:
+                        - generic: Recents
+                      - list:
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ssl-tls
+                            - generic:
+                              - generic: Overview
+                              - generic:
+                                - generic: noteschatai.com
+                                - generic: /
+                                - generic: SSL/TLS
+                          - generic:
+                            - button
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ssl-tls/edge-certificates
+                            - generic:
+                              - generic: Edge Certificates
+                              - generic:
+                                - generic: noteschatai.com
+                                - generic: /
+                                - generic: SSL/TLS
+                          - generic:
+                            - button
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/domains/overview
+                            - generic:
+                              - generic: Overview
+                              - generic: Domains
+                          - generic:
+                            - button
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/services/view/noteschatai/production
+                            - generic:
+                              - generic: noteschatai
+                              - generic: Workers
+                          - generic:
+                            - button
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/dns/records
+                            - generic:
+                              - generic: Records
+                              - generic:
+                                - generic: noteschatai.com
+                                - generic: /
+                                - generic: DNS
+                          - generic:
+                            - button
+                  - listitem:
+                    - generic:
+                      - button:
+                        - generic: Domains
+                      - list:
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/domains/overview
+                            - generic: Overview
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/domains/registrations
+                            - generic: Registrations
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/domains/transfers
+                            - generic: Transfers
+                  - generic:
+                    - generic: Observe
+                    - list:
+                      - listitem:
+                        - generic:
+                          - button:
+                            - generic: Investigate
+                          - list:
+                            - generic:
+                              - listitem:
+                                - button:
+                                  - generic: Log Explorer
+                              - list:
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/log-explorer/log-search
+                                    - generic: Log search
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/trace
+                                - generic:
+                                  - generic: Trace
+                                  - generic: Beta
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/logs
+                                - generic: Logpush
+                      - listitem:
+                        - generic:
+                          - button:
+                            - generic: Analytics
+                          - list:
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/dashboards
+                                - generic:
+                                  - generic: Dashboards
+                                  - generic: New
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/analytics
+                                - generic: Account analytics
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/web-analytics
+                                - generic: Web analytics
+                  - generic:
+                    - generic: Build
+                    - list:
+                      - listitem:
+                        - generic:
+                          - button:
+                            - generic: Compute
+                          - list:
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers-and-pages
+                                - generic: Workers & Pages
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/observability
+                                - generic: Observability
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers-for-platforms
+                                - generic: Workers for Platforms
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/containers
+                                - generic: Containers
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/durable-objects
+                                - generic: Durable Objects
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/queues
+                                - generic: Queues
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/workflows
+                                - generic: Workflows
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/browser-run
+                                - generic: Browser Run
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/vpc
+                                - generic:
+                                  - generic: VPC
+                                  - generic: Beta
+                            - generic:
+                              - listitem:
+                                - button:
+                                  - generic: Email Service
+                              - list:
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/email-service/sending
+                                    - generic:
+                                      - generic: Email Sending
+                                      - generic: Beta
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/email-service/routing
+                                    - generic: Email Routing
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/plans
+                                - generic: Workers plans
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/flagship
+                                - generic:
+                                  - generic: Flagship
+                                  - generic: Beta
+                      - listitem:
+                        - generic:
+                          - button:
+                            - generic: AI
+                          - list:
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ai/models
+                                - generic: Models
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ai/workers-ai
+                                - generic: Workers AI
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ai/ai-gateway
+                                - generic: AI Gateway
+                            - listitem:
+                              - link:
+                                - /url: https://dash.cloudflare.com/a04e4b0093d43062ab43d1cda7c1a7c2/one/access-controls/ai-controls/mcp-server-portal
+                                - generic: MCP Portals
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ai/vectorize
+                                - generic: Vectorize
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ai/ai-search
+                                - generic:
+                                  - generic: AI Search
+                                  - generic: Beta
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/agents
+                                - generic: Agents
+                      - listitem:
+                        - generic:
+                          - button:
+                            - generic: Storage & databases
+                          - list:
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/r2/overview
+                                - generic: R2 Object Storage
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/data-catalog
+                                - generic:
+                                  - generic: R2 Data Catalog
+                                  - generic: Beta
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/hyperdrive
+                                - generic: Postgres & MySQL (Hyperdrive)
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/kv/namespaces
+                                - generic: Workers KV
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/d1
+                                - generic: D1 SQLite Database
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/analytics-engine
+                                - generic: Analytics Engine
+                            - generic:
+                              - listitem:
+                                - button:
+                                  - generic:
+                                    - generic: Pipelines
+                                    - generic: Beta
+                              - list:
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/pipelines/overview
+                                    - generic: Pipelines
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/secrets-store
+                                - generic:
+                                  - generic: Secrets Store
+                                  - generic: New
+                      - listitem:
+                        - generic:
+                          - button:
+                            - generic: Media
+                          - list:
+                            - generic:
+                              - listitem:
+                                - button:
+                                  - generic: Stream
+                              - list:
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/stream/plans
+                                    - generic: Plans
+                            - generic:
+                              - listitem:
+                                - button:
+                                  - generic: Images
+                              - list:
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/images/transformations
+                                    - generic: Transformations
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/images/hosted
+                                    - generic: Hosted images
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/images/plans
+                                    - generic: Plans
+                            - generic:
+                              - listitem:
+                                - button:
+                                  - generic: Realtime
+                              - list:
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/realtime/kit
+                                    - generic: RealtimeKit
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/realtime/turn
+                                    - generic: TURN Server
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/realtime/sfu
+                                    - generic: Serverless SFU
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/realtime/moq
+                                    - generic:
+                                      - generic: MoQ Relay
+                                      - generic: Beta
+                  - generic:
+                    - generic: Protect & connect
+                    - list:
+                      - listitem:
+                        - generic:
+                          - button:
+                            - generic: Application security
+                          - list:
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/security-center
+                                - generic: Security insights
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/application-security/waf
+                                - generic: WAF
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/application-security/botbase
+                                - generic: BotBase
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/application-security/investigate
+                                - generic: Investigate
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/security-center/inventory
+                                - generic: Infrastructure
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/turnstile
+                                - generic: Turnstile
+                      - listitem:
+                        - link:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/zero-trust/landing-page
+                          - generic: Zero Trust
+                      - listitem:
+                        - generic:
+                          - button:
+                            - generic: Networking
+                          - list:
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/magic-networks/overview
+                                - generic:
+                                  - generic: Overview
+                                  - generic: New
+                            - generic:
+                              - listitem:
+                                - button:
+                                  - generic: Insights
+                              - list:
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/networking-insights/analytics/network-analytics/flow-analytics
+                                    - generic: Network flow
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/tunnels
+                                - generic: Tunnels
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/mesh
+                                - generic:
+                                  - generic: Mesh
+                                  - generic: Beta
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/magic-networks/routes
+                                - generic:
+                                  - generic: Routes
+                                  - generic: New
+                            - generic:
+                              - listitem:
+                                - button:
+                                  - generic: IP addresses
+                              - list:
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ip-addresses/address-space
+                                    - generic: Address space
+                                - listitem:
+                                  - link:
+                                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/ip-addresses/proxy-ips
+                                    - generic: Address maps
+                      - listitem:
+                        - generic:
+                          - button:
+                            - generic: Delivery & performance
+                          - list:
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/bulk-redirects
+                                - generic: Bulk redirects
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/load-balancing
+                                - generic: Load Balancing
+                            - listitem:
+                              - link:
+                                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/tag-management/zaraz
+                                - generic: Web tag management
+                  - listitem:
+                    - generic:
+                      - button:
+                        - generic: Manage account
+                      - list:
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/members
+                            - generic: Members
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/billing
+                            - generic: Billing
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/api-tokens
+                            - generic: Account API tokens
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/oauth-clients
+                            - generic: OAuth clients
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/audit-log
+                            - generic: Audit logs
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/notifications
+                            - generic: Notifications
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/shared-configurations
+                            - generic:
+                              - generic: Shared config
+                              - generic: Alpha
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/blocked-content
+                            - generic: Blocked content
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/abuse-reports
+                            - generic: Abuse reports
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/carbon
+                            - generic: Carbon Impact Report
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/configurations
+                            - generic: Configurations
+                        - listitem:
+                          - link:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/tags
+                            - generic:
+                              - generic: Tagged Resources
+                              - generic: Beta
+            - generic [ref=f69e36]:
+              - button "Quick search..." [ref=f69e38] [cursor=pointer]:
+                - generic [ref=f69e40]:
+                  - generic [ref=f69e43]: Quick search...
+                  - generic [ref=f69e44]: Ctrl K
+              - link "Back to Domains" [ref=f69e46] [cursor=pointer]:
+                - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/domains/overview
+              - list [ref=f69e53]:
+                - listitem [ref=f69e54]:
+                  - link "Overview" [ref=f69e55] [cursor=pointer]:
+                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/
+                - listitem [ref=f69e62]:
+                  - generic [ref=f69e63]:
+                    - button "Recents" [ref=f69e64] [cursor=pointer]
+                    - list [ref=f69e73]:
+                      - listitem [ref=f69e75]:
+                        - link [ref=f69e76] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ssl-tls
+                          - generic [ref=f69e77]:
+                            - generic [ref=f69e78]: Overview
+                            - generic [ref=f69e79]:
+                              - generic [ref=f69e80]: noteschatai.com
+                              - generic [ref=f69e81]: /
+                              - generic [ref=f69e82]: SSL/TLS
+                        - button [ref=f69e84] [cursor=pointer]
+                      - listitem [ref=f69e93]:
+                        - link [ref=f69e94] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ssl-tls/edge-certificates
+                          - generic [ref=f69e95]:
+                            - generic [ref=f69e96]: Edge Certificates
+                            - generic [ref=f69e97]:
+                              - generic [ref=f69e98]: noteschatai.com
+                              - generic [ref=f69e99]: /
+                              - generic [ref=f69e100]: SSL/TLS
+                        - button [ref=f69e102] [cursor=pointer]
+                      - listitem [ref=f69e111]:
+                        - link [ref=f69e112] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/domains/overview
+                          - generic [ref=f69e113]:
+                            - generic [ref=f69e114]: Overview
+                            - generic [ref=f69e115]: Domains
+                        - button [ref=f69e118] [cursor=pointer]
+                      - listitem [ref=f69e127]:
+                        - link [ref=f69e128] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/workers/services/view/noteschatai/production
+                          - generic [ref=f69e129]:
+                            - generic [ref=f69e130]: noteschatai
+                            - generic [ref=f69e131]: Workers
+                        - button [ref=f69e134] [cursor=pointer]
+                      - listitem [ref=f69e143]:
+                        - link [ref=f69e144] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/dns/records
+                          - generic [ref=f69e145]:
+                            - generic [ref=f69e146]: Records
+                            - generic [ref=f69e147]:
+                              - generic [ref=f69e148]: noteschatai.com
+                              - generic [ref=f69e149]: /
+                              - generic [ref=f69e150]: DNS
+                        - button [ref=f69e152] [cursor=pointer]
+                - listitem [ref=f69e161]:
+                  - generic [ref=f69e162]:
+                    - button "AI Crawl Control" [ref=f69e163] [cursor=pointer]
+                    - list [ref=f69e172]:
+                      - listitem [ref=f69e174]:
+                        - link [ref=f69e175] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ai/overview
+                          - generic [ref=f69e176]: Overview
+                      - listitem [ref=f69e178]:
+                        - link [ref=f69e179] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ai/metrics
+                          - generic [ref=f69e180]: Metrics
+                      - listitem [ref=f69e182]:
+                        - link [ref=f69e183] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ai/security
+                          - generic [ref=f69e184]: Security
+                      - listitem [ref=f69e186]:
+                        - link [ref=f69e187] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ai/optimization
+                          - generic [ref=f69e188]:
+                            - generic [ref=f69e189]: Optimization
+                            - generic [ref=f69e190]: New
+                      - listitem [ref=f69e192]:
+                        - link [ref=f69e193] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ai/signals
+                          - generic [ref=f69e194]: Signals
+                - listitem [ref=f69e196]:
+                  - generic [ref=f69e197]:
+                    - button "Agent Readiness" [ref=f69e198] [cursor=pointer]
+                    - list [ref=f69e206]:
+                      - listitem [ref=f69e208]:
+                        - link [ref=f69e209] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/agent-readiness/overview
+                          - generic [ref=f69e210]: Overview
+                      - listitem [ref=f69e212]:
+                        - link [ref=f69e213] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/agent-readiness/diagnostics
+                          - generic [ref=f69e214]:
+                            - generic [ref=f69e215]: Diagnostics
+                            - generic [ref=f69e216]: Beta
+                      - listitem [ref=f69e218]:
+                        - link [ref=f69e219] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/agent-readiness/ai-playground
+                          - generic [ref=f69e220]:
+                            - generic [ref=f69e221]: AI Playground
+                            - generic [ref=f69e222]: Beta
+                      - listitem [ref=f69e224]:
+                        - link [ref=f69e225] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/agent-readiness/webmcp
+                          - generic [ref=f69e226]:
+                            - generic [ref=f69e227]: WebMCP
+                            - generic [ref=f69e228]: Beta
+                - listitem [ref=f69e230]:
+                  - generic [ref=f69e231]:
+                    - button "Investigate" [ref=f69e232] [cursor=pointer]
+                    - list [ref=f69e241]:
+                      - generic [ref=f69e243]:
+                        - listitem [ref=f69e244]:
+                          - button [ref=f69e245] [cursor=pointer]:
+                            - generic [ref=f69e246]: Log Explorer
+                        - list [ref=f69e250]:
+                          - listitem [ref=f69e252]:
+                            - link [ref=f69e253] [cursor=pointer]:
+                              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/log-explorer/log-search
+                              - generic [ref=f69e254]: Log search
+                      - listitem [ref=f69e256]:
+                        - link [ref=f69e257] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/rules/trace/search
+                          - generic [ref=f69e258]:
+                            - generic [ref=f69e259]: Trace
+                            - generic [ref=f69e260]: Beta
+                      - listitem [ref=f69e262]:
+                        - link [ref=f69e263] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/analytics/logs
+                          - generic [ref=f69e264]: Logpush
+                - listitem [ref=f69e266]:
+                  - generic [ref=f69e267]:
+                    - button "Analytics" [ref=f69e268] [cursor=pointer]
+                    - list [ref=f69e277]:
+                      - listitem [ref=f69e279]:
+                        - link [ref=f69e280] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/dashboards
+                          - generic [ref=f69e281]:
+                            - generic [ref=f69e282]: Dashboards
+                            - generic [ref=f69e283]: New
+                      - listitem [ref=f69e285]:
+                        - link [ref=f69e286] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/analytics/traffic
+                          - generic [ref=f69e287]: HTTP Traffic
+                      - listitem [ref=f69e289]:
+                        - link [ref=f69e290] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/analytics/web/overview
+                          - generic [ref=f69e291]: Web analytics
+                      - listitem [ref=f69e293]:
+                        - link [ref=f69e294] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/analytics/performance
+                          - generic [ref=f69e295]: Performance
+                      - listitem [ref=f69e297]:
+                        - link [ref=f69e298] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/analytics/workers
+                          - generic [ref=f69e299]: Workers
+                - listitem [ref=f69e301]:
+                  - generic [ref=f69e302]:
+                    - button "DNS" [ref=f69e303] [cursor=pointer]
+                    - list [ref=f69e311]:
+                      - listitem [ref=f69e313]:
+                        - link [ref=f69e314] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/dns/records
+                          - generic [ref=f69e315]: Records
+                      - listitem [ref=f69e317]:
+                        - link [ref=f69e318] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/dns/analytics
+                          - generic [ref=f69e319]: Analytics
+                      - listitem [ref=f69e321]:
+                        - link [ref=f69e322] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/dns/settings
+                          - generic [ref=f69e323]: Settings
+                - listitem [ref=f69e325]:
+                  - generic [ref=f69e326]:
+                    - button "Email" [ref=f69e327] [cursor=pointer]
+                    - list [ref=f69e337]:
+                      - listitem [ref=f69e339]:
+                        - link [ref=f69e340] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/email/dmarc-management
+                          - generic [ref=f69e341]: DMARC Management
+                      - listitem [ref=f69e343]:
+                        - link [ref=f69e344] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/email/security
+                          - generic [ref=f69e345]: Email Security
+                - listitem [ref=f69e347]:
+                  - generic [ref=f69e348]:
+                    - button "SSL/TLS" [expanded] [ref=f69e349] [cursor=pointer]
+                    - region [ref=f69e358]:
+                      - list [ref=f69e360]:
+                        - listitem [ref=f69e362]:
+                          - link "Overview" [ref=f69e363] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ssl-tls
+                        - listitem [ref=f69e366]:
+                          - link "Edge Certificates" [ref=f69e367] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ssl-tls/edge-certificates
+                        - listitem [ref=f69e370]:
+                          - link "Client Certificates" [ref=f69e371] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ssl-tls/client-certificates
+                        - listitem [ref=f69e374]:
+                          - link "Origin Server" [ref=f69e375] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ssl-tls/origin
+                        - listitem [ref=f69e378]:
+                          - link "Custom Hostnames" [ref=f69e379] [cursor=pointer]:
+                            - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ssl-tls/custom-hostnames
+                - listitem [ref=f69e382]:
+                  - generic [ref=f69e383]:
+                    - button "Security" [ref=f69e384] [cursor=pointer]
+                    - list [ref=f69e392]:
+                      - listitem [ref=f69e394]:
+                        - link [ref=f69e395] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/security/overview
+                          - generic [ref=f69e396]: Overview
+                      - listitem [ref=f69e398]:
+                        - link [ref=f69e399] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/security/analytics
+                          - generic [ref=f69e400]: Analytics
+                      - listitem [ref=f69e402]:
+                        - link [ref=f69e403] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/security/web-assets
+                          - generic [ref=f69e404]: Web assets
+                      - listitem [ref=f69e406]:
+                        - link [ref=f69e407] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/security/security-rules
+                          - generic [ref=f69e408]: Security rules
+                      - listitem [ref=f69e410]:
+                        - link [ref=f69e411] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/security/settings
+                          - generic [ref=f69e412]: Settings
+                - listitem [ref=f69e414]:
+                  - link "Access" [ref=f69e415] [cursor=pointer]:
+                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/access
+                - listitem [ref=f69e422]:
+                  - generic [ref=f69e423]:
+                    - button "Speed" [ref=f69e424] [cursor=pointer]
+                    - list [ref=f69e432]:
+                      - listitem [ref=f69e434]:
+                        - link [ref=f69e435] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/speed
+                          - generic [ref=f69e436]:
+                            - generic [ref=f69e437]: Observatory
+                            - generic [ref=f69e438]: Beta
+                      - listitem [ref=f69e440]:
+                        - link [ref=f69e441] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/speed/origin-analytics
+                          - generic [ref=f69e442]: Origin Analytics
+                      - listitem [ref=f69e444]:
+                        - link [ref=f69e445] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/speed/rum
+                          - generic [ref=f69e446]: Real user monitoring
+                      - listitem [ref=f69e448]:
+                        - link [ref=f69e449] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/speed/test
+                          - generic [ref=f69e450]:
+                            - generic [ref=f69e451]: Synthetic monitoring
+                            - generic [ref=f69e452]: Beta
+                      - listitem [ref=f69e454]:
+                        - link [ref=f69e455] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/speed/optimization
+                          - generic [ref=f69e456]: Settings
+                      - listitem [ref=f69e458]:
+                        - link [ref=f69e459] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/speed/smart-shield
+                          - generic [ref=f69e460]: Smart Shield
+                - listitem [ref=f69e462]:
+                  - generic [ref=f69e463]:
+                    - button "Caching" [ref=f69e464] [cursor=pointer]
+                    - list [ref=f69e475]:
+                      - listitem [ref=f69e477]:
+                        - link [ref=f69e478] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/caching
+                          - generic [ref=f69e479]: Overview
+                      - listitem [ref=f69e481]:
+                        - link [ref=f69e482] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/caching/configuration
+                          - generic [ref=f69e483]: Configuration
+                      - listitem [ref=f69e485]:
+                        - link [ref=f69e486] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/caching/cache-rules
+                          - generic [ref=f69e487]: Cache Rules
+                      - listitem [ref=f69e489]:
+                        - link [ref=f69e490] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/caching/tiered-cache
+                          - generic [ref=f69e491]: Tiered Cache
+                      - listitem [ref=f69e493]:
+                        - link [ref=f69e494] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/caching/cache-reserve
+                          - generic [ref=f69e495]: Cache Reserve
+                - listitem [ref=f69e497]:
+                  - link "Workers Routes" [ref=f69e498] [cursor=pointer]:
+                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/workers
+                - listitem [ref=f69e506]:
+                  - generic [ref=f69e507]:
+                    - button "Rules" [ref=f69e508] [cursor=pointer]
+                    - list [ref=f69e517]:
+                      - listitem [ref=f69e519]:
+                        - link [ref=f69e520] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/rules/overview
+                          - generic [ref=f69e521]: Overview
+                      - listitem [ref=f69e523]:
+                        - link [ref=f69e524] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/rules/snippets
+                          - generic [ref=f69e525]: Snippets
+                      - listitem [ref=f69e527]:
+                        - link [ref=f69e528] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/rules/cloud-connector
+                          - generic [ref=f69e529]:
+                            - generic [ref=f69e530]: Cloud Connector
+                            - generic [ref=f69e531]: Beta
+                      - listitem [ref=f69e533]:
+                        - link [ref=f69e534] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/rules/page-rules
+                          - generic [ref=f69e535]: Page Rules
+                      - listitem [ref=f69e537]:
+                        - link [ref=f69e538] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/rules/settings
+                          - generic [ref=f69e539]: Settings
+                - listitem [ref=f69e541]:
+                  - link "Error Pages New" [ref=f69e542] [cursor=pointer]:
+                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/error-pages
+                    - generic [ref=f69e547]:
+                      - generic [ref=f69e548]: Error Pages
+                      - generic [ref=f69e549]: New
+                - listitem [ref=f69e551]:
+                  - link "Network" [ref=f69e552] [cursor=pointer]:
+                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/network
+                - listitem [ref=f69e559]:
+                  - generic [ref=f69e560]:
+                    - button "Traffic" [ref=f69e561] [cursor=pointer]
+                    - list [ref=f69e569]:
+                      - listitem [ref=f69e571]:
+                        - link [ref=f69e572] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/traffic
+                          - generic [ref=f69e573]: Argo Smart Routing
+                      - listitem [ref=f69e575]:
+                        - link [ref=f69e576] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/traffic/load-balancing
+                          - generic [ref=f69e577]: Load Balancing
+                      - listitem [ref=f69e579]:
+                        - link [ref=f69e580] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/traffic/load-balancing-analytics
+                          - generic [ref=f69e581]: Load Balancing Analytics
+                      - listitem [ref=f69e583]:
+                        - link [ref=f69e584] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/traffic/health-checks
+                          - generic [ref=f69e585]: Health Checks
+                      - listitem [ref=f69e587]:
+                        - link [ref=f69e588] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/traffic/waiting-rooms
+                          - generic [ref=f69e589]: Waiting Room
+                - listitem [ref=f69e591]:
+                  - link "Web3" [ref=f69e592] [cursor=pointer]:
+                    - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/web3
+                - listitem [ref=f69e601]:
+                  - generic [ref=f69e602]:
+                    - button "Manage account" [ref=f69e603] [cursor=pointer]
+                    - list [ref=f69e612]:
+                      - listitem [ref=f69e614]:
+                        - link [ref=f69e615] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/members
+                          - generic [ref=f69e616]: Members
+                      - listitem [ref=f69e618]:
+                        - link [ref=f69e619] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/billing
+                          - generic [ref=f69e620]: Billing
+                      - listitem [ref=f69e622]:
+                        - link [ref=f69e623] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/api-tokens
+                          - generic [ref=f69e624]: Account API tokens
+                      - listitem [ref=f69e626]:
+                        - link [ref=f69e627] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/audit-log
+                          - generic [ref=f69e628]: Audit logs
+                      - listitem [ref=f69e630]:
+                        - link [ref=f69e631] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/notifications
+                          - generic [ref=f69e632]: Notifications
+                      - listitem [ref=f69e634]:
+                        - link [ref=f69e635] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/shared-configurations
+                          - generic [ref=f69e636]:
+                            - generic [ref=f69e637]: Shared config
+                            - generic [ref=f69e638]: Alpha
+                      - listitem [ref=f69e640]:
+                        - link [ref=f69e641] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/blocked-content
+                          - generic [ref=f69e642]: Blocked content
+                      - listitem [ref=f69e644]:
+                        - link [ref=f69e645] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/abuse-reports
+                          - generic [ref=f69e646]: Abuse reports
+                      - listitem [ref=f69e648]:
+                        - link [ref=f69e649] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/carbon
+                          - generic [ref=f69e650]: Carbon Impact Report
+                      - listitem [ref=f69e652]:
+                        - link [ref=f69e653] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/configurations
+                          - generic [ref=f69e654]: Configurations
+                      - listitem [ref=f69e656]:
+                        - link [ref=f69e657] [cursor=pointer]:
+                          - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/tags
+                          - generic [ref=f69e658]:
+                            - generic [ref=f69e659]: Tagged Resources
+                            - generic [ref=f69e660]: Beta
+        - button "Collapse sidebar" [expanded] [ref=f69e666] [cursor=pointer]
+    - generic [ref=f69e669]:
+      - banner [ref=f69e670]:
+        - generic [ref=f69e671]:
+          - button "Star domain" [ref=f69e672] [cursor=pointer]
+          - generic [ref=f69e677] [cursor=pointer]:
+            - paragraph [ref=f69e678]: noteschatai.com
+            - button "free" [ref=f69e679]
+        - generic [ref=f69e683]:
+          - button "Ask AI" [ref=f69e684] [cursor=pointer]
+          - link "Support" [ref=f69e690] [cursor=pointer]:
+            - /url: /?to=/:account/support
+          - button "User menu" [ref=f69e695] [cursor=pointer]
+      - main [ref=f69e699]:
+        - generic [ref=f69e701]:
+          - generic [ref=f69e703]:
+            - paragraph [ref=f69e704]: SSL/TLS
+            - heading "Edge Certificates" [level=1] [ref=f69e706]
+            - paragraph [ref=f69e707]:
+              - generic [ref=f69e708]: Customize your edge certificates, which encrypt traffic between your visitors and Cloudflare.
+            - button "open documentation - Edge certificates documentation" [ref=f69e711] [cursor=pointer]: Edge certificates documentation
+          - generic [ref=f69e716]:
+            - generic [ref=f69e717]:
+              - generic [ref=f69e718]:
+                - heading "Manage Edge Certificates" [level=3] [ref=f69e719]
+                - generic [ref=f69e720]:
+                  - text: "Your plan includes:"
+                  - list [ref=f69e721]:
+                    - listitem [ref=f69e722]: A shared Cloudflare universal SSL certificate and a corresponding backup certificate
+                  - text: "Additional certificate customization options:"
+                  - list [ref=f69e723]:
+                    - listitem [ref=f69e724]:
+                      - link "Activate Advanced Certificate Manager (ACM)" [ref=f69e725] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ssl-tls/acm
+                      - text: to order auto-renewing, wildcard or dedicated certificates with customizable hostnames
+                    - listitem [ref=f69e726]:
+                      - generic [ref=f69e727]: Upgrade to the Business plan
+                      - text: to upload a custom certificate
+              - generic [ref=f69e729]:
+                - button "Order an advanced certificate" [disabled] [ref=f69e730]
+                - button "Upload a custom certificate" [disabled] [ref=f69e735]
+            - table [ref=f69e740]:
+              - row [ref=f69e741]:
+                - columnheader "Hosts" [ref=f69e742]
+                - columnheader "Type" [ref=f69e743]
+                - columnheader "Status" [ref=f69e744]
+                - columnheader "Expires on" [ref=f69e745]
+                - columnheader "Tags" [ref=f69e746]
+              - button [ref=f69e747] [cursor=pointer]:
+                - cell "*.www.noteschatai.com, noteschatai.com, www.noteschatai.com" [ref=f69e748]
+                - cell "Advanced" [ref=f69e749]
+                - cell [ref=f69e750]:
+                  - button "Pending Validation(Error)" [ref=f69e752]:
+                    - generic [ref=f69e757]:
+                      - generic [ref=f69e758]: Pending Validation
+                      - generic [ref=f69e759]: (Error)
+                - cell "(Managed)" [ref=f69e760]
+                - cell [ref=f69e763]
+                - cell [ref=f69e764]:
+                  - img "caret-right" [ref=f69e766]
+              - button [ref=f69e768] [cursor=pointer]:
+                - cell "*.noteschatai.com, noteschatai.com" [ref=f69e769]
+                - cell "Advanced" [ref=f69e770]
+                - cell "Active" [ref=f69e771]
+                - cell "2026-11-30 (Managed)" [ref=f69e776]:
+                  - generic [ref=f69e777]:
+                    - text: 2026-11-30
+                    - generic [ref=f69e778]: (Managed)
+                - cell [ref=f69e779]
+                - cell [ref=f69e780]:
+                  - img "caret-right" [ref=f69e782]
+              - button [ref=f69e784] [cursor=pointer]:
+                - cell "*.noteschatai.com, noteschatai.com" [ref=f69e785]
+                - cell "Universal" [ref=f69e786]
+                - cell "Active" [ref=f69e787]
+                - cell "2026-11-30 (Managed)" [ref=f69e792]:
+                  - generic [ref=f69e793]:
+                    - text: 2026-11-30
+                    - generic [ref=f69e794]: (Managed)
+                - cell [ref=f69e795]
+                - cell [ref=f69e796]:
+                  - img "caret-right" [ref=f69e798]
+            - generic [ref=f69e800]:
+              - generic [ref=f69e802]:
+                - button "Edge Certificates API" [ref=f69e803] [cursor=pointer]:
+                  - text: API
+                  - img "caret-right" [ref=f69e805]
+                - button "Edge Certificates Help" [ref=f69e807] [cursor=pointer]:
+                  - text: Help
+                  - img "caret-right" [ref=f69e809]
+              - generic:
+                - region "Edge Certificates API"
+                - region "Edge Certificates Help"
+          - generic [ref=f69e813]:
+            - generic [ref=f69e814]:
+              - heading "Advanced Certificate Manager (ACM)" [level=3] [ref=f69e815]
+              - text: Get more control and flexibility over your certificates and unlock TLS settings.
+              - list [ref=f69e818]:
+                - listitem [ref=f69e819]: Issue auto-renewing, wildcard and dedicated certificates
+                - listitem [ref=f69e820]: Customize hostnames on certificates
+                - listitem [ref=f69e821]: Cover more than one level of a subdomain (e.g. dev.www.example.com)
+                - listitem [ref=f69e822]: Specify cipher suites to enhance security and meet industry standards
+                - listitem [ref=f69e823]: Define your preferred certificate authority (CA) and validity period
+            - link "Activate" [ref=f69e825] [cursor=pointer]:
+              - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ssl-tls/acm
+          - generic [ref=f69e828]:
+            - generic [ref=f69e829]:
+              - generic [ref=f69e830]:
+                - heading "Total TLS" [level=3] [ref=f69e831]
+                - generic [ref=f69e834]:
+                  - generic [ref=f69e835]: Cloudflare will issue individual certificates for every proxied hostname. Once enabled, all hostnames in your domain will be covered by a TLS certificate.
+                  - generic [ref=f69e837]:
+                    - link "Activate Advanced Certificate Manager (ACM)" [ref=f69e838] [cursor=pointer]:
+                      - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ssl-tls/acm
+                    - text: to enable Total TLS
+              - generic [ref=f69e839]:
+                - button "Select a Certificate Authority Select..." [ref=f69e841]:
+                  - generic [ref=f69e842]:
+                    - generic [ref=f69e843]: Select a Certificate Authority
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: Select...
+                          - combobox [disabled]
+                - button [ref=f69e845]:
+                  - checkbox [disabled] [ref=f69e847]
+            - generic [ref=f69e848]:
+              - button "Total TLS API" [ref=f69e851] [cursor=pointer]:
+                - text: API
+                - img "caret-right" [ref=f69e853]
+              - generic:
+                - region "Total TLS API"
+          - generic [ref=f69e856]:
+            - generic [ref=f69e857]:
+              - generic [ref=f69e858]:
+                - heading "Cipher suites" [level=3] [ref=f69e859]
+                - generic [ref=f69e860]:
+                  - paragraph [ref=f69e861]:
+                    - text: Customize the
+                    - link "cipher suites" [ref=f69e862] [cursor=pointer]:
+                      - /url: https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/
+                    - text: used in the SSL/TLS handshake that establishes a secure connection between clients and the Cloudflare network.
+                  - paragraph [ref=f69e867]:
+                    - generic [ref=f69e868]:
+                      - link "Activate Advanced Certificate Manager (ACM)" [ref=f69e869] [cursor=pointer]:
+                        - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/ssl-tls/acm
+                      - text: to configure Cipher Suites.
+              - button "Configure" [ref=f69e871]:
+                - button "Configure" [disabled]
+            - generic [ref=f69e872]:
+              - generic [ref=f69e874]:
+                - button "ciphers API" [ref=f69e875] [cursor=pointer]:
+                  - text: API
+                  - img "caret-right" [ref=f69e877]
+                - button "ciphers Help" [ref=f69e879] [cursor=pointer]:
+                  - text: Help
+                  - img "caret-right" [ref=f69e881]
+              - generic:
+                - region "ciphers API"
+                - region "ciphers Help"
+          - generic [ref=f69e884]:
+            - generic [ref=f69e885]:
+              - generic [ref=f69e886]:
+                - heading "Always Use HTTPS" [level=3] [ref=f69e887]
+                - generic [ref=f69e890]:
+                  - generic [ref=f69e891]:
+                    - paragraph [ref=f69e893]: Redirect all requests with scheme “http” to “https”. This applies to all http requests to the zone.
+                    - paragraph [ref=f69e897]:
+                      - text: Enabling this while your origin also forces HTTPS redirects can cause
+                      - link "redirect loops" [ref=f69e898] [cursor=pointer]:
+                        - /url: https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/
+                      - text: . Disable origin-side HTTP-to-HTTPS redirects to avoid ERR_TOO_MANY_REDIRECTS.
+                      - link "Learn more" [ref=f69e899] [cursor=pointer]:
+                        - /url: https://developers.cloudflare.com/ssl/edge-certificates/additional-options/always-use-https/
+                  - generic [ref=f69e1165]: This setting was last changed a few seconds ago
+              - checkbox "Always Use HTTPS" [checked] [active] [ref=f69e902] [cursor=pointer]
+            - generic [ref=f69e903]:
+              - generic [ref=f69e905]:
+                - button "Always Use HTTPS API" [ref=f69e906] [cursor=pointer]:
+                  - text: API
+                  - img "caret-right" [ref=f69e908]
+                - button "Always Use HTTPS Help" [ref=f69e910] [cursor=pointer]:
+                  - text: Help
+                  - img "caret-right" [ref=f69e912]
+              - generic:
+                - region "Always Use HTTPS API"
+                - region "Always Use HTTPS Help"
+          - generic [ref=f69e915]:
+            - generic [ref=f69e916]:
+              - generic [ref=f69e917]:
+                - heading "HTTP Strict Transport Security (HSTS)" [level=3] [ref=f69e918]
+                - generic [ref=f69e921]: Enforce web security policy for your website.
+              - button "HTTP Strict Transport Security (HSTS)" [ref=f69e925] [cursor=pointer]:
+                - generic [ref=f69e926]: Enable HSTS
+            - generic [ref=f69e927]:
+              - generic [ref=f69e929]:
+                - button "HTTP Strict Transport Security (HSTS) API" [ref=f69e930] [cursor=pointer]:
+                  - text: API
+                  - img "caret-right" [ref=f69e932]
+                - button "HTTP Strict Transport Security (HSTS) Help" [ref=f69e934] [cursor=pointer]:
+                  - text: Help
+                  - img "caret-right" [ref=f69e936]
+              - generic:
+                - region "HTTP Strict Transport Security (HSTS) API"
+                - region "HTTP Strict Transport Security (HSTS) Help"
+          - generic [ref=f69e939]:
+            - generic [ref=f69e940]:
+              - generic [ref=f69e941]:
+                - heading "Minimum TLS Version" [level=3] [ref=f69e942]
+                - paragraph [ref=f69e947]: Only allow HTTPS connections from visitors that support the selected TLS protocol version or newer.
+              - button "TLS 1.0 (default) Minimum TLS Version" [ref=f69e951] [cursor=pointer]: TLS 1.0 (default)
+            - generic [ref=f69e952]:
+              - generic [ref=f69e954]:
+                - button "Minimum TLS Version API" [ref=f69e955] [cursor=pointer]:
+                  - text: API
+                  - img "caret-right" [ref=f69e957]
+                - button "Minimum TLS Version Help" [ref=f69e959] [cursor=pointer]:
+                  - text: Help
+                  - img "caret-right" [ref=f69e961]
+              - generic:
+                - region "Minimum TLS Version API"
+                - region "Minimum TLS Version Help"
+          - generic [ref=f69e963]:
+            - generic [ref=f69e964]:
+              - generic [ref=f69e965]:
+                - heading "Opportunistic Encryption" [level=3] [ref=f69e966]
+                - generic [ref=f69e969]:
+                  - paragraph [ref=f69e971]: Opportunistic Encryption allows browsers to benefit from the improved performance of HTTP/2 by letting them know that your site is available over an encrypted connection. Browsers will continue to show “http” in the address bar, not “https”.
+                  - generic [ref=f69e972]:
+                    - text: Create a
+                    - link "Configuration Rule" [ref=f69e973] [cursor=pointer]:
+                      - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/rules/configuration-rules
+                    - text: to customize these settings by hostname.
+              - checkbox "Opportunistic Encryption" [checked] [ref=f69e976] [cursor=pointer]
+            - generic [ref=f69e977]:
+              - generic [ref=f69e979]:
+                - button "Opportunistic Encryption API" [ref=f69e980] [cursor=pointer]:
+                  - text: API
+                  - img "caret-right" [ref=f69e982]
+                - button "Opportunistic Encryption Help" [ref=f69e984] [cursor=pointer]:
+                  - text: Help
+                  - img "caret-right" [ref=f69e986]
+              - generic:
+                - region "Opportunistic Encryption API"
+                - region "Opportunistic Encryption Help"
+          - generic [ref=f69e989]:
+            - generic [ref=f69e990]:
+              - generic [ref=f69e991]:
+                - heading "TLS 1.3" [level=3] [ref=f69e992]
+                - paragraph [ref=f69e997]: Enable the latest version of the TLS protocol for improved security and performance.
+              - checkbox "TLS 1.3" [checked] [ref=f69e1000] [cursor=pointer]
+            - generic [ref=f69e1001]:
+              - generic [ref=f69e1003]:
+                - button "TLS 1.3 API" [ref=f69e1004] [cursor=pointer]:
+                  - text: API
+                  - img "caret-right" [ref=f69e1006]
+                - button "TLS 1.3 Help" [ref=f69e1008] [cursor=pointer]:
+                  - text: Help
+                  - img "caret-right" [ref=f69e1010]
+              - generic:
+                - region "TLS 1.3 API"
+                - region "TLS 1.3 Help"
+          - generic [ref=f69e1014]:
+            - generic [ref=f69e1015]:
+              - generic [ref=f69e1016]:
+                - heading "Automatic HTTPS Rewrites" [level=3] [ref=f69e1017]
+                - generic [ref=f69e1020]:
+                  - paragraph [ref=f69e1022]: Automatic HTTPS Rewrites helps fix mixed content by changing “http” to “https” for all resources or links on your web site that can be served with HTTPS.
+                  - generic [ref=f69e1023]:
+                    - text: Create a
+                    - link "Configuration Rule" [ref=f69e1024] [cursor=pointer]:
+                      - /url: /a04e4b0093d43062ab43d1cda7c1a7c2/noteschatai.com/rules/configuration-rules
+                    - text: to customize these settings by hostname.
+              - checkbox "Automatic HTTPS Rewrites" [checked] [ref=f69e1027] [cursor=pointer]
+            - generic [ref=f69e1028]:
+              - generic [ref=f69e1030]:
+                - button "Automatic HTTPS Rewrites API" [ref=f69e1031] [cursor=pointer]:
+                  - text: API
+                  - img "caret-right" [ref=f69e1033]
+                - button "Automatic HTTPS Rewrites Help" [ref=f69e1035] [cursor=pointer]:
+                  - text: Help
+                  - img "caret-right" [ref=f69e1037]
+              - generic:
+                - region "Automatic HTTPS Rewrites API"
+                - region "Automatic HTTPS Rewrites Help"
+          - generic [ref=f69e1040]:
+            - generic [ref=f69e1041]:
+              - generic [ref=f69e1042]:
+                - heading "Certificate Transparency Monitoring" [level=3] [ref=f69e1043]
+                - text: Receive an email when a Certificate Authority issues a certificate for your domain.
+              - checkbox [ref=f69e1046] [cursor=pointer]
+            - paragraph [ref=f69e1050]:
+              - text: Certificate Transparency Monitoring has changed. If you previously enabled CT Monitoring, any recipients listed below might be carried over from your previous settings (account members with the
+              - strong [ref=f69e1051]: SSL and Certificate Write
+              - text: permission). You can add or remove them at any time.
+            - generic [ref=f69e1052]:
+              - button "Certificate Transparency Monitoring Help" [ref=f69e1055] [cursor=pointer]:
+                - text: Help
+                - img "caret-right" [ref=f69e1057]
+              - generic:
+                - region "Certificate Transparency Monitoring Help"
+          - generic [ref=f69e1060]:
+            - generic [ref=f69e1061]:
+              - generic [ref=f69e1062]:
+                - heading "Disable Universal SSL" [level=3] [ref=f69e1063]
+                - text: Disabling Universal SSL removes any currently active Universal SSL certificates for your zone from the edge and prevents any future Universal SSL certificates from being ordered. If there are no dedicated certificates or custom certificates uploaded for the domain, visitors will be unable to access the domain over HTTPS.
+              - button "Disable Universal SSL" [ref=f69e1065] [cursor=pointer]
+            - generic [ref=f69e1066]:
+              - button "Disable Universal SSL Help" [ref=f69e1069] [cursor=pointer]:
+                - text: Help
+                - img "caret-right" [ref=f69e1071]
+              - generic:
+                - region "Disable Universal SSL Help"
+      - contentinfo [ref=f69e1073]:
+        - list [ref=f69e1075]:
+          - listitem [ref=f69e1076]:
+            - link "Support" [ref=f69e1077] [cursor=pointer]:
+              - /url: https://support.cloudflare.com
+          - listitem [ref=f69e1078]:
+            - link "System status" [ref=f69e1079] [cursor=pointer]:
+              - /url: https://www.cloudflarestatus.com
+          - listitem [ref=f69e1080]:
+            - link "Careers" [ref=f69e1081] [cursor=pointer]:
+              - /url: https://www.cloudflare.com/careers/
+          - listitem [ref=f69e1082]:
+            - link "Terms of Use" [ref=f69e1083] [cursor=pointer]:
+              - /url: https://www.cloudflare.com/website-terms/
+          - listitem [ref=f69e1084]:
+            - link "Report Security Issues" [ref=f69e1085] [cursor=pointer]:
+              - /url: https://www.cloudflare.com/disclosure/
+          - listitem [ref=f69e1086]:
+            - link "Privacy Policy" [ref=f69e1087] [cursor=pointer]:
+              - /url: https://www.cloudflare.com/privacypolicy/
+          - listitem [ref=f69e1088]:
+            - button [ref=f69e1089] [cursor=pointer]:
+              - img "A blue and white pill with a checkmark and an x, representing privacy choices" [ref=f69e1090]
+              - text: Cookie Preferences
+          - listitem [ref=f69e1091]:
+            - generic [ref=f69e1092]: © 2026 Cloudflare, Inc.
+  - generic:
+    - region "Notifications"
+  - status [ref=f69e1105]

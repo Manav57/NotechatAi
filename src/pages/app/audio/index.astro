@@ -4,6 +4,7 @@ import AppLayout from '../../../layouts/AppLayout.astro';
 import Button from '../../../components/ui/Button.astro';
 import Badge from '../../../components/ui/Badge.astro';
 import Card from '../../../components/ui/Card.astro';
+import UpgradeModal from '../../../components/ui/UpgradeModal.astro';
 
 // Fetch real document data server-side
 let docCount = 0;
@@ -54,7 +55,7 @@ const audioItems: any[] = [];
           <p class="font-caption text-mute">0 of 2 generated today · Resets at midnight UTC</p>
         </div>
       </div>
-      <a href="/pricing" class="btn-secondary-sm">Upgrade for more</a>
+      <button onclick="showUpgradeModal()" class="btn-secondary-sm">Upgrade for more</button>
     </div>
 
     {/* Currently Playing */}
@@ -337,18 +338,16 @@ const audioItems: any[] = [];
           <label class="block font-body-sm-strong text-ink mb-2">Select Sources</label>
           <p class="font-body-sm text-body mb-3">Choose documents to include in the overview. Leave empty to use all sources.</p>
           <div class="space-y-2 max-h-48 overflow-y-auto border border-hairline rounded-lg p-3">
-            {[
-              { id: 's1', title: 'Machine Learning Fundamentals.pdf', checked: true },
-              { id: 's2', title: 'Neural Networks Overview (YouTube)', checked: true },
-              { id: 's3', title: 'Attention Is All You Need.pdf', checked: false },
-              { id: 's4', title: 'Deep Learning Book - Chapter 6.epub', checked: false },
-              { id: 's5', title: 'Transformer Architecture Explained', checked: false },
-            ].map((src) => (
-              <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-canvas-soft cursor-pointer transition-colors">
-                <input type="checkbox" checked={src.checked} class="w-4 h-4 rounded border-hairline text-primary focus:ring-link accent-primary" />
-                <span class="font-body-sm text-ink truncate">{src.title}</span>
-              </label>
-            ))}
+            {documents.length === 0 ? (
+              <p class="font-body-sm text-mute text-center py-4">No documents available. Upload documents first.</p>
+            ) : (
+              documents.map((doc: any) => (
+                <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-canvas-soft cursor-pointer transition-colors">
+                  <input type="checkbox" checked class="w-4 h-4 rounded border-hairline text-primary focus:ring-link accent-primary" />
+                  <span class="font-body-sm text-ink truncate">{doc.title}</span>
+                </label>
+              ))
+            )}
           </div>
         </div>
 
@@ -394,6 +393,8 @@ const audioItems: any[] = [];
       </form>
     </div>
   </div>
+
+  <UpgradeModal />
 </AppLayout>
 
 <script>

@@ -66,7 +66,7 @@ import AppLayout from '../../../layouts/AppLayout.astro';
         <div class="max-w-3xl mx-auto">
           <form id="chat-form" class="relative">
             <div class="flex items-end gap-2 bg-canvas-soft rounded-xl border border-hairline focus-within:border-violet focus-within:ring-1 focus-within:ring-violet/20 transition-all">
-              <textarea id="chat-input" placeholder="Ask anything about your documents..." class="flex-1 bg-transparent font-body-md text-ink placeholder:text-mute resize-none py-3 pl-4 pr-3 focus:outline-none min-h-[44px] max-h-48" rows="1" aria-label="Message"></textarea>
+              <textarea id="chat-input" placeholder="Ask anything about your documents..." class="flex-1 bg-transparent font-body-md text-ink placeholder:text-mute resize-none py-3 pl-4 pr-3 focus:outline-none min-h-[44px] max-h-48 leading-relaxed" rows="1" aria-label="Message" style="field-sizing: content;"></textarea>
               <div class="pr-2 pb-2">
                 <button type="submit" id="send-btn" class="w-9 h-9 flex items-center justify-center rounded-lg bg-primary text-on-primary hover:opacity-90 active:opacity-70 transition-all disabled:opacity-30 disabled:cursor-not-allowed" disabled aria-label="Send">
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M16 9L3 3l2.5 6L3 15l13-6z" fill="currentColor"/></svg>
@@ -98,9 +98,14 @@ import AppLayout from '../../../layouts/AppLayout.astro';
     let currentConversationId: string | null = null;
     let isStreaming = false;
 
+    // Auto-resize textarea: use field-sizing: content if supported (CSS handles it),
+    // otherwise fall back to manual height calculation.
+    const supportsFieldSizing = CSS.supports('field-sizing', 'content');
     chatInput?.addEventListener('input', function () {
-      this.style.height = 'auto';
-      this.style.height = Math.min(this.scrollHeight, 192) + 'px';
+      if (!supportsFieldSizing) {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 192) + 'px';
+      }
       if (sendBtn) sendBtn.disabled = !this.value.trim() || isStreaming;
     });
 

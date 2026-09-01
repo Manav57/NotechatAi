@@ -1,0 +1,119 @@
+- generic [active] [ref=f146e1]:
+  - banner [ref=f146e2]:
+    - generic [ref=f146e3]:
+      - link "NotesChatAI Home" [ref=f146e4] [cursor=pointer]:
+        - /url: /
+        - img "NotesChatAI" [ref=f146e5]
+        - generic [ref=f146e6]: NotesChatAI
+      - navigation "Main navigation" [ref=f146e7]:
+        - link "Features" [ref=f146e8] [cursor=pointer]:
+          - /url: /features
+        - link "Pricing" [ref=f146e9] [cursor=pointer]:
+          - /url: /pricing
+        - link "Docs" [ref=f146e10] [cursor=pointer]:
+          - /url: /free-beta
+        - link "Blog" [ref=f146e11] [cursor=pointer]:
+          - /url: /blog
+      - generic [ref=f146e12]:
+        - button "Toggle dark mode" [ref=f146e13]
+        - link "Log in" [ref=f146e17] [cursor=pointer]:
+          - /url: /auth/login
+        - link "Sign up" [ref=f146e18] [cursor=pointer]:
+          - /url: /auth/signup
+  - main [ref=f146e19]:
+    - generic [ref=f146e20]:
+      - generic [ref=f146e21]:
+        - link "NotesChatAI Home" [ref=f146e22] [cursor=pointer]:
+          - /url: /
+          - generic [ref=f146e26]: NotesChatAI
+        - heading "Welcome back" [level=1] [ref=f146e27]
+        - paragraph [ref=f146e28]: Sign in to continue building your knowledge base.
+      - generic [ref=f146e29]:
+        - link "Continue with Google" [ref=f146e30] [cursor=pointer]:
+          - /url: /api/auth/signin/google
+        - link "Continue with GitHub" [ref=f146e36] [cursor=pointer]:
+          - /url: /api/auth/signin/github
+        - generic [ref=f146e39]: or sign in with email
+        - generic [ref=f146e44]:
+          - generic [ref=f146e45]:
+            - generic [ref=f146e46]: Email
+            - textbox "Email" [ref=f146e47]:
+              - /placeholder: you@example.com
+          - generic [ref=f146e48]:
+            - generic [ref=f146e49]:
+              - generic [ref=f146e50]: Password
+              - generic [ref=f146e51]: Forgot password?
+            - generic [ref=f146e52]:
+              - textbox "Password" [ref=f146e53]:
+                - /placeholder: Your password
+              - button "Toggle password visibility" [ref=f146e54]
+          - generic [ref=f146e58]:
+            - checkbox "Remember me for 30 days" [ref=f146e59]
+            - generic [ref=f146e60] [cursor=pointer]: Remember me for 30 days
+          - button "Sign In" [ref=f146e61]
+      - paragraph [ref=f146e63]:
+        - text: Don't have an account?
+        - link "Start free beta" [ref=f146e64] [cursor=pointer]:
+          - /url: /auth/signup
+  - contentinfo [ref=f146e65]:
+    - generic [ref=f146e66]:
+      - generic [ref=f146e67]:
+        - generic [ref=f146e68]:
+          - link "NotesChatAI Home" [ref=f146e69] [cursor=pointer]:
+            - /url: /
+            - img "NotesChatAI" [ref=f146e70]
+            - generic [ref=f146e71]: NotesChatAI
+          - paragraph [ref=f146e72]: Your persistent AI study assistant. Upload once, remember forever.
+        - navigation "Product" [ref=f146e73]:
+          - heading "Product" [level=3] [ref=f146e74]
+          - list [ref=f146e75]:
+            - listitem [ref=f146e76]:
+              - link "Features" [ref=f146e77] [cursor=pointer]:
+                - /url: /features
+            - listitem [ref=f146e78]:
+              - link "Pricing" [ref=f146e79] [cursor=pointer]:
+                - /url: /pricing
+            - listitem [ref=f146e80]:
+              - link "Docs" [ref=f146e81] [cursor=pointer]:
+                - /url: /free-beta
+            - listitem [ref=f146e82]:
+              - link "Blog" [ref=f146e83] [cursor=pointer]:
+                - /url: /blog
+        - navigation "Company" [ref=f146e84]:
+          - heading "Company" [level=3] [ref=f146e85]
+          - list [ref=f146e86]:
+            - listitem [ref=f146e87]:
+              - link "About" [ref=f146e88] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=f146e89]:
+              - link "Contact" [ref=f146e90] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=f146e91]:
+              - link "Blog" [ref=f146e92] [cursor=pointer]:
+                - /url: /blog
+        - navigation "Resources" [ref=f146e93]:
+          - heading "Resources" [level=3] [ref=f146e94]
+          - list [ref=f146e95]:
+            - listitem [ref=f146e96]:
+              - link "Community" [ref=f146e97] [cursor=pointer]:
+                - /url: https://github.com/noteschatai
+            - listitem [ref=f146e98]:
+              - link "Status" [ref=f146e99] [cursor=pointer]:
+                - /url: /status
+        - navigation "Legal" [ref=f146e100]:
+          - heading "Legal" [level=3] [ref=f146e101]
+          - list [ref=f146e102]:
+            - listitem [ref=f146e103]:
+              - link "Privacy" [ref=f146e104] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=f146e105]:
+              - link "Terms" [ref=f146e106] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=f146e107]:
+              - link "Cookies" [ref=f146e108] [cursor=pointer]:
+                - /url: /cookies
+      - generic [ref=f146e110]:
+        - paragraph [ref=f146e111]: © 2026 NotesChatAI. All rights reserved.
+        - link "GitHub" [ref=f146e113] [cursor=pointer]:
+          - /url: https://github.com/noteschatai
+          - generic [aria-hidden] [ref=f146e114]: ⌘

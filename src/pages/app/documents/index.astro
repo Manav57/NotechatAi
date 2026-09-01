@@ -201,6 +201,25 @@ import Badge from '../../../components/ui/Badge.astro';
 
       if (!file) { alert('Please select a file'); return; }
 
+      // Client-side file validation
+      const allowedExts = ['.pdf', '.epub', '.txt', '.md', '.mdx', '.docx', '.doc', '.mp3', '.wav', '.mp4', '.webm'];
+      const blockedExts = ['.exe', '.sh', '.bat', '.cmd', '.com', '.msi', '.scr', '.pif', '.js', '.mjs', '.cjs', '.ts', '.jsx', '.tsx', '.vbs', '.vbe', '.wsf', '.wsh', '.ps1', '.reg', '.dll', '.so', '.dylib', '.app', '.deb', '.rpm', '.apk', '.jar', '.py', '.rb', '.pl', '.php'];
+      const fileExt = '.' + file.name.split('.').pop()?.toLowerCase();
+      const maxSize = 10 * 1024 * 1024; // 10 MB
+
+      if (blockedExts.includes(fileExt)) {
+        alert('Executable and script files are not allowed for security reasons.');
+        return;
+      }
+      if (!allowedExts.includes(fileExt)) {
+        alert(`File type "${fileExt}" is not supported. Allowed: ${allowedExts.join(', ')}`);
+        return;
+      }
+      if (file.size > maxSize) {
+        alert(`File too large. Maximum size is 10 MB. Your file is ${(file.size / (1024*1024)).toFixed(1)} MB.`);
+        return;
+      }
+
       submitUpload.disabled = true;
       submitUpload.innerHTML = '<span class="animate-spin inline-block mr-1.5">⏳</span>Uploading...';
 

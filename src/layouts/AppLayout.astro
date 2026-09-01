@@ -172,7 +172,7 @@ const isActive = (href: string) => {
           {user ? (
             <div class="space-y-2">
               <div class="flex items-center gap-3 px-3 py-2">
-                <img src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`} alt="" class="w-8 h-8 rounded-full" />
+                <img src={user.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`} alt="" class="w-8 h-8 rounded-full" />
                 <div class="min-w-0">
                   <p class="font-body-sm-strong text-ink truncate">{user.name}</p>
                   <p class="font-caption text-mute truncate">{user.email}</p>

@@ -3,6 +3,7 @@ export const prerender = false;
 import AppLayout from '../../layouts/AppLayout.astro';
 import Card from '../../components/ui/Card.astro';
 import Badge from '../../components/ui/Badge.astro';
+import UpgradeModal from '../../components/ui/UpgradeModal.astro';
 
 const user = (Astro.locals as any)?.user;
 
@@ -170,8 +171,8 @@ try {
 
     <Card variant="marketing-large">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="font-display-md text-ink">Your Plan: Free Beta</h2>
-        <a href="/pricing" class="btn-secondary-sm">Upgrade to Pro</a>
+        <h2 class="font-display-md text-ink">Your Plan: {user?.plan === 'pro' ? 'Pro' : user?.plan === 'team' ? 'Team' : 'Free Beta'}</h2>
+        <button onclick="showUpgradeModal()" class="btn-secondary-sm">Upgrade to Pro</button>
       </div>
       <div class="grid sm:grid-cols-3 gap-6">
         <div class="text-center p-4 bg-canvas-soft/50 rounded-lg">
@@ -190,5 +191,5 @@ try {
     </Card>
   </div>
 
-
+  <UpgradeModal />
 </AppLayout>

@@ -1,0 +1,57 @@
+- generic [ref=f138e2]:
+  - generic [ref=f138e3]:
+    - link "Skip to content" [ref=f138e4] [cursor=pointer]:
+      - /url: "#start-of-content"
+    - banner [ref=f138e6]
+  - main [ref=f138e9]:
+    - generic [ref=f138e10]:
+      - generic [ref=f138e12]:
+        - img "Noteschatai logo" [ref=f138e14]
+        - paragraph [ref=f138e15]:
+          - text: Sign in to
+          - strong [ref=f138e16]: GitHub
+          - text: to continue to
+          - strong [ref=f138e17]: Noteschatai
+      - generic [ref=f138e18]:
+        - generic [ref=f138e21]:
+          - button "Dismiss this message" [active] [ref=f138e22] [cursor=pointer]
+          - alert [ref=f138e25]: Incorrect username or password.
+        - generic [ref=f138e27]:
+          - generic [ref=f138e28]:
+            - generic [ref=f138e29]: Username or email address
+            - textbox "Username or email address" [ref=f138e30]: mp7015559@gmail.com
+          - generic [ref=f138e31]:
+            - generic [ref=f138e32]: Password
+            - textbox "Password" [ref=f138e33]
+            - link "Forgot password?" [ref=f138e34] [cursor=pointer]:
+              - /url: /password_reset
+          - button "Sign in" [ref=f138e36] [cursor=pointer]
+        - generic [ref=f138e37]:
+          - generic [ref=f138e38]: or
+          - button "Continue with Google" [ref=f138e41] [cursor=pointer]
+          - button "Continue with Apple" [ref=f138e45] [cursor=pointer]
+      - generic [ref=f138e48]:
+        - paragraph [ref=f138e50]:
+          - text: New to GitHub?
+          - link "Create an account" [ref=f138e51] [cursor=pointer]:
+            - /url: /join?return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DOv23liTgnfvbXLdiaZMX%26redirect_uri%3Dhttps%253A%252F%252Fnoteschatai.com%252Fapi%252Fauth%252Fcallback%252Fgithub%26scope%3Dread%253Auser%2Buser%253Aemail&source=oauth
+        - paragraph [ref=f138e53]:
+          - button "Sign in with a passkey" [ref=f138e54] [cursor=pointer]
+  - contentinfo [ref=f138e57]:
+    - list [ref=f138e58]:
+      - listitem [ref=f138e59]:
+        - link "Terms" [ref=f138e60] [cursor=pointer]:
+          - /url: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+      - listitem [ref=f138e61]:
+        - link "Privacy" [ref=f138e62] [cursor=pointer]:
+          - /url: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+      - listitem [ref=f138e63]:
+        - link "Docs" [ref=f138e64] [cursor=pointer]:
+          - /url: https://docs.github.com
+      - listitem [ref=f138e65]:
+        - link "Contact GitHub Support" [ref=f138e66] [cursor=pointer]:
+          - /url: https://support.github.com
+      - listitem [ref=f138e67]:
+        - button "Manage cookies" [ref=f138e69] [cursor=pointer]
+      - listitem [ref=f138e70]:
+        - button "Do not share my personal information" [ref=f138e72] [cursor=pointer]

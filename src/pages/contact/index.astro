@@ -161,10 +161,10 @@ import Footer from '../../components/ui/Footer.astro';
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name: form.name.value,
-            email: form.email.value,
-            subject: form.subject.value,
-            message: form.message.value,
+            name: (form.querySelector('[name="name"]') as HTMLInputElement)?.value || '',
+            email: (form.querySelector('[name="email"]') as HTMLInputElement)?.value || '',
+            subject: (form.querySelector('[name="subject"]') as HTMLInputElement)?.value || '',
+            message: (form.querySelector('[name="message"]') as HTMLTextAreaElement)?.value || '',
           }),
         });
         const data = await res.json().catch(() => ({}));
