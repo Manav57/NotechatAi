@@ -5,6 +5,7 @@
 ALTER TABLE users ADD COLUMN stripe_customer_id TEXT;
 ALTER TABLE users ADD COLUMN stripe_subscription_id TEXT;
 ALTER TABLE users ADD COLUMN subscription_status TEXT DEFAULT 'active';
+ALTER TABLE users ADD COLUMN billing_period TEXT DEFAULT 'monthly';
 
 -- Daily usage counters (reset at UTC midnight)
 ALTER TABLE users ADD COLUMN chats_used_today INTEGER DEFAULT 0;
