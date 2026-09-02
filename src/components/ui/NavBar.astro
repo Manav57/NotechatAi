@@ -40,13 +40,61 @@ const { user = null } = Astro.props;
         </>
       ) : (
         <>
-          <a href="/auth/login" class="hidden sm:inline-flex items-center px-3 h-11 rounded-sm font-body-sm-strong text-ink border border-hairline hover:bg-canvas-soft transition-all duration-150">Log in</a>
+          <a href="/auth/login" class="inline-flex items-center px-3 h-11 rounded-sm font-body-sm-strong text-ink border border-hairline hover:bg-canvas-soft transition-all duration-150">Log in</a>
           <a href="/auth/signup" class="inline-flex items-center px-3 h-11 rounded-sm bg-primary text-on-primary font-body-sm-strong hover:opacity-90 transition-all duration-150">Sign up</a>
         </>
       )}
     </div>
+
+    {/* Mobile hamburger */}
+    <button
+      id="public-mobile-menu-btn"
+      class="md:hidden flex items-center justify-center w-10 h-10 rounded-full hover:bg-canvas-soft transition-colors"
+      aria-label="Open menu"
+      aria-expanded="false"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-ink" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
   </div>
 </header>
+
+{/* Public mobile menu overlay */}
+<div id="public-mobile-menu" class="fixed inset-0 z-50 hidden md:hidden" role="dialog" aria-modal="true" aria-label="Navigation">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="public-mobile-menu-backdrop"></div>
+  <div class="absolute right-0 top-0 h-full w-72 bg-canvas shadow-level-5 flex flex-col animate-slide-in-right">
+    <div class="flex items-center justify-between p-4 border-b border-hairline">
+      <a href="/" class="flex items-center gap-2">
+        <img src="/logo.svg" alt="NotesChatAI" width="28" height="28" class="rounded-md" />
+        <span class="font-display-sm text-ink">NotesChatAI</span>
+      </a>
+      <button id="public-mobile-menu-close" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-canvas-soft transition-colors" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="text-ink" aria-hidden="true">
+          <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <nav class="flex-1 p-4 space-y-1" aria-label="Mobile navigation">
+      <a href="/features" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-body-md text-body hover:bg-canvas-soft hover:text-ink transition-colors">Features</a>
+      <a href="/pricing" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-body-md text-body hover:bg-canvas-soft hover:text-ink transition-colors">Pricing</a>
+      <a href="/free-beta" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-body-md text-body hover:bg-canvas-soft hover:text-ink transition-colors">Docs</a>
+      <a href="/blog" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-body-md text-body hover:bg-canvas-soft hover:text-ink transition-colors">Blog</a>
+    </nav>
+    <div class="p-4 border-t border-hairline">
+      {user ? (
+        <div class="space-y-2">
+          <a href="/app" class="btn-primary w-full text-center">Dashboard</a>
+        </div>
+      ) : (
+        <div class="flex gap-2">
+          <a href="/auth/login" class="nav-cta-login flex-1 text-center">Log in</a>
+          <a href="/auth/signup" class="nav-cta-signup flex-1 text-center">Sign up</a>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
 
 <style>
   .nav-bar {
@@ -60,3 +108,25 @@ const { user = null } = Astro.props;
     }
   }
 </style>
+
+<script>
+  const pubMenuBtn = document.getElementById('public-mobile-menu-btn');
+  const pubMenu = document.getElementById('public-mobile-menu');
+  const pubMenuBackdrop = document.getElementById('public-mobile-menu-backdrop');
+  const pubMenuClose = document.getElementById('public-mobile-menu-close');
+
+  pubMenuBtn?.addEventListener('click', () => {
+    pubMenu?.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    pubMenuBtn.setAttribute('aria-expanded', 'true');
+  });
+
+  function closePubMenu() {
+    pubMenu?.classList.add('hidden');
+    document.body.style.overflow = '';
+    pubMenuBtn?.setAttribute('aria-expanded', 'false');
+  }
+
+  pubMenuBackdrop?.addEventListener('click', closePubMenu);
+  pubMenuClose?.addEventListener('click', closePubMenu);
+</script>

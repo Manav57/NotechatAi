@@ -95,7 +95,9 @@ const finalStructuredData = structuredData || defaultStructuredData;
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
     <meta name="robots" content={robots} />
-    <meta name="theme-color" content="#171717" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="author" content="NotesChatAI" />
     <link rel="canonical" href={canonicalURL} />
 

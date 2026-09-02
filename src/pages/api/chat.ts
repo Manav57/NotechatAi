@@ -317,12 +317,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const OPENROUTER_API_KEY = bindings.OPENROUTER_API_KEY;
 
     if (db) {
-      // Defensive quota check: if the schema ever drifts (e.g. billing columns
-      // missing), never let it break chat — log and proceed.
       try {
         const quota = await verifyQuota(db, user.id, 'chat');
         if (!quota.allowed) return new Response(JSON.stringify({ error: 'QUOTA_EXCEEDED', message: quota.message, plan: quota.plan, feature: quota.feature, used: quota.used, limit: quota.limit, upgradeUrl: '/pricing' }), { status: 429, headers: { 'Content-Type': 'application/json' } });
-      } catch (e) { console.error('verifyQuota failed (proceeding):', e); }
+      } catch (e) {
+        console.error('verifyQuota failed (denying request):', e);
+        return new Response(JSON.stringify({ error: 'Service temporarily unavailable. Please try again.' }), { status: 503, headers: { 'Content-Type': 'application/json' } });
+      }
     }
 
     if (!OPENROUTER_API_KEY) return new Response(JSON.stringify({ error: 'OpenRouter API key not configured' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
@@ -435,7 +436,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ message: assistantContent, conversationId: conv.id, citations: vectorResults.length > 0 ? vectorResults.map((m: any) => ({ id: m.id, title: m.metadata?.documentId || 'Document', score: m.score })) : [], generatedFile }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (e) {
     console.error('Chat POST error:', e);
-    return new Response(JSON.stringify({ error: 'Internal server error: ' + (e instanceof Error ? e.message : String(e)) }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 };
 
@@ -459,6 +460,6 @@ export const GET: APIRoute = async ({ request, cookies }) => {
     return new Response(JSON.stringify({ conversations: convs.results || convs }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (e) {
     console.error('Chat GET error:', e);
-    return new Response(JSON.stringify({ error: 'Internal server error: ' + (e instanceof Error ? e.message : String(e)) }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 };

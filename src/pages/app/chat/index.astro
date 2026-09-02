@@ -64,7 +64,7 @@ import AppLayout from '../../../layouts/AppLayout.astro';
       </div>
 
       {/* Messages area */}
-      <div class="flex-1 overflow-y-auto" id="messages-container">
+      <div class="flex-1 overflow-y-auto" id="messages-container" aria-live="polite" aria-relevant="additions">
         <div class="max-w-3xl mx-auto px-4 lg:px-6 py-6">
           {/* Welcome state */}
           <div id="welcome-state" class="min-h-[50vh] flex flex-col items-center justify-center text-center">
@@ -154,6 +154,14 @@ import AppLayout from '../../../layouts/AppLayout.astro';
         this.style.height = Math.min(this.scrollHeight, 192) + 'px';
       }
       if (sendBtn) sendBtn.disabled = !this.value.trim() || isStreaming;
+    });
+
+    // Enter to send, Shift+Enter for newline
+    chatInput?.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey && !isStreaming && this.value.trim()) {
+        e.preventDefault();
+        chatForm?.requestSubmit();
+      }
     });
 
     document.querySelectorAll('.suggestion-btn').forEach(btn => {
@@ -258,7 +266,9 @@ import AppLayout from '../../../layouts/AppLayout.astro';
       const div = document.createElement('div');
       div.id = id;
       div.className = 'message flex gap-3 animate-slide-up';
-      div.innerHTML = `<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary text-sm font-medium flex-shrink-0" aria-hidden="true">N</div><div class="flex-1"><div class="flex items-center gap-2 mb-1"><span class="font-body-sm-strong text-primary">NotesChatAI</span><span class="font-caption text-mute">Thinking…</span></div><div class="flex gap-1.5 py-2"><span class="w-2 h-2 bg-primary/30 rounded-full animate-bounce" style="animation-delay:0ms"></span><span class="w-2 h-2 bg-primary/30 rounded-full animate-bounce" style="animation-delay:150ms"></span><span class="w-2 h-2 bg-primary/30 rounded-full animate-bounce" style="animation-delay:300ms"></span></div></div>`;
+      div.setAttribute('role', 'status');
+      div.setAttribute('aria-label', 'AI is thinking');
+      div.innerHTML = `<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary text-sm font-medium flex-shrink-0" aria-hidden="true">N</div><div class="flex-1"><div class="flex items-center gap-2 mb-1"><span class="font-body-sm-strong text-primary">NotesChatAI</span><span class="font-caption text-mute">Thinking…</span></div><div class="flex gap-1.5 py-2" aria-hidden="true"><span class="w-2 h-2 bg-primary/30 rounded-full animate-bounce" style="animation-delay:0ms"></span><span class="w-2 h-2 bg-primary/30 rounded-full animate-bounce" style="animation-delay:150ms"></span><span class="w-2 h-2 bg-primary/30 rounded-full animate-bounce" style="animation-delay:300ms"></span></div></div>`;
       messagesList?.appendChild(div);
       scrollToBottom();
       return id;

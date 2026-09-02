@@ -59,7 +59,9 @@ const isActive = (href: string) => {
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#171717" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
     <link rel="canonical" href={canonicalURL} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
@@ -109,7 +111,7 @@ const isActive = (href: string) => {
           {user ? (
             <>
               <span class="hidden sm:block font-body-sm text-body mr-2">{user.plan === 'free' ? 'Free Beta' : user.plan === 'pro' ? 'Pro' : user.plan === 'team' ? 'Team' : 'Free Beta'}</span>
-              <div class="relative group">
+              <div class="relative group focus-within:opacity-100 focus-within:visible">
                 <button class="flex items-center gap-2 px-3 py-1.5 bg-canvas-soft rounded-full hover:bg-canvas-soft-2 transition-colors" aria-expanded="false" aria-haspopup="true">
                   <img src={user.image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`} alt="" class="w-6 h-6 rounded-full" />
                   <span class="text-body-sm text-ink">{user.name}</span>
@@ -117,11 +119,11 @@ const isActive = (href: string) => {
                     <path d="M5 6l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </button>
-                <div class="absolute right-0 mt-2 w-48 bg-canvas rounded-lg border border-hairline shadow-level-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 py-2 z-50">
-                  <a href="/app/settings" class="block px-4 py-2 font-body-sm text-body hover:bg-canvas-soft">Settings</a>
-                  <a href="/app/settings/billing" class="block px-4 py-2 font-body-sm text-body hover:bg-canvas-soft">Billing</a>
+                <div class="absolute right-0 mt-2 w-48 bg-canvas rounded-lg border border-hairline shadow-level-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-all duration-150 py-2 z-50">
+                  <a href="/app/settings" class="block px-4 py-2 font-body-sm text-body hover:bg-canvas-soft focus:bg-canvas-soft focus:outline-none">Settings</a>
+                  <a href="/app/settings/billing" class="block px-4 py-2 font-body-sm text-body hover:bg-canvas-soft focus:bg-canvas-soft focus:outline-none">Billing</a>
                   <hr class="border-hairline my-2" />
-                  <button id="signout-btn" class="block w-full text-left px-4 py-2 font-body-sm text-error hover:bg-error-soft">Sign out</button>
+                  <button id="signout-btn" class="block w-full text-left px-4 py-2 font-body-sm text-error hover:bg-error-soft focus:bg-error-soft focus:outline-none">Sign out</button>
                 </div>
               </div>
             </>

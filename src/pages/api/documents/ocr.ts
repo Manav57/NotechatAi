@@ -1,6 +1,7 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
+import { dbGetSession } from '../../../lib/db-auth';
 import { devGetSession } from '../../../lib/dev-auth';
 import { createDocument } from '../../../lib/dev-store';
 import { verifyQuota, incrementDocumentCount } from '../../../lib/billing';
@@ -26,11 +27,18 @@ Your output will be processed into a searchable knowledge base, so accuracy is c
 
 // ─── Helpers ───
 
-function getUser(cookies: { get: (name: string) => { value: string } | undefined }) {
-  const token = cookies.get('session')?.value;
+async function getUser(cookies: { get: (name: string) => { value: string } | undefined }) {
+  const token = cookies.get('session')?.value || cookies.get('better-auth.session_token')?.value;
   if (!token) return null;
-  const result = devGetSession(token);
-  return result?.session?.user || null;
+  try {
+    const result = await dbGetSession(token);
+    if (result) return result.session.user;
+  } catch {}
+  try {
+    const result = devGetSession(token);
+    if (result) return result.session.user;
+  } catch {}
+  return null;
 }
 
 async function getEnv() {
@@ -96,7 +104,7 @@ async function extractTextFromImage(
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
-    const user = getUser(cookies);
+    const user = await getUser(cookies);
     if (!user) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
@@ -222,8 +230,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
   } catch (e) {
     console.error('OCR endpoint error:', e);
+    console.error('OCR endpoint error:', e);
     return new Response(JSON.stringify({
-      error: 'Internal server error: ' + (e instanceof Error ? e.message : String(e)),
+      error: 'Internal server error',
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },

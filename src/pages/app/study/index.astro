@@ -42,7 +42,7 @@ try {
     {/* Study Stats */}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
       <div class="bg-canvas rounded-lg border border-hairline p-4 text-center">
-        <p class="font-display-xl text-ink">{docCount > 0 ? '0' : '0'}</p>
+        <p class="font-display-xl text-ink">0</p>
         <p class="font-body-sm text-mute">Total Flashcards</p>
       </div>
       <div class="bg-canvas rounded-lg border border-hairline p-4 text-center">
@@ -339,21 +339,21 @@ try {
     });
   });
 
-  // Quiz options
+  // Quiz options — score against data-correct attribute instead of hardcoded text
   document.querySelectorAll<HTMLElement>('.quiz-option').forEach((btn) => {
     btn.addEventListener('click', () => {
       // Reset all
       document.querySelectorAll('.quiz-option').forEach((b) => {
         b.classList.remove('border-success', 'bg-success/5', 'border-error', 'bg-error/5', 'pointer-events-none');
       });
-      // Mark selected
-      const isCorrect = btn.textContent?.includes('Self-attention');
+      // Mark selected — check against data-correct attribute
+      const isCorrect = btn.dataset.correct === 'true';
       btn.classList.add(isCorrect ? 'border-success' : 'border-error');
       btn.classList.add(isCorrect ? 'bg-success/5' : 'bg-error/5');
-      // Show correct
+      // Show correct answer if wrong
       if (!isCorrect) {
         document.querySelectorAll('.quiz-option').forEach((b) => {
-          if (b.textContent?.includes('Self-attention')) {
+          if (b.dataset.correct === 'true') {
             b.classList.add('border-success', 'bg-success/5');
           }
         });

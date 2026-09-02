@@ -225,6 +225,9 @@ if (documents.length > 0) {
       const circle = node.querySelector('circle');
       const fillColor = circle?.getAttribute('fill') || '#171717';
 
+      function escapeHtml(t: string) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+      const safeLabel = escapeHtml(label);
+
       detailContent.innerHTML = `
         <div>
           <div class="flex items-center gap-3 mb-4">
@@ -232,7 +235,7 @@ if (documents.length > 0) {
               <div class="w-4 h-4 rounded-full" style="background-color: ${fillColor}"></div>
             </div>
             <div>
-              <h3 class="font-display-sm text-ink">${label}</h3>
+              <h3 class="font-display-sm text-ink">${safeLabel}</h3>
               <p class="font-caption text-mute">Document</p>
             </div>
           </div>
@@ -250,7 +253,7 @@ if (documents.length > 0) {
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="mr-1.5" aria-hidden="true">
               <path d="M12 8a2 2 0 0 1-2 2H4l-2 2V3a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.2"/>
             </svg>
-            Ask about ${label}
+            Ask about ${safeLabel}
           </a>
         </div>
       `;

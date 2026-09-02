@@ -49,7 +49,7 @@ export const GET: APIRoute = async ({ params, cookies }) => {
     return new Response(JSON.stringify({ conversation: conv, messages: msgs.results || msgs }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (e) {
     console.error('Chat GET single error:', e);
-    return new Response(JSON.stringify({ error: 'Internal server error: ' + (e instanceof Error ? e.message : String(e)) }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 };
 
@@ -72,6 +72,6 @@ export const DELETE: APIRoute = async ({ params, cookies }) => {
     return new Response(JSON.stringify({ success: true }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (e) {
     console.error('Chat DELETE error:', e);
-    return new Response(JSON.stringify({ error: 'Internal server error: ' + (e instanceof Error ? e.message : String(e)) }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
 };

@@ -735,6 +735,18 @@
   background: linear-gradient(to right, transparent, rgba(17,17,17,0.9));
 }
 
+/* ─── Reduced Motion ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Mobile padding adjustments */
 @media (max-width: 640px) {
   .hero-band { padding: 48px 16px; }
