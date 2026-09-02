@@ -47,6 +47,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@astrojs/tailwind": "^6.0.2",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.67.0",
