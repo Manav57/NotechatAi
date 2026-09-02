@@ -17,6 +17,9 @@ const publicPaths = [
   '/auth/login',
   '/auth/signup',
   '/api',
+  '/sitemap-index.xml',
+  '/sitemap.xml',
+  '/robots.txt',
 ];
 
 function isPublicPath(pathname: string): boolean {
