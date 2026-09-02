@@ -155,7 +155,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         automatic_tax: { enabled: true },
       });
     } catch (taxErr: any) {
-      if (taxErr?.type === 'invalid_request_error' && taxErr?.message?.includes('automatic tax')) {
+      // Stripe Tax is only available when a valid head-office address is configured.
+      // Fall back to a non-tax checkout when Tax is unavailable in this account.
+      const msg = (taxErr?.message || '') as string;
+      const taxUnavailable =
+        msg.includes('automatic tax') ||
+        msg.includes('head office address') ||
+        msg.includes('enable automatic tax');
+      if (taxUnavailable) {
         console.warn('Stripe Tax not configured — creating checkout without automatic_tax');
         session = await stripe.checkout.sessions.create(sessionPayload);
       } else {
