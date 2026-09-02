@@ -29,6 +29,7 @@ const publicApiPrefixes = [
   '/api/auth/session',
   '/api/auth/signin/google',
   '/api/auth/signin/github',
+  '/api/billing/webhook',
   '/api/contact',
   '/api/newsletter',
 ];
