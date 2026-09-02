@@ -21,32 +21,35 @@ are what matter.
 | `STRIPE_PLUS_MONTHLY_PRICE_ID`     | Plus        | Monthly        | $5.00  |
 | `STRIPE_PLUS_ANNUAL_PRICE_ID`      | Plus        | Yearly         | $60.00 |
 
-- [ ] Create the 4 prices in Stripe
-- [ ] Copy each Price ID (starts with `price_`)
+- [x] Create the 4 prices in Stripe (DONE 2026-09-02, test mode)
+- [x] Copy each Price ID (starts with `price_`) — wired into Worker secrets
 
 ## 2. Stripe — set the secrets + env vars in Cloudflare (main domain)
 
 Set these on the **production** deployment that serves `noteschatai.com` (Cloudflare
 Workers → Settings → Variables and Secrets). Required:
 
-- [ ] `STRIPE_SECRET_KEY` (Stripe **live** secret key, starts `sk_live_`)
-- [ ] `STRIPE_WEBHOOK_SECRET` (`whsec_...` from the webhook endpoint below)
-- [ ] `STRIPE_PRO_MONTHLY_PRICE_ID`
-- [ ] `STRIPE_PRO_ANNUAL_PRICE_ID`
-- [ ] `STRIPE_PLUS_MONTHLY_PRICE_ID`
-- [ ] `STRIPE_PLUS_ANNUAL_PRICE_ID`
+- [x] `STRIPE_SECRET_KEY` — wired (currently **test** key `sk_test_...`; must be swapped for live `sk_live_...`)
+- [x] `STRIPE_WEBHOOK_SECRET` (`whsec_...`) — wired
+- [x] `STRIPE_PRO_MONTHLY_PRICE_ID` — wired
+- [x] `STRIPE_PRO_ANNUAL_PRICE_ID` — wired
+- [x] `STRIPE_PLUS_MONTHLY_PRICE_ID` — wired
+- [x] `STRIPE_PLUS_ANNUAL_PRICE_ID` — wired
+
+> Secret wiring done 2026-09-02 via `wrangler secret put` into Worker `noteschatai`
+> (serves main domain). **Re-wire with live keys after Stripe activation.**
 
 Optional fallback (still supported by code):
 - [ ] `STRIPE_PRO_PRICE_ID` / `STRIPE_PLUS_PRICE_ID`
 
 ## 3. Stripe — webhook endpoint
 
-- [ ] In Stripe Dashboard → Developers → Webhooks → Add endpoint:
-      `https://noteschatai.com/api/billing/webhook`
-- [ ] Subscribe to events: `checkout.session.completed`,
+- [x] In Stripe Dashboard → Developers → Webhooks → Add endpoint:
+      `https://noteschatai.com/api/billing/webhook` (DONE — endpoint `we_1UBJwD...`, status **Active**)
+- [x] Subscribe to events: `checkout.session.completed`,
       `customer.subscription.updated`, `customer.subscription.deleted`,
-      `invoice.payment_failed`
-- [ ] Copy the **Signing secret** into `STRIPE_WEBHOOK_SECRET` env var
+      `invoice.payment_failed` (verified active, all 4 events)
+- [x] Copy the **Signing secret** into `STRIPE_WEBHOOK_SECRET` env var
 
 ## 4. Stripe — account activation + bank payout (THE MONEY PART)
 
@@ -60,6 +63,10 @@ Optional fallback (still supported by code):
       and regional methods are auto-offered by Stripe Checkout via
       `payment_method_collection: 'always'` + `automatic_tax`). This is what makes
       "pay from all countries" work.
+- [ ] **Enable Stripe Tax** (checkout uses `automatic_tax: { enabled: true }` in
+      `src/pages/api/billing/checkout.ts`). If Tax isn't activated, checkout
+      session creation fails with an error. Verify under Stripe Dashboard →
+      Settings → Tax in each mode (test + live).
 
 ## 5. Test a real checkout (Live mode)
 
@@ -84,15 +91,17 @@ Optional fallback (still supported by code):
       `ALTER TABLE users ADD COLUMN billing_period TEXT DEFAULT 'monthly';`
       ✅ Verified present: `id, email, ..., stripe_customer_id, stripe_subscription_id, subscription_status, chats_used_today, audio_used_today, documents_count, last_usage_reset, billing_period`
 
-## 8. CSP — must be deployed to main domain (pending)
+## 8. CSP — must be deployed to main domain (DONE)
 
 The code fix is in `src/middleware.ts` (whitelists `static.cloudflareinsights.com`
-and the AdSense domain set). It must be deployed to `noteschatai.com` via the
-same channel as Worker `ea38835f`. Until then, the **live site still blocks**
-Cloudflare Web Analytics + AdSense quality calls (2 console errors on every page).
+and the AdSense domain set). Deployed to `noteschatai.com` — zero console errors.
 
-- [ ] Deploy the CSP fix to the main domain
-- [ ] Verify zero CSP console errors on `/pricing`
+- [x] Deploy the CSP fix to the main domain (DONE 2026-09-02)
+- [x] Verify zero CSP console errors on `/pricing` (verified)
+
+> Also fixed 2026-09-02: pricing page annual copy was stale/misleading
+> ("50% off yearly ($2/mo → $1/mo)") — corrected to "Pro $24/year ($2/mo)",
+> "Plus $60/year ($5/mo)" to match the real Stripe prices. Deployed + verified live.
 
 ---
 
@@ -102,5 +111,5 @@ Cloudflare Web Analytics + AdSense quality calls (2 console errors on every page
 | 4 Stripe prices + bank + live mode    | Manav | Stripe dashboard  |
 | Env vars + webhook                    | Agent | Secrets           |
 | AdSense approval                      | Manav | Google review     |
-| CSP deploy to main domain             | Agent | Deploy channel    |
+| CSP deploy to main domain             | Agent | ✅ Done 2026-09-02 |
 | billing_period migration              | Agent | —                 |
