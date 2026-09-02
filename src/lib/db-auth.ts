@@ -4,40 +4,90 @@
  * Falls back to dev-auth if D1 is unavailable (e.g., local dev without workerd).
  */
 
-import { randomUUID, scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
-import { promisify } from 'node:util';
+import { randomUUID } from 'node:crypto';
 
-const scryptAsync = promisify(scrypt);
+// ─── Password hashing — WebCrypto PBKDF2-SHA256 (works in Cloudflare Workers) ───
+// New hashes: pbkdf2:<iterations>:<salt_hex>:<hash_hex>
+// Legacy scrypt:<...> hashes are still verified for backward compatibility.
 
-// ─── Password hashing — scrypt with per-user random salt ───
-// Format: scrypt:<N>:<r>:<p>:<salt_hex>:<hash_hex>
-// N=16384, r=8, p=1 are OWASP recommended defaults for scrypt.
+const PBKDF2_ITERATIONS = 210000;
+const PBKDF2_KEY_BITS = 256;
 
-const SCRYPT_N = 16384;
-const SCRYPT_R = 8;
-const SCRYPT_P = 1;
-const SCRYPT_KEYLEN = 64;
+const encoder = new TextEncoder();
+
+function bytesToHex(bytes: Uint8Array): string {
+  return Array.from(bytes).map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+function hexToBytes(hex: string): Uint8Array {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < bytes.length; i++) {
+    bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+  }
+  return bytes;
+}
+
+function timingSafeEqualStr(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+async function pbkdf2Derive(password: string, salt: Uint8Array, iterations: number): Promise<Uint8Array> {
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(password),
+    { name: 'PBKDF2' },
+    false,
+    ['deriveBits']
+  );
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', salt: salt as BufferSource, iterations, hash: 'SHA-256' },
+    keyMaterial,
+    PBKDF2_KEY_BITS
+  );
+  return new Uint8Array(bits);
+}
 
 export async function hashPassword(password: string): Promise<string> {
-  const salt = randomBytes(16);
-  const key = (await scryptAsync(password, salt, SCRYPT_KEYLEN, { N: SCRYPT_N, r: SCRYPT_R, p: SCRYPT_P })) as Buffer;
-  return `scrypt:${SCRYPT_N}:${SCRYPT_R}:${SCRYPT_P}:${salt.toString('hex')}:${key.toString('hex')}`;
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const key = await pbkdf2Derive(password, salt, PBKDF2_ITERATIONS);
+  return `pbkdf2:${PBKDF2_ITERATIONS}:${bytesToHex(salt)}:${bytesToHex(key)}`;
 }
 
 export async function verifyPassword(storedHash: string, password: string): Promise<boolean> {
-  // Legacy: detect old SHA-256 hashes and reject (force re-hash on next login)
-  if (!storedHash.startsWith('scrypt:')) {
-    // For backward compat during migration, we can't verify — return false
-    // User must reset password. Alternatively, we could keep a legacy check,
-    // but that weakens security. Return false to force re-hash.
-    return false;
+  // New scheme — PBKDF2 (Cloudflare-Workers safe).
+  if (storedHash.startsWith('pbkdf2:')) {
+    const [, iterStr, saltHex, expectedHex] = storedHash.split(':');
+    const salt = hexToBytes(saltHex);
+    const computed = await pbkdf2Derive(password, salt, parseInt(iterStr, 10) || PBKDF2_ITERATIONS);
+    return timingSafeEqualStr(bytesToHex(computed), expectedHex);
   }
-  const [, nStr, rStr, pStr, saltHex, hashHex] = storedHash.split(':');
-  const salt = Buffer.from(saltHex, 'hex');
-  const expectedHash = Buffer.from(hashHex, 'hex');
-  const key = (await scryptAsync(password, salt, SCRYPT_KEYLEN, { N: parseInt(nStr), r: parseInt(rStr), p: parseInt(pStr) })) as Buffer;
-  if (key.length !== expectedHash.length) return false;
-  return timingSafeEqual(key, expectedHash);
+
+  // Legacy scrypt hashes — verify via node:crypto (with graceful fallback).
+  if (storedHash.startsWith('scrypt:')) {
+    try {
+      const { scrypt, timingSafeEqual } = await import('node:crypto');
+      const { promisify } = await import('node:util');
+      const scryptAsync = promisify(scrypt) as any;
+      const [, nStr, rStr, pStr, saltHex, hashHex] = storedHash.split(':');
+      const salt = hexToBytes(saltHex);
+      const key = (await scryptAsync(password, salt, 64, {
+        N: parseInt(nStr, 10),
+        r: parseInt(rStr, 10),
+        p: parseInt(pStr, 10),
+      } as any)) as Uint8Array;
+      const expected = hexToBytes(hashHex);
+      if (key.length !== expected.length) return false;
+      return timingSafeEqual(Buffer.from(key), Buffer.from(expected));
+    } catch {
+      return false; // runtime doesn't support scrypt — force password reset
+    }
+  }
+
+  // Any other legacy hash (e.g. old SHA-256) — cannot verify. Force re-hash.
+  return false;
 }
 
 // ─── Types ───
