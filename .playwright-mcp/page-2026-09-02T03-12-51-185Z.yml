@@ -1,0 +1,68 @@
+- generic [active] [ref=f8e1]:
+  - banner [ref=f8e2]:
+    - generic [ref=f8e3]:
+      - link "NotesChatAI Dashboard" [ref=f8e4] [cursor=pointer]:
+        - /url: /app
+        - generic [ref=f8e8]: NotesChatAI
+      - navigation "App navigation" [ref=f8e9]:
+        - link "Dashboard" [ref=f8e10] [cursor=pointer]:
+          - /url: /app
+        - link "Documents" [ref=f8e11] [cursor=pointer]:
+          - /url: /app/documents
+        - link "Chat" [ref=f8e12] [cursor=pointer]:
+          - /url: /app/chat
+        - link "Audio" [ref=f8e13] [cursor=pointer]:
+          - /url: /app/audio
+        - link "Mind Map" [ref=f8e14] [cursor=pointer]:
+          - /url: /app/mindmap
+        - link "Study" [ref=f8e15] [cursor=pointer]:
+          - /url: /app/study
+      - generic [ref=f8e16]:
+        - button "Toggle dark mode" [ref=f8e17]
+        - generic [ref=f8e21]: Free Beta
+        - button "Manav Patidar" [ref=f8e23]
+  - main [ref=f8e27]:
+    - generic [ref=f8e29]:
+      - complementary [ref=f8e30]:
+        - generic [ref=f8e31]:
+          - button "New Chat" [ref=f8e32]
+          - link "Add Document" [ref=f8e35] [cursor=pointer]:
+            - /url: /app/documents
+        - paragraph [ref=f8e39]: Conversations
+        - paragraph [ref=f8e42]: No conversations yet
+      - main [ref=f8e43]:
+        - generic [ref=f8e45]:
+          - heading "Summarize the key features of NotesChatAI in one s" [level=1] [ref=f8e81]
+          - paragraph [ref=f8e47]: Ask anything about your documents — answers come with citations
+        - generic [ref=f8e82]:
+          - generic [ref=f8e83]:
+            - generic [aria-hidden] [ref=f8e84]: U
+            - generic [ref=f8e85]:
+              - generic [ref=f8e86]:
+                - generic [ref=f8e87]: You
+                - generic [ref=f8e88]: Just now
+              - generic [ref=f8e89]: Summarize the key features of NotesChatAI in one short paragraph.
+          - generic [ref=f8e90]:
+            - generic [aria-hidden] [ref=f8e91]: "N"
+            - generic [ref=f8e92]:
+              - generic [ref=f8e93]:
+                - generic [ref=f8e94]: NotesChatAI
+                - generic [ref=f8e95]: Just now
+              - generic [ref=f8e96]: NotesChatAI is a friendly AI study assistant designed to help students learn and study effectively. It can answer questions about uploaded documents, handwritten notes, and textbooks, while also providing explanations in simple terms. The AI can generate study materials like flashcards, summaries, and downloadable documents (PDF, DOCX, XLSX). Additionally, it assists with exam preparation and can engage in casual conversations, making it a versatile tool for enhancing learning and comprehension.
+        - generic [ref=f8e65]:
+          - generic [ref=f8e66]:
+            - textbox "Message" [ref=f8e67]:
+              - /placeholder: Ask anything about your documents...
+            - button "Send message" [disabled] [ref=f8e68]
+          - generic [ref=f8e71]:
+            - link "Add a document for better answers" [ref=f8e72] [cursor=pointer]:
+              - /url: /app/documents
+            - paragraph [ref=f8e75]: Enter to send · Shift+Enter new line
+  - contentinfo [ref=f8e76]:
+    - paragraph [ref=f8e78]:
+      - text: © 2026 NotesChatAI.
+      - link "Privacy" [ref=f8e79] [cursor=pointer]:
+        - /url: /privacy
+      - text: ·
+      - link "Terms" [ref=f8e80] [cursor=pointer]:
+        - /url: /terms

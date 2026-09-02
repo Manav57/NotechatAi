@@ -1,0 +1,134 @@
+<!--
+  EXAMPLE · checkbox-radio-switch · Approach (B): BEM markup — styles in
+  checkbox-radio-switch.bem.scss.
+
+  Same UI as checkbox-radio-switch.utility.html (checkbox group, radio group in a
+  <fieldset>/<legend>, and switches), but the markup carries SEMANTIC BEM class
+  names; all visual styling lives in the .scss via grouped @apply.
+
+  BEM convention (skill), one block per control:
+    block `checkbox` — elements `checkbox-control`, `checkbox-label`, `checkbox-hint`,
+                       `checkbox-error`; element modifier `checkbox-control_invalid`.
+    block `radio`    — elements `radio-control`, `radio-label`, `radio-hint`.
+    block `switch`   — elements `switch-control` (the input/peer), `switch-track`,
+                       `switch-thumb`, `switch-label`.
+  Elements always derive from the block; no `-a-b` chains.
+
+  States covered: hover, focus-visible (outline-ring), checked, disabled, plus
+  required validation via user-invalid: (NOT invalid:/peer-invalid:). The switch
+  uses peer-checked: for track/thumb and the wrapping label uses has-[:checked]:/
+  has-[:disabled]:. Tokens are the canonical SEMANTIC ones (theme.css).
+-->
+
+<!-- demo wrapper: just lays the controls out for preview; not part of the component -->
+<form class="flex max-w-sm flex-col gap-8 p-6" novalidate>
+
+  <!-- ═════════════════════════ 1. Checkbox ═════════════════════════ -->
+  <fieldset class="fieldGroup">
+    <legend class="fieldGroup-legend">Notifications</legend>
+
+    <!-- default checked: wrapping <label> ties control + text without a for/id pair -->
+    <label class="checkbox">
+      <input type="checkbox" name="emails" checked class="checkbox-control" />
+      <span class="checkbox-label">
+        Product emails
+        <span class="checkbox-hint">Occasional updates about new features.</span>
+      </span>
+    </label>
+
+    <!-- unchecked -->
+    <label class="checkbox">
+      <input type="checkbox" name="sms" class="checkbox-control" />
+      <span class="checkbox-label">SMS reminders</span>
+    </label>
+
+    <!-- disabled -->
+    <label class="checkbox">
+      <input type="checkbox" name="postal" disabled class="checkbox-control" />
+      <span class="checkbox-label">Postal mail (unavailable)</span>
+    </label>
+
+    <!-- required + invalid: user-invalid: styles only AFTER interaction; error linked -->
+    <label class="checkbox">
+      <input
+        type="checkbox"
+        name="terms"
+        required
+        aria-describedby="terms-error"
+        class="checkbox-control checkbox-control_invalid"
+      />
+      <span class="checkbox-label">
+        I accept the terms
+        <span id="terms-error" class="checkbox-error">Required to continue.</span>
+      </span>
+    </label>
+  </fieldset>
+
+  <!-- ═════════════════════════ 2. Radio group ═════════════════════════ -->
+  <!-- the group itself is the <fieldset>; <legend> labels it for screen readers -->
+  <fieldset class="fieldGroup">
+    <legend class="fieldGroup-legend">Billing period</legend>
+
+    <!-- checked option -->
+    <label class="radio">
+      <input type="radio" name="plan" value="monthly" checked class="radio-control" />
+      <span class="radio-label">Monthly</span>
+    </label>
+
+    <!-- unchecked option -->
+    <label class="radio">
+      <input type="radio" name="plan" value="yearly" class="radio-control" />
+      <span class="radio-label">
+        Yearly
+        <span class="radio-hint">Save 20% versus monthly.</span>
+      </span>
+    </label>
+
+    <!-- disabled option -->
+    <label class="radio">
+      <input type="radio" name="plan" value="lifetime" disabled class="radio-control" />
+      <span class="radio-label">Lifetime (sold out)</span>
+    </label>
+  </fieldset>
+
+  <!-- ═════════════════════════ 3. Switch ═════════════════════════ -->
+  <!--
+    Switch = <input type="checkbox" role="switch"> made invisible and used as a
+    `peer`; the visible switch-track / switch-thumb siblings are driven by
+    peer-checked:. role="switch" announces on/off to assistive tech.
+  -->
+  <fieldset class="fieldGroup">
+    <legend class="fieldGroup-legend">Preferences</legend>
+
+    <!-- switch ON (checked) -->
+    <label class="switch">
+      <span class="switch-label">Dark mode</span>
+      <span class="switch-box">
+        <input type="checkbox" role="switch" name="dark-mode" checked class="switch-control peer" />
+        <span class="switch-track"></span>
+        <span class="switch-thumb"></span>
+      </span>
+    </label>
+
+    <!-- switch OFF (unchecked) -->
+    <label class="switch">
+      <span class="switch-label">Compact layout</span>
+      <span class="switch-box">
+        <input type="checkbox" role="switch" name="compact" class="switch-control peer" />
+        <span class="switch-track"></span>
+        <span class="switch-thumb"></span>
+      </span>
+    </label>
+
+    <!-- switch DISABLED (checked + disabled) -->
+    <label class="switch">
+      <span class="switch-label">Beta features (locked)</span>
+      <span class="switch-box">
+        <input type="checkbox" role="switch" name="beta" checked disabled class="switch-control peer" />
+        <span class="switch-track"></span>
+        <span class="switch-thumb"></span>
+      </span>
+    </label>
+  </fieldset>
+
+</form>

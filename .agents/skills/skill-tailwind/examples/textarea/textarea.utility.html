@@ -1,0 +1,122 @@
+<!--
+  EXAMPLE · textarea · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as textarea.bem.html, so you can diff A vs B on identical structure.
+  No framework: plain HTML fragment.
+
+  A labelled multi-line input that GROWS WITH ITS CONTENT via field-sizing-content
+  (a v4.1 flagship) — the textarea auto-sizes to the typed text with NO JavaScript.
+  This replaces the old JS auto-resize hack (listen to `input`, set
+  el.style.height = el.scrollHeight + "px"). We just add the `field-sizing-content`
+  utility and bound growth with rows / min-h / max-h.
+
+  States covered: focus-visible (ring-ring), disabled, and invalid. Validation uses
+  user-invalid: (NOT invalid:) so the danger styling fires only AFTER the user
+  interacts — `:invalid` would flag an empty required field on page load.
+  Don't rely on color alone — always duplicate the error with text.
+
+  Accessibility: <label for> tied to the <textarea id>; the hint and the error are
+  linked via aria-describedby (space-separated id list). On the invalid example the
+  field also carries aria-invalid="true". Replace token VALUES under your design
+  system; the NAMES stay stable. Dark theme works for free — every color is a token.
+-->
+
+<!-- demo wrapper: just lays the fields out for preview; not part of the component -->
+<div class="flex max-w-md flex-col gap-6 p-6">
+
+  <!-- ───────── Default (auto-growing + hint) ───────── -->
+  <div class="flex flex-col gap-1.5">
+    <label for="bio" class="text-sm font-medium text-foreground">
+      Bio
+    </label>
+
+    <!--
+      field-sizing-content = auto-grow with no JS. The rows="2" attribute sets
+      the starting height; min-h / max-h bound the growth (after max-h it scrolls).
+      user-invalid: turns the border/ring danger only after interaction.
+    -->
+    <textarea
+      id="bio"
+      name="bio"
+      rows="2"
+      placeholder="Tell us a little about yourself…"
+      aria-describedby="bio-hint"
+      class="field-sizing-content min-h-16 max-h-64 w-full
+             resize-none rounded-md border border-border bg-input px-3 py-2
+             text-sm text-foreground placeholder:text-muted-foreground
+             transition-colors duration-150
+             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+             disabled:cursor-not-allowed disabled:opacity-50
+             user-invalid:border-danger user-invalid:focus-visible:ring-danger"
+    ></textarea>
+
+    <p id="bio-hint" class="text-xs text-muted-foreground">
+      The box grows as you type — no scrollbar until it hits its max height.
+    </p>
+  </div>
+
+  <!-- ───────── Disabled ───────── -->
+  <div class="flex flex-col gap-1.5">
+    <label for="notes" class="text-sm font-medium text-foreground">
+      Internal notes
+    </label>
+
+    <textarea
+      id="notes"
+      name="notes"
+      rows="2"
+      disabled
+      aria-describedby="notes-hint"
+      class="field-sizing-content min-h-16 max-h-64 w-full
+             resize-none rounded-md border border-border bg-input px-3 py-2
+             text-sm text-foreground placeholder:text-muted-foreground
+             transition-colors duration-150
+             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+             disabled:cursor-not-allowed disabled:opacity-50
+             user-invalid:border-danger user-invalid:focus-visible:ring-danger"
+    >Locked while your account is being verified.</textarea>
+
+    <p id="notes-hint" class="text-xs text-muted-foreground">
+      Visible to reviewers only.
+    </p>
+  </div>
+
+  <!-- ───────── Invalid (required + aria-invalid + hint AND error) ───────── -->
+  <div class="flex flex-col gap-1.5">
+    <label for="reason" class="text-sm font-medium text-foreground">
+      Reason for refund
+    </label>
+
+    <!--
+      Invalid state = danger border + danger focus ring, driven by user-invalid:
+      (fires after the user edits/blurs a still-empty required field). The error
+      and hint are BOTH referenced from aria-describedby (space-separated ids).
+      aria-invalid="true" exposes the invalid state to assistive tech up front.
+    -->
+    <textarea
+      id="reason"
+      name="reason"
+      rows="2"
+      required
+      aria-invalid="true"
+      aria-describedby="reason-hint reason-error"
+      placeholder="Describe what went wrong…"
+      class="field-sizing-content min-h-16 max-h-64 w-full
+             resize-none rounded-md border border-danger bg-input px-3 py-2
+             text-sm text-foreground placeholder:text-muted-foreground
+             transition-colors duration-150
+             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger focus-visible:ring-offset-2 focus-visible:ring-offset-background
+             disabled:cursor-not-allowed disabled:opacity-50
+             user-invalid:border-danger user-invalid:focus-visible:ring-danger"
+    ></textarea>
+
+    <p id="reason-hint" class="text-xs text-muted-foreground">
+      A few sentences is plenty.
+    </p>
+    <!-- error is announced and linked via aria-describedby; never colour-only -->
+    <p id="reason-error" class="text-xs font-medium text-danger">
+      Please tell us why you&rsquo;re requesting a refund.
+    </p>
+  </div>
+
+</div>

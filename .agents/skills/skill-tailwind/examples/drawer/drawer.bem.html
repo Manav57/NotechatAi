@@ -1,0 +1,71 @@
+<!--
+  EXAMPLE · drawer · Approach (B): BEM markup — styles in drawer.bem.scss.
+
+  Same UI as drawer.utility.html (a native off-canvas <dialog> pinned to the
+  RIGHT edge, with a header / scrollable body, a × close control, a v4 slide-in
+  on the panel and a fading ::backdrop), but the markup carries SEMANTIC BEM
+  classes; the look lives in drawer.bem.scss.
+
+  The only JS is a native platform API: the trigger calls dialog.showModal()
+  (real modal off-canvas panel — focus trap + Esc-to-close from the platform) and
+  the close control sits in a <form method="dialog"> so submitting closes the
+  dialog. No framework.
+
+  BEM convention (strict): one block `drawer`; side is a BLOCK MODIFIER
+  (drawer_right / drawer_left, underscore) that flips the edge + slide direction;
+  elements via hyphen (drawer-panel / drawer-header / drawer-title /
+  drawer-body / drawer-close). Elements descend from the block — no `-a-b` chains.
+  This instance is `drawer drawer_right`, matching the utility file; swap to
+  `drawer drawer_left` for a mirrored left drawer (identical UI, other edge).
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css); .dark overrides
+  them, so this markup needs no dark-specific classes. The aria-label names the
+  panel for assistive tech; aria-labelledby links the visible heading.
+-->
+
+<!-- demo wrapper: neutral page surface + the trigger that opens the drawer -->
+<div class="drawerDemo">
+
+  <!-- Trigger: native platform API. Opens the NEXT sibling dialog. -->
+  <button
+    type="button"
+    class="button button_primary"
+    onclick="this.nextElementSibling.showModal()"
+  >
+    Open drawer
+  </button>
+
+  <!-- Native off-canvas <dialog>; edge, slide-in + ::backdrop are styled in the SCSS. -->
+  <dialog
+    class="drawer drawer_right"
+    aria-label="Settings panel"
+    aria-labelledby="drawer-title"
+  >
+    <div class="drawer-panel">
+
+      <!-- header: title + a close (×) control -->
+      <header class="drawer-header">
+        <h2 id="drawer-title" class="drawer-title">Settings panel</h2>
+
+        <!-- close button: a submit inside method="dialog" closes the dialog -->
+        <form method="dialog" class="drawer-closeForm">
+          <button type="submit" class="drawer-close" aria-label="Close drawer">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </button>
+        </form>
+      </header>
+
+      <!-- body: scrolls independently when content overflows the panel height -->
+      <div class="drawer-body">
+        Drawer content goes here. Keep the skeleton neutral; the surrounding design
+        system supplies the real colors, type and spacing via the @theme tokens.
+        The panel slides in from the edge, traps focus, and closes on Esc or via
+        the × control.
+      </div>
+
+    </div>
+  </dialog>
+
+</div>

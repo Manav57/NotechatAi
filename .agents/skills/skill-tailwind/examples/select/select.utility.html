@@ -1,0 +1,167 @@
+<!--
+  EXAMPLE · select · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as select.bem.html, so you can diff A vs B on identical structure.
+  No framework: plain HTML fragment.
+
+  A styled NATIVE <select>: the native control keeps its built-in keyboard,
+  search-by-typing and a11y for free; we only restyle the box. The recipe:
+    • appearance-none on the <select> removes the OS chevron + native chrome;
+    • a custom chevron <svg> is overlaid and made pointer-events-none, so clicks
+      fall through to the <select> and the native popup still opens;
+    • the wrapper is relative; the icon is absolutely positioned at the right;
+    • the control reserves right padding (pr-9) so the value never overlaps it.
+
+  States covered: focus-visible (ring-ring), disabled (opacity + not-allowed),
+  and validation in two layers — aria-[invalid=true]: paints danger right away
+  (pairs with aria-invalid="true", e.g. a server-side result, = the BEM
+  `select-invalid` modifier), while user-invalid: (v4.1) covers the live
+  client-side case. We use user-invalid: NOT invalid:/peer-invalid:, because the
+  latter fire before the user has interacted; user-invalid: only styles AFTER a
+  failed interaction. Error is linked via aria-describedby and dubbed in text,
+  never colour-only. A required <select> with an empty first option drives it.
+
+  Tokens are the canonical SEMANTIC ones (see templates/theme.css): bg-input,
+  border-border, text-foreground, text-muted-foreground (placeholder option +
+  hint + icon), ring-ring (focus), border-danger / ring-danger / text-danger
+  (invalid). Replace the token VALUES under your design system; the NAMES stay
+  stable. Dark theme works for free — every color is a token that .dark overrides.
+-->
+
+<!-- demo wrapper: just lays the fields out for preview; not part of the component -->
+<form class="flex max-w-sm flex-col gap-6 p-6">
+
+  <!-- ───────── Default (with hint) ───────── -->
+  <div class="flex flex-col gap-1.5">
+    <label for="country" class="text-sm font-medium text-foreground">
+      Country
+    </label>
+
+    <!-- relative wrapper: holds the native <select> + the overlaid chevron -->
+    <div class="relative">
+      <select
+        id="country"
+        name="country"
+        aria-describedby="country-hint"
+        class="h-10 w-full appearance-none
+               rounded-md border border-border bg-input pl-3 pr-9
+               text-sm text-foreground
+               transition-colors duration-150
+               hover:border-ring/60
+               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+               disabled:cursor-not-allowed disabled:opacity-50
+               user-invalid:border-danger user-invalid:focus-visible:ring-danger"
+      >
+        <option value="us">United States</option>
+        <option value="de">Germany</option>
+        <option value="jp">Japan</option>
+        <option value="br">Brazil</option>
+      </select>
+
+      <!-- custom chevron: decorative, must not eat the click → pointer-events-none -->
+      <svg
+        class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+        viewBox="0 0 16 16" fill="none" aria-hidden="true"
+      >
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+    <p id="country-hint" class="text-xs text-muted-foreground">
+      Used to localize prices and shipping.
+    </p>
+  </div>
+
+  <!-- ───────── Disabled ───────── -->
+  <div class="flex flex-col gap-1.5">
+    <label for="plan" class="text-sm font-medium text-foreground">
+      Plan
+    </label>
+
+    <div class="relative">
+      <select
+        id="plan"
+        name="plan"
+        disabled
+        aria-describedby="plan-hint"
+        class="h-10 w-full appearance-none
+               rounded-md border border-border bg-input pl-3 pr-9
+               text-sm text-foreground
+               transition-colors duration-150
+               hover:border-ring/60
+               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+               disabled:cursor-not-allowed disabled:opacity-50
+               user-invalid:border-danger user-invalid:focus-visible:ring-danger"
+      >
+        <option value="pro">Pro (current)</option>
+        <option value="team">Team</option>
+      </select>
+
+      <svg
+        class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+        viewBox="0 0 16 16" fill="none" aria-hidden="true"
+      >
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+    <p id="plan-hint" class="text-xs text-muted-foreground">
+      Locked while your billing period is active.
+    </p>
+  </div>
+
+  <!-- ───────── Invalid (required + empty value → user-invalid after interaction) ───────── -->
+  <div class="flex flex-col gap-1.5">
+    <label for="role" class="text-sm font-medium text-foreground">
+      Role
+    </label>
+
+    <!--
+      Two layers of "invalid", matching the BEM `select-invalid` modifier:
+        • aria-[invalid=true]: paints the danger border/ring RIGHT AWAY — pairs
+          with aria-invalid="true" (e.g. a known/server-side validation result);
+        • user-invalid: (v4.1) covers the live client-side case — it styles only
+          AFTER the user leaves an invalid field, unlike invalid:/peer-invalid:
+          which fire immediately, before any interaction.
+      `required` + a value-less placeholder option makes "nothing chosen" invalid.
+      The live error text is linked via aria-describedby and carries the meaning.
+    -->
+    <div class="relative">
+      <select
+        id="role"
+        name="role"
+        required
+        aria-invalid="true"
+        aria-describedby="role-error"
+        class="h-10 w-full appearance-none
+               rounded-md border border-border bg-input pl-3 pr-9
+               text-sm text-foreground
+               transition-colors duration-150
+               hover:border-ring/60
+               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+               disabled:cursor-not-allowed disabled:opacity-50
+               aria-[invalid=true]:border-danger aria-[invalid=true]:focus-visible:ring-danger
+               user-invalid:border-danger user-invalid:focus-visible:ring-danger"
+      >
+        <!-- empty value + disabled placeholder: not a valid choice for `required` -->
+        <option value="" disabled selected>Select a role…</option>
+        <option value="admin">Admin</option>
+        <option value="editor">Editor</option>
+        <option value="viewer">Viewer</option>
+      </select>
+
+      <svg
+        class="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+        viewBox="0 0 16 16" fill="none" aria-hidden="true"
+      >
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+    <!-- error is announced and linked via aria-describedby; never colour-only -->
+    <p id="role-error" class="text-xs font-medium text-danger">
+      Please choose a role to continue.
+    </p>
+  </div>
+
+</form>

@@ -1,0 +1,72 @@
+<!--
+  TEMPLATE · Approach (B): BEM markup — styling lives in component.bem.scss.
+
+  Same UI as component.utility.html (a neutral button + a simple card) on the
+  exact same structure, so you can diff A vs B. No framework: plain HTML.
+
+  BEM convention (DEFAULT — element via `-`, modifier via `_`, camelCase for
+  multi-word parts; configurable per project — if the repo already declares a
+  scheme, follow that):
+    block:               button            card
+    block modifier:      button_primary    button_outline
+    element:             card-title  card-body  card-footer  card-action
+    element modifier:    card-footer_meta   (element + single underscore)
+  The footer buttons reuse the `button` block: the variant comes from the
+  `button_primary` / `button_outline` BLOCK modifiers, while `card-action` is the
+  card's own element (geometry only).
+  One block per component; elements always hang off the block (no -a-b chains).
+  Every class below has a matching rule in component.bem.scss — don't ship a
+  class the SCSS never styles.
+
+  Pick the tag by BEHAVIOUR, not appearance: a thing that NAVIGATES is an `<a>`,
+  a thing that ACTS is a `<button>` — the `button` block styles apply to either,
+  so a link-as-button is `<a class="button button_primary">`, never an `<a>`
+  wrapped in a `<button>`.
+
+  States (hover / focus-visible / active / disabled) and the dark theme are
+  handled entirely in the SCSS — the markup carries no variant utilities.
+-->
+
+<!-- ───────────────────────── Button ───────────────────────── -->
+
+<!-- Primary: block + block modifier -->
+<button type="button" class="button button_primary">
+  <!-- element: decorative leading icon -->
+  <svg class="button-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  </svg>
+  <span>Button</span>
+</button>
+
+<!-- Outline: block + block modifier -->
+<button type="button" class="button button_outline">
+  <span>Button</span>
+</button>
+
+<!-- Link styled as a button: same block + modifier on an <a> that NAVIGATES.
+     The focus ring lands on the real focusable element (the <a> itself). -->
+<a href="#" class="button button_primary">Continue</a>
+
+<!-- ───────────────────────── Card ─────────────────────────── -->
+
+<article class="card">
+  <header class="card-header">
+    <h3 class="card-title">Card title</h3>
+    <p class="card-subtitle">
+      Supporting text that describes the card in one short line.
+    </p>
+  </header>
+
+  <div class="card-body">
+    Body content goes here. Keep the skeleton neutral; the surrounding design
+    system supplies the real colors, type and spacing via the @theme tokens.
+  </div>
+
+  <footer class="card-footer">
+    <!-- element modifier: a muted meta line aligned opposite the actions -->
+    <span class="card-footer_meta">Last edited just now</span>
+    <!-- reuse the button block; the block modifier picks the variant -->
+    <button type="button" class="button button_outline card-action">Cancel</button>
+    <button type="button" class="button button_primary card-action">Confirm</button>
+  </footer>
+</article>

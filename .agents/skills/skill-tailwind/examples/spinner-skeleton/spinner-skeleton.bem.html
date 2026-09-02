@@ -1,0 +1,58 @@
+<!--
+  EXAMPLE · spinner-skeleton · Approach (B): BEM markup — styles in
+  spinner-skeleton.bem.scss.
+
+  Same UI as spinner-skeleton.utility.html (a SPINNER with role="status" + a
+  visually-hidden label, and a SKELETON whose pulsing placeholders sit in an
+  aria-busy container), but the markup carries SEMANTIC BEM classes; the look
+  lives in spinner-skeleton.bem.scss.
+
+  NO JS at all: both patterns animate purely with animate-spin / animate-pulse,
+  and stop under prefers-reduced-motion (motion-reduce) — handled in the SCSS.
+  No framework.
+
+  BEM convention (strict): two blocks, one per pattern.
+    • spinner  — element spinner-ring (the spinning circle).
+    • skeleton — elements skeleton-avatar (round placeholder) and skeleton-line
+      (text-bar placeholder); the line modifier skeleton-line_title widens the
+      first bar. Elements descend from the block — no `-a-b` chains.
+
+  Accessibility lives in the MARKUP (same as A): role="status" + sr-only label on
+  the spinner; aria-busy="true" on the skeleton container; every placeholder is
+  aria-hidden="true" (pure decoration).
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): border-border /
+  border-t-transparent (ring), bg-muted (placeholder fill), bg-card /
+  text-card-foreground (surface). .dark overrides them, so this markup needs no
+  dark-specific classes.
+
+  No AI-slop: neutral, no gradients / glass / blobs. rounded-full appears ONLY on
+  the circular spinner ring and the round avatar; text lines stay rounded-sm.
+-->
+
+<!-- demo wrapper: neutral page surface holding both loading patterns -->
+<div class="spinnerSkeletonDemo">
+
+  <!-- Pattern 1 — SPINNER. role="status" + sr-only label do the announcing;
+       the ring itself is decorative (aria-hidden). -->
+  <div class="spinner" role="status">
+    <span class="spinner-ring" aria-hidden="true"></span>
+    <span class="spinner-label">Loading…</span>
+    <span class="sr-only">Loading</span>
+  </div>
+
+  <!-- Pattern 2 — SKELETON. The container is the busy region (aria-busy);
+       every placeholder inside is aria-hidden decoration. -->
+  <div class="skeleton" aria-busy="true" aria-label="Loading content">
+    <!-- avatar placeholder — round (rounded-full is legitimate here) -->
+    <span class="skeleton-avatar" aria-hidden="true"></span>
+
+    <!-- text-line placeholders — a wide title bar + two body lines -->
+    <div class="skeleton-lines">
+      <span class="skeleton-line skeleton-line_title" aria-hidden="true"></span>
+      <span class="skeleton-line" aria-hidden="true"></span>
+      <span class="skeleton-line skeleton-line_short" aria-hidden="true"></span>
+    </div>
+  </div>
+
+</div>

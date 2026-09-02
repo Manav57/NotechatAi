@@ -1,0 +1,55 @@
+<!--
+  EXAMPLE · badge · Approach (B): BEM markup — styled by badge.bem.scss.
+
+  Same UI as badge.utility.html (same tones, same sizes, same text), expressed
+  with semantic BEM classes instead of utilities in the markup.
+
+  BEM convention (strict): one block `badge`; elements via a hyphen
+  (`badge-dot`); block modifiers via an underscore (`badge_primary`,
+  `badge_md`). Base class = neutral tone, sm size; modifiers swap only what
+  differs. Tokens (used in the SCSS) are the canonical semantic ones from
+  templates/theme.css.
+
+  Static, non-interactive component: no hover/focus/active/disabled states.
+  Tone is conveyed by the WORD, never by color alone; when meaning is not in the
+  surrounding text, add an aria-label or a visually-hidden prefix.
+-->
+
+<!-- demo wrapper: neutral page surface so token pairs read correctly -->
+<div class="flex flex-col gap-6 bg-background p-6 text-foreground">
+
+  <!-- ── Tones (sm) ─────────────────────────────────────────── -->
+  <div class="flex flex-wrap items-center gap-2">
+    <span class="badge">Neutral</span>
+    <span class="badge badge_primary">Primary</span>
+    <span class="badge badge_success">Success</span>
+    <span class="badge badge_warning">Warning</span>
+    <span class="badge badge_danger">Danger</span>
+  </div>
+
+  <!-- ── Tones (md) — same tones, larger size ───────────────── -->
+  <div class="flex flex-wrap items-center gap-2">
+    <span class="badge badge_md">Neutral</span>
+    <span class="badge badge_md badge_primary">Primary</span>
+    <span class="badge badge_md badge_success">Success</span>
+    <span class="badge badge_md badge_warning">Warning</span>
+    <span class="badge badge_md badge_danger">Danger</span>
+  </div>
+
+  <!-- ── With a leading dot (decorative) + accessible status ─── -->
+  <div class="flex flex-wrap items-center gap-2">
+    <!-- The dot is decorative; the word "Active" carries the meaning. -->
+    <span class="badge badge_success">
+      <svg class="badge-dot" viewBox="0 0 6 6" aria-hidden="true">
+        <circle cx="3" cy="3" r="3" fill="currentColor" />
+      </svg>
+      Active
+    </span>
+    <!-- Meaning not in surrounding text → spell it out for screen readers. -->
+    <span class="badge badge_danger">
+      <span class="sr-only">Status:</span>
+      Failed
+    </span>
+  </div>
+
+</div>

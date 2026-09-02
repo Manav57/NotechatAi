@@ -1,0 +1,71 @@
+<!--
+  EXAMPLE · tabs · Approach (B): BEM markup — styles in tabs.bem.scss.
+
+  Same UI as tabs.utility.html (a tablist of tabs + matching panels, one tab
+  initially active, one disabled tab), but the markup carries SEMANTIC BEM
+  classes; the look lives in tabs.bem.scss.
+
+  Framework-agnostic: NO framework, NO JS. Same pure CSS pattern — hidden radio
+  <input>s (one per tab) decide which panel is visible. The radios precede the
+  tablist and the panels as SIBLINGS so the SCSS `:checked ~ ...` selectors can
+  reach both the active tab (label) and its panel. One radio is `checked` for the
+  initial selection.
+
+  BEM convention (default): one block `tabs`; elements via hyphen —
+  tabs-radio, tabs-list, tabs-tab, tabs-panel. The active-tab modifier
+  `tabs-tab_active` is NOT a class toggled by JS: it is driven purely by
+  `:checked` in the SCSS (a real CSS state), demonstrating that a BEM element
+  modifier can be a stylistic state without scripting. Elements descend from the
+  block — no `_a_b` chains.
+
+  HONEST LIMITATION — see tabs.utility.html header: this CSS-only version gives
+  role="tablist"/tab/tabpanel + aria-selected and real focusable controls, but
+  full WAI-ARIA tabs (roving tabindex + Arrow/Home/End key handling) need ~15
+  lines of vanilla JS that is deliberately omitted. Do not fake a framework.
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css); .dark overrides
+  them, so this markup needs no dark-specific classes.
+-->
+
+<!-- demo wrapper: neutral page surface only; not part of the component -->
+<div class="tabsDemo">
+
+  <div class="tabs">
+    <!--
+      The radios live FIRST so they precede the list and the panels as siblings.
+      They are visually hidden (tabs-radio = sr-only in SCSS) but keyboard-
+      focusable; the matching <label> is the visible tab.
+    -->
+    <input type="radio" name="tabs" id="tab-overview" class="tabs-radio" checked />
+    <input type="radio" name="tabs" id="tab-activity" class="tabs-radio" />
+    <input type="radio" name="tabs" id="tab-settings" class="tabs-radio" />
+
+    <!-- tablist: the visible tabs are <label>s bound to the radios above -->
+    <div role="tablist" aria-label="Account sections" class="tabs-list">
+      <label for="tab-overview" id="tab-overview-label" role="tab" aria-selected="true" aria-controls="panel-overview" class="tabs-tab">Overview</label>
+      <label for="tab-activity" id="tab-activity-label" role="tab" aria-selected="false" aria-controls="panel-activity" class="tabs-tab">Activity</label>
+
+      <!-- disabled tab: no radio to bind, so it's an inert label, not focusable -->
+      <span role="tab" aria-selected="false" aria-disabled="true" class="tabs-tab tabs-tab_disabled">Billing</span>
+
+      <label for="tab-settings" id="tab-settings-label" role="tab" aria-selected="false" aria-controls="panel-settings" class="tabs-tab">Settings</label>
+    </div>
+
+    <!-- panels: hidden by default; the matching :checked radio reveals one -->
+    <section id="panel-overview" role="tabpanel" aria-labelledby="tab-overview-label" tabindex="0" class="tabs-panel">
+      <p>Overview panel. Keep the skeleton neutral; the surrounding design system
+        supplies the real colors, type and spacing via the @theme tokens.</p>
+    </section>
+
+    <section id="panel-activity" role="tabpanel" aria-labelledby="tab-activity-label" tabindex="0" class="tabs-panel">
+      <p>Activity panel. Each panel is shown only when its sibling radio is
+        checked — no JavaScript involved.</p>
+    </section>
+
+    <section id="panel-settings" role="tabpanel" aria-labelledby="tab-settings-label" tabindex="0" class="tabs-panel">
+      <p>Settings panel. Replace the token VALUES under your design system; the
+        token NAMES stay stable across both approaches.</p>
+    </section>
+  </div>
+
+</div>

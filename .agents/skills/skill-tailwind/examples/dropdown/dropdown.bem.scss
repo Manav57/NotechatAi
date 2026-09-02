@@ -1,0 +1,137 @@
+/*
+  EXAMPLE · dropdown · Approach (B): BEM + @apply — styles for dropdown.bem.html.
+
+  Same UI as dropdown.utility.html (a native <details>/<summary> menu: trigger +
+  rotating chevron, an animated surface, link + button items, a separator and a
+  destructive item), expressed with @apply grouped by property kind. Group order
+  follows the engine's property-order:
+    layout/position → size → spacing → background/border/shape → typography →
+    effects/motion → interaction; then nested states; then modifiers.
+
+  NO framework: native <details> owns [open]; <summary> is keyboard-operable. The
+  only JS is a one-line native close-on-select in the markup. HONEST LIMIT: this
+  is a DISCLOSURE, not a WAI-ARIA role="menu" — full Arrow/Home/End/type-ahead
+  keyboard menu semantics need ~15 lines of native JS. See the .html headers.
+
+  v4 enter animation (no JS state): the menu only paints while the item has the
+  native [open] attribute. We animate opacity + translate on the open frame, and
+  @starting-style supplies the *initial* frame the browser transitions FROM. The
+  `starting:` @apply variant is valid here. prefers-reduced-motion is honored with
+  motion-reduce:transition-none.
+
+  @reference — REQUIRED if this SCSS is compiled SEPARATELY from your Tailwind
+  entry (a CSS module, an isolated stylesheet, a framework's scoped <style>):
+  point it at the entry that does `@import "tailwindcss"`, otherwise @apply cannot
+  see the utilities/tokens. If this file is part of the same build that already
+  imports tailwindcss, DROP this line — a second reference is redundant.
+*/
+
+@reference "../app.css"; /* ← path to YOUR entry that imports tailwindcss */
+
+/* ───────────────────────── Dropdown (native <details>) ───────────────────────── */
+
+.dropdown {
+  /* positioning context for the absolute menu */
+  @apply relative;
+  /* shrink to the trigger so it doesn't stretch across its parent */
+  @apply w-fit;
+
+  /* element: trigger — the <summary> button (keyboard-operable on its own) */
+  &-trigger {
+    @apply inline-flex items-center justify-between gap-2;
+    @apply h-10 min-w-44;
+    @apply px-3;
+    @apply rounded-md border border-border bg-background;
+    @apply text-sm font-medium text-foreground;
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+    /* hide the default disclosure marker, show pointer */
+    @apply cursor-pointer select-none list-none;
+    &::-webkit-details-marker { @apply hidden; }
+
+    &:hover         { @apply bg-muted; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+    &:active        { @apply bg-muted; }
+  }
+
+  /* element: icon — chevron; rotates when the parent <details> is [open] */
+  &-icon {
+    @apply size-4 shrink-0;
+    @apply text-muted-foreground;
+    @apply transition-transform duration-200 ease-out motion-reduce:transition-none;
+  }
+
+  /* element: menu — the floating surface; closed (initial) frame.
+     It only paints while the item is [open]; @starting-style + the [open] rule
+     below drive the v4 enter animation with no JS state. */
+  &-menu {
+    /* anchored below the trigger */
+    @apply absolute left-0 top-full z-20;
+    @apply w-56;
+    /* mt-2 lifts it off the trigger; p-1 pads the item list */
+    @apply mt-2 p-1;
+    @apply rounded-md border border-border bg-card shadow-lg;
+    @apply text-card-foreground;
+    /* closed frame */
+    @apply opacity-0 -translate-y-1;
+    @apply transition-[opacity,transform] duration-150 ease-out motion-reduce:transition-none;
+  }
+
+  /* element: item — a link OR a button row; identical look for both */
+  &-item {
+    @apply flex items-center gap-2;
+    @apply w-full;
+    @apply px-2 py-1.5;
+    @apply rounded-sm;
+    @apply text-left text-sm text-foreground;
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+    @apply cursor-pointer;
+
+    /* hover + keyboard focus share the soft accent surface */
+    &:hover         { @apply bg-accent text-accent-foreground; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; @apply bg-accent text-accent-foreground; }
+    &:active        { @apply bg-accent/80; }
+
+    /* modifier (element): danger — destructive tone (e.g. Sign out) */
+    &_danger {
+      @apply text-danger;
+
+      &:hover         { @apply bg-danger text-danger-foreground; }
+      &:focus-visible { @apply bg-danger text-danger-foreground; }
+      &:active        { @apply bg-danger/90; }
+    }
+  }
+
+  /* element: separator — a decorative 1px divider between item groups */
+  &-separator {
+    @apply h-px;
+    @apply my-1;
+    @apply bg-border;
+  }
+
+  /* --- state: open --- (driven by the native [open] attribute on the <details>;
+     the descendant selectors are required because the menu/icon react to the
+     item's open state) */
+  &[open] {
+    .dropdown-icon { @apply rotate-180; }
+
+    .dropdown-menu {
+      /* open (target) frame */
+      @apply opacity-100 translate-y-0;
+    }
+  }
+
+  /* enter animation: the frame the browser transitions FROM on open */
+  @starting-style {
+    &[open] .dropdown-menu {
+      @apply opacity-0 -translate-y-1;
+    }
+  }
+}
+
+/* ───────────────────── Demo wrapper (layout only) ───────────────────── */
+
+.dropdownDemo {
+  @apply flex min-h-64 items-start justify-center;
+  @apply p-6;
+  @apply bg-background text-foreground;
+}

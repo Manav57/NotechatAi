@@ -1,0 +1,95 @@
+/*
+  EXAMPLE · list · Approach (B): BEM + @apply — styles for list.bem.html.
+
+  Same UI as in list.utility.html (list-group: <ul> → <li> with clickable
+  rows; leading icon, title + secondary text, trailing meta/badge; one row is
+  active). The look is assembled from utilities via @apply, grouped by
+  property type in the order: layout → sizing → spacing → background/borders/shape →
+  typography → effects/motion → interaction; then states; then
+  modifiers.
+
+  @reference — NEEDED if this SCSS is compiled SEPARATELY from the entry CSS
+  (a CSS module, an isolated <style>, a framework scoped style): @apply and tokens
+  resolve against your Tailwind entry. If the file is part of the same build that
+  already has `@import "tailwindcss"`, REMOVE this line (a second reference is redundant).
+*/
+@reference "../app.css"; /* ← path to YOUR entry that imports tailwindcss */
+
+/*
+  Tokens — the canonical SEMANTIC ones (templates/theme.css). Since every color
+  is a token that .dark overrides, dark mode requires no rules here.
+
+  BEM: block list; elements list-item, list-leading, list-content, list-title,
+  list-subtitle, list-meta; element modifier list-item_active.
+*/
+
+.list {
+  @apply w-full max-w-md;
+  /* divide-y draws separators BETWEEN <li> (the
+     last has no line); overflow-hidden clips the rows to the rounded corners */
+  @apply overflow-hidden rounded-lg border border-border bg-card divide-y divide-border;
+  /* default color on the card surface */
+  @apply text-card-foreground;
+
+  /* element: row — a clickable <a>, full set of states */
+  &-item {
+    @apply flex items-center gap-3;
+    @apply px-4 py-3;
+    @apply text-sm;
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+
+    /* states. focus-visible — a visible ring via outline; -outline-offset
+       draws it INSIDE the row so it isn't clipped by the container's overflow-hidden */
+    &:hover         { @apply bg-muted; }
+    &:focus-visible { @apply outline-2 -outline-offset-2 outline-ring; }
+    &:active        { @apply bg-muted; }
+
+    /* element modifier: the active row (= aria-current="page").
+       Persistent background + left accent via inset box-shadow (doesn't shift content,
+       unlike border-l). bg-primary comes from the token variable. */
+    &_active {
+      @apply bg-muted;
+      box-shadow: inset 2px 0 0 0 var(--color-primary);
+
+      &:hover  { @apply bg-muted; }
+      &:active { @apply bg-muted; }
+    }
+  }
+
+  /* element: leading icon (decorative, aria-hidden in the markup) */
+  &-leading {
+    @apply size-5 shrink-0;
+    @apply text-muted-foreground;
+  }
+
+  /* element: main block — title + secondary text in a column.
+     min-w-0 allows truncate on the child rows inside the flex row */
+  &-content {
+    @apply flex min-w-0 flex-col;
+  }
+
+  /* element: the row's main text */
+  &-title {
+    @apply truncate font-medium text-foreground;
+  }
+
+  /* element: secondary (muted) text */
+  &-subtitle {
+    @apply truncate text-muted-foreground;
+  }
+
+  /* element: trailing meta — badge/counter at the right edge (ml-auto pushes it).
+     The base is neutral (muted); the tone is moved into modifiers. */
+  &-meta {
+    @apply ml-auto inline-flex shrink-0 items-center;
+    @apply h-5;
+    @apply px-2;
+    @apply rounded-sm bg-muted;
+    @apply text-xs font-medium text-muted-foreground;
+
+    /* element modifier: accent counter (pair to the active row) */
+    &_accent  { @apply bg-primary text-primary-foreground; }
+    /* element modifier: "success" status (the tone is echoed by a word, not only color) */
+    &_success { @apply bg-success/15 text-success; }
+  }
+}

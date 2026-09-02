@@ -1,0 +1,263 @@
+<!--
+  EXAMPLE · pagination · Approach (A): UTILITY-FIRST — classes in the markup.
+
+  Pagination: <nav aria-label="Pagination"> with a <ul> of page links + prev/next
+  controls. The current page is marked aria-current="page" and is NOT a link
+  (it's a <span>, not an <a> — nowhere to go). Prev/next controls at the edges of
+  the range are "disabled": an <a> can't truly be disabled, so at the edge we
+  render a <span> with aria-disabled="true" and an inactive style (cursor-not-allowed,
+  dimming) — it's not focusable and not clickable.
+
+  @container — on a NARROW container the NUMBERED list collapses: the page numbers
+  are hidden (@max-sm:hidden), prev/next remain, and a compact "Page X of Y" status
+  appears between them (hidden by default, visible @max-sm:flex). The breakpoint is
+  measured from the PARENT's width (container queries in v4), not the viewport — so
+  the component collapses the same way in any layout column.
+
+  Same structure and states as in pagination.bem.html (diff A vs B on the same UI).
+  No framework: plain HTML, no JS — navigation via ordinary <a href>.
+
+  Link states: hover / focus-visible / active; the active page is
+  aria-current="page" (+ visual emphasis). Visible focus — outline-ring
+  (doesn't shift layout). Motion — transition-colors + motion-reduce.
+
+  Tokens — canonical SEMANTIC ones (see templates/theme.css): bg-background,
+  text-foreground, text-muted-foreground, border-border, bg-accent, bg-primary/
+  text-primary-foreground, outline-ring. Token values are placeholders for your
+  design system; the names are stable. Dark mode works "for free" — every color
+  is a token that .dark overrides, so there are no dark: variants of its own here.
+
+  The demo wrapper below only provides a neutral background and padding; it is not
+  part of the component. TWO pagination states are shown: (1) first page — prev
+  disabled; (2) middle of the range — both controls active.
+-->
+
+<div class="flex flex-col gap-8 bg-background p-8 text-foreground">
+
+  <!-- ───── State 1: current page = 1 (prev disabled at the edge) ───── -->
+  <div class="@container">
+    <nav aria-label="Pagination">
+      <ul class="flex items-center gap-1">
+
+        <!-- Prev: on the FIRST page there is no link → <span aria-disabled> (not focusable) -->
+        <li>
+          <span
+            aria-disabled="true"
+            class="inline-flex h-9 items-center justify-center gap-1 px-3
+                   rounded-md border border-border bg-background
+                   text-sm font-medium text-muted-foreground
+                   opacity-50 cursor-not-allowed pointer-events-none select-none"
+          >
+            <svg class="size-4" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M12 5l-5 5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Prev
+          </span>
+        </li>
+
+        <!-- Numbered list: each item is hidden on a narrow container (@max-sm:hidden) -->
+        <li class="@max-sm:hidden">
+          <span
+            aria-current="page"
+            class="inline-flex h-9 min-w-9 items-center justify-center px-3
+                   rounded-md border border-transparent
+                   bg-primary text-sm font-medium text-primary-foreground
+                   select-none"
+          >1</span>
+        </li>
+        <li class="@max-sm:hidden">
+          <a
+            href="?page=2"
+            class="inline-flex h-9 min-w-9 items-center justify-center px-3
+                   rounded-md border border-border bg-background
+                   text-sm font-medium text-foreground
+                   transition-colors duration-150 motion-reduce:transition-none
+                   hover:bg-accent hover:text-accent-foreground
+                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                   active:bg-accent/80"
+          >2</a>
+        </li>
+        <li class="@max-sm:hidden">
+          <a
+            href="?page=3"
+            class="inline-flex h-9 min-w-9 items-center justify-center px-3
+                   rounded-md border border-border bg-background
+                   text-sm font-medium text-foreground
+                   transition-colors duration-150 motion-reduce:transition-none
+                   hover:bg-accent hover:text-accent-foreground
+                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                   active:bg-accent/80"
+          >3</a>
+        </li>
+
+        <!-- Ellipsis: decorative range break, not focusable -->
+        <li class="@max-sm:hidden" aria-hidden="true">
+          <span class="inline-flex h-9 min-w-9 items-center justify-center text-sm text-muted-foreground select-none">…</span>
+        </li>
+
+        <li class="@max-sm:hidden">
+          <a
+            href="?page=12"
+            class="inline-flex h-9 min-w-9 items-center justify-center px-3
+                   rounded-md border border-border bg-background
+                   text-sm font-medium text-foreground
+                   transition-colors duration-150 motion-reduce:transition-none
+                   hover:bg-accent hover:text-accent-foreground
+                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                   active:bg-accent/80"
+          >12</a>
+        </li>
+
+        <!-- Compact status: shown ONLY on a narrow container (instead of numbers) -->
+        <li class="hidden grow items-center justify-center @max-sm:flex">
+          <span class="text-sm font-medium text-muted-foreground">Page 1 of 12</span>
+        </li>
+
+        <!-- Next: active link (there is a next page) -->
+        <li>
+          <a
+            href="?page=2"
+            rel="next"
+            class="inline-flex h-9 items-center justify-center gap-1 px-3
+                   rounded-md border border-border bg-background
+                   text-sm font-medium text-foreground
+                   transition-colors duration-150 motion-reduce:transition-none
+                   hover:bg-accent hover:text-accent-foreground
+                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                   active:bg-accent/80"
+          >
+            Next
+            <svg class="size-4" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M8 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- ───── State 2: current page = 6 (both controls active) ───── -->
+  <div class="@container">
+    <nav aria-label="Pagination">
+      <ul class="flex items-center gap-1">
+
+        <!-- Prev: active link (there is a previous page) -->
+        <li>
+          <a
+            href="?page=5"
+            rel="prev"
+            class="inline-flex h-9 items-center justify-center gap-1 px-3
+                   rounded-md border border-border bg-background
+                   text-sm font-medium text-foreground
+                   transition-colors duration-150 motion-reduce:transition-none
+                   hover:bg-accent hover:text-accent-foreground
+                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                   active:bg-accent/80"
+          >
+            <svg class="size-4" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M12 5l-5 5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Prev
+          </a>
+        </li>
+
+        <li class="@max-sm:hidden">
+          <a
+            href="?page=1"
+            class="inline-flex h-9 min-w-9 items-center justify-center px-3
+                   rounded-md border border-border bg-background
+                   text-sm font-medium text-foreground
+                   transition-colors duration-150 motion-reduce:transition-none
+                   hover:bg-accent hover:text-accent-foreground
+                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                   active:bg-accent/80"
+          >1</a>
+        </li>
+
+        <li class="@max-sm:hidden" aria-hidden="true">
+          <span class="inline-flex h-9 min-w-9 items-center justify-center text-sm text-muted-foreground select-none">…</span>
+        </li>
+
+        <li class="@max-sm:hidden">
+          <a
+            href="?page=5"
+            class="inline-flex h-9 min-w-9 items-center justify-center px-3
+                   rounded-md border border-border bg-background
+                   text-sm font-medium text-foreground
+                   transition-colors duration-150 motion-reduce:transition-none
+                   hover:bg-accent hover:text-accent-foreground
+                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                   active:bg-accent/80"
+          >5</a>
+        </li>
+
+        <!-- Current page: aria-current="page", <span> (not a link) -->
+        <li class="@max-sm:hidden">
+          <span
+            aria-current="page"
+            class="inline-flex h-9 min-w-9 items-center justify-center px-3
+                   rounded-md border border-transparent
+                   bg-primary text-sm font-medium text-primary-foreground
+                   select-none"
+          >6</span>
+        </li>
+
+        <li class="@max-sm:hidden">
+          <a
+            href="?page=7"
+            class="inline-flex h-9 min-w-9 items-center justify-center px-3
+                   rounded-md border border-border bg-background
+                   text-sm font-medium text-foreground
+                   transition-colors duration-150 motion-reduce:transition-none
+                   hover:bg-accent hover:text-accent-foreground
+                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                   active:bg-accent/80"
+          >7</a>
+        </li>
+
+        <li class="@max-sm:hidden" aria-hidden="true">
+          <span class="inline-flex h-9 min-w-9 items-center justify-center text-sm text-muted-foreground select-none">…</span>
+        </li>
+
+        <li class="@max-sm:hidden">
+          <a
+            href="?page=12"
+            class="inline-flex h-9 min-w-9 items-center justify-center px-3
+                   rounded-md border border-border bg-background
+                   text-sm font-medium text-foreground
+                   transition-colors duration-150 motion-reduce:transition-none
+                   hover:bg-accent hover:text-accent-foreground
+                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                   active:bg-accent/80"
+          >12</a>
+        </li>
+
+        <!-- Compact status on a narrow container -->
+        <li class="hidden grow items-center justify-center @max-sm:flex">
+          <span class="text-sm font-medium text-muted-foreground">Page 6 of 12</span>
+        </li>
+
+        <!-- Next: active link (there is a next page) -->
+        <li>
+          <a
+            href="?page=7"
+            rel="next"
+            class="inline-flex h-9 items-center justify-center gap-1 px-3
+                   rounded-md border border-border bg-background
+                   text-sm font-medium text-foreground
+                   transition-colors duration-150 motion-reduce:transition-none
+                   hover:bg-accent hover:text-accent-foreground
+                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                   active:bg-accent/80"
+          >
+            Next
+            <svg class="size-4" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M8 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+</div>

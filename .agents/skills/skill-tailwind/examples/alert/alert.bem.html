@@ -1,0 +1,108 @@
+<!--
+  EXAMPLE · alert · Approach (B): BEM markup — styles in alert.bem.scss.
+
+  Same UI as alert.utility.html (info / success / warning / danger notification
+  with icon slot, title, body and a dismiss button), expressed with semantic BEM
+  class names. No framework: plain HTML. The only inline JS is a native platform
+  call (the dismiss button removes its own alert) — not a framework.
+
+  BEM convention (canonical default): one block `alert`; block modifiers via
+  underscore (alert_success / alert_warning / alert_danger; info is the
+  un-modified base); elements via hyphen (alert-icon / alert-title / alert-body
+  / alert-close). Elements descend from the block — no `-a-b` chains.
+
+  Accessibility mirrors the utility version: role="alert" (urgent) vs
+  role="status" (polite); icon is aria-hidden; tone duplicated in the title text;
+  dismiss is a real <button> with aria-label and full interactive states.
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css); .dark overrides
+  them, so this markup needs no dark-specific classes.
+-->
+
+<!-- demo wrapper: neutral page surface -->
+<div class="flex flex-col gap-4 bg-background p-6 text-foreground">
+
+  <!-- info (base variant — no modifier) -->
+  <div class="alert" role="status">
+    <svg class="alert-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.5" />
+      <path d="M10 9v4.5M10 6.5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+
+    <div class="alert-content">
+      <p class="alert-title">Heads up</p>
+      <p class="alert-body">
+        This is an informational message. Keep the skeleton neutral; the design
+        system supplies the real tone via the @theme tokens.
+      </p>
+    </div>
+
+    <button type="button" class="alert-close" aria-label="Dismiss"
+            onclick="this.closest('.alert').remove()">
+      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- success -->
+  <div class="alert alert_success" role="status">
+    <svg class="alert-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.5" />
+      <path d="M6.5 10.25l2.25 2.25L13.5 7.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+
+    <div class="alert-content">
+      <p class="alert-title">Saved</p>
+      <p class="alert-body">Your changes were saved successfully.</p>
+    </div>
+
+    <button type="button" class="alert-close" aria-label="Dismiss"
+            onclick="this.closest('.alert').remove()">
+      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- warning -->
+  <div class="alert alert_warning" role="alert">
+    <svg class="alert-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M10 3.5l6.5 11.25H3.5L10 3.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+      <path d="M10 8.5v3M10 13.5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+
+    <div class="alert-content">
+      <p class="alert-title">Check your input</p>
+      <p class="alert-body">Some fields need attention before you can continue.</p>
+    </div>
+
+    <button type="button" class="alert-close" aria-label="Dismiss"
+            onclick="this.closest('.alert').remove()">
+      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- danger -->
+  <div class="alert alert_danger" role="alert">
+    <svg class="alert-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.5" />
+      <path d="M7.5 7.5l5 5M12.5 7.5l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+
+    <div class="alert-content">
+      <p class="alert-title">Something went wrong</p>
+      <p class="alert-body">The action could not be completed. Please try again.</p>
+    </div>
+
+    <button type="button" class="alert-close" aria-label="Dismiss"
+            onclick="this.closest('.alert').remove()">
+      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+</div>

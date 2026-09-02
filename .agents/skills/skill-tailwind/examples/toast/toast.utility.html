@@ -1,0 +1,237 @@
+<!--
+  EXAMPLE · toast · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as toast.bem.html, so you can diff A vs B on identical structure.
+  Framework-agnostic: plain HTML + CSS. A toast region holding individual
+  toasts in four tones (info / success / warning / danger), each with an icon,
+  a title, a body and an accessible close (×) button.
+
+  ── ARIA model (the point of this example) ────────────────────────────────
+    • The REGION wrapper is role="region" + aria-label so assistive tech can
+      jump to the notification area and announce it as a landmark.
+    • Each toast is role="status" aria-live="polite" (info / success / warning)
+      so a screen reader announces it WITHOUT stealing focus. The danger toast
+      uses role="alert" (implicit aria-live="assertive") so errors interrupt.
+    • The close button is a real <button type="button"> with aria-label, since
+      its only content is a decorative × glyph (aria-hidden). Status icons are
+      aria-hidden too — the tone is carried by the title text, not just color.
+
+  ── v4 enter/leave animation (no framework) ──────────────────────────────
+    Appear: the `starting:` variant (@starting-style) supplies the initial
+    frame the browser transitions FROM; transition-discrete keeps `display`
+    animatable so the toast can fade/slide in when it is first inserted /
+    un-hidden. Leave: a plain `transition` on opacity/transform plays on
+    removal. prefers-reduced-motion is honored via motion-reduce:transition-none.
+
+  ── ~JS needed (honest note — NOT a framework) ───────────────────────────
+    This file is the STRUCTURE + STYLE only. A queue, auto-dismiss timers and
+    click-to-close need a few lines of native platform JS — there is no CSS-only
+    way to remove a node on a timer or after a click. A minimal vanilla sketch
+    (no framework, no build step) is given at the very bottom; wire it up or
+    swap in your own. Without it the toasts simply render statically.
+
+  Tokens are the canonical SEMANTIC ones from templates/theme.css
+  (bg-card / text-card-foreground, border-border, bg-success/-foreground,
+  bg-warning/-foreground, bg-danger/-foreground, text-muted-foreground,
+  outline-ring …). Replace the token VALUES under your design system; the NAMES
+  stay stable. Dark theme works for free — every color is a token .dark overrides.
+-->
+
+<!-- demo wrapper: neutral page surface; not part of the component -->
+<div class="min-h-60 bg-background p-6 text-foreground">
+
+  <!--
+    region: the live notification landmark. `fixed` + bottom-right is one common
+    placement; `pointer-events-none` lets clicks pass through the gaps between
+    toasts, while each toast re-enables pointer-events on itself.
+  -->
+  <section
+    role="region"
+    aria-label="Notifications"
+    class="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex flex-col items-end gap-2 p-4
+           sm:inset-x-auto sm:right-0"
+  >
+
+    <!-- ── INFO (default) ── role="status" + aria-live="polite" ───────────── -->
+    <div
+      role="status"
+      aria-live="polite"
+      class="pointer-events-auto relative flex w-full max-w-sm items-start gap-3
+             rounded-lg border border-border bg-card p-4 pr-10 text-card-foreground shadow-lg
+             opacity-100 translate-y-0
+             transition-[opacity,transform,display] duration-200 ease-out transition-discrete
+             motion-reduce:transition-none
+             starting:opacity-0 starting:translate-y-2"
+    >
+      <!-- icon: tone color via text-*, decorative so aria-hidden -->
+      <svg class="mt-0.5 size-5 shrink-0 text-muted-foreground" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm1-11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm-1 3a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1Z" clip-rule="evenodd" />
+      </svg>
+
+      <div class="flex min-w-0 flex-col gap-0.5">
+        <p class="text-sm font-semibold leading-none">Update available</p>
+        <p class="text-sm leading-relaxed text-muted-foreground">A new version is ready to install.</p>
+      </div>
+
+      <!-- close: real button, labelled because content is a decorative glyph -->
+      <button
+        type="button"
+        aria-label="Dismiss notification"
+        class="absolute right-2 top-2 inline-flex size-7 shrink-0 items-center justify-center
+               rounded-sm border border-transparent text-muted-foreground
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:bg-muted hover:text-foreground
+               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               active:bg-muted
+               disabled:opacity-50 disabled:pointer-events-none
+               cursor-pointer"
+      >
+        <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- ── SUCCESS ── tone via border/icon color; role="status" ───────────── -->
+    <div
+      role="status"
+      aria-live="polite"
+      class="pointer-events-auto relative flex w-full max-w-sm items-start gap-3
+             rounded-lg border border-success/40 bg-card p-4 pr-10 text-card-foreground shadow-lg
+             opacity-100 translate-y-0
+             transition-[opacity,transform,display] duration-200 ease-out transition-discrete
+             motion-reduce:transition-none
+             starting:opacity-0 starting:translate-y-2"
+    >
+      <svg class="mt-0.5 size-5 shrink-0 text-success" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.7-9.3a1 1 0 0 0-1.4-1.4L9 10.6 7.7 9.3a1 1 0 0 0-1.4 1.4l2 2a1 1 0 0 0 1.4 0l4-4Z" clip-rule="evenodd" />
+      </svg>
+
+      <div class="flex min-w-0 flex-col gap-0.5">
+        <p class="text-sm font-semibold leading-none">Changes saved</p>
+        <p class="text-sm leading-relaxed text-muted-foreground">Your profile was updated successfully.</p>
+      </div>
+
+      <button
+        type="button"
+        aria-label="Dismiss notification"
+        class="absolute right-2 top-2 inline-flex size-7 shrink-0 items-center justify-center
+               rounded-sm border border-transparent text-muted-foreground
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:bg-muted hover:text-foreground
+               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               active:bg-muted
+               disabled:opacity-50 disabled:pointer-events-none
+               cursor-pointer"
+      >
+        <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- ── WARNING ── role="status" (non-urgent caution) ──────────────────── -->
+    <div
+      role="status"
+      aria-live="polite"
+      class="pointer-events-auto relative flex w-full max-w-sm items-start gap-3
+             rounded-lg border border-warning/40 bg-card p-4 pr-10 text-card-foreground shadow-lg
+             opacity-100 translate-y-0
+             transition-[opacity,transform,display] duration-200 ease-out transition-discrete
+             motion-reduce:transition-none
+             starting:opacity-0 starting:translate-y-2"
+    >
+      <svg class="mt-0.5 size-5 shrink-0 text-warning" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M9.1 2.6a1 1 0 0 1 1.8 0l7 13A1 1 0 0 1 17 17H3a1 1 0 0 1-.9-1.5l7-13ZM11 8a1 1 0 1 0-2 0v3a1 1 0 1 0 2 0V8Zm-1 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z" clip-rule="evenodd" />
+      </svg>
+
+      <div class="flex min-w-0 flex-col gap-0.5">
+        <p class="text-sm font-semibold leading-none">Storage almost full</p>
+        <p class="text-sm leading-relaxed text-muted-foreground">You have used 90% of your quota.</p>
+      </div>
+
+      <button
+        type="button"
+        aria-label="Dismiss notification"
+        class="absolute right-2 top-2 inline-flex size-7 shrink-0 items-center justify-center
+               rounded-sm border border-transparent text-muted-foreground
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:bg-muted hover:text-foreground
+               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               active:bg-muted
+               disabled:opacity-50 disabled:pointer-events-none
+               cursor-pointer"
+      >
+        <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- ── DANGER ── role="alert" (assertive — interrupts the screen reader) ─ -->
+    <div
+      role="alert"
+      class="pointer-events-auto relative flex w-full max-w-sm items-start gap-3
+             rounded-lg border border-danger/40 bg-card p-4 pr-10 text-card-foreground shadow-lg
+             opacity-100 translate-y-0
+             transition-[opacity,transform,display] duration-200 ease-out transition-discrete
+             motion-reduce:transition-none
+             starting:opacity-0 starting:translate-y-2"
+    >
+      <svg class="mt-0.5 size-5 shrink-0 text-danger" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM11 6a1 1 0 1 0-2 0v4a1 1 0 1 0 2 0V6Zm-1 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z" clip-rule="evenodd" />
+      </svg>
+
+      <div class="flex min-w-0 flex-col gap-0.5">
+        <p class="text-sm font-semibold leading-none">Upload failed</p>
+        <p class="text-sm leading-relaxed text-muted-foreground">The connection was lost. Please try again.</p>
+      </div>
+
+      <button
+        type="button"
+        aria-label="Dismiss notification"
+        class="absolute right-2 top-2 inline-flex size-7 shrink-0 items-center justify-center
+               rounded-sm border border-transparent text-muted-foreground
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:bg-muted hover:text-foreground
+               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               active:bg-muted
+               disabled:opacity-50 disabled:pointer-events-none
+               cursor-pointer"
+      >
+        <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+  </section>
+</div>
+
+<!--
+  ── ~JS (native platform, NOT a framework) — queue + auto-dismiss + close ──
+  Minimal vanilla sketch: append a cloned toast, start a timer, animate out by
+  toggling a hidden state, remove the node. No build step, no framework. Adapt
+  the markup template to your needs; this is intentionally tiny.
+
+  <script>
+    const region = document.querySelector('[role="region"][aria-label="Notifications"]');
+
+    // close on the × button (event delegation)
+    region.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[aria-label="Dismiss notification"]');
+      if (btn) dismiss(btn.closest('[role="status"], [role="alert"]'));
+    });
+
+    function dismiss(toast) {
+      if (!toast) return;
+      toast.classList.add('opacity-0', 'translate-y-2'); // play the leave transition
+      toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+    }
+
+    // auto-dismiss every currently-rendered toast after 5s (skip if reduced motion off-screen, etc.)
+    region.querySelectorAll('[role="status"], [role="alert"]').forEach((toast) => {
+      setTimeout(() => dismiss(toast), 5000);
+    });
+  </script>
+-->

@@ -1,0 +1,109 @@
+<!--
+  EXAMPLE · select · Approach (B): BEM markup — styles in select.bem.scss.
+
+  Same UI as select.utility.html (label + native <select> with a custom overlaid
+  chevron + hint/error, wired via aria-describedby). Here the markup carries
+  SEMANTIC BEM class names; all visual styling lives in select.bem.scss via
+  grouped @apply.
+
+  BEM convention (skill): block `select`; elements `select-label`,
+  `select-control` (the native <select>), `select-icon` (the chevron),
+  `select-hint`, `select-error`; block modifier `select_invalid`. One block per
+  component; elements always hang off the block (no _a_b chains).
+
+  The native <select> is kept: appearance-none strips the OS chevron, the custom
+  `select-icon` is overlaid and pointer-events-none so clicks fall through and the
+  native popup still opens. States covered: focus-visible (ring-ring), disabled,
+  and validation via user-invalid: in the SCSS — NOT invalid:/peer-invalid:, since
+  those fire before any interaction. Tokens are the canonical SEMANTIC ones.
+-->
+
+<!-- demo wrapper: just lays the fields out for preview; not part of the component -->
+<form class="flex max-w-sm flex-col gap-6 p-6">
+
+  <!-- ───────── Default (with hint) ───────── -->
+  <div class="select">
+    <label for="country" class="select-label">Country</label>
+
+    <div class="select-field">
+      <select
+        id="country"
+        name="country"
+        aria-describedby="country-hint"
+        class="select-control"
+      >
+        <option value="us">United States</option>
+        <option value="de">Germany</option>
+        <option value="jp">Japan</option>
+        <option value="br">Brazil</option>
+      </select>
+
+      <!-- custom chevron: decorative; the SCSS makes it pointer-events-none -->
+      <svg class="select-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+    <p id="country-hint" class="select-hint">
+      Used to localize prices and shipping.
+    </p>
+  </div>
+
+  <!-- ───────── Disabled ───────── -->
+  <div class="select">
+    <label for="plan" class="select-label">Plan</label>
+
+    <div class="select-field">
+      <select
+        id="plan"
+        name="plan"
+        disabled
+        aria-describedby="plan-hint"
+        class="select-control"
+      >
+        <option value="pro">Pro (current)</option>
+        <option value="team">Team</option>
+      </select>
+
+      <svg class="select-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+    <p id="plan-hint" class="select-hint">
+      Locked while your billing period is active.
+    </p>
+  </div>
+
+  <!-- ───────── Invalid (block modifier + required + empty value → user-invalid) ───────── -->
+  <div class="select select_invalid">
+    <label for="role" class="select-label">Role</label>
+
+    <div class="select-field">
+      <select
+        id="role"
+        name="role"
+        required
+        aria-invalid="true"
+        aria-describedby="role-error"
+        class="select-control"
+      >
+        <!-- empty value + disabled placeholder: not a valid choice for `required` -->
+        <option value="" disabled selected>Select a role…</option>
+        <option value="admin">Admin</option>
+        <option value="editor">Editor</option>
+        <option value="viewer">Viewer</option>
+      </select>
+
+      <svg class="select-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+    <!-- error is announced and linked via aria-describedby; never colour-only -->
+    <p id="role-error" class="select-error">
+      Please choose a role to continue.
+    </p>
+  </div>
+
+</form>

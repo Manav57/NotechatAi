@@ -1,0 +1,137 @@
+<!--
+  EXAMPLE · pagination · Approach (B): BEM markup — styles in pagination.bem.scss.
+
+  Same UI as in pagination.utility.html (numbered pagination + prev/next;
+  current page aria-current="page"; on a narrow container the numbers collapse
+  into a compact "Page X of Y" status via @container). Here the markup carries
+  SEMANTIC BEM names; the appearance is assembled from utilities via @apply.
+
+  The skill's BEM convention (camelCase for multi-word parts):
+    block           pagination
+    elements        pagination-list, pagination-item, pagination-link,
+                    pagination-prev, pagination-next, pagination-ellipsis,
+                    pagination-status
+    elem modifier   pagination-link_current   (= current page, aria-current)
+                    pagination-prev_disabled  (= prev at the edge, aria-disabled)
+                    pagination-next_disabled  (= next at the edge, aria-disabled)
+
+  Parity with approach A: structure, states, and @container behavior are identical;
+  only WHERE the style lives differs (in SCSS, not in markup classes).
+
+  No framework: plain HTML, no JS — navigation via ordinary <a href>.
+  The current page and the "disabled" prev/next are <span> (not <a>): the current
+  one has nowhere to lead, and a link can't truly be disabled, so at the edge it's
+  an inactive span with aria-disabled="true" (not focusable, not clickable).
+-->
+
+<div class="flex flex-col gap-8 bg-background p-8 text-foreground">
+
+  <!-- ───── State 1: current page = 1 (prev disabled at the edge) ───── -->
+  <div class="pagination">
+    <nav aria-label="Pagination">
+      <ul class="pagination-list">
+
+        <!-- Prev: on the FIRST page there is no link → inactive <span> -->
+        <li class="pagination-item">
+          <span class="pagination-prev pagination-prev_disabled" aria-disabled="true">
+            <svg class="pagination-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M12 5l-5 5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Prev
+          </span>
+        </li>
+
+        <!-- Numbered list (collapses on a narrow container) -->
+        <li class="pagination-item pagination-item_numbered">
+          <span class="pagination-link pagination-link_current" aria-current="page">1</span>
+        </li>
+        <li class="pagination-item pagination-item_numbered">
+          <a href="?page=2" class="pagination-link">2</a>
+        </li>
+        <li class="pagination-item pagination-item_numbered">
+          <a href="?page=3" class="pagination-link">3</a>
+        </li>
+        <li class="pagination-item pagination-item_numbered" aria-hidden="true">
+          <span class="pagination-ellipsis">…</span>
+        </li>
+        <li class="pagination-item pagination-item_numbered">
+          <a href="?page=12" class="pagination-link">12</a>
+        </li>
+
+        <!-- Compact status: visible ONLY on a narrow container (instead of numbers) -->
+        <li class="pagination-item pagination-item_status">
+          <span class="pagination-status">Page 1 of 12</span>
+        </li>
+
+        <!-- Next: active link -->
+        <li class="pagination-item">
+          <a href="?page=2" class="pagination-next" rel="next">
+            Next
+            <svg class="pagination-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M8 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- ───── State 2: current page = 6 (both controls active) ───── -->
+  <div class="pagination">
+    <nav aria-label="Pagination">
+      <ul class="pagination-list">
+
+        <!-- Prev: active link -->
+        <li class="pagination-item">
+          <a href="?page=5" class="pagination-prev" rel="prev">
+            <svg class="pagination-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M12 5l-5 5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Prev
+          </a>
+        </li>
+
+        <li class="pagination-item pagination-item_numbered">
+          <a href="?page=1" class="pagination-link">1</a>
+        </li>
+        <li class="pagination-item pagination-item_numbered" aria-hidden="true">
+          <span class="pagination-ellipsis">…</span>
+        </li>
+        <li class="pagination-item pagination-item_numbered">
+          <a href="?page=5" class="pagination-link">5</a>
+        </li>
+
+        <!-- Current page: aria-current="page", <span> (not a link) -->
+        <li class="pagination-item pagination-item_numbered">
+          <span class="pagination-link pagination-link_current" aria-current="page">6</span>
+        </li>
+
+        <li class="pagination-item pagination-item_numbered">
+          <a href="?page=7" class="pagination-link">7</a>
+        </li>
+        <li class="pagination-item pagination-item_numbered" aria-hidden="true">
+          <span class="pagination-ellipsis">…</span>
+        </li>
+        <li class="pagination-item pagination-item_numbered">
+          <a href="?page=12" class="pagination-link">12</a>
+        </li>
+
+        <!-- Compact status on a narrow container -->
+        <li class="pagination-item pagination-item_status">
+          <span class="pagination-status">Page 6 of 12</span>
+        </li>
+
+        <!-- Next: active link -->
+        <li class="pagination-item">
+          <a href="?page=7" class="pagination-next" rel="next">
+            Next
+            <svg class="pagination-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M8 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+</div>

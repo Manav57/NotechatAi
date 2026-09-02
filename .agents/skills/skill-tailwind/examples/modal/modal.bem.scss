@@ -1,0 +1,163 @@
+/*
+  EXAMPLE · modal · Approach (B): BEM + @apply — styles for modal.bem.html.
+
+  Same UI as modal.utility.html (a native <dialog> with header / body / footer,
+  a × close control and Cancel / Confirm actions, plus a v4 enter animation on
+  the panel and its ::backdrop), expressed with @apply grouped by property kind.
+  Group order follows the engine's property-order:
+    layout/position → size → spacing → background/border/shape → typography →
+    effects/motion → interaction; then nested states; then modifiers.
+
+  v4 enter animation (no JS state): the dialog only paints once it has the
+  native [open] attribute (set by showModal()). We animate opacity + transform
+  on the open frame, and @starting-style supplies the *initial* frame the
+  browser transitions FROM — both for the dialog and its ::backdrop. The
+  `starting:` @apply variant is valid here. prefers-reduced-motion is honored
+  with motion-reduce:transition-none.
+
+  @reference — REQUIRED if this SCSS is compiled SEPARATELY from your Tailwind
+  entry (a CSS module, an isolated stylesheet, a framework's scoped <style>):
+  point it at the entry that does `@import "tailwindcss"`, otherwise @apply
+  cannot see the utilities/tokens. If this file is part of the same build that
+  already imports tailwindcss, DROP this line — a second reference is redundant.
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css). Because every
+  color is a token that .dark overrides, the dark theme needs no extra rules.
+*/
+
+/* ───────────────────────── Modal (native <dialog>) ───────────────────────── */
+
+.modal {
+  /* m-auto centers the dialog in the viewport */
+  @apply m-auto;
+  @apply w-full max-w-lg;
+  @apply rounded-lg border border-border bg-card shadow-lg;
+  @apply text-card-foreground;
+  /* closed (initial) frame; animates display+overlay so the
+     element stays visible long enough to fade out on close */
+  @apply opacity-0 scale-95;
+  @apply transition-[opacity,transform,display,overlay] duration-200 ease-out transition-discrete;
+  @apply motion-reduce:transition-none;
+
+  /* open frame — present once showModal() sets the [open] attribute */
+  &[open] {
+    @apply opacity-100 scale-100;
+  }
+
+  /* enter animation: the frame the browser transitions FROM on open */
+  @starting-style {
+    &[open] {
+      @apply opacity-0 scale-95;
+    }
+  }
+
+  /* platform backdrop — also fades in via its own starting frame */
+  &::backdrop {
+    @apply bg-foreground/40;
+    @apply opacity-0 transition-[opacity,display,overlay] duration-200 transition-discrete;
+    @apply motion-reduce:transition-none;
+  }
+  &[open]::backdrop {
+    @apply opacity-100;
+  }
+  @starting-style {
+    &[open]::backdrop {
+      @apply opacity-0;
+    }
+  }
+
+  /* element: panel — vertical stack with the inner padding */
+  &-panel {
+    @apply flex flex-col gap-4;
+    @apply p-6;
+  }
+
+  /* element: header row — title + close control */
+  &-header {
+    @apply flex items-start justify-between gap-4;
+  }
+
+  /* element: title — linked from aria-labelledby */
+  &-title {
+    @apply text-base font-semibold leading-none tracking-tight;
+  }
+
+  /* element: body — linked from aria-describedby */
+  &-body {
+    @apply text-sm leading-relaxed text-muted-foreground;
+  }
+
+  /* element: the form wrapping the close button (display: contents — no box) */
+  &-closeForm {
+    @apply contents;
+  }
+
+  /* element: close (×) control — interactive, full state set */
+  &-close {
+    @apply -m-1 inline-flex shrink-0 items-center justify-center;
+    @apply size-7;
+    @apply rounded-sm border border-transparent;
+    @apply text-muted-foreground;
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+    @apply cursor-pointer;
+
+    &:hover         { @apply bg-muted text-foreground; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+    &:active        { @apply bg-muted; }
+    &:disabled      { @apply opacity-50 pointer-events-none; }
+
+    /* nested icon glyph */
+    & > svg { @apply size-4; }
+  }
+
+  /* element: footer — right-aligned action row (a <form method="dialog">) */
+  &-footer {
+    @apply flex items-center justify-end gap-2;
+  }
+}
+
+/* ───────────── Embedded button block (footer + trigger actions) ───────────── */
+/* The button is its own component; here it is sized for the footer/trigger.
+   Base stays NEUTRAL — tone/intent lives in _primary / _outline modifiers. */
+
+.button {
+  @apply inline-flex items-center justify-center gap-2;
+  /* footer/action height */
+  @apply h-9;
+  @apply px-3;
+  @apply rounded-md border border-transparent;
+  @apply text-sm font-medium;
+  @apply transition-colors duration-150 motion-reduce:transition-none;
+  @apply cursor-pointer select-none;
+
+  &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+  &:disabled      { @apply opacity-50 pointer-events-none; }
+
+  /* modifier: primary (Confirm / trigger) */
+  &_primary {
+    @apply bg-primary;
+    @apply text-primary-foreground;
+
+    &:hover  { @apply bg-primary/90; }   /* slash opacity — v4 */
+    &:active { @apply bg-primary/95; }
+  }
+
+  /* modifier: outline / secondary (Cancel) */
+  &_outline {
+    @apply bg-background border-border;
+    @apply text-foreground;
+
+    &:hover  { @apply bg-muted; }
+    &:active { @apply bg-muted; }
+  }
+}
+
+/* ───────────────────── Demo wrapper (layout only) ───────────────────── */
+
+.modalDemo {
+  @apply flex flex-col items-start gap-4;
+  @apply p-6;
+  @apply bg-background text-foreground;
+}

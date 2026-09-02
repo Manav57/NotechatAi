@@ -1,0 +1,94 @@
+<!--
+  EXAMPLE · spinner-skeleton · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as spinner-skeleton.bem.html, so you can diff A vs B on identical
+  structure. Framework-agnostic: plain HTML + CSS-only animation. NO JavaScript —
+  both patterns animate purely with Tailwind's animate-spin / animate-pulse.
+
+  Two loading-state patterns, side by side:
+    1) SPINNER — an indeterminate ring (border + border-t-transparent) that spins
+       via animate-spin. role="status" + a visually-hidden <span class="sr-only">
+       Loading</span> announce "loading" to assistive tech (the ring itself is
+       decoration: aria-hidden). On a fixed-length wait this is the right tool.
+    2) SKELETON — placeholder blocks (avatar + text lines) that pulse via
+       animate-pulse, standing in for content while it loads. The placeholders are
+       aria-hidden="true" (pure decoration); the CONTAINER carries aria-busy="true"
+       so assistive tech knows the region is loading, not empty.
+
+  Reduced motion: both animations stop under prefers-reduced-motion via
+  motion-reduce:animate-none — the spinner still reads as a "loading" ring (with
+  its sr-only label) and the skeleton still shows the placeholder shapes, just
+  without movement. Never leave a user with vestibular sensitivity spinning.
+
+  Tokens are the canonical SEMANTIC ones from templates/theme.css: border-border /
+  border-t-transparent build the ring; bg-muted is the placeholder fill; bg-card /
+  text-card-foreground the surrounding surface. Replace the token VALUES under your
+  design system; the NAMES stay stable. Dark theme works for free — every color is
+  a token that .dark overrides, so this markup needs no `dark:` variants of its own.
+
+  No AI-slop: neutral skeleton, no gradients / glass / blobs. rounded-full is used
+  ONLY where it is legitimate — the circular spinner ring and the round avatar
+  placeholder; text lines stay rounded-sm.
+-->
+
+<!-- demo wrapper: neutral page surface holding both loading patterns -->
+<div class="flex flex-col items-start gap-8 bg-background p-6 text-foreground">
+
+  <!--
+    Pattern 1 — SPINNER.
+    role="status" makes this a live region; the sr-only text is what a screen
+    reader actually announces. The ring is decorative, so it is aria-hidden.
+  -->
+  <div role="status" class="inline-flex items-center gap-3">
+    <!-- the ring: a full circle border with one transparent edge, spun by animate-spin -->
+    <span
+      aria-hidden="true"
+      class="inline-block size-6 shrink-0
+             rounded-full border-2 border-border border-t-transparent
+             animate-spin motion-reduce:animate-none"
+    ></span>
+    <!-- visible helper text is optional; the sr-only label is required -->
+    <span class="text-sm text-muted-foreground">Loading…</span>
+    <span class="sr-only">Loading</span>
+  </div>
+
+  <!--
+    Pattern 2 — SKELETON.
+    The container is the busy region: aria-busy="true" tells assistive tech the
+    content is loading. Every placeholder inside is aria-hidden (pure decoration);
+    swap this whole block for the real content once it arrives.
+  -->
+  <div
+    aria-busy="true"
+    aria-label="Loading content"
+    class="flex w-full max-w-sm items-start gap-4
+           rounded-lg border border-border bg-card p-6 text-card-foreground"
+  >
+    <!-- avatar placeholder — round, so rounded-full is legitimate here -->
+    <span
+      aria-hidden="true"
+      class="size-12 shrink-0 rounded-full bg-muted
+             animate-pulse motion-reduce:animate-none"
+    ></span>
+
+    <!-- text-line placeholders — staggered widths read as a title + two body lines -->
+    <div class="flex min-w-0 flex-1 flex-col gap-3">
+      <span
+        aria-hidden="true"
+        class="h-4 w-2/3 rounded-sm bg-muted
+               animate-pulse motion-reduce:animate-none"
+      ></span>
+      <span
+        aria-hidden="true"
+        class="h-3 w-full rounded-sm bg-muted
+               animate-pulse motion-reduce:animate-none"
+      ></span>
+      <span
+        aria-hidden="true"
+        class="h-3 w-4/5 rounded-sm bg-muted
+               animate-pulse motion-reduce:animate-none"
+      ></span>
+    </div>
+  </div>
+
+</div>

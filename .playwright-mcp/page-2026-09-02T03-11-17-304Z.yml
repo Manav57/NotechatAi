@@ -1,0 +1,124 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "NotesChatAI Home" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "NotesChatAI" [ref=e5]
+        - generic [ref=e6]: NotesChatAI
+      - navigation "Main navigation" [ref=e7]:
+        - link "Features" [ref=e8] [cursor=pointer]:
+          - /url: /features
+        - link "Pricing" [ref=e9] [cursor=pointer]:
+          - /url: /pricing
+        - link "Docs" [ref=e10] [cursor=pointer]:
+          - /url: /free-beta
+        - link "Blog" [ref=e11] [cursor=pointer]:
+          - /url: /blog
+      - generic [ref=e12]:
+        - button "Toggle dark mode" [ref=e13]
+        - link "Log in" [ref=e17] [cursor=pointer]:
+          - /url: /auth/login
+        - link "Sign up" [ref=e18] [cursor=pointer]:
+          - /url: /auth/signup
+  - main [ref=e19]:
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - link "NotesChatAI Home" [ref=e22] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e26]: NotesChatAI
+        - heading "Welcome back" [level=1] [ref=e27]
+        - paragraph [ref=e28]: Sign in to continue building your knowledge base.
+      - generic [ref=e29]:
+        - link "Continue with Google" [ref=e30] [cursor=pointer]:
+          - /url: /api/auth/signin/google
+        - link "Continue with GitHub" [ref=e36] [cursor=pointer]:
+          - /url: /api/auth/signin/github
+        - generic [ref=e39]: or sign in with email
+        - generic [ref=e44]:
+          - generic [ref=e45]:
+            - generic [ref=e46]: Email
+            - textbox "Email" [ref=e47]:
+              - /placeholder: you@example.com
+          - generic [ref=e48]:
+            - generic [ref=e49]:
+              - generic [ref=e50]: Password
+              - generic [ref=e51]: Forgot password?
+            - generic [ref=e52]:
+              - textbox "Password" [ref=e53]:
+                - /placeholder: Your password
+              - button "Toggle password visibility" [ref=e54]
+          - generic [ref=e58]:
+            - checkbox "Remember me for 30 days" [ref=e59]
+            - generic [ref=e60] [cursor=pointer]: Remember me for 30 days
+          - button "Sign In" [ref=e61]
+      - paragraph [ref=e63]:
+        - text: Don't have an account?
+        - link "Start free beta" [ref=e64] [cursor=pointer]:
+          - /url: /auth/signup
+      - paragraph [ref=e65]:
+        - text: By signing in, you agree to our
+        - link "Terms of Service" [ref=e66] [cursor=pointer]:
+          - /url: /terms
+        - text: and
+        - link "Privacy Policy" [ref=e67] [cursor=pointer]:
+          - /url: /privacy
+        - text: .
+  - contentinfo [ref=e68]:
+    - generic [ref=e69]:
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - link "NotesChatAI Home" [ref=e72] [cursor=pointer]:
+            - /url: /
+            - img "NotesChatAI" [ref=e73]
+            - generic [ref=e74]: NotesChatAI
+          - paragraph [ref=e75]: Your persistent AI study assistant. Upload once, remember forever.
+        - navigation "Product" [ref=e76]:
+          - heading "Product" [level=3] [ref=e77]
+          - list [ref=e78]:
+            - listitem [ref=e79]:
+              - link "Features" [ref=e80] [cursor=pointer]:
+                - /url: /features
+            - listitem [ref=e81]:
+              - link "Pricing" [ref=e82] [cursor=pointer]:
+                - /url: /pricing
+            - listitem [ref=e83]:
+              - link "Docs" [ref=e84] [cursor=pointer]:
+                - /url: /free-beta
+            - listitem [ref=e85]:
+              - link "Blog" [ref=e86] [cursor=pointer]:
+                - /url: /blog
+        - navigation "Company" [ref=e87]:
+          - heading "Company" [level=3] [ref=e88]
+          - list [ref=e89]:
+            - listitem [ref=e90]:
+              - link "About" [ref=e91] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e92]:
+              - link "Contact" [ref=e93] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e94]:
+              - link "Email Us" [ref=e95] [cursor=pointer]:
+                - /url: mailto:noteschatai@gmail.com
+        - navigation "Resources" [ref=e96]:
+          - heading "Resources" [level=3] [ref=e97]
+          - list [ref=e98]:
+            - listitem [ref=e99]:
+              - link "Community" [ref=e100] [cursor=pointer]:
+                - /url: https://github.com/noteschatai
+            - listitem [ref=e101]:
+              - link "Status" [ref=e102] [cursor=pointer]:
+                - /url: /status
+        - navigation "Legal" [ref=e103]:
+          - heading "Legal" [level=3] [ref=e104]
+          - list [ref=e105]:
+            - listitem [ref=e106]:
+              - link "Privacy" [ref=e107] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e108]:
+              - link "Terms" [ref=e109] [cursor=pointer]:
+                - /url: /terms
+      - generic [ref=e111]:
+        - paragraph [ref=e112]: © 2026 NotesChatAI. All rights reserved.
+        - link "GitHub" [ref=e114] [cursor=pointer]:
+          - /url: https://github.com/noteschatai
+          - generic [aria-hidden] [ref=e115]: ⌘

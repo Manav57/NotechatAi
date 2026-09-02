@@ -1,0 +1,48 @@
+/* entry.css — the single entry point for the project's styles.
+ *
+ * Include THIS file in your build (PostCSS / Lightning CSS / @tailwindcss CLI).
+ * Order matters: first the Tailwind core, then the project tokens (@theme in theme.css),
+ * then — if needed — your custom utilities/variants/safelist.
+ *
+ * Note: theme.css itself starts with @import "tailwindcss" — re-importing the
+ * same module is deduplicated by the build, so the line below is safe and kept
+ * as an explicit entry-point declaration. If you prefer a single import — remove it
+ * and keep only @import "./theme.css".
+ */
+
+@import "tailwindcss";
+@import "./theme.css";
+
+/* ── Custom variants (uncomment if needed) ───────────────────
+ * A custom variant via an inline selector (no body). The variant stack goes left to right.
+ *   @custom-variant hocus (&:hover, &:focus);
+ * Block form with @slot:
+ *   @custom-variant theme-midnight {
+ *     &:where([data-theme="midnight"] *) { @slot; }
+ *   }
+ * (Class-based dark mode is already declared in theme.css.)
+ */
+
+/* ── Custom utilities (uncomment if needed) ────────────────────
+ * In v4 custom utilities are defined via @utility (NOT @layer utilities).
+ * Static:
+ *   @utility content-grid { display: grid; grid-template-columns: 1fr min(64rem, 100%) 1fr; }
+ * Functional (the name must end with -*):
+ *   @utility tab-* { tab-size: --value(integer); }
+ * CSS variables in arbitrary values: bg-(--brand), text-(--ink) (not bg-[--brand]).
+ *
+ * Tip: when the SAME utility group repeats on many elements (not only [arbitrary]
+ * values), promote it to one custom utility here. A common case is a visible-focus
+ * preset reused across interactive controls — see the focus-ring recipe in
+ * docs/custom-utilities-and-layers.md, e.g.:
+ *   @utility focus-ring { @apply outline-none ring-2 ring-ring ring-offset-2; }
+ */
+
+/* ── Scan sources / safelist (uncomment if needed) ────
+ * The scanner looks for LITERAL class strings; names built by concatenation
+ * (text-{dynamic}-500) are not found — add them to the safelist:
+ *   @source inline("{bg,text,border}-{primary,danger,success}");
+ * Add a non-standard path (bypassing .gitignore) / exclude a path:
+ *   @source "../node_modules/some-ui-lib";
+ *   @source not "../legacy";
+ */

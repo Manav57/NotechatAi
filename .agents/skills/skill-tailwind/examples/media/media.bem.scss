@@ -1,0 +1,104 @@
+/*
+  EXAMPLE · media · Approach (B): BEM + @apply — styles for media.bem.html.
+
+  Same UI as media.utility.html, expressed via @apply, grouped by
+  property type. Group order: layout/position → sizing → spacing →
+  background/borders/shape → typography → effects/motion → interaction; then
+  nested states (none here — the media is static); then modifiers.
+
+  @reference — NEEDED only if this SCSS is compiled SEPARATELY from the page
+  (CSS module, isolated <style>, framework scoped styles): @apply and tokens
+  resolve against your entry CSS. If the file is in the same build that already does
+  `@import "tailwindcss"`, REMOVE this line — the repeated reference is redundant.
+*/
+@reference "../app.css";   /* ← path to YOUR entry that imports tailwindcss */
+
+/*
+  The ratio is set by the block MODIFIER (figure_video / figure_square) on the
+  figure-media wrapper; the image fills it object-cover. rounded-lg — neutral
+  rounding (NOT rounded-full: this is not an avatar/pill/spinner). bg-muted holds
+  the placeholder surface while the media loads.
+
+  Tokens — canonical SEMANTIC ones (templates/theme.css): bg-muted, border-border,
+  text-muted-foreground (caption below media), text-background (overlaid caption over
+  the scrim). Each color is a token that .dark overrides, so dark mode does
+  not require extra rules here.
+*/
+
+/* ───────────────────────────── Figure ───────────────────────────── */
+
+.figure {
+  @apply flex flex-col gap-2;
+  @apply w-full max-w-md;
+
+  /* element: media — ratio wrapper, clips the image to the frame */
+  &-media {
+    @apply relative;
+    @apply w-full;
+    @apply overflow-hidden rounded-lg border border-border bg-muted;
+  }
+
+  /* element: image — fills the wrapper; in the flow (decorative case) w-full h-auto */
+  &-image {
+    @apply size-full;
+    @apply object-cover;
+  }
+
+  /* element: caption — caption BELOW media by default */
+  &-caption {
+    @apply text-sm text-muted-foreground;
+  }
+
+  /* flat overlaid-caption elements (for figure_overlay) */
+  &-captionTitle {
+    @apply font-semibold;
+  }
+  &-captionText {
+    @apply text-background/80;
+  }
+
+  /* ── block modifiers: the ratio is set on the figure-media wrapper ── */
+
+  /* modifier: 16:9 */
+  &_video {
+    .figure-media { @apply aspect-video; }
+  }
+
+  /* modifier: 1:1 */
+  &_square {
+    .figure-media { @apply aspect-square; }
+  }
+
+  /* modifier: plain — decorative media without a ratio wrapper, image in the flow */
+  &_plain {
+    .figure-image {
+      @apply h-auto w-full;
+      @apply rounded-lg border border-border bg-muted;
+    }
+  }
+
+  /* modifier: overlay — caption over the image with a gradient scrim.
+     The opaque gradient exists ONLY for caption contrast — this is not glass/slop.
+     The block itself becomes the positioning context (relative), since the caption is
+     a sibling of figure-media, not its descendant: the absolute is measured from figure. The frame/clip
+     is still held by figure-media (as in the other cases), without a double frame. */
+  &_overlay {
+    @apply relative;
+
+    .figure-caption {
+      @apply absolute inset-x-0 bottom-0 flex flex-col gap-0.5;
+      @apply p-4;
+      @apply bg-linear-to-t from-foreground/70 to-transparent;
+      @apply text-sm font-medium text-background;
+    }
+  }
+}
+
+/* ───────────────────── Demo wrapper (layout only) ───────────────────── */
+
+.mediaDemo {
+  @apply grid grid-cols-1 gap-8 sm:grid-cols-2;
+  @apply p-8;
+  @apply bg-background;
+  @apply text-foreground;
+}

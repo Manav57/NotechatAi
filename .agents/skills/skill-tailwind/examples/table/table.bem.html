@@ -1,0 +1,131 @@
+<!--
+  EXAMPLE · table · Approach (B): BEM markup — styles in table.bem.scss.
+
+  Same UI as in table.utility.html (semantic data table: <caption>,
+  <thead> with <th scope="col">, <tbody> with <th scope="row">, zebra, row hover,
+  sticky header, tabular-nums for numbers, responsive wrapper via @container).
+  Here the markup carries SEMANTIC BEM names; the appearance is assembled from
+  utilities via @apply in table.bem.scss. No framework: plain HTML.
+
+  The skill's BEM convention (element = `-`, modifier = `_`; camelCase for
+  multi-word parts):
+    block         dataTable                 (wrapper with @container + overflow)
+    elements      dataTable-table           (native <table>)
+                  dataTable-head            (header cells <th>)
+                  dataTable-row             (body rows <tbody> <tr>: zebra/hover)
+                  dataTable-cell            (data cells <td>)
+    + helper elements caption/badge for status (dataTable-caption,
+      dataTable-status and tone modifiers dataTable-status_paid/_pending/_overdue).
+  Classes are attached to the NATIVE thead/tbody/tfoot/tr/th/td — BEM does not
+  replace tag semantics, it only names them. One block per component; no _a_b chains.
+
+  Parity with approach A: structure, number of rows/columns, scope, states and
+  behavior are identical; only WHERE the style lives differs (in SCSS, not in
+  markup classes).
+
+  SORTING/FILTERING — NOT implemented (as in A): only the aria-sort semantics on
+  the sorted column are given. Real click-to-sort requires native JS and is left
+  as a flagged TODO — we don't mimic a framework.
+
+  The demo wrapper below provides background/padding and a height constraint to
+  show the sticky header; it is not part of the component.
+-->
+
+<!-- demo wrapper: background, padding and height constraint to show the sticky header -->
+<div class="dataTableDemo">
+
+  <section class="dataTableDemo-section">
+    <h2 class="dataTableDemo-heading">Team invoices</h2>
+
+    <!--
+      Block dataTable: the component wrapper. role/aria-label/tabindex make the
+      scroll area focusable and named (needed for keyboard scrolling on
+      overflow). @container + overflow live in the SCSS class dataTable.
+    -->
+    <div
+      class="dataTable"
+      role="region"
+      aria-label="Team invoices, scrollable"
+      tabindex="0">
+
+      <table class="dataTable-table">
+        <!-- accessible table name; visually hidden (duplicates <h2>), but announced -->
+        <caption class="dataTable-caption">Team invoices for the current quarter</caption>
+
+        <!-- sticky header: class on the native <thead> -->
+        <thead class="dataTable-thead">
+          <!-- header row: no dataTable-row (zebra/hover — only on body rows) -->
+          <tr>
+            <th scope="col" class="dataTable-head">Invoice</th>
+            <th scope="col" class="dataTable-head">Client</th>
+            <th scope="col" class="dataTable-head">Status</th>
+            <!-- sorted numeric column: right + aria-sort (static, demo) -->
+            <th scope="col" aria-sort="ascending"
+                class="dataTable-head dataTable-head_numeric">Amount</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- zebra/hover — on the dataTable-row class (see SCSS) -->
+          <tr class="dataTable-row">
+            <th scope="row" class="dataTable-rowHead">INV-1001</th>
+            <td class="dataTable-cell">Acme Corp</td>
+            <td class="dataTable-cell">
+              <!-- the status tone is duplicated by a WORD, not color alone -->
+              <span class="dataTable-status dataTable-status_paid">Paid</span>
+            </td>
+            <!-- number: the -numeric modifier = right + tabular-nums -->
+            <td class="dataTable-cell dataTable-cell_numeric">$1,200.00</td>
+          </tr>
+
+          <tr class="dataTable-row">
+            <th scope="row" class="dataTable-rowHead">INV-1002</th>
+            <td class="dataTable-cell">Globex</td>
+            <td class="dataTable-cell">
+              <span class="dataTable-status dataTable-status_pending">Pending</span>
+            </td>
+            <td class="dataTable-cell dataTable-cell_numeric">$840.50</td>
+          </tr>
+
+          <tr class="dataTable-row">
+            <th scope="row" class="dataTable-rowHead">INV-1003</th>
+            <td class="dataTable-cell">Initech</td>
+            <td class="dataTable-cell">
+              <span class="dataTable-status dataTable-status_overdue">Overdue</span>
+            </td>
+            <td class="dataTable-cell dataTable-cell_numeric">$3,015.00</td>
+          </tr>
+
+          <tr class="dataTable-row">
+            <th scope="row" class="dataTable-rowHead">INV-1004</th>
+            <td class="dataTable-cell">Umbrella</td>
+            <td class="dataTable-cell">
+              <span class="dataTable-status dataTable-status_paid">Paid</span>
+            </td>
+            <td class="dataTable-cell dataTable-cell_numeric">$560.00</td>
+          </tr>
+
+          <tr class="dataTable-row">
+            <th scope="row" class="dataTable-rowHead">INV-1005</th>
+            <td class="dataTable-cell">Hooli</td>
+            <td class="dataTable-cell">
+              <span class="dataTable-status dataTable-status_pending">Pending</span>
+            </td>
+            <td class="dataTable-cell dataTable-cell_numeric">$12,480.75</td>
+          </tr>
+        </tbody>
+
+        <!-- total row -->
+        <tfoot class="dataTable-tfoot">
+          <!-- total row: no dataTable-row (zebra/hover — only on body rows) -->
+          <tr>
+            <th scope="row" colspan="3"
+                class="dataTable-footHead">Total</th>
+            <td class="dataTable-cell dataTable-cell_numeric">$18,096.25</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+</div>

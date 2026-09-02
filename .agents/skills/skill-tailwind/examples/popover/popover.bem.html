@@ -1,0 +1,98 @@
+<!--
+  EXAMPLE · popover · Approach (B): BEM markup — styling lives in popover.bem.scss.
+
+  Same UI as popover.utility.html (a button that toggles a native Popover-API
+  panel holding a small menu, with a v4 enter animation + optional ::backdrop),
+  on the exact same structure, so you can diff A vs B. Framework-agnostic: plain
+  HTML; the only JS-adjacent bit is the NATIVE Popover API attribute, not a
+  framework.
+
+  Native platform wiring (no framework):
+    • `popovertarget="popover-menu"` on the trigger toggles the panel on click.
+    • `popover` (=auto) on the panel gives light-dismiss + Esc + top-layer paint.
+    • aria-expanded does NOT update itself for popovers; sync it from the panel's
+      `toggle` event with a few lines of native JS (marked "needs ~JS" below) —
+      do NOT fake it with a framework.
+
+  BEM convention (default): one block `popover`; elements via hyphen —
+  popover-trigger (the control), popover-panel (the floating [popover] surface),
+  popover-item (a menu entry). Plus flat helper elements popover-header /
+  popover-heading / popover-desc / popover-divider / popover-list / popover-icon /
+  popover-chevron. Elements descend from the block — no `-a-b` chains. Item tone
+  is a MODIFIER (underscore) on the element: popover-item_danger (NOT a nested chain).
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): bg-card /
+  text-card-foreground (panel surface), bg-accent / text-accent-foreground (item
+  hover), border-border, outline-ring (focus), text-danger (destructive). .dark
+  overrides them, so this markup needs no dark-specific classes.
+
+  Progressive enhancement (see SCSS): positioning uses an absolute panel +
+  translate today; CSS anchor positioning (a native CSS feature —
+  anchor-name / position-anchor + position-area; no dedicated Tailwind utilities,
+  use arbitrary properties) is an optional upgrade that can
+  tether the panel and auto-flip on viewport overflow.
+-->
+
+<!-- demo wrapper: gives the panel room to render; not part of the component -->
+<div class="popoverDemo">
+
+  <!-- block: positioning context for the absolutely-placed panel -->
+  <div class="popover">
+
+    <!--
+      element: the focusable trigger. `popovertarget` is the native wiring that
+      toggles the panel — no JS for open/close/Esc/light-dismiss. aria-expanded
+      starts "false" and should be synced from the panel's `toggle` event
+      (needs ~JS — do NOT fake with a framework).
+    -->
+    <button
+      type="button"
+      class="popover-trigger"
+      popovertarget="popover-menu"
+      aria-expanded="false"
+      aria-controls="popover-menu"
+    >
+      Options
+      <!-- decorative chevron; rotates while the panel is open -->
+      <svg class="popover-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+
+    <!--
+      element: the native [popover] panel. Enter animation + ::backdrop are styled
+      in the SCSS via :popover-open + @starting-style. aria-labelledby names the
+      group from its heading.
+    -->
+    <div
+      id="popover-menu"
+      popover
+      class="popover-panel"
+      aria-labelledby="popover-heading"
+    >
+      <!-- header: accessible name for the group -->
+      <div class="popover-header">
+        <p id="popover-heading" class="popover-heading">Account</p>
+        <p class="popover-desc">Manage your workspace</p>
+      </div>
+
+      <div class="popover-divider" role="presentation"></div>
+
+      <!-- menu items: real interactive controls, full state set -->
+      <div class="popover-list">
+        <button type="button" class="popover-item">Profile settings</button>
+        <a href="#" class="popover-item">Billing</a>
+        <button type="button" class="popover-item" disabled>Team (coming soon)</button>
+      </div>
+
+      <div class="popover-divider" role="presentation"></div>
+
+      <!-- destructive action: element modifier carries the danger tone -->
+      <div class="popover-list">
+        <button type="button" class="popover-item popover-item_danger">Sign out</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

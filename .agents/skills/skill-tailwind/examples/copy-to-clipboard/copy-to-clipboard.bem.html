@@ -1,0 +1,141 @@
+<!--
+  EXAMPLE · copy-to-clipboard · Approach (B): BEM markup — styling lives in
+  copy-to-clipboard.bem.scss.
+
+  Same UI as copy-to-clipboard.utility.html (a button that copies a short
+  placeholder value and confirms success two ways), on the exact same structure,
+  so you can diff A vs B. Framework-agnostic.
+
+  BEM convention (default — element via single hyphen `-`, modifier via single
+  underscore `_`, camelCase lowercase-first):
+    block            copyField
+    elements         copyField-value · copyField-button · copyField-icon ·
+                     copyField-label · copyField-status
+    element modifier  copyField-button_done  (the success frame of the button)
+  One block per component; elements are flat from the block (no `-a-b` chains).
+  This is the DEFAULT scheme — if your repo already standardizes on another BEM
+  style (classic `block__elem_mod`, Two-Dashes, React, …), FOLLOW that instead;
+  consistency beats the default. The only invariants the skill always enforces:
+  names stay programmatically separable, a modifier never stands alone
+  (`copyField-button copyField-button_done`, never a bare `copyField-button_done`),
+  and no elements of elements.
+
+  ── ARIA model (visuals in the SCSS; semantics here in the markup) ──────────
+    • copyField-button is a real <button type="button"> with aria-describedby
+      pointing at copyField-value, so its description includes the copied value.
+    • TWO success signals: the VISIBLE label/icon swap (sighted users) AND a
+      visually-hidden live region copyField-status (role="status"
+      aria-live="polite") that screen readers announce without moving focus. A
+      text/icon swap alone is not reliably announced.
+    • The leading icon span is decoration (aria-hidden); meaning lives in the text.
+
+  ── ~JS needed (honest note — NOT a framework) ─────────────────────────────
+    No CSS-only way to read the clipboard or to flip+revert transient state on a
+    timer. The small <script> below is plain vanilla DOM glue
+    (navigator.clipboard.writeText + toggling [hidden] + updating the live
+    region's text + a setTimeout revert) — the kind of stateful code the skill
+    says to FLAG, not hide. It targets ids / data-* hooks, NOT BEM classes, so the
+    look stays entirely in the SCSS. Swap it for your framework's click handler +
+    reactive boolean. The success modifier copyField-button_done is shown here as
+    an ALTERNATIVE state hook your framework may toggle instead of [hidden]
+    (one or the other — do not rely on both at once).
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css). .dark overrides
+  them, so this markup needs no dark-specific classes.
+-->
+
+<!-- demo wrapper: neutral page surface; not part of the component -->
+<div class="copyFieldDemo">
+
+  <div class="copyField">
+
+    <!-- the value to copy: a generic placeholder, with an id for aria-describedby -->
+    <code id="copyValue" class="copyField-value">example-token-1234</code>
+
+    <!--
+      The copy button.
+      · aria-describedby="copyValue" — description includes the copied value.
+      · data-copy-target hooks the script to the value (a hook, not a class).
+      · Two label spans toggled by [hidden]; only one shows at a time.
+    -->
+    <button
+      type="button"
+      id="copyButton"
+      data-copy-target="#copyValue"
+      aria-describedby="copyValue"
+      class="copyField-button"
+    >
+      <!-- idle: copy glyph + "Copy" -->
+      <span data-copy-idle class="copyField-label">
+        <span class="copyField-icon" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none">
+            <rect x="5.25" y="5.25" width="7.5" height="7.5" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+            <path d="M10.75 5.25V4A1.25 1.25 0 0 0 9.5 2.75H4A1.25 1.25 0 0 0 2.75 4v5.5A1.25 1.25 0 0 0 4 10.75h1.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+        <span>Copy</span>
+      </span>
+
+      <!-- success: check glyph + "Copied" — hidden until the script swaps it -->
+      <span data-copy-done hidden class="copyField-label copyField-label_done">
+        <span class="copyField-icon" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M3.5 8.5l2.75 2.75L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+        <span>Copied</span>
+      </span>
+    </button>
+  </div>
+
+  <!--
+    The ANNOUNCEMENT region. Visually hidden but present in the a11y tree.
+    role="status" + aria-live="polite" → a screen reader announces text inserted
+    here, without stealing focus. Stays in the DOM, starts EMPTY; the script writes
+    "Copied to clipboard" on success and clears it on revert. Only change its text.
+  -->
+  <span id="copyStatus" role="status" aria-live="polite" class="copyField-status"></span>
+
+</div>
+
+<script>
+  // ~JS — small, vanilla, dependency-free. The skill flags this as stateful glue,
+  // not a framework. Replace with your framework's click handler + reactive flag;
+  // the markup, BEM classes and ARIA model above stay identical.
+  (function () {
+    const button = document.getElementById("copyButton");
+    if (!button) return;
+
+    const idle    = button.querySelector("[data-copy-idle]");
+    const done    = button.querySelector("[data-copy-done]");
+    const status  = document.getElementById("copyStatus");
+    const valueEl = document.querySelector(button.dataset.copyTarget);
+    let revertTimer;
+
+    function showCopied() {
+      idle.hidden = true;
+      done.hidden = false;
+      // If your framework toggles the modifier instead of [hidden], do:
+      //   button.classList.add("copyField-button_done");
+      if (status) status.textContent = "Copied to clipboard"; // announced (polite)
+      clearTimeout(revertTimer);
+      revertTimer = setTimeout(function () {
+        done.hidden = true;
+        idle.hidden = false;
+        // button.classList.remove("copyField-button_done");
+        if (status) status.textContent = ""; // clear so the next copy re-announces
+      }, 2000);
+    }
+
+    button.addEventListener("click", async function () {
+      const text = valueEl ? valueEl.textContent.trim() : "";
+      try {
+        // Clipboard API needs a secure context (https/localhost) + user gesture.
+        await navigator.clipboard.writeText(text);
+        showCopied();
+      } catch (err) {
+        if (status) status.textContent = "Copy failed — select the text and copy manually";
+      }
+    });
+  })();
+</script>

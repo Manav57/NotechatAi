@@ -1,0 +1,127 @@
+/*
+  EXAMPLE · avatar · Approach (B): BEM + @apply — styles for avatar.bem.html.
+
+  Same UI as avatar.utility.html (image avatar with initials fallback, an
+  initials-only avatar, the three sizes, an avatar with a status dot, and an
+  overlapping avatar group), expressed with @apply grouped by property kind.
+  Group order follows the engine's property-order:
+    layout/position → size → spacing → background/border/shape → typography →
+    effects/motion → interaction; then nested states; then modifiers.
+
+  @reference — REQUIRED if this SCSS is compiled SEPARATELY from your Tailwind
+  entry (a CSS module, an isolated stylesheet, a framework's scoped <style>):
+  point it at the entry that does `@import "tailwindcss"`, otherwise @apply
+  cannot see the utilities/tokens. If this file is part of the same build that
+  already imports tailwindcss, DROP this line — a second reference is redundant.
+*/
+@reference "../app.css";   /* ← path to YOUR entry that imports tailwindcss */
+
+/*
+  rounded-full is LEGITIMATE here — an avatar is a canonical round element (along
+  with pills and spinners), not AI-slop over-rounding.
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): bg-muted /
+  text-muted-foreground (fallback surface), ring-background (overlap + status
+  ring), bg-success (status). Because every colour is a token that .dark
+  overrides, the dark theme needs no extra rules here.
+*/
+
+/* ───────────────────────── Avatar ───────────────────────── */
+
+.avatar {
+  /* positioning context; centres the fallback glyph */
+  @apply relative inline-flex shrink-0 items-center justify-center;
+  /* base size; _sm / _lg modifiers override it */
+  @apply size-10;
+  /* clip the image to the circle */
+  @apply overflow-hidden rounded-full bg-muted;
+  /* used by an initials-only / overflow-count avatar */
+  @apply text-sm font-medium text-muted-foreground;
+  @apply select-none;
+
+  /* element: surface — inner clipping layer used when the block itself must NOT
+     clip (the status variant): it rounds + clips the image/initials to the circle
+     so the sibling status puck's outward ring can spill past the avatar edge */
+  &-surface {
+    /* fill the block, centre the fallback glyph */
+    @apply absolute inset-0 inline-flex items-center justify-center;
+    /* clip the image to the circle */
+    @apply overflow-hidden rounded-full bg-muted;
+  }
+
+  /* element: image — covers the fallback when it loads; hidden (onerror) reveals it */
+  &-image {
+    /* paint above the fallback layer */
+    @apply relative;
+    @apply size-full;
+    @apply rounded-full object-cover;
+  }
+
+  /* element: fallback — initials layer behind the image; name on aria-label */
+  &-fallback {
+    /* fill the avatar, centre the glyph */
+    @apply absolute inset-0 inline-flex items-center justify-center;
+    @apply text-sm font-medium text-muted-foreground;
+    @apply select-none;
+  }
+
+  /* element: status — a puck pinned bottom-right; ring separates it from the avatar.
+     tone meaning is duplicated in sr-only text in the markup (not colour-only). */
+  &-status {
+    @apply absolute bottom-0 right-0 inline-flex;
+    @apply size-3;
+    /* ring matches the page so the puck reads apart */
+    @apply rounded-full bg-success ring-2 ring-background;
+  }
+
+  /* modifier (block): small */
+  &_sm {
+    @apply size-8;
+    @apply text-xs;
+
+    .avatar-fallback { @apply text-xs; }
+  }
+
+  /* modifier (block): large */
+  &_lg {
+    @apply size-14;
+    @apply text-base;
+
+    .avatar-fallback { @apply text-base; }
+  }
+
+  /* modifier (block): ringed — a background-coloured ring so overlapping avatars
+     in a group stay legible against one another and the page */
+  &_ringed {
+    @apply ring-2 ring-background;
+  }
+
+  /* modifier (block): hasStatus — the block hosts a status puck whose ring spills
+     OUTSIDE the circle, so the block must NOT clip (overflow-visible); the inner
+     avatar-surface clips the image/initials instead. Without this the puck's ring
+     would be cut off by the block's overflow-hidden. */
+  &_hasStatus {
+    /* drop the block-level clip */
+    @apply overflow-visible bg-transparent;
+  }
+}
+
+/* ───────────── Avatar group (own block: an overlapping row) ───────────── */
+
+.avatarGroup {
+  /* overlap the avatars by pulling them left */
+  @apply flex -space-x-3;
+}
+
+/* ───────────────────── Demo wrappers (layout only) ───────────────────── */
+
+.avatarDemo {
+  @apply flex flex-col items-start gap-8;
+  @apply p-6;
+  @apply bg-background text-foreground;
+}
+
+.avatarSizes {
+  /* align the three sizes on their baseline edge */
+  @apply flex items-end gap-4;
+}

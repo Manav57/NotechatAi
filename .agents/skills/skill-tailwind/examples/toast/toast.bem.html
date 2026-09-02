@@ -1,0 +1,113 @@
+<!--
+  EXAMPLE · toast · Approach (B): BEM markup — styling lives in toast.bem.scss.
+
+  Same UI as toast.utility.html (a notification region holding info / success /
+  warning / danger toasts, each with an icon, title, body and a close button),
+  on the exact same structure, so you can diff A vs B. Framework-agnostic.
+
+  BEM convention (strict): one block `toast`; elements via hyphen —
+  toast-icon / toast-title / toast-body / toast-close. Tone is a BLOCK modifier
+  via underscore — toast_success / toast_warning / toast_danger (the default INFO
+  needs no modifier). Elements descend from the block — no `-a-b` chains. The
+  region/list wrapper is a separate layout block `toastRegion`.
+
+  ── ARIA model (visuals in the SCSS; semantics here in the markup) ──────────
+    • role="region" + aria-label on the wrapper → a notification landmark.
+    • role="status" aria-live="polite" on info/success/warning toasts → announced
+      without stealing focus. The danger toast uses role="alert" (assertive) so
+      errors interrupt. Status icon is aria-hidden; tone is in the title text.
+    • toast-close is a real <button type="button"> with aria-label (content is a
+      decorative × glyph).
+
+  ── ~JS needed (honest note — NOT a framework) ─────────────────────────────
+    Structure + style only. A queue, auto-dismiss timers and click-to-close are a
+    few lines of native platform JS (no CSS-only way to remove a node on a timer
+    or click). See the minimal vanilla sketch in toast.utility.html — it applies
+    here unchanged (it targets role / aria-label, not utility classes).
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): bg-card /
+  text-card-foreground, border-border, text-success / -warning / -danger,
+  text-muted-foreground, outline-ring. .dark overrides them, so this markup needs
+  no dark-specific classes.
+-->
+
+<!-- demo wrapper: neutral page surface; not part of the component -->
+<div class="toastDemo">
+
+  <!-- region: the live notification landmark + the toast stack -->
+  <section class="toastRegion" role="region" aria-label="Notifications">
+
+    <!-- ── INFO (default — no tone modifier) ── role="status" ──────────────── -->
+    <div class="toast" role="status" aria-live="polite">
+      <svg class="toast-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm1-11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm-1 3a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1Z" clip-rule="evenodd" />
+      </svg>
+
+      <div class="toast-text">
+        <p class="toast-title">Update available</p>
+        <p class="toast-body">A new version is ready to install.</p>
+      </div>
+
+      <button type="button" class="toast-close" aria-label="Dismiss notification">
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- ── SUCCESS ── role="status" ────────────────────────────────────────── -->
+    <div class="toast toast_success" role="status" aria-live="polite">
+      <svg class="toast-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.7-9.3a1 1 0 0 0-1.4-1.4L9 10.6 7.7 9.3a1 1 0 0 0-1.4 1.4l2 2a1 1 0 0 0 1.4 0l4-4Z" clip-rule="evenodd" />
+      </svg>
+
+      <div class="toast-text">
+        <p class="toast-title">Changes saved</p>
+        <p class="toast-body">Your profile was updated successfully.</p>
+      </div>
+
+      <button type="button" class="toast-close" aria-label="Dismiss notification">
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- ── WARNING ── role="status" ────────────────────────────────────────── -->
+    <div class="toast toast_warning" role="status" aria-live="polite">
+      <svg class="toast-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M9.1 2.6a1 1 0 0 1 1.8 0l7 13A1 1 0 0 1 17 17H3a1 1 0 0 1-.9-1.5l7-13ZM11 8a1 1 0 1 0-2 0v3a1 1 0 1 0 2 0V8Zm-1 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z" clip-rule="evenodd" />
+      </svg>
+
+      <div class="toast-text">
+        <p class="toast-title">Storage almost full</p>
+        <p class="toast-body">You have used 90% of your quota.</p>
+      </div>
+
+      <button type="button" class="toast-close" aria-label="Dismiss notification">
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- ── DANGER ── role="alert" (assertive) ──────────────────────────────── -->
+    <div class="toast toast_danger" role="alert">
+      <svg class="toast-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM11 6a1 1 0 1 0-2 0v4a1 1 0 1 0 2 0V6Zm-1 7a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z" clip-rule="evenodd" />
+      </svg>
+
+      <div class="toast-text">
+        <p class="toast-title">Upload failed</p>
+        <p class="toast-body">The connection was lost. Please try again.</p>
+      </div>
+
+      <button type="button" class="toast-close" aria-label="Dismiss notification">
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+  </section>
+</div>

@@ -1,0 +1,137 @@
+/*
+  EXAMPLE · navbar · Approach (B): BEM + @apply — styles for navbar.bem.html.
+
+  Same UI as in navbar.utility.html (responsive header: brand + links +
+  actions; the mobile menu expands WITHOUT JS via the native <details>). Here
+  the look is assembled from utilities via @apply, grouped by property type in order:
+  layout → sizing → spacing → background/borders/shape → typography →
+  effects/motion → interaction; then states; then modifiers.
+
+  @reference — NEEDED if this SCSS is compiled SEPARATELY from the entry CSS
+  (CSS module, isolated <style>, framework scoped style): @apply and tokens
+  resolve against your Tailwind entry. If the file is part of the same build that
+  already has `@import "tailwindcss"`, REMOVE this line (a second reference is redundant).
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css). Since every color
+  is a token that .dark overrides, dark mode needs no rules here.
+
+  BEM: block navbar; elements navbar-brand, navbar-menu, navbar-link,
+  navbar-actions, navbar-toggle, navbar-cta; element modifier navbar-link_active.
+
+  CTA reuse: the primary button is NOT re-authored here. It is the shared
+  `button` block (button + button_primary modifier — see examples/button) placed
+  on the node via a BEM mix: <a class="button button_primary navbar-cta">. The
+  block owns the button's appearance (incl. all states); navbar-cta sets ONLY
+  placement/visibility for this slot. One affordance = one block — see the BEM-mix
+  rule in references/approaches.md §7 and resources/anti-patterns.md §17.
+*/
+
+.navbar {
+  @apply border-b border-border bg-background;
+
+  /* element: inner <nav> container (centering + max width) */
+  &-inner {
+    @apply mx-auto;
+    @apply w-full max-w-6xl;
+    @apply px-4;
+  }
+
+  /* element: <details> — wrapper for the "menu open" state (without JS) */
+  &-details {
+    @apply block;
+
+    /* state: menu expanded on mobile → show the panel as a column.
+       On >=md the panel is always visible (see &-menu below), so this rule matters
+       only below md. */
+    &[open] .navbar-menu {
+      @apply flex;
+    }
+  }
+
+  /* element: top row (brand + burger) */
+  &-bar {
+    @apply flex items-center gap-4;
+    @apply h-14;
+  }
+
+  /* element: brand text (link to home, no logo) */
+  &-brand {
+    @apply mr-auto;
+    @apply rounded-sm;
+    @apply text-base font-semibold tracking-tight text-foreground;
+    @apply transition-colors duration-150;
+
+    &:hover         { @apply text-foreground/80; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+  }
+
+  /* element: burger trigger (<summary>); hidden on >=md */
+  &-toggle {
+    @apply inline-flex items-center justify-center;
+    @apply size-9;
+    @apply rounded-md border border-border bg-background;
+    @apply text-foreground;
+    @apply transition-colors duration-150;
+    @apply list-none cursor-pointer select-none md:hidden;
+
+    /* remove the default <summary> disclosure marker */
+    &::-webkit-details-marker { @apply hidden; }
+
+    &:hover         { @apply bg-accent text-accent-foreground; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+    &:active        { @apply bg-accent; }
+  }
+
+  /* element: icon inside the burger */
+  &-toggleIcon {
+    @apply size-5;
+  }
+
+  /* element: menu panel (links + actions).
+     Mobile-first hidden; expands via &-details[open] above; on >=md
+     always visible as a horizontal row. */
+  &-menu {
+    @apply hidden flex-col gap-1 md:flex md:flex-row md:items-center;
+    @apply pb-3 md:pb-0;
+  }
+
+  /* element: link list <ul> */
+  &-list {
+    @apply flex flex-col gap-1 md:flex-row md:items-center;
+  }
+
+  /* element: navigation link */
+  &-link {
+    @apply block;
+    @apply px-3 py-2;
+    @apply rounded-md;
+    @apply text-sm font-medium text-muted-foreground;
+    @apply transition-colors duration-150;
+
+    &:hover         { @apply bg-accent text-accent-foreground; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+
+    /* element modifier: active item (= aria-current="page") */
+    &_active {
+      @apply bg-accent;
+      @apply text-accent-foreground;
+    }
+  }
+
+  /* element: actions block (on >=md pinned to the right) */
+  &-actions {
+    @apply flex items-center gap-2 md:ml-auto;
+    @apply mt-2 md:mt-0;
+  }
+
+  /* element: CTA slot — the shared `button button_primary` block sits here via a
+     BEM mix. This element supplies ONLY placement/visibility for the slot, never
+     the button's appearance (that lives in the `button` block). Full-width on
+     mobile, intrinsic width on >=md. */
+  &-cta {
+    /* placement only */
+    @apply w-full md:w-auto;
+  }
+}

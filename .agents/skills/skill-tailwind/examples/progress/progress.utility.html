@@ -1,0 +1,126 @@
+<!--
+  EXAMPLE · progress · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as progress.bem.html, so you can diff A vs B on identical structure.
+  Framework-agnostic: plain HTML on a NATIVE <progress>. NO JavaScript here — the
+  bar values are static placeholders. A live progress bar only needs its `value`
+  attribute updated from your own code (~JS), which is outside this skeleton.
+
+  Why native <progress>: the element already exposes the correct role and the
+  value/max to assistive tech, and the browser animates the indeterminate state
+  for free. We only restyle it:
+    • `appearance-none` strips the OS chrome so our token styles show through.
+    • The TRACK is the element box itself (bg-muted, rounded, fixed height).
+    • The VALUE (fill) is a pseudo-element, styled PER ENGINE because there is no
+      cross-browser selector:
+        [&::-webkit-progress-bar]    → the track in WebKit/Blink (transparent;
+                                       our own bg-muted on the element shows through)
+        [&::-webkit-progress-value]  → the fill in WebKit/Blink (bg-primary)
+        [&::-moz-progress-bar]       → the fill in Firefox (bg-primary)
+      `accent-color` alone would tint the fill, but pseudo-elements let us also
+      round the fill and animate its width with a design token — so we use those.
+    • Determinate fill width animates via `transition-[width]` on the value pseudo;
+      prefers-reduced-motion is honored with motion-reduce:transition-none.
+
+  INDETERMINATE variant: a <progress> with `max` but NO `value` attribute is
+  indeterminate — the browser owns the looping animation. We can't size a fill we
+  don't control, so we paint a moving sliver with a small @keyframes (named below)
+  on the value pseudo, and disable it under motion-reduce.
+
+  Accessibility: <progress> is its own ARIA progressbar; value/max are read from
+  the attributes — we don't hand-roll role/aria-valuenow. Each bar is linked to a
+  visible <label> via `for`/`id`. The percent text is decorative (aria-hidden):
+  the value is already announced from the element, so we avoid double reading.
+  The indeterminate bar has no numeric value to announce, but its visible <label
+  for="sync"> still names it — no aria-label (that would override the label and
+  voice different text than is shown, a WCAG 2.5.3 Label-in-Name mismatch).
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): bg-muted (track),
+  bg-primary (fill), text-foreground / text-muted-foreground (labels). Replace the
+  token VALUES under your design system; the NAMES stay stable. Dark theme works
+  for free — every color is a token that .dark overrides.
+
+  No AI-slop: neutral surfaces, no gradients / glass / blobs. `rounded-full` is
+  legitimate here — a thin bar with fully rounded ends is a PILL (one of the
+  allowed cases, same reasoning as the switch track); it is NOT excessive rounding.
+-->
+
+
+<!-- the indeterminate sliver animation: no Tailwind utility owns this keyframe,
+     so the keyframe AND its binding to the sliver pseudo-element are declared once
+     as raw CSS. We bind it on a small `.progressIndeterminate` hook class rather
+     than an arbitrary `before:[animation:…]` utility: @apply is never allowed
+     inside @keyframes, and the animation shorthand reads cleaner as plain CSS. -->
+<style>
+  @keyframes progressIndeterminate {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+  }
+  /* the looping sliver: the ::before is shaped with utilities in the markup;
+     only the animation binding lives here (and is dropped under reduced motion) */
+  .progressIndeterminate::before {
+    animation: progressIndeterminate 1.5s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .progressIndeterminate::before { animation: none; }
+  }
+</style>
+
+<!-- demo wrapper: neutral page surface; not part of the component -->
+<div class="flex w-full max-w-md flex-col gap-6 bg-background p-6 text-foreground">
+
+  <!-- ───────── Determinate ───────── -->
+  <div class="flex flex-col gap-1.5">
+
+    <!-- label row: name + live percent text (text is decorative, value is on the bar) -->
+    <div class="flex items-baseline justify-between gap-4">
+      <label for="upload" class="text-sm font-medium text-foreground">Uploading file</label>
+      <span aria-hidden="true" class="text-sm tabular-nums text-muted-foreground">60%</span>
+    </div>
+
+    <!--
+      Native determinate <progress>: max + value = a real progressbar.
+      The element box is the TRACK; the value pseudo-element is the FILL.
+    -->
+    <progress
+      id="upload"
+      max="100"
+      value="60"
+      class="block h-2 w-full appearance-none overflow-hidden rounded-full bg-muted
+             [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-muted
+             [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-primary
+             [&::-webkit-progress-value]:transition-[width] [&::-webkit-progress-value]:duration-300 [&::-webkit-progress-value]:ease-out
+             [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:bg-primary
+             motion-reduce:[&::-webkit-progress-value]:transition-none"
+    >60%</progress>
+  </div>
+
+  <!-- ───────── Indeterminate ───────── -->
+  <div class="flex flex-col gap-1.5">
+
+    <!-- label only: no numeric value to show -->
+    <label for="sync" class="text-sm font-medium text-foreground">Syncing</label>
+
+    <!--
+      Native indeterminate <progress>: `max` but NO `value` attribute. The element
+      has no value to announce; its name comes from the visible <label for="sync">
+      above (no aria-label — that would override the label and announce different
+      text than sighted users see, a WCAG 2.5.3 Label-in-Name mismatch). We paint a
+      looping sliver on the value pseudo (the browser's own indeterminate paint is
+      hidden by our appearance-none + bg-muted track). The keyframe is the <style>
+      block above.
+    -->
+    <progress
+      id="sync"
+      max="100"
+      class="progressIndeterminate
+             relative block h-2 w-full appearance-none overflow-hidden rounded-full bg-muted
+             [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-muted
+             [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-primary
+             [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:bg-transparent
+             before:absolute before:inset-y-0 before:left-0 before:w-1/3 before:rounded-full before:bg-primary before:content-['']
+             motion-reduce:before:hidden"
+    ></progress>
+  </div>
+
+</div>

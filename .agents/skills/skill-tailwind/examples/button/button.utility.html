@@ -1,0 +1,399 @@
+<!--
+  EXAMPLE · button · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as button.bem.html, so you can diff A vs B on identical structure.
+  Framework-agnostic: plain HTML, no JS, no build step assumed here.
+
+  Tokens are the canonical SEMANTIC ones from templates/theme.css
+  (bg-primary / text-primary-foreground, bg-muted, border-border, outline-ring …).
+  Replace the token VALUES under your design system; the NAMES stay stable.
+  Dark theme works for free — every color is a token that .dark overrides, so
+  this markup needs no `dark:` variants of its own.
+
+  Variants: primary · outline (secondary) · ghost · danger.
+  Sizes:    sm (h-8) · md (h-10) · lg (h-12), with matching px and text-*.
+  States:   hover · active · focus-visible · disabled — all via variants.
+  Leading icon: <svg class="size-4 shrink-0"> placeholder, aria-hidden.
+
+  Tag by BEHAVIOUR, not by look: a thing that ACTS is a <button>, a thing that
+  NAVIGATES is an <a href>. The SAME button utility classes style EITHER tag,
+  so a "link styled as a button" is a real <a href> carrying those classes —
+  including the focus-visible:* ring, which then lands on the actually-focusable
+  navigation control. See the last row. NEVER wrap an <a> in a styled <button>
+  to borrow its look; that nests two interactive elements and strands the focus
+  ring on the non-navigating wrapper.
+-->
+
+<!-- demo wrapper: rows by variant, columns by size + one disabled per variant -->
+<div class="flex flex-col gap-6 p-6 bg-background text-foreground">
+
+  <!-- ── Variant: primary ───────────────────────────────────── -->
+  <div class="flex flex-wrap items-center gap-3">
+    <!-- sm -->
+    <button
+      type="button"
+      class="inline-flex items-center justify-center gap-2
+             h-8 px-3
+             rounded-md border border-transparent
+             bg-primary text-primary-foreground text-xs font-medium
+             transition-colors duration-150
+             hover:bg-primary/90
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-primary/95
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span>Primary</span>
+    </button>
+
+    <!-- md -->
+    <button
+      type="button"
+      class="inline-flex items-center justify-center gap-2
+             h-10 px-4
+             rounded-md border border-transparent
+             bg-primary text-primary-foreground text-sm font-medium
+             transition-colors duration-150
+             hover:bg-primary/90
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-primary/95
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span>Primary</span>
+    </button>
+
+    <!-- lg -->
+    <button
+      type="button"
+      class="inline-flex items-center justify-center gap-2
+             h-12 px-6
+             rounded-md border border-transparent
+             bg-primary text-primary-foreground text-base font-medium
+             transition-colors duration-150
+             hover:bg-primary/90
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-primary/95
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span>Primary</span>
+    </button>
+
+    <!-- disabled -->
+    <button
+      type="button"
+      disabled
+      class="inline-flex items-center justify-center gap-2
+             h-10 px-4
+             rounded-md border border-transparent
+             bg-primary text-primary-foreground text-sm font-medium
+             transition-colors duration-150
+             hover:bg-primary/90
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-primary/95
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <span>Disabled</span>
+    </button>
+  </div>
+
+  <!-- ── Variant: outline (secondary) ───────────────────────── -->
+  <div class="flex flex-wrap items-center gap-3">
+    <!-- sm -->
+    <button
+      type="button"
+      class="inline-flex items-center justify-center gap-2
+             h-8 px-3
+             rounded-md border border-border
+             bg-background text-foreground text-xs font-medium
+             transition-colors duration-150
+             hover:bg-muted
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-muted
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span>Outline</span>
+    </button>
+
+    <!-- md -->
+    <button
+      type="button"
+      class="inline-flex items-center justify-center gap-2
+             h-10 px-4
+             rounded-md border border-border
+             bg-background text-foreground text-sm font-medium
+             transition-colors duration-150
+             hover:bg-muted
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-muted
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span>Outline</span>
+    </button>
+
+    <!-- lg -->
+    <button
+      type="button"
+      class="inline-flex items-center justify-center gap-2
+             h-12 px-6
+             rounded-md border border-border
+             bg-background text-foreground text-base font-medium
+             transition-colors duration-150
+             hover:bg-muted
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-muted
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span>Outline</span>
+    </button>
+
+    <!-- disabled -->
+    <button
+      type="button"
+      disabled
+      class="inline-flex items-center justify-center gap-2
+             h-10 px-4
+             rounded-md border border-border
+             bg-background text-foreground text-sm font-medium
+             transition-colors duration-150
+             hover:bg-muted
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-muted
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <span>Disabled</span>
+    </button>
+  </div>
+
+  <!-- ── Variant: ghost ─────────────────────────────────────── -->
+  <div class="flex flex-wrap items-center gap-3">
+    <!-- sm -->
+    <button
+      type="button"
+      class="inline-flex items-center justify-center gap-2
+             h-8 px-3
+             rounded-md border border-transparent
+             bg-transparent text-foreground text-xs font-medium
+             transition-colors duration-150
+             hover:bg-muted
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-muted
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span>Ghost</span>
+    </button>
+
+    <!-- md -->
+    <button
+      type="button"
+      class="inline-flex items-center justify-center gap-2
+             h-10 px-4
+             rounded-md border border-transparent
+             bg-transparent text-foreground text-sm font-medium
+             transition-colors duration-150
+             hover:bg-muted
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-muted
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span>Ghost</span>
+    </button>
+
+    <!-- lg -->
+    <button
+      type="button"
+      class="inline-flex items-center justify-center gap-2
+             h-12 px-6
+             rounded-md border border-transparent
+             bg-transparent text-foreground text-base font-medium
+             transition-colors duration-150
+             hover:bg-muted
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-muted
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span>Ghost</span>
+    </button>
+
+    <!-- disabled -->
+    <button
+      type="button"
+      disabled
+      class="inline-flex items-center justify-center gap-2
+             h-10 px-4
+             rounded-md border border-transparent
+             bg-transparent text-foreground text-sm font-medium
+             transition-colors duration-150
+             hover:bg-muted
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-muted
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <span>Disabled</span>
+    </button>
+  </div>
+
+  <!-- ── Variant: danger ────────────────────────────────────── -->
+  <div class="flex flex-wrap items-center gap-3">
+    <!-- sm -->
+    <button
+      type="button"
+      class="inline-flex items-center justify-center gap-2
+             h-8 px-3
+             rounded-md border border-transparent
+             bg-danger text-danger-foreground text-xs font-medium
+             transition-colors duration-150
+             hover:bg-danger/90
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-danger/95
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span>Danger</span>
+    </button>
+
+    <!-- md -->
+    <button
+      type="button"
+      class="inline-flex items-center justify-center gap-2
+             h-10 px-4
+             rounded-md border border-transparent
+             bg-danger text-danger-foreground text-sm font-medium
+             transition-colors duration-150
+             hover:bg-danger/90
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-danger/95
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span>Danger</span>
+    </button>
+
+    <!-- lg -->
+    <button
+      type="button"
+      class="inline-flex items-center justify-center gap-2
+             h-12 px-6
+             rounded-md border border-transparent
+             bg-danger text-danger-foreground text-base font-medium
+             transition-colors duration-150
+             hover:bg-danger/90
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-danger/95
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span>Danger</span>
+    </button>
+
+    <!-- disabled -->
+    <button
+      type="button"
+      disabled
+      class="inline-flex items-center justify-center gap-2
+             h-10 px-4
+             rounded-md border border-transparent
+             bg-danger text-danger-foreground text-sm font-medium
+             transition-colors duration-150
+             hover:bg-danger/90
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-danger/95
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <span>Disabled</span>
+    </button>
+  </div>
+
+  <!-- ── Link styled as a button (NAVIGATES) ─────────────────── -->
+  <!--
+    A real <a href> with the SAME button utilities as the primary <button>
+    above. It LOOKS like a button but NAVIGATES, so the anchor is the correct
+    tag. The focus-visible:* ring is on the <a> itself, so the focus treatment
+    lands on the real, focusable navigation control. `no-underline` keeps it
+    reading as a button; the `disabled:*` variants are dropped because <a> has
+    no disabled state (omit href / add aria-disabled if a link must be inert).
+    Do NOT wrap a bare <a> inside this styled <button> to reuse the look.
+  -->
+  <div class="flex flex-wrap items-center gap-3">
+    <a
+      href="#"
+      class="inline-flex items-center justify-center gap-2
+             h-10 px-4
+             rounded-md border border-transparent
+             bg-primary text-primary-foreground text-sm font-medium no-underline
+             transition-colors duration-150
+             hover:bg-primary/90
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-primary/95
+             cursor-pointer select-none"
+    >
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+      <span>Link styled as a button</span>
+    </a>
+
+    <a
+      href="#"
+      class="inline-flex items-center justify-center gap-2
+             h-10 px-4
+             rounded-md border border-border
+             bg-background text-foreground text-sm font-medium no-underline
+             transition-colors duration-150
+             hover:bg-muted
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-muted
+             cursor-pointer select-none"
+    >
+      <span>Outline link</span>
+    </a>
+  </div>
+
+</div>

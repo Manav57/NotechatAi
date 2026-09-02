@@ -1,0 +1,211 @@
+<!--
+  EXAMPLE · popover · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as popover.bem.html, so you can diff A vs B on identical structure.
+  Framework-agnostic: plain HTML on the NATIVE Popover API. The ONLY JS is a
+  native platform attribute, not a framework: `popovertarget` wires the trigger
+  to the panel. The platform gives us, for free:
+    • toggle on click,
+    • light-dismiss (click outside closes),
+    • Esc to close,
+    • top-layer rendering (panel paints above everything, no z-index war).
+  No showPopover() call is needed for click-to-open — the attribute does it.
+
+  v4 styling of the panel:
+    • [popover] is a real selectable target; here we style it with utilities on
+      the element itself plus the `[&:popover-open]:` arbitrary variant for the
+      OPEN frame (there is no built-in `popover-open:` variant in v4 — the
+      arbitrary `[&:popover-open]:` form is the correct, checked way).
+    • A [popover] is `display:none` until open, so we animate it with
+      @starting-style (`starting:` variant) + `transition-discrete` so the enter
+      transition can run across the display change. The closed frame is the base
+      (opacity-0 scale-95); the open frame is `[&:popover-open]:` … ; and
+      `starting:[&:popover-open]:` supplies the frame the browser transitions FROM.
+    • ::backdrop is optional; we tint it via the `backdrop:` variant.
+
+  Positioning — absolute + translate baseline today; anchor positioning upgrade:
+    The panel is centred under the trigger with absolute + left-1/2 + -translate-x-1/2
+    inside a relative wrapper. This works in every browser.
+    PROGRESSIVE ENHANCEMENT: CSS anchor positioning (a native CSS feature —
+    anchor-name on the trigger, position-anchor on the panel + position-area;
+    Tailwind has no dedicated utilities, so use arbitrary properties)
+    lets the panel tether to the trigger and auto-flip on viewport overflow — without
+    the manual translate math. It is not yet universal, so we keep absolute+translate
+    as the baseline and treat anchors as an optional upgrade (commented inline).
+
+  Accessibility:
+    • The trigger is a real <button type="button"> with aria-expanded reflecting
+      open/closed and aria-controls pointing at the panel id. (aria-expanded does
+      not update by itself for popovers — a few lines of native JS toggle it on
+      the `toggle` event; marked below as "needs ~JS", not faked with a framework.)
+    • The panel is a labelled group: aria-labelledby → the heading id.
+    • Menu items inside are real <button>/<a> with the full state set
+      (hover · active · focus-visible · disabled) and a visible focus ring.
+  prefers-reduced-motion is honored with motion-reduce:transition-none.
+
+  Tokens are the canonical SEMANTIC ones from templates/theme.css
+  (bg-card / text-card-foreground, bg-popover via card surface, bg-accent /
+  text-accent-foreground for item hover, border-border, outline-ring …).
+  Replace the token VALUES under your design system; the NAMES stay stable. Dark
+  theme works for free — every color is a token that .dark overrides, so this
+  markup needs no `dark:` variants of its own.
+-->
+
+<!-- demo wrapper: gives the panel room to render; not part of the component -->
+<div class="flex min-h-60 items-start justify-center bg-background p-12 text-foreground">
+
+  <!-- block = positioning context for the absolutely-placed panel -->
+  <div class="relative inline-block">
+
+    <!--
+      trigger: a real focusable button. `popovertarget` is the native wiring that
+      toggles the panel below — no JS for open/close/Esc/light-dismiss.
+      aria-expanded starts "false"; a tiny native `toggle`-event listener should
+      sync it to the panel's open state (needs ~JS — do NOT fake with a framework).
+    -->
+    <button
+      type="button"
+      popovertarget="popover-menu"
+      aria-expanded="false"
+      aria-controls="popover-menu"
+      class="group inline-flex items-center justify-center gap-2
+             h-10 px-4
+             rounded-md border border-border
+             bg-background text-foreground text-sm font-medium
+             transition-colors duration-150 motion-reduce:transition-none
+             hover:bg-muted
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-muted
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      Options
+      <!-- chevron: decorative; rotates while the panel is open (driven by the
+           trigger's own aria-expanded, synced by the native toggle listener) -->
+      <svg class="size-4 shrink-0 text-muted-foreground
+                  transition-transform duration-200 ease-out motion-reduce:transition-none
+                  group-aria-expanded:rotate-180" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+
+    <!--
+      panel: a native [popover]. `popover` (=auto) gives light-dismiss + Esc.
+      It paints in the top layer, so `absolute` here positions it relative to the
+      wrapper while still escaping overflow. Closed frame is the base (opacity-0 +
+      scale-95); the `[&:popover-open]:` variant is the OPEN frame; `starting:`
+      supplies the enter frame. `transition-discrete` lets the transition span the
+      display:none↔block change. ::backdrop is tinted via `backdrop:`.
+
+      ANCHOR UPGRADE (optional; native CSS anchor positioning via arbitrary
+      properties — Tailwind has no `anchor-*` utilities): give the trigger `[anchor-name:--menuBtn]`
+      and the panel `[position-anchor:--menuBtn]` + e.g. `[position-area:bottom]`,
+      then drop the absolute/left-1/2/translate math. Kept commented as it is not
+      yet universally supported.
+    -->
+    <div
+      id="popover-menu"
+      popover
+      aria-labelledby="popover-heading"
+      class="absolute left-1/2 top-full z-10 mt-2 -translate-x-1/2
+             m-0 w-56
+             rounded-lg border border-border
+             bg-card text-card-foreground shadow-lg
+             opacity-0 scale-95
+             transition-[opacity,transform,display,overlay] duration-200 ease-out
+             transition-discrete motion-reduce:transition-none
+             [&:popover-open]:opacity-100 [&:popover-open]:scale-100
+             starting:[&:popover-open]:opacity-0 starting:[&:popover-open]:scale-95
+             backdrop:bg-foreground/10"
+    >
+      <!-- header: an accessible name for the group (aria-labelledby target) -->
+      <div class="flex flex-col gap-0.5 p-3">
+        <p id="popover-heading" class="text-sm font-semibold leading-none tracking-tight">
+          Account
+        </p>
+        <p class="text-xs leading-relaxed text-muted-foreground">
+          Manage your workspace
+        </p>
+      </div>
+
+      <!-- divider -->
+      <div class="h-px bg-border" role="presentation"></div>
+
+      <!-- menu items: real interactive controls, full state set -->
+      <div class="flex flex-col p-1">
+        <button
+          type="button"
+          class="inline-flex w-full items-center gap-2
+                 px-2 py-1.5
+                 rounded-sm border border-transparent
+                 bg-transparent text-foreground text-sm
+                 transition-colors duration-150 motion-reduce:transition-none
+                 hover:bg-accent hover:text-accent-foreground
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                 active:bg-accent/80
+                 disabled:opacity-50 disabled:pointer-events-none
+                 cursor-pointer select-none"
+        >
+          Profile settings
+        </button>
+
+        <a
+          href="#"
+          class="inline-flex w-full items-center gap-2
+                 px-2 py-1.5
+                 rounded-sm border border-transparent
+                 bg-transparent text-foreground text-sm
+                 transition-colors duration-150 motion-reduce:transition-none
+                 hover:bg-accent hover:text-accent-foreground
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                 active:bg-accent/80
+                 cursor-pointer select-none"
+        >
+          Billing
+        </a>
+
+        <!-- a disabled item: inert-looking, not focusable, dimmed -->
+        <button
+          type="button"
+          disabled
+          class="inline-flex w-full items-center gap-2
+                 px-2 py-1.5
+                 rounded-sm border border-transparent
+                 bg-transparent text-foreground text-sm
+                 transition-colors duration-150 motion-reduce:transition-none
+                 hover:bg-accent hover:text-accent-foreground
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                 active:bg-accent/80
+                 disabled:opacity-50 disabled:pointer-events-none
+                 cursor-pointer select-none"
+        >
+          Team (coming soon)
+        </button>
+      </div>
+
+      <!-- divider -->
+      <div class="h-px bg-border" role="presentation"></div>
+
+      <!-- destructive action, tinted via the danger token -->
+      <div class="flex flex-col p-1">
+        <button
+          type="button"
+          class="inline-flex w-full items-center gap-2
+                 px-2 py-1.5
+                 rounded-sm border border-transparent
+                 bg-transparent text-danger text-sm
+                 transition-colors duration-150 motion-reduce:transition-none
+                 hover:bg-danger/10
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                 active:bg-danger/15
+                 disabled:opacity-50 disabled:pointer-events-none
+                 cursor-pointer select-none"
+        >
+          Sign out
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,93 @@
+<!--
+  EXAMPLE · responsive-grid · Approach (A): UTILITY-FIRST — classes in the markup.
+
+  A card grid that reflows the number of columns based on the CONTAINER WIDTH, not
+  the viewport — via Tailwind v4 container queries. The wrapper is marked @container,
+  and the grid reacts to its width: grid-cols-1 → @sm:grid-cols-2 → @lg:grid-cols-3.
+  Same UI as in responsive-grid.bem.html (diff A vs B on a single structure).
+
+  Container vs viewport (see the contrasting block below):
+    • @container + @sm:/@lg:  — breakpoints are measured from the PARENT's width.
+      The same component in a narrow side column shows 1 column, and in a
+      wide main area — 3, without any knowledge of the screen size. This is what makes
+      the grid truly reusable anywhere in the layout.
+    • sm:/md:/lg:            — breakpoints are measured from the VIEWPORT's width
+      (media queries). They react to the whole screen, not the component's context.
+
+  The grid is layout, not semantics: the items are a list → <ul>/<li>.
+  Visual order = DOM order (we don't break the reading order). The cards are
+  simple neutral placeholders without interactive states (a structural component;
+  states would live on nested buttons/links if there were any).
+
+  Tokens are the canonical SEMANTIC ones (see templates/theme.css): bg-background,
+  bg-card/text-card-foreground, text-muted-foreground, border-border. The token
+  values are placeholders for the design system; the names are stable. Dark mode works
+  without dedicated dark: variants — every color is a token that .dark swaps.
+
+  The demo wrapper below only provides a neutral background and page padding — it is not
+  part of the component.
+-->
+
+<div class="bg-background p-8">
+
+  <!-- ───── Grid by CONTAINER width (v4 container queries) ───── -->
+  <!--
+    @container turns this div into a container context. The child grid reads
+    its width: base (narrow) = 1 column, at container @sm = 2, at @lg = 3.
+    To see the switch, change the width of THIS wrapper (e.g. max-w-*), not
+    the browser window.
+  -->
+  <div class="@container">
+    <ul class="grid grid-cols-1 gap-4 @sm:grid-cols-2 @lg:grid-cols-3">
+      <li class="flex flex-col gap-1 p-4 rounded-lg border border-border bg-card text-card-foreground">
+        <h3 class="text-sm font-medium">Card one</h3>
+        <p class="text-sm text-muted-foreground">Placeholder body for the first cell.</p>
+      </li>
+      <li class="flex flex-col gap-1 p-4 rounded-lg border border-border bg-card text-card-foreground">
+        <h3 class="text-sm font-medium">Card two</h3>
+        <p class="text-sm text-muted-foreground">Placeholder body for the second cell.</p>
+      </li>
+      <li class="flex flex-col gap-1 p-4 rounded-lg border border-border bg-card text-card-foreground">
+        <h3 class="text-sm font-medium">Card three</h3>
+        <p class="text-sm text-muted-foreground">Placeholder body for the third cell.</p>
+      </li>
+      <li class="flex flex-col gap-1 p-4 rounded-lg border border-border bg-card text-card-foreground">
+        <h3 class="text-sm font-medium">Card four</h3>
+        <p class="text-sm text-muted-foreground">Placeholder body for the fourth cell.</p>
+      </li>
+      <li class="flex flex-col gap-1 p-4 rounded-lg border border-border bg-card text-card-foreground">
+        <h3 class="text-sm font-medium">Card five</h3>
+        <p class="text-sm text-muted-foreground">Placeholder body for the fifth cell.</p>
+      </li>
+      <li class="flex flex-col gap-1 p-4 rounded-lg border border-border bg-card text-card-foreground">
+        <h3 class="text-sm font-medium">Card six</h3>
+        <p class="text-sm text-muted-foreground">Placeholder body for the sixth cell.</p>
+      </li>
+    </ul>
+  </div>
+
+  <!--
+    ───── Contrast: same layout, but by VIEWPORT width (media queries) ─────
+
+    Same cards, but the breakpoints are sm:/md:/lg: (viewport variants).
+    The @container wrapper is NOT needed here: the breakpoints are measured from the screen width,
+    not the parent. The difference is one thing: @sm/@lg look at the CONTAINER, sm/md/lg —
+    at the VIEWPORT. This grid's columns change only when the browser window is resized,
+    even if the wrapper is narrowed.
+  -->
+  <ul class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <li class="flex flex-col gap-1 p-4 rounded-lg border border-border bg-card text-card-foreground">
+      <h3 class="text-sm font-medium">Viewport card one</h3>
+      <p class="text-sm text-muted-foreground">Columns react to the screen width.</p>
+    </li>
+    <li class="flex flex-col gap-1 p-4 rounded-lg border border-border bg-card text-card-foreground">
+      <h3 class="text-sm font-medium">Viewport card two</h3>
+      <p class="text-sm text-muted-foreground">Columns react to the screen width.</p>
+    </li>
+    <li class="flex flex-col gap-1 p-4 rounded-lg border border-border bg-card text-card-foreground">
+      <h3 class="text-sm font-medium">Viewport card three</h3>
+      <p class="text-sm text-muted-foreground">Columns react to the screen width.</p>
+    </li>
+  </ul>
+
+</div>

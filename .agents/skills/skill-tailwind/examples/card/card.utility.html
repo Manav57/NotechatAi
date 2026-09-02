@@ -1,0 +1,126 @@
+<!--
+  EXAMPLE · card · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  A container surface for grouped content: header (title + subtitle),
+  body and footer with an action. The same UI as in card.bem.html — the structure
+  can be diffed A vs B. Pure HTML, framework-free.
+
+  There are two cases here:
+    1) A static card with footer actions (buttons using the same classes as in the
+       button example: primary + outline). The buttons carry the FULL set of states.
+    2) An interactive card-link (the `interactive` modifier in the BEM version):
+       the entire <a> is clickable, on hover a slight lift via shadow shadow-sm → shadow-md
+       and a switch from border-border → border-ring. States hover/focus-visible/active.
+
+  Tokens are the canonical SEMANTIC ones (see templates/theme.css). Token values
+  are replaced to match the project's design system; the names are stable. Dark mode works without
+  `dark:` variants — every color is a token that .dark overrides.
+
+  The demo wrapper below only centers the examples on the page — it is not part of
+  the component.
+-->
+
+<div class="flex flex-col items-center gap-8 bg-background p-8">
+
+  <!-- ───────── 1. Static card with footer actions ───────── -->
+
+  <article
+    class="flex flex-col gap-4
+           w-full max-w-sm
+           p-6
+           rounded-lg border border-border
+           bg-card text-card-foreground shadow-sm"
+  >
+    <header class="flex flex-col gap-1">
+      <h3 class="text-lg font-semibold leading-tight tracking-tight">
+        Card title
+      </h3>
+      <p class="text-sm text-muted-foreground">
+        Supporting subtitle that describes the card in one short line.
+      </p>
+    </header>
+
+    <div class="text-sm leading-relaxed">
+      Body content goes here. Keep the skeleton neutral; the surrounding design
+      system supplies the real colors, type and spacing via the @theme tokens.
+    </div>
+
+    <footer class="flex items-center justify-end gap-2">
+      <!-- action: outline (secondary) — same button classes as the button example -->
+      <button
+        type="button"
+        class="inline-flex items-center justify-center
+               h-9 px-3
+               rounded-md border border-border
+               bg-background text-foreground text-sm font-medium
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:bg-muted
+               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               active:bg-muted
+               disabled:opacity-50 disabled:pointer-events-none
+               cursor-pointer select-none"
+      >
+        Cancel
+      </button>
+      <!-- action: primary -->
+      <button
+        type="button"
+        class="inline-flex items-center justify-center
+               h-9 px-3
+               rounded-md border border-transparent
+               bg-primary text-primary-foreground text-sm font-medium
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:bg-primary/90
+               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               active:bg-primary/95
+               disabled:opacity-50 disabled:pointer-events-none
+               cursor-pointer select-none"
+      >
+        Confirm
+      </button>
+    </footer>
+  </article>
+
+  <!-- ───────── 2. Interactive card-link (interactive) ───────── -->
+  <!--
+    The whole card is a single clickable <a> (no nested clickable areas,
+    so as not to fragment focus). On hover: shadow-sm → shadow-md + border-ring.
+    Visible focus via a focus-visible ring. Motion is shadow only, with
+    motion-reduce. The footer here carries a hint/meta, not a separate button.
+  -->
+  <a
+    href="#"
+    class="flex flex-col gap-4
+           w-full max-w-sm
+           p-6
+           rounded-lg border border-border
+           bg-card text-card-foreground shadow-sm no-underline
+           transition-shadow duration-150 motion-reduce:transition-none
+           hover:border-ring hover:shadow-md
+           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+           active:shadow-sm
+           cursor-pointer"
+  >
+    <header class="flex flex-col gap-1">
+      <h3 class="text-lg font-semibold leading-tight tracking-tight">
+        Interactive card
+      </h3>
+      <p class="text-sm text-muted-foreground">
+        The whole card is a link — hover lifts it with a stronger shadow.
+      </p>
+    </header>
+
+    <div class="text-sm leading-relaxed">
+      Use this variant when the entire surface navigates somewhere. Avoid nesting
+      separate clickable controls inside a clickable card.
+    </div>
+
+    <footer class="flex items-center justify-end gap-2 text-sm text-muted-foreground">
+      <span>Read more</span>
+      <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </footer>
+  </a>
+
+</div>

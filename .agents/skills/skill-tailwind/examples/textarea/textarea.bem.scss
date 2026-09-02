@@ -1,0 +1,94 @@
+/*
+  EXAMPLE · textarea · Approach (B): BEM + @apply — styles for textarea.bem.html.
+
+  Same UI as textarea.utility.html (label + auto-growing control + hint + error).
+  @apply is split into lines grouped by property kind, in the engine's
+  property-order: layout/position → size → spacing → background/border/shape →
+  typography → effects/motion → interaction; then nested states; then the
+  `textarea_invalid` block modifier.
+
+  field-sizing-content (v4.1) makes the <textarea> auto-grow with its content with
+  NO JavaScript — it replaces the old JS hack (on `input`, set
+  el.style.height = el.scrollHeight + "px"). It lives in the SIZE group below.
+
+  @reference — REQUIRED only if this SCSS is compiled SEPARATELY from the page
+  (a CSS module / isolated stylesheet / framework scoped <style>); point it at
+  YOUR Tailwind entry so @apply can resolve the tokens. If this file is part of
+  the same build that already does `@import "tailwindcss"`, DROP this line.
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): bg-input,
+  border-border, text-foreground, placeholder:text-muted-foreground, ring-ring,
+  text-muted-foreground (hint), border-danger / ring-danger / text-danger
+  (invalid). Because every color is a token .dark overrides, dark theme is free.
+*/
+
+/* ─────────────────────── Block: textarea ─────────────────────── */
+
+.textarea {
+  @apply flex flex-col gap-1.5;
+  @apply w-full;
+}
+
+/* element: label — tied to the control via for/id in the markup */
+.textarea-label {
+  @apply text-sm font-medium text-foreground;
+}
+
+/* element: control — the <textarea> itself.
+   field-sizing-content = auto-grow with no JS; rows/min-h start it, max-h caps it.
+   Validation styling is keyed off :user-invalid (NOT :invalid) so danger fires
+   only AFTER the user interacts — an empty required field stays neutral on load. */
+.textarea-control {
+  /* field-sizing drives auto-grow; min/max bound it */
+  @apply field-sizing-content min-h-16 max-h-64 w-full;
+  @apply px-3 py-2;
+  @apply resize-none rounded-md border border-border bg-input;
+  @apply text-sm text-foreground placeholder:text-muted-foreground;
+  @apply transition-colors duration-150;
+
+  /* state: keyboard focus → visible ring (focus-visible keeps it off mouse clicks) */
+  &:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* state: disabled */
+  &:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+
+  /* state: user-invalid — fires only after interaction (NOT plain :invalid) */
+  &:user-invalid {
+    @apply border-danger;
+
+    &:focus-visible {
+      @apply ring-danger;
+    }
+  }
+}
+
+/* element: hint — secondary helper text; linked via aria-describedby */
+.textarea-hint {
+  @apply text-xs text-muted-foreground;
+}
+
+/* element: error — shown in the invalid state; linked via aria-describedby.
+   Never colour-only: the message itself carries the meaning. */
+.textarea-error {
+  @apply text-xs font-medium text-danger;
+}
+
+/* ──────────────── Block modifier: invalid ───────────────
+   Pairs with aria-invalid="true" on the control. Swaps the control's border and
+   focus ring to the danger token straight away (for server-flagged errors), while
+   the :user-invalid state above covers live client-side validation. */
+.textarea_invalid {
+  .textarea-control {
+    @apply border-danger;
+
+    &:focus-visible {
+      @apply ring-danger;
+    }
+  }
+}

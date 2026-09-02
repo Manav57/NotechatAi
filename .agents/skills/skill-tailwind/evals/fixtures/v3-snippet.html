@@ -1,0 +1,29 @@
+<!-- FIXTURE — INPUT ONLY (Tailwind v3 markup). Intentionally "bad" code as INPUT for migration/review. -->
+<!-- NOT a reference. v3 forms are expected here. Cases: EV-01, EV-03, EV-11.                          -->
+
+<!-- v3: bg-opacity-* instead of slash opacity (bg-primary/90) -->
+<!-- v3: bg-gradient-to-* instead of bg-linear-to-* -->
+<!-- v3: bg-[#hex] instead of a semantic token / bg-(--var) -->
+<!-- v3: shadow-sm with the old meaning (shifted in v4: old shadow-sm == new shadow-xs) -->
+
+<section class="bg-gradient-to-r from-purple-500 to-blue-500 p-8 rounded-3xl">
+  <div class="bg-white bg-opacity-60 backdrop-blur-md rounded-2xl p-6 shadow-sm">
+    <h2 class="text-[#111827] text-2xl font-bold">Hero</h2>
+    <p class="text-[#6b7280] text-sm mt-2">Subtitle placeholder.</p>
+
+    <button
+      class="mt-4 inline-flex items-center h-10 px-4 rounded-lg
+             bg-[#1f6feb] text-white text-sm font-medium
+             hover:bg-[#1f6feb] hover:bg-opacity-90">
+      Action
+    </button>
+
+    <a
+      href="#"
+      class="ml-2 inline-flex items-center h-10 px-4 rounded-lg
+             border border-gray-200 text-[#1f6feb] text-sm font-medium
+             hover:bg-gray-50">
+      Secondary
+    </a>
+  </div>
+</section>

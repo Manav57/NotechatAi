@@ -1,0 +1,126 @@
+/*
+  EXAMPLE · card · Approach (B): BEM + @apply — styles for card.bem.html.
+
+  The same UI as in card.utility.html, expressed via @apply, grouped by
+  property type. Group order: layout/position → sizes → spacing →
+  background/borders/shape → typography → effects/motion → interaction; then
+  nested states; then modifiers.
+
+  @reference is NEEDED only if this SCSS is compiled SEPARATELY from the page
+  (a CSS module, an isolated <style>, framework scoped styles): @apply and tokens
+  resolve against your entry CSS. If the file is in the same build that already does
+  `@import "tailwindcss"`, REMOVE this line — a repeated reference is redundant.
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css). Every color is a token
+  that .dark overrides, so dark mode requires no extra rules here.
+*/
+
+/* ───────────────────────────── Card ───────────────────────────── */
+
+.card {
+  @apply flex flex-col gap-4;
+  @apply w-full max-w-sm;
+  @apply p-6;
+  @apply rounded-lg border border-border bg-card shadow-sm;
+  @apply text-card-foreground;
+
+  /* element: header */
+  &-header {
+    @apply flex flex-col gap-1;
+  }
+
+  /* element: title */
+  &-title {
+    @apply text-lg font-semibold leading-tight tracking-tight;
+  }
+
+  /* element: subtitle */
+  &-subtitle {
+    @apply text-sm text-muted-foreground;
+  }
+
+  /* element: body */
+  &-body {
+    @apply text-sm leading-relaxed;
+  }
+
+  /* element: footer */
+  &-footer {
+    @apply flex items-center justify-end gap-2;
+
+    /* element modifier: meta line instead of buttons (interactive card) */
+    &_meta {
+      @apply text-sm text-muted-foreground;
+    }
+  }
+
+  /* element: action — footer button; geometry only, intent comes from .button_* */
+  &-action {
+    @apply h-9;
+    @apply px-3;
+  }
+
+  /* element: icon (decorative arrow in the meta footer) */
+  &-icon {
+    @apply size-4 shrink-0;
+  }
+
+  /* block modifier: interactive card-link */
+  &_interactive {
+    @apply no-underline;
+    @apply transition-shadow duration-150 motion-reduce:transition-none;
+    @apply cursor-pointer;
+
+    &:hover {
+      @apply border-ring shadow-md;
+    }
+    &:focus-visible {
+      @apply outline-2 outline-offset-2 outline-ring;
+    }
+    &:active {
+      @apply shadow-sm;
+    }
+  }
+}
+
+/* ──────────────────────────── Button ──────────────────────────── */
+/* Base button block (neutral base; intent — in the modifiers), reused
+   in the card footer as card-action. The same contract as in the button example. */
+
+.button {
+  @apply inline-flex items-center justify-center gap-2;
+  @apply h-10;
+  @apply px-4;
+  @apply rounded-md border border-transparent;
+  @apply text-sm font-medium;
+  @apply transition-colors duration-150 motion-reduce:transition-none;
+  @apply cursor-pointer select-none;
+
+  &:focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+  &:disabled {
+    @apply opacity-50;
+    @apply pointer-events-none;
+  }
+
+  /* modifier: primary */
+  &_primary {
+    @apply bg-primary;
+    @apply text-primary-foreground;
+
+    &:hover  { @apply bg-primary/90; }   /* slash opacity */
+    &:active { @apply bg-primary/95; }
+  }
+
+  /* modifier: outline (secondary) */
+  &_outline {
+    @apply border-border bg-background;
+    @apply text-foreground;
+
+    &:hover  { @apply bg-muted; }
+    &:active { @apply bg-muted; }
+  }
+}

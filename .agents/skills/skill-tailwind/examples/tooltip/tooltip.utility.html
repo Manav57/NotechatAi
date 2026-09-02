@@ -1,0 +1,103 @@
+<!--
+  EXAMPLE · tooltip · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as tooltip.bem.html, so you can diff A vs B on identical structure.
+  Framework-agnostic: plain HTML + CSS-only behaviour. NO JavaScript at all —
+  visibility is driven purely by CSS variants off the trigger's own state.
+
+  Accessibility — the whole point of this example:
+    • The bubble shows on BOTH :hover AND :focus-visible of the trigger, so
+      keyboard and assistive-tech users get the tip, not just mouse users. We
+      reveal it with group-hover:* AND group-focus-visible:* (focus-visible, not
+      focus — no flash on a mouse click).
+    • role="tooltip" on the bubble + aria-describedby on the trigger create the
+      programmatic link, so a screen reader announces the bubble as the trigger's
+      description. Marking the bubble aria-hidden while it is not shown is NOT
+      needed here — it is a description, surfaced on demand, so we keep it in the
+      a11y tree.
+    • The trigger is a real <button type="button"> (focusable, in the tab order).
+      A non-interactive trigger (an icon) would need tabindex="0" to be reachable
+      by keyboard — never rely on hover alone.
+
+  Positioning — `group` + an absolutely-positioned bubble:
+    The wrapper is the positioning context (relative). The bubble is absolute,
+    centred above the trigger (bottom-full + left-1/2 + -translate-x-1/2). This
+    works in every browser today.
+    PROGRESSIVE ENHANCEMENT: CSS anchor positioning (a native CSS feature —
+    anchor-name / position-anchor + position-area; Tailwind has no dedicated
+    utilities, so use arbitrary properties like [anchor-name:--tip]) can replace the manual
+    translate math and auto-flip when the tip would overflow the viewport. It is
+    not yet universally supported, so this example uses the absolute+translate
+    baseline and treats anchor positioning as an optional upgrade.
+
+  v4 enter animation: the bubble fades + lifts in via opacity/translate plus the
+  `starting:` variant (@starting-style) supplying the initial frame; closed state
+  also sets invisible + pointer-events-none so a hidden tip never traps the mouse.
+  prefers-reduced-motion is honored with motion-reduce:transition-none.
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): bg-foreground /
+  text-background for the contrasting bubble surface, outline-ring for focus.
+  Replace the token VALUES under your design system; the NAMES stay stable. Dark
+  theme works for free — every color is a token that .dark overrides.
+-->
+
+<!-- demo wrapper: gives the tip room to render; not part of the component -->
+<div class="flex min-h-40 items-center justify-center bg-background p-12 text-foreground">
+
+  <!-- block = positioning context for the absolutely-placed bubble -->
+  <span class="relative inline-block">
+
+    <!--
+      trigger: a real focusable button. `group` lets the bubble react to the
+      trigger's :hover and :focus-visible. aria-describedby points at the bubble.
+    -->
+    <button
+      type="button"
+      aria-describedby="tip-save"
+      class="group inline-flex items-center justify-center gap-2
+             h-10 px-4
+             rounded-md border border-border
+             bg-background text-foreground text-sm font-medium
+             transition-colors duration-150 motion-reduce:transition-none
+             hover:bg-muted
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-muted
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      Hover or focus me
+    </button>
+
+    <!--
+      bubble: role="tooltip" + the id referenced by aria-describedby.
+      Hidden by default (opacity-0 + invisible + pointer-events-none); revealed
+      on the trigger's hover OR keyboard focus via group-* variants. `starting:`
+      gives the @starting-style frame the browser transitions FROM on appear.
+    -->
+    <span
+      id="tip-save"
+      role="tooltip"
+      class="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2
+             w-max max-w-xs
+             rounded-md
+             bg-foreground text-background text-xs font-medium
+             px-2 py-1
+             shadow-md
+             opacity-0 invisible translate-y-1
+             transition-[opacity,transform,visibility] duration-150 ease-out
+             motion-reduce:transition-none
+             starting:opacity-0
+             group-hover:visible group-hover:translate-y-0 group-hover:opacity-100
+             group-focus-visible:visible group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+    >
+      Saves your changes to the server
+      <!-- little arrow: a rotated square sharing the bubble's surface color -->
+      <span
+        aria-hidden="true"
+        class="absolute left-1/2 top-full size-2 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-[1px] bg-foreground"
+      ></span>
+    </span>
+
+  </span>
+
+</div>

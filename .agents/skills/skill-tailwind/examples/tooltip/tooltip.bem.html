@@ -1,0 +1,50 @@
+<!--
+  EXAMPLE · tooltip · Approach (B): BEM markup — styling lives in tooltip.bem.scss.
+
+  Same UI as tooltip.utility.html (a focusable trigger with a CSS-only tooltip
+  that appears on BOTH hover AND keyboard focus), on the exact same structure, so
+  you can diff A vs B. Framework-agnostic: plain HTML, no JavaScript.
+
+  BEM convention (strict): one block `tooltip`; elements via hyphen —
+  `tooltip-trigger` (the focusable control) and `tooltip-bubble` (the floating
+  description). Elements descend from the block — no `-a-b` chains. The block
+  itself is the positioning context (position: relative, set in the SCSS).
+
+  Accessibility (handled by markup here, visuals/visibility in the SCSS):
+    • role="tooltip" on the bubble + aria-describedby on the trigger link the two,
+      so a screen reader announces the bubble as the trigger's description.
+    • The trigger is a real <button type="button"> — focusable and in the tab
+      order. The bubble appears on hover AND on keyboard focus-visible (wired in
+      the SCSS), never on hover alone.
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): bg-foreground /
+  text-background (contrasting bubble), outline-ring (focus). .dark overrides
+  them, so this markup needs no dark-specific classes.
+
+  Progressive enhancement note (see SCSS): positioning uses an absolute bubble +
+  translate today; CSS anchor positioning (a native CSS feature — anchor-name /
+  position-anchor / position-area; no dedicated Tailwind utilities, use arbitrary
+  properties) is an optional upgrade that can auto-flip on viewport overflow.
+-->
+
+<!-- demo wrapper: gives the tip room to render; not part of the component -->
+<div class="tooltipDemo">
+
+  <!-- block: positioning context + the hover/focus group for the bubble -->
+  <span class="tooltip">
+
+    <!-- element: the focusable trigger; describedby links it to the bubble -->
+    <button type="button" class="tooltip-trigger" aria-describedby="tip-save">
+      Hover or focus me
+    </button>
+
+    <!-- element: the floating description; role + id complete the a11y link -->
+    <span id="tip-save" role="tooltip" class="tooltip-bubble">
+      Saves your changes to the server
+      <!-- decorative arrow element -->
+      <span aria-hidden="true" class="tooltip-arrow"></span>
+    </span>
+
+  </span>
+
+</div>

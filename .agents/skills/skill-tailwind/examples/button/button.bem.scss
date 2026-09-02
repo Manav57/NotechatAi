@@ -1,0 +1,130 @@
+/*
+  EXAMPLE · button · Approach (B): BEM + @apply — styles for button.bem.html.
+
+  Same UI as button.utility.html (variants primary / outline / ghost / danger,
+  sizes sm / md / lg, plus a disabled state and a link styled as a button),
+  expressed with @apply grouped by property kind. Group order follows the
+  engine's property-order:
+    layout/position → size → spacing → background/border/shape → typography →
+    effects/motion → interaction; then nested states; then modifiers.
+
+  BEM convention (default): block `button`; element via single hyphen
+  (`button-icon`); modifier via single underscore (`button_primary`,
+  `button_sm`); multi-word parts camelCase, lowercase-first (`buttonDemo`).
+  Configurable — follow your project's scheme if it already declares one.
+  `&`-nesting concatenates the literal suffix onto the parent, so `&-icon`
+  yields `.button-icon` and `&_primary` yields `.button_primary`.
+
+  TAG-AGNOSTIC: every selector below targets the CLASS, never an element type
+  (`.button`, not `button`). So the same `button` block styles — and crucially
+  the `&:focus-visible` ring — apply whether the class sits on a <button> (an
+  action) or on an <a href> (navigation). That is why a link styled as a button
+  carries its own focus ring on the real, focusable navigation control.
+
+  @reference — REQUIRED if this SCSS is compiled SEPARATELY from your Tailwind
+  entry (a CSS module, an isolated stylesheet, a framework's scoped <style>):
+  point it at the entry that does `@import "tailwindcss"`, otherwise @apply
+  cannot see the utilities/tokens. If this file is part of the same build that
+  already imports tailwindcss, DROP this line — a second reference is redundant.
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css). Because every
+  color is a token that .dark overrides, the dark theme needs no extra rules.
+  The base class carries the DEFAULT (md) geometry plus shared behaviour;
+  tone/intent lives in tone modifiers so the base never hardcodes a color.
+
+  SIZE AXIS: the bare `.button` IS the md size — there is no `button_md`
+  modifier. Only the off-default sizes get a modifier (`button_sm`, `button_lg`),
+  each overriding just the geometry that differs from the base. A `button_md`
+  whose @apply set equalled the base would be a DEAD modifier (it styles
+  nothing) — see references/review.md §3.5 — so we omit it.
+*/
+
+/* ───────────────────────── Button ───────────────────────── */
+
+.button {
+  @apply inline-flex items-center justify-center gap-2;
+  /* default (md) geometry; off-default sizes override via &_sm / &_lg */
+  @apply h-10;
+  @apply px-4;
+  /* tone comes from modifiers — base stays color-neutral */
+  @apply rounded-md border border-transparent;
+  /* no-underline keeps an <a> looking like a button */
+  @apply text-sm font-medium no-underline;
+  @apply transition-colors duration-150;
+  @apply cursor-pointer select-none;
+
+  /* shared across every variant, and across <button> AND <a> */
+  &:focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+  /* :disabled only applies to <button>; an <a> styled as a button has no
+     disabled state — omit href / add aria-disabled if a link must be inert */
+  &:disabled {
+    @apply opacity-50 pointer-events-none;
+  }
+
+  /* element: leading icon */
+  &-icon {
+    @apply inline-flex items-center justify-center;
+    @apply size-4 shrink-0;
+  }
+
+  /* ── size modifiers (geometry only; md is the bare base — no `&_md`) ── */
+  &_sm {
+    @apply h-8;
+    @apply px-3;
+    @apply text-xs;
+  }
+  &_lg {
+    @apply h-12;
+    @apply px-6;
+    @apply text-base;
+  }
+
+  /* ── tone / intent modifiers (color only, base stays neutral) ── */
+  &_primary {
+    @apply bg-primary;
+    @apply text-primary-foreground;
+
+    &:hover  { @apply bg-primary/90; }   /* slash opacity — v4 */
+    &:active { @apply bg-primary/95; }
+  }
+
+  &_outline {
+    @apply bg-background border-border;
+    @apply text-foreground;
+
+    &:hover  { @apply bg-muted; }
+    &:active { @apply bg-muted; }
+  }
+
+  &_ghost {
+    @apply bg-transparent;
+    @apply text-foreground;
+
+    &:hover  { @apply bg-muted; }
+    &:active { @apply bg-muted; }
+  }
+
+  &_danger {
+    @apply bg-danger;
+    @apply text-danger-foreground;
+
+    &:hover  { @apply bg-danger/90; }
+    &:active { @apply bg-danger/95; }
+  }
+}
+
+/* ───────────────────── Demo wrapper (layout only) ───────────────────── */
+
+.buttonDemo {
+  @apply flex flex-col gap-6;
+  @apply p-6;
+  @apply bg-background text-foreground;
+
+  &-row {
+    @apply flex flex-wrap items-center gap-3;
+  }
+}

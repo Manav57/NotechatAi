@@ -1,0 +1,49 @@
+<!--
+  EXAMPLE · breadcrumb · Approach (B): BEM markup — styles in breadcrumb.bem.scss.
+
+  Same UI as in breadcrumb.utility.html (breadcrumbs: links + current
+  page; "/" separator via the CSS pseudo-element before:, not as text in the DOM).
+  Here the markup carries SEMANTIC names per BEM; the appearance is assembled from utilities
+  via @apply in breadcrumb.bem.scss.
+
+  Skill BEM convention:
+    block           breadcrumb
+    elements        breadcrumb-list, breadcrumb-item, breadcrumb-link
+    element modifier breadcrumb-link_current  (= current page, aria-current="page")
+  One block per component; elements always derive from the block (no a-b chains).
+
+  Semantics are identical to approach A: <nav aria-label="Breadcrumb"> → <ol> → <li>.
+  Intermediate items are <a> links; the last is NOT a link, but a <span aria-current=
+  "page">. The separator is drawn in SCSS (breadcrumb-item::before), not in the markup.
+
+  Pairing with approach A: structure and states are identical; only WHERE the
+  style lives differs (in SCSS, not in markup classes). No framework: pure HTML.
+-->
+
+<!-- demo wrapper: neutral page background so the breadcrumbs read in context -->
+<div class="min-h-32 bg-background text-foreground p-4">
+  <nav aria-label="Breadcrumb" class="breadcrumb">
+    <ol class="breadcrumb-list">
+
+      <!-- First item: link (the ::before separator is suppressed on :first-child) -->
+      <li class="breadcrumb-item">
+        <a href="/" class="breadcrumb-link">Home</a>
+      </li>
+
+      <!-- Intermediate item: link -->
+      <li class="breadcrumb-item">
+        <a href="/library" class="breadcrumb-link">Library</a>
+      </li>
+
+      <!-- Intermediate item: link -->
+      <li class="breadcrumb-item">
+        <a href="/library/components" class="breadcrumb-link">Components</a>
+      </li>
+
+      <!-- Current page: NOT a link; aria-current="page" + modifier -->
+      <li class="breadcrumb-item">
+        <span class="breadcrumb-link breadcrumb-link_current" aria-current="page">Breadcrumb</span>
+      </li>
+    </ol>
+  </nav>
+</div>

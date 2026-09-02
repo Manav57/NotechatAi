@@ -1,0 +1,184 @@
+/*
+  EXAMPLE · drawer · Approach (B): BEM + @apply — styles for drawer.bem.html.
+
+  Same UI as drawer.utility.html (a native off-canvas <dialog> pinned to a screen
+  edge, with a header / scrollable body, a × close control, a v4 slide-in on the
+  panel and a fading ::backdrop), expressed with @apply grouped by property kind.
+  Group order follows the engine's property-order:
+    layout/position → size → spacing → background/border/shape → typography →
+    effects/motion → interaction; then nested states; then modifiers.
+
+  Off-canvas slide-in (no JS state): the dialog only paints once it has the
+  native [open] attribute (set by showModal()). The base parks the panel fully
+  off-screen with translate-x; the open frame slides it to translate-x-0; and
+  @starting-style supplies the *initial* frame the browser transitions FROM —
+  for the panel and its ::backdrop. transition-discrete keeps display/overlay
+  animatable so the panel stays painted while it slides in/out. The side is a
+  BLOCK MODIFIER: drawer_right pins to the right + slides from translate-x-full,
+  drawer_left mirrors it. prefers-reduced-motion is honored with motion-reduce.
+
+  @reference — REQUIRED here because this SCSS is shown as a standalone file
+  (a CSS module / isolated stylesheet / scoped <style> compiles SEPARATELY from
+  your Tailwind entry). It points @apply at the build that does
+  `@import "tailwindcss"`, otherwise the utilities/tokens are unknown and @apply
+  fails. If you instead inline this into the SAME build that already imports
+  tailwindcss, DROP this line — a second reference is redundant.
+*/
+
+@reference "../app.css";   /* ← path to YOUR entry that imports tailwindcss */
+
+/* ───────────────────────── Drawer (native off-canvas <dialog>) ───────────────────────── */
+
+.drawer {
+  @apply h-dvh max-h-dvh w-full max-w-sm;
+  @apply m-0 p-0;
+  @apply rounded-none bg-card shadow-lg;
+  @apply text-card-foreground;
+  /* animate translate + display/overlay so the panel stays
+     painted long enough to slide out on close */
+  @apply transition-[translate,display,overlay] duration-300 ease-out transition-discrete;
+  @apply motion-reduce:transition-none;
+
+  /* platform backdrop — fades in via its own starting frame */
+  &::backdrop {
+    @apply bg-foreground/40;
+    @apply opacity-0 transition-[opacity,display,overlay] duration-300 transition-discrete;
+    @apply motion-reduce:transition-none;
+  }
+  &[open]::backdrop {
+    @apply opacity-100;
+  }
+  @starting-style {
+    &[open]::backdrop {
+      @apply opacity-0;
+    }
+  }
+
+  /* element: panel — full-height vertical stack (header + scrollable body) */
+  &-panel {
+    @apply flex flex-col;
+    @apply h-full;
+  }
+
+  /* element: header row — title + close control, fixed at the top */
+  &-header {
+    @apply flex shrink-0 items-start justify-between gap-4;
+    @apply p-4;
+    /* divider under the header */
+    @apply border-b border-border;
+  }
+
+  /* element: title — linked from aria-labelledby */
+  &-title {
+    @apply text-base font-semibold leading-none tracking-tight;
+  }
+
+  /* element: body — grows to fill, scrolls independently when content overflows */
+  &-body {
+    @apply flex-1;
+    @apply p-4;
+    @apply text-sm leading-relaxed text-muted-foreground;
+    @apply overflow-y-auto;
+  }
+
+  /* element: the form wrapping the close button (display: contents — no box) */
+  &-closeForm {
+    @apply contents;
+  }
+
+  /* element: close (×) control — interactive, full state set */
+  &-close {
+    @apply -m-1 inline-flex shrink-0 items-center justify-center;
+    @apply size-7;
+    @apply rounded-sm border border-transparent;
+    @apply text-muted-foreground;
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+    @apply cursor-pointer;
+
+    &:hover         { @apply bg-muted text-foreground; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+    &:active        { @apply bg-muted; }
+    &:disabled      { @apply opacity-50 pointer-events-none; }
+
+    /* nested icon glyph */
+    & > svg { @apply size-4; }
+  }
+
+  /* --- modifier (block): side = RIGHT — pin to the right edge, slide from the
+     right. translate-x-full parks it off-screen; the open frame slides to 0;
+     @starting-style supplies the off-screen frame the open animates FROM. --- */
+  &_right {
+    @apply ml-auto right-3;
+    @apply border-l border-border;
+    /* closed (initial) frame: off-screen to the right */
+    @apply translate-x-full;
+
+    &[open] {
+      /* open frame: on-screen */
+      @apply translate-x-0;
+    }
+    @starting-style {
+      &[open] { @apply translate-x-full; }
+    }
+  }
+
+  /* --- modifier (block): side = LEFT — mirror of _right (identical UI, other
+     edge). -translate-x-full parks it off-screen to the left. --- */
+  &_left {
+    @apply mr-auto left-3;
+    @apply border-r border-border;
+    /* closed (initial) frame: off-screen to the left */
+    @apply -translate-x-full;
+
+    &[open] {
+      /* open frame: on-screen */
+      @apply translate-x-0;
+    }
+    @starting-style {
+      &[open] { @apply -translate-x-full; }
+    }
+  }
+}
+
+/* ───────────── Embedded button block (the open trigger) ───────────── */
+/* The button is its own component; here it is sized for the trigger. Base stays
+   NEUTRAL — tone/intent lives in _primary / _outline modifiers. */
+
+.button {
+  @apply inline-flex items-center justify-center gap-2;
+  @apply h-10;
+  @apply px-4;
+  @apply rounded-md border border-transparent;
+  @apply text-sm font-medium;
+  @apply transition-colors duration-150 motion-reduce:transition-none;
+  @apply cursor-pointer select-none;
+
+  &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+  &:disabled      { @apply opacity-50 pointer-events-none; }
+
+  /* modifier: primary (the trigger) */
+  &_primary {
+    @apply bg-primary;
+    @apply text-primary-foreground;
+
+    &:hover  { @apply bg-primary/90; }   /* slash opacity — v4 */
+    &:active { @apply bg-primary/95; }
+  }
+
+  /* modifier: outline / secondary */
+  &_outline {
+    @apply bg-background border-border;
+    @apply text-foreground;
+
+    &:hover  { @apply bg-muted; }
+    &:active { @apply bg-muted; }
+  }
+}
+
+/* ───────────────────── Demo wrapper (layout only) ───────────────────── */
+
+.drawerDemo {
+  @apply flex flex-col items-start gap-4;
+  @apply p-6;
+  @apply bg-background text-foreground;
+}

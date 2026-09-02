@@ -1,0 +1,41 @@
+/* FIXTURE — INPUT ONLY (Tailwind v3). Intentionally "bad" code as INPUT for migration/review. */
+/* NOT a reference. The main skill body must not contain this — only in before→after pairs.     */
+/* Cases: EV-01 (v3→v4 migration), EV-11 (review).                                             */
+
+/* v3: three separate directives instead of a single @import "tailwindcss" */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* v3: custom utility via @layer utilities (in v4 — @utility name { ... }) */
+@layer utilities {
+  .content-auto {
+    content-visibility: auto;
+  }
+
+  /* v3: arbitrary "wrapper utility" with hardcoded values */
+  .card-shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+  }
+}
+
+/* v3: component layer with "hidden" utility soup and hex (candidate for @theme tokens) */
+@layer components {
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: #1f6feb;        /* repeated brand hex — candidate for --color-primary */
+    color: #ffffff;
+    border-radius: 8px;               /* candidate for --radius-md / rounded-md */
+    font-weight: 500;
+  }
+
+  .btn-primary:hover {
+    background-color: rgba(31, 111, 235, 0.9); /* v3-style opacity instead of bg-primary/90 */
+  }
+}

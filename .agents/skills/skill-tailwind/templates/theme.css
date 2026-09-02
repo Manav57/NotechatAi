@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+/* Class-based dark mode (v4 custom variant) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* This token set is a STARTER MENU, not a mandate — keep only tokens with a real
+     consumer in your UI and drop the rest (an unused @theme token still ships a utility). */
+  /* Color — SEMANTIC PLACEHOLDERS. Replace the VALUES with the project's design
+     tokens / design system; keep the NAMES stable. No brand colors hardcoded. */
+  --color-background: oklch(99% 0 0);
+  --color-foreground: oklch(21% 0.01 255);
+
+  --color-muted: oklch(96% 0.004 255);
+  --color-muted-foreground: oklch(52% 0.01 255);
+
+  --color-card: oklch(100% 0 0);
+  --color-card-foreground: oklch(21% 0.01 255);
+
+  --color-border: oklch(92% 0.004 255);
+  --color-input: oklch(92% 0.004 255); /* add when you have form inputs */
+  --color-ring: oklch(62% 0.02 255);
+
+  --color-primary: oklch(52% 0.12 255);
+  --color-primary-foreground: oklch(99% 0 0);
+
+  --color-accent: oklch(96% 0.004 255);
+  --color-accent-foreground: oklch(21% 0.01 255);
+
+  --color-success: oklch(60% 0.13 150);
+  --color-success-foreground: oklch(99% 0 0);
+
+  --color-warning: oklch(75% 0.13 80);
+  --color-warning-foreground: oklch(24% 0.03 80);
+
+  --color-danger: oklch(58% 0.18 27);
+  --color-danger-foreground: oklch(99% 0 0);
+
+  /* Fonts — name by ROLE (heading / body / mono), never by appearance. Do NOT name a
+     font token --font-display: `display` is both a CSS property and the @font-face
+     `font-display` descriptor, so the name shadows a real CSS keyword. Stacks below are
+     placeholder defaults — swap in the design system's families, keep the role names. */
+  --font-heading: ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Code", monospace;
+
+  /* Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+}
+
+/* Dark theme — override the same tokens (values are placeholders too) */
+.dark {
+  --color-background: oklch(18% 0.01 255);
+  --color-foreground: oklch(96% 0.004 255);
+  --color-muted: oklch(26% 0.01 255);
+  --color-muted-foreground: oklch(68% 0.01 255);
+  --color-card: oklch(21% 0.01 255);
+  --color-card-foreground: oklch(96% 0.004 255);
+  --color-border: oklch(30% 0.01 255);
+  --color-input: oklch(30% 0.01 255);
+  --color-ring: oklch(62% 0.02 255);
+  --color-primary: oklch(70% 0.12 255);
+  --color-primary-foreground: oklch(18% 0.01 255);
+  --color-accent: oklch(28% 0.01 255);
+  --color-accent-foreground: oklch(96% 0.004 255);
+  /* Every status pair declared in @theme MUST be re-checked here: any token you add
+     above needs a matching .dark override so its *-foreground keeps contrast in dark
+     too — otherwise it keeps its light value (e.g. near-white text on a light fill).
+     See docs/dark-mode.md §8 (the *-foreground contrast-pair rule). */
+  --color-success: oklch(72% 0.15 150);
+  --color-success-foreground: oklch(18% 0.04 150);
+  --color-warning: oklch(80% 0.14 80);
+  --color-warning-foreground: oklch(22% 0.04 80);
+  --color-danger: oklch(62% 0.17 27);
+  --color-danger-foreground: oklch(99% 0 0);
+  /* Darken the browser's native layer (scrollbars/form controls) with the theme — see docs/dark-mode.md §7 */
+  color-scheme: dark;
+}
+
+@layer base {
+  * { @apply border-border; }
+  /* Light native layer (scrollbars/form controls) by default; .dark flips it — see docs/dark-mode.md §7 */
+  :root { color-scheme: light; }
+  body { @apply bg-background text-foreground; }
+}

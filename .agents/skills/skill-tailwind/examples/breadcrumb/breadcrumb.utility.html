@@ -1,0 +1,84 @@
+<!--
+  EXAMPLE · breadcrumb · Approach (A): UTILITY-FIRST — classes in the markup.
+
+  Breadcrumbs in pure HTML. Semantics: <nav aria-label="Breadcrumb"> →
+  <ol> → <li>. Intermediate items are <a> links; the last item is NOT a link,
+  but a <span aria-current="page"> (the current page must not be clickable).
+
+  The "/" separator is drawn VIA CSS (before:content-['/']), NOT as text in the DOM:
+  it is decoration, the screen reader does not announce it. The first <li> has no separator
+  (first:before:content-none).
+
+  Same structure and states as in breadcrumb.bem.html (diff A vs B on a single
+  UI). No framework: pure HTML.
+
+  Tokens are the canonical SEMANTIC ones (see templates/theme.css): text-foreground,
+  text-muted-foreground, outline-ring, etc. Token values are placeholders for your
+  design system; the names are stable. Dark mode works "for free" — every color
+  is a token that .dark overrides, so there are no dedicated dark: variants here.
+
+  Link states: hover (color) / focus-visible (visible ring via outline).
+  The current item — aria-current="page" + muted-emphasized non-link text.
+-->
+
+<!-- demo wrapper: neutral page background so the breadcrumbs read in context -->
+<div class="min-h-32 bg-background text-foreground p-4">
+  <nav aria-label="Breadcrumb">
+    <ol class="flex flex-wrap items-center gap-1.5 text-sm">
+
+      <!-- First item: link, without a leading separator -->
+      <li class="flex items-center gap-1.5
+                 before:text-muted-foreground before:content-['/'] first:before:content-none">
+        <a
+          href="/"
+          class="rounded-sm text-muted-foreground
+                 transition-colors duration-150
+                 hover:text-foreground
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        >
+          Home
+        </a>
+      </li>
+
+      <!-- Intermediate item: link, "/" separator via before: -->
+      <li class="flex items-center gap-1.5
+                 before:text-muted-foreground before:content-['/'] first:before:content-none">
+        <a
+          href="/library"
+          class="rounded-sm text-muted-foreground
+                 transition-colors duration-150
+                 hover:text-foreground
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        >
+          Library
+        </a>
+      </li>
+
+      <!-- Intermediate item: link -->
+      <li class="flex items-center gap-1.5
+                 before:text-muted-foreground before:content-['/'] first:before:content-none">
+        <a
+          href="/library/components"
+          class="rounded-sm text-muted-foreground
+                 transition-colors duration-150
+                 hover:text-foreground
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        >
+          Components
+        </a>
+      </li>
+
+      <!--
+        Current page: NOT a link. aria-current="page" reports the position
+        to the screen reader; visually emphasized with a regular (not muted) color and
+        weight. The "/" separator before it — also via before:.
+      -->
+      <li class="flex items-center gap-1.5
+                 before:text-muted-foreground before:content-['/'] first:before:content-none">
+        <span aria-current="page" class="font-medium text-foreground">
+          Breadcrumb
+        </span>
+      </li>
+    </ol>
+  </nav>
+</div>

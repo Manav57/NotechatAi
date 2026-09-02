@@ -1,0 +1,137 @@
+<!--
+  EXAMPLE · input-field · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as input-field.bem.html, so you can diff A vs B on identical structure.
+  No framework: plain HTML fragment.
+
+  A labelled text input with: <label for>, a control with an optional leading
+  icon, a hint line and an error line, wired to the control via aria-describedby.
+
+  States covered: focus-visible (ring-ring), disabled, and invalid
+  (aria-invalid="true" → border-danger + ring-danger + visible error text).
+  We don't rely on color alone — the error is always duplicated as text.
+
+  Tokens are the canonical SEMANTIC ones (see templates/theme.css): bg-input,
+  border-border, text-foreground, placeholder:text-muted-foreground, ring-ring,
+  text-muted-foreground (hint), text-danger / border-danger (error). Replace the
+  token VALUES under your design system; the NAMES stay stable. Dark theme works
+  for free — every color is a semantic token that .dark overrides.
+-->
+
+<!-- demo wrapper: just lays the fields out for preview; not part of the component -->
+<div class="flex max-w-sm flex-col gap-6 p-6">
+
+  <!-- ───────── Default (with leading icon + hint) ───────── -->
+  <div class="flex flex-col gap-1.5">
+    <label for="email" class="text-sm font-medium text-foreground">
+      Email
+    </label>
+
+    <!-- control wrapper holds the leading icon + input on one row.
+         has-[:focus-visible] lifts the ring to the control only on keyboard
+         focus (focus-visible semantics) — no ring on a mouse click. -->
+    <div
+      class="relative flex items-center
+             h-10 w-full
+             rounded-md border border-border bg-input transition-colors duration-150
+             has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background"
+    >
+      <!-- leading icon (decorative) -->
+      <svg
+        class="pointer-events-none absolute left-3 size-4 shrink-0 text-muted-foreground"
+        viewBox="0 0 16 16" fill="none" aria-hidden="true"
+      >
+        <path d="M2 4.5h12v7H2zM2 5l6 4 6-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+
+      <input
+        id="email"
+        type="email"
+        name="email"
+        placeholder="you@example.com"
+        aria-describedby="email-hint"
+        class="h-full w-full
+               rounded-md bg-transparent pl-9 pr-3
+               text-sm text-foreground placeholder:text-muted-foreground
+               outline-none
+               disabled:cursor-not-allowed disabled:opacity-50"
+      />
+    </div>
+
+    <p id="email-hint" class="text-xs text-muted-foreground">
+      We&rsquo;ll only use this to send sign-in links.
+    </p>
+  </div>
+
+  <!-- ───────── Disabled ───────── -->
+  <div class="flex flex-col gap-1.5">
+    <label for="company" class="text-sm font-medium text-foreground">
+      Company
+    </label>
+
+    <div
+      class="relative flex items-center
+             h-10 w-full
+             rounded-md border border-border bg-input transition-colors duration-150
+             has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background"
+    >
+      <input
+        id="company"
+        type="text"
+        name="company"
+        value="Example Co."
+        disabled
+        aria-describedby="company-hint"
+        class="h-full w-full
+               rounded-md bg-transparent px-3
+               text-sm text-foreground placeholder:text-muted-foreground
+               outline-none
+               disabled:cursor-not-allowed disabled:opacity-50"
+      />
+    </div>
+
+    <p id="company-hint" class="text-xs text-muted-foreground">
+      Locked while your account is being verified.
+    </p>
+  </div>
+
+  <!-- ───────── Invalid (aria-invalid="true" → danger border + error text) ───────── -->
+  <div class="flex flex-col gap-1.5">
+    <label for="password" class="text-sm font-medium text-foreground">
+      Password
+    </label>
+
+    <!--
+      Invalid state = danger border + danger focus ring (instead of border/ring).
+      In the BEM version this is the single `inputField-invalid` modifier on the
+      block; here we apply the danger token-classes directly. The input also
+      carries aria-invalid="true" and is linked to the error via aria-describedby.
+    -->
+    <div
+      class="relative flex items-center
+             h-10 w-full
+             rounded-md border border-danger bg-input transition-colors duration-150
+             has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-danger has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background"
+    >
+      <input
+        id="password"
+        type="password"
+        name="password"
+        value="123"
+        aria-invalid="true"
+        aria-describedby="password-error"
+        class="h-full w-full
+               rounded-md bg-transparent px-3
+               text-sm text-foreground placeholder:text-muted-foreground
+               outline-none
+               disabled:cursor-not-allowed disabled:opacity-50"
+      />
+    </div>
+
+    <!-- error is announced and linked via aria-describedby; never colour-only -->
+    <p id="password-error" class="text-xs font-medium text-danger">
+      Password must be at least 8 characters.
+    </p>
+  </div>
+
+</div>

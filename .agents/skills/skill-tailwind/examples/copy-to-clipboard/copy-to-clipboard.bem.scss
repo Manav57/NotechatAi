@@ -1,0 +1,95 @@
+/*
+  EXAMPLE · copy-to-clipboard · Approach (B): BEM + @apply — styles for
+  copy-to-clipboard.bem.html.
+
+  Same UI as copy-to-clipboard.utility.html (a copy button that confirms success
+  visibly AND via a visually-hidden live region), expressed with @apply grouped by
+  property kind. Group order follows the engine's property-order:
+    layout/position → size → spacing → background/border/shape → typography →
+    effects/motion → interaction; then nested states; then modifiers.
+
+  BEM convention (default): elements via single hyphen (&-value, &-button,
+  &-icon, &-label, &-status); modifiers via single underscore (&_done). In SCSS,
+  `&`-concatenation appends the literal suffix onto the parent, so a nested
+  element-then-modifier yields .copyField-button_done. camelCase block names
+  survive verbatim. If your repo standardizes on another BEM style, FOLLOW it —
+  consistency beats the default; the SCSS nesting mechanics are the same.
+
+  @reference — REQUIRED if this SCSS is compiled SEPARATELY from your Tailwind
+  entry (a CSS module, an isolated stylesheet, a framework's scoped <style>):
+  point it at the entry that does `@import "tailwindcss"`, otherwise @apply
+  cannot see the utilities/tokens. If this file is part of the same build that
+  already imports tailwindcss, DROP this line — a second reference is redundant.
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css). Because every
+  color is a token that .dark overrides, the dark theme needs no extra rules.
+*/
+
+/* ───────────────────────── Copy field ───────────────────────── */
+
+.copyField {
+  @apply inline-flex items-center gap-2;
+
+  /* element: the value being copied, shown read-only in a <code> */
+  &-value {
+    @apply px-2 py-1;
+    @apply rounded-sm border border-border bg-muted;
+    @apply text-sm font-mono text-foreground;
+  }
+
+  /* element: the copy button (the only interactive node) */
+  &-button {
+    @apply inline-flex items-center justify-center gap-2;
+    @apply h-9;
+    @apply px-3;
+    @apply rounded-md border border-border bg-background;
+    @apply text-sm font-medium text-foreground;
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+    @apply cursor-pointer select-none;
+
+    &:hover         { @apply bg-muted; }
+    &:active        { @apply bg-muted; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+    &:disabled      { @apply opacity-50 pointer-events-none; }
+
+    /* modifier: success frame — an OPTIONAL state hook your framework may toggle
+       (classList) instead of swapping [hidden] on the label spans. The label
+       below already tints itself green; this keeps it self-contained either way. */
+    &_done {
+      @apply border-success/40;
+    }
+  }
+
+  /* element: a label group (idle vs done) — only one is shown at a time */
+  &-label {
+    @apply inline-flex items-center gap-2;
+
+    /* modifier: the success label tints to the status color */
+    &_done {
+      @apply text-success;
+    }
+  }
+
+  /* element: the leading icon slot (decoration; aria-hidden in the markup) */
+  &-icon {
+    @apply inline-flex items-center justify-center;
+    @apply size-4 shrink-0;
+  }
+
+  /* element: the visually-hidden live region (role="status" aria-live="polite").
+     sr-only keeps it in the a11y tree but off-screen — present, empty at rest,
+     and only its TEXT changes. */
+  &-status {
+    @apply sr-only;
+  }
+}
+
+/* ───────────────────── Demo wrapper (layout only) ───────────────────── */
+
+.copyFieldDemo {
+  @apply flex flex-col items-start gap-4;
+  @apply p-6;
+  @apply bg-background text-foreground;
+}

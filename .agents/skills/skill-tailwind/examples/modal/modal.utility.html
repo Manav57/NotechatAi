@@ -1,0 +1,149 @@
+<!--
+  EXAMPLE · modal · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as modal.bem.html, so you can diff A vs B on identical structure.
+  Framework-agnostic: plain HTML on a NATIVE <dialog>. The only JS is a native
+  platform API (dialog.showModal() / form method="dialog" closes it) — NOT a
+  framework. Opening with showModal() gives a real modal: focus trap, inert
+  background and Esc-to-close come from the platform, not from us.
+
+  v4 entry animation: the dialog AND its ::backdrop fade/scale in on open via
+  the `starting:` variant (@starting-style) + `transition` + transform/opacity:
+    closed→open  →  starting:opacity-0 starting:scale-95  (initial frame)
+    open         →  opacity-100 scale-100                  (target frame)
+  prefers-reduced-motion is respected with motion-reduce:transition-none.
+
+  Tokens are the canonical SEMANTIC ones from templates/theme.css
+  (bg-card / text-card-foreground, border-border, bg-muted, outline-ring …).
+  Replace the token VALUES under your design system; the NAMES stay stable.
+  Dark theme works for free — every color is a token that .dark overrides, so
+  this markup needs no `dark:` variants of its own.
+
+  Accessibility: <dialog> sets role="dialog" + aria-modal itself; we link the
+  heading via aria-labelledby and the body via aria-describedby. Footer buttons
+  expose the full state set (hover · active · focus-visible · disabled).
+-->
+
+<!-- demo wrapper: neutral page surface + the trigger that opens the dialog -->
+<div class="flex flex-col items-start gap-4 bg-background p-6 text-foreground">
+
+  <!-- Trigger: native platform API, no framework. Opens the NEXT sibling dialog. -->
+  <button
+    type="button"
+    onclick="this.nextElementSibling.showModal()"
+    class="inline-flex items-center justify-center gap-2
+           h-10 px-4
+           rounded-md border border-transparent
+           bg-primary text-primary-foreground text-sm font-medium
+           transition-colors duration-150 motion-reduce:transition-none
+           hover:bg-primary/90
+           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+           active:bg-primary/95
+           disabled:opacity-50 disabled:pointer-events-none
+           cursor-pointer select-none"
+  >
+    Open dialog
+  </button>
+
+  <!--
+    Native <dialog>. `m-auto` centers it; opacity+scale animate the panel in,
+    and `backdrop:` styles + animates the platform backdrop. The `open:` and
+    `starting:` variants drive the enter transition with no JS state.
+  -->
+  <dialog
+    aria-labelledby="modal-title"
+    aria-describedby="modal-body"
+    class="m-auto w-full max-w-lg
+           rounded-lg border border-border
+           bg-card text-card-foreground shadow-lg
+           opacity-0 scale-95
+           transition-[opacity,transform,display,overlay] duration-200 ease-out
+           transition-discrete motion-reduce:transition-none
+           open:opacity-100 open:scale-100
+           starting:open:opacity-0 starting:open:scale-95
+           backdrop:bg-foreground/40
+           backdrop:opacity-0 backdrop:transition-[opacity,display,overlay]
+           backdrop:duration-200 backdrop:transition-discrete
+           backdrop:open:opacity-100 backdrop:starting:open:opacity-0
+           backdrop:motion-reduce:transition-none"
+  >
+    <!-- panel: vertical stack, header / body / footer -->
+    <div class="flex flex-col gap-4 p-6">
+
+      <!-- header: title + a close (×) control -->
+      <header class="flex items-start justify-between gap-4">
+        <h2 id="modal-title" class="text-base font-semibold leading-none tracking-tight">
+          Dialog title
+        </h2>
+
+        <!-- close button: a real submit inside method="dialog" closes the dialog -->
+        <form method="dialog" class="contents">
+          <button
+            type="submit"
+            aria-label="Close dialog"
+            class="-m-1 inline-flex shrink-0 items-center justify-center
+                   size-7
+                   rounded-sm border border-transparent
+                   text-muted-foreground
+                   transition-colors duration-150 motion-reduce:transition-none
+                   hover:bg-muted hover:text-foreground
+                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                   active:bg-muted
+                   disabled:opacity-50 disabled:pointer-events-none
+                   cursor-pointer"
+          >
+            <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </button>
+        </form>
+      </header>
+
+      <!-- body -->
+      <p id="modal-body" class="text-sm leading-relaxed text-muted-foreground">
+        Body content goes here. Keep the skeleton neutral; the surrounding design
+        system supplies the real colors, type and spacing via the @theme tokens.
+      </p>
+
+      <!-- footer: a single <form method="dialog"> so either button closes the dialog -->
+      <form method="dialog" class="flex items-center justify-end gap-2">
+        <!-- Cancel (secondary / outline) -->
+        <button
+          type="submit"
+          class="inline-flex items-center justify-center
+                 h-9 px-3
+                 rounded-md border border-border
+                 bg-background text-foreground text-sm font-medium
+                 transition-colors duration-150 motion-reduce:transition-none
+                 hover:bg-muted
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                 active:bg-muted
+                 disabled:opacity-50 disabled:pointer-events-none
+                 cursor-pointer select-none"
+        >
+          Cancel
+        </button>
+
+        <!-- Confirm (primary). `value` lets the opener read which button closed it. -->
+        <button
+          type="submit"
+          value="confirm"
+          class="inline-flex items-center justify-center
+                 h-9 px-3
+                 rounded-md border border-transparent
+                 bg-primary text-primary-foreground text-sm font-medium
+                 transition-colors duration-150 motion-reduce:transition-none
+                 hover:bg-primary/90
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                 active:bg-primary/95
+                 disabled:opacity-50 disabled:pointer-events-none
+                 cursor-pointer select-none"
+        >
+          Confirm
+        </button>
+      </form>
+
+    </div>
+  </dialog>
+
+</div>

@@ -1,0 +1,146 @@
+<!--
+  EXAMPLE · media · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Responsive image/media: <figure> with <img> (or <picture>) + <figcaption>.
+  Same UI as media.bem.html — the structure can be diffed A vs B on identical
+  markup. Plain HTML + CSS, framework-free, no JS.
+
+  What the skeleton shows:
+    1) <figure> 16:9 (aspect-video): the wrapper sets the ratio and clips the image
+       (overflow-hidden + rounded-lg), <img> fills it with object-cover. The caption is
+       BELOW the media in a separate <figcaption>. loading="lazy" + mandatory alt.
+    2) <figure> 1:1 (aspect-square): same ratio-via-wrapper, a square.
+    3) <picture> with art-direction (different source per breakpoint) — the ratio is
+       still on the wrapper; demonstrates that the media element can be a <picture>.
+    4) Variant with an OVERLAID caption: <figcaption> over the image at the bottom,
+       readability comes from a gradient scrim (bg-linear-to-t, NOT decorative slop) from
+       a semi-transparent foreground; the text is text-background for contrast.
+    5) Purely DECORATIVE image: empty alt="" + role="presentation" — no
+       caption, the screen reader skips it.
+
+  Keep the ratio on the WRAPPER (aspect-video/aspect-square) + object-cover on <img>,
+  so an image of any size won't break the frame; <img> is then w-full h-auto in the
+  flow (for cases without a fixed ratio). rounded-lg — neutral rounding;
+  rounded-full is NOT used here (this is not an avatar/pill/spinner).
+
+  Accessibility:
+    • A meaningful image carries a real alt; <figcaption> describes/captions it.
+    • Purely decorative — alt="" (empty) + role="presentation": not announced.
+    • The overlaid caption stays real text (rather than "baked" into the image),
+      contrast is provided by the gradient scrim + text-background.
+
+  Tokens — canonical SEMANTIC ones (templates/theme.css): bg-muted (surface placeholder
+  while the media loads), text-muted-foreground (caption), text-foreground
+  /text-background (overlaid caption), border-border, rounded-lg. Token values
+  are swapped to fit the design system; names stay stable. Dark mode works "for free" —
+  each color is a token that .dark overrides, no dark:* classes needed.
+
+  The demo wrapper below only lays out the examples on the page — it is not part of the
+  component.
+-->
+
+<div class="grid grid-cols-1 gap-8 bg-background p-8 sm:grid-cols-2">
+
+  <!-- ───────── 1. figure 16:9 (aspect-video), caption below media ───────── -->
+
+  <figure class="flex w-full max-w-md flex-col gap-2">
+    <div class="aspect-video w-full overflow-hidden rounded-lg border border-border bg-muted">
+      <img
+        src="./media-landscape.jpg"
+        alt="Wide mountain ridge under an overcast sky"
+        loading="lazy"
+        decoding="async"
+        class="size-full object-cover"
+      />
+    </div>
+    <figcaption class="text-sm text-muted-foreground">
+      A short caption that describes the image for sighted users.
+    </figcaption>
+  </figure>
+
+  <!-- ───────── 2. figure 1:1 (aspect-square), caption below media ───────── -->
+
+  <figure class="flex w-full max-w-md flex-col gap-2">
+    <div class="aspect-square w-full overflow-hidden rounded-lg border border-border bg-muted">
+      <img
+        src="./media-square.jpg"
+        alt="Top-down view of tools arranged on a workbench"
+        loading="lazy"
+        decoding="async"
+        class="size-full object-cover"
+      />
+    </div>
+    <figcaption class="text-sm text-muted-foreground">
+      Square crop (1:1) — same wrapper-driven aspect, different ratio.
+    </figcaption>
+  </figure>
+
+  <!-- ───────── 3. <picture> (art-direction), 16:9 wrapper ───────── -->
+  <!--
+    The ratio is still on the wrapper; the media element is a <picture> with different sources
+    per breakpoint (art-direction). object-cover applies to the resulting <img>.
+  -->
+  <figure class="flex w-full max-w-md flex-col gap-2">
+    <div class="aspect-video w-full overflow-hidden rounded-lg border border-border bg-muted">
+      <picture>
+        <source media="(min-width: 640px)" srcset="./media-wide.jpg" />
+        <source media="(max-width: 639px)" srcset="./media-tall.jpg" />
+        <img
+          src="./media-wide.jpg"
+          alt="City street that re-frames from wide to tall on small screens"
+          loading="lazy"
+          decoding="async"
+          class="size-full object-cover"
+        />
+      </picture>
+    </div>
+    <figcaption class="text-sm text-muted-foreground">
+      &lt;picture&gt; swaps the source per breakpoint (art-direction).
+    </figcaption>
+  </figure>
+
+  <!-- ───────── 4. Variant with an OVERLAID caption ───────── -->
+  <!--
+    figcaption over the image at the bottom. Readability — a gradient scrim
+    (bg-linear-to-t from foreground/70 to transparent), text-background text.
+    This is NOT glass/slop: the opaque gradient exists only for caption contrast.
+  -->
+  <figure class="relative w-full max-w-md overflow-hidden rounded-lg border border-border bg-muted">
+    <div class="aspect-video w-full">
+      <img
+        src="./media-overlay.jpg"
+        alt="Harbor at dusk with boats moored along the pier"
+        loading="lazy"
+        decoding="async"
+        class="size-full object-cover"
+      />
+    </div>
+    <figcaption
+      class="absolute inset-x-0 bottom-0
+             flex flex-col gap-0.5
+             p-4
+             bg-linear-to-t from-foreground/70 to-transparent
+             text-sm font-medium text-background"
+    >
+      <span class="font-semibold">Overlaid caption</span>
+      <span class="text-background/80">Caption sits over the image, kept readable by a gradient scrim.</span>
+    </figcaption>
+  </figure>
+
+  <!-- ───────── 5. Purely DECORATIVE image (no caption) ───────── -->
+  <!--
+    Empty alt="" + role="presentation" → screen reader skips it. No <figcaption>,
+    since the image carries no information. In the flow: w-full h-auto.
+  -->
+  <figure class="w-full max-w-md">
+    <img
+      src="./media-decorative.svg"
+      alt=""
+      role="presentation"
+      loading="lazy"
+      decoding="async"
+      class="h-auto w-full rounded-lg border border-border bg-muted object-cover"
+    />
+  </figure>
+
+</div>

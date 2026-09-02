@@ -1,0 +1,102 @@
+/*
+  EXAMPLE · select · Approach (B): BEM + @apply — styles for select.bem.html.
+
+  Same UI as select.utility.html (label + native <select> with a custom overlaid
+  chevron + hint/error). @apply is split into lines grouped by property kind, in
+  the engine's property-order: layout/position → size → spacing → background/
+  border/shape → typography → effects/motion → interaction; then nested states;
+  then the `select_invalid` block modifier.
+
+  @reference — REQUIRED only if this SCSS is compiled SEPARATELY from the page
+  (a CSS module / isolated stylesheet / framework scoped <style>); point it at
+  YOUR Tailwind entry so @apply can resolve the tokens. If this file is part of
+  the same build that already does `@import "tailwindcss"`, DROP this line.
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Validation uses user-invalid: (v4.1), NOT invalid:/peer-invalid: — the latter
+  fire before the user interacts; user-invalid: only styles after a failed
+  interaction. Tokens are the canonical SEMANTIC ones (templates/theme.css):
+  bg-input, border-border, text-foreground, text-muted-foreground (icon + hint),
+  ring-ring (focus), border-danger / ring-danger / text-danger (invalid). Because
+  every color is a token .dark overrides, dark theme is free.
+*/
+
+/* ─────────────────────── Block: select ─────────────────────── */
+
+.select {
+  @apply flex flex-col gap-1.5;
+  @apply w-full;
+}
+
+/* element: label — tied to the control via for/id in the markup */
+.select-label {
+  @apply text-sm font-medium text-foreground;
+}
+
+/* element: field — relative wrapper holding the native <select> + overlaid icon */
+.select-field {
+  @apply relative;
+}
+
+/* element: control — the native <select>; appearance-none strips OS chrome,
+   pr-9 reserves room for the overlaid chevron so the value never overlaps it */
+.select-control {
+  @apply h-10 w-full;
+  @apply pl-3 pr-9;
+  @apply appearance-none rounded-md border border-border bg-input;
+  @apply text-sm text-foreground;
+  @apply transition-colors duration-150;
+  @apply cursor-pointer;
+
+  /* state: hover — subtle border lift */
+  &:hover {
+    @apply border-ring/60;
+  }
+  /* state: keyboard focus → visible ring (focus-visible, not focus) */
+  &:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+  /* state: disabled */
+  &:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+  /* state: validation — user-invalid fires only AFTER a failed interaction,
+     unlike invalid:/peer-invalid: which fire before the user has touched it */
+  &:user-invalid {
+    @apply border-danger;
+    &:focus-visible { @apply ring-danger; }
+  }
+}
+
+/* element: icon — custom chevron; decorative + pointer-events-none so clicks
+   fall through to the <select> and the native popup still opens */
+.select-icon {
+  @apply pointer-events-none absolute right-3 top-1/2 -translate-y-1/2;
+  @apply size-4;
+  @apply text-muted-foreground;
+}
+
+/* element: hint — secondary helper text */
+.select-hint {
+  @apply text-xs text-muted-foreground;
+}
+
+/* element: error — shown in the invalid state; linked via aria-describedby.
+   Never colour-only: the message itself carries the meaning. */
+.select-error {
+  @apply text-xs font-medium text-danger;
+}
+
+/* ──────────────── Block modifier: invalid ───────────────
+   Pairs with aria-invalid="true" on the control. Forces the danger border/ring
+   even before user-invalid would (e.g. server-side validation result), while the
+   :user-invalid state above still covers the live client-side case. The error
+   text is already danger above. */
+.select_invalid {
+  .select-control {
+    @apply border-danger;
+
+    &:focus-visible { @apply ring-danger; }
+  }
+}

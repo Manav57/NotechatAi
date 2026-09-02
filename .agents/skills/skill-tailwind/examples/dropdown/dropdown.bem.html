@@ -1,0 +1,76 @@
+<!--
+  EXAMPLE · dropdown · Approach (B): BEM markup — styles in dropdown.bem.scss.
+
+  Same UI as dropdown.utility.html (a native <details>/<summary> menu: a trigger
+  with a rotating chevron, a surface that animates in, link + button items, a
+  separator and a destructive item), but the markup carries SEMANTIC BEM classes;
+  the look lives in dropdown.bem.scss.
+
+  The disclosure needs NO framework: native <details> owns the open state, and
+  <summary> is keyboard-operable (Enter/Space/Esc/Tab) on its own. The only JS is
+  a one-line native DOM write to close the menu after a choice:
+    onclick="this.closest('details').open=false"   (NOT a framework).
+
+  HONEST A11Y LIMIT (same as the utility file): this is a correct, focusable
+  DISCLOSURE, not a WAI-ARIA role="menu". Full menu keyboard semantics (Arrow
+  navigation, Home/End, type-ahead, focus return on Esc) need ~15 lines of native
+  JS, so we DON'T claim role="menu"/role="menuitem" we can't back up. Tab moves
+  through real links/buttons. For strict APG menu behaviour add a small JS layer —
+  do NOT pull in a framework. A native popover-API build is a drop-in alternative
+  (same role-vs-keyboard caveat); see the utility file's header.
+
+  BEM convention (default): one block `dropdown`; elements via hyphen —
+  dropdown-trigger (<summary>) / dropdown-menu (<ul>) / dropdown-item (link or
+  button) / dropdown-separator. Element modifier dropdown-item_danger marks the
+  destructive item. Elements descend from the BLOCK — no `-a-b` chains. The
+  open/closed look comes from the native [open] attribute (styled in the SCSS),
+  not a JS class. (dropdown-icon for the chevron is also a block element.)
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css); .dark overrides
+  them, so this markup needs no dark-specific classes.
+-->
+
+<!-- demo wrapper: neutral page surface; min height gives the open menu room -->
+<div class="dropdownDemo">
+
+  <!-- block = the native disclosure + positioning context (styled in SCSS) -->
+  <details class="dropdown">
+
+    <!-- trigger (<summary>): the real, keyboard-operable button -->
+    <summary class="dropdown-trigger" aria-haspopup="menu">
+      <span>Options</span>
+      <!-- chevron: rotates when the parent <details> is [open] -->
+      <svg class="dropdown-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </summary>
+
+    <!-- menu: a plain <ul> of links/buttons (NOT role="menu" — see header) -->
+    <ul class="dropdown-menu">
+      <!-- item (link): navigates, then collapses the menu -->
+      <li>
+        <a href="#profile" class="dropdown-item" onclick="this.closest('details').open=false">
+          View profile
+        </a>
+      </li>
+
+      <!-- item (button): runs an action, then collapses the menu -->
+      <li>
+        <button type="button" class="dropdown-item" onclick="this.closest('details').open=false">
+          Account settings
+        </button>
+      </li>
+
+      <!-- separator: decorative divider; aria-hidden so SR doesn't announce it -->
+      <li class="dropdown-separator" aria-hidden="true"></li>
+
+      <!-- item (danger): destructive action; tone via the element modifier -->
+      <li>
+        <button type="button" class="dropdown-item dropdown-item_danger" onclick="this.closest('details').open=false">
+          Sign out
+        </button>
+      </li>
+    </ul>
+  </details>
+
+</div>

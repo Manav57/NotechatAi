@@ -1,0 +1,246 @@
+<!--
+  EXAMPLE · checkbox-radio-switch · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as checkbox-radio-switch.bem.html, so you can diff A vs B on identical
+  structure. No framework: plain HTML fragment, only native form controls.
+
+  Three native controls in one example:
+    1. checkbox — <input type="checkbox">, default look tinted with accent-primary
+       (v4 maps accent-color); label tied via wrapping <label>.
+    2. radio    — a group inside <fieldset>/<legend>; each <input type="radio">
+       shares one `name`; default look tinted with accent-primary.
+    3. switch   — <input type="checkbox" role="switch"> with appearance-none; the
+       sibling track/thumb are styled with peer-checked:, and the wrapping <label>
+       reacts to has-[:checked]:. The thumb slides via translate + transition, with
+       motion-reduce:transition-none.
+
+  States covered for every control: hover, focus-visible (outline-ring), checked,
+  disabled. Required controls also show validation via user-invalid: (NOT invalid:/
+  peer-invalid:, which fire before the user has interacted). Errors are linked with
+  aria-describedby and duplicated as text — never colour-only.
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): accent-primary
+  (accent-color), bg-primary / bg-input, border-border / border-input, ring-ring /
+  outline-ring, text-foreground / text-muted-foreground, text-danger / border-danger.
+  Replace the token VALUES under your design system; the NAMES stay stable. Dark
+  theme works for free — every color is a semantic token that .dark overrides.
+-->
+
+<!-- demo wrapper: just lays the controls out for preview; not part of the component -->
+<form class="flex max-w-sm flex-col gap-8 p-6" novalidate>
+
+  <!-- ═════════════════════════ 1. Checkbox ═════════════════════════ -->
+  <fieldset class="flex flex-col gap-3 border-0 p-0">
+    <legend class="mb-1 text-sm font-medium text-foreground">Notifications</legend>
+
+    <!-- default checked: wrapping <label> ties control + text without a for/id pair -->
+    <label class="group inline-flex w-fit items-start gap-3 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+      <input
+        type="checkbox"
+        name="emails"
+        checked
+        class="mt-0.5 size-4 shrink-0 rounded-sm accent-primary
+               transition-colors duration-150 motion-reduce:transition-none
+               outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               disabled:cursor-not-allowed"
+      />
+      <span class="text-sm leading-tight text-foreground select-none">
+        Product emails
+        <span class="block text-xs font-normal text-muted-foreground">Occasional updates about new features.</span>
+      </span>
+    </label>
+
+    <!-- unchecked -->
+    <label class="group inline-flex w-fit items-center gap-3 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+      <input
+        type="checkbox"
+        name="sms"
+        class="size-4 shrink-0 rounded-sm accent-primary
+               transition-colors duration-150 motion-reduce:transition-none
+               outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               disabled:cursor-not-allowed"
+      />
+      <span class="text-sm leading-tight text-foreground select-none">SMS reminders</span>
+    </label>
+
+    <!-- disabled -->
+    <label class="group inline-flex w-fit items-center gap-3 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+      <input
+        type="checkbox"
+        name="postal"
+        disabled
+        class="size-4 shrink-0 rounded-sm accent-primary
+               transition-colors duration-150 motion-reduce:transition-none
+               outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               disabled:cursor-not-allowed"
+      />
+      <span class="text-sm leading-tight text-foreground select-none">Postal mail (unavailable)</span>
+    </label>
+
+    <!-- required + invalid: user-invalid: only styles AFTER interaction; error text linked -->
+    <label class="group inline-flex w-fit items-start gap-3 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+      <input
+        type="checkbox"
+        name="terms"
+        required
+        aria-describedby="terms-error"
+        class="mt-0.5 size-4 shrink-0 rounded-sm accent-primary
+               transition-colors duration-150 motion-reduce:transition-none
+               outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               user-invalid:outline-2 user-invalid:outline-danger
+               disabled:cursor-not-allowed"
+      />
+      <span class="text-sm leading-tight text-foreground select-none">
+        I accept the terms
+        <span id="terms-error" class="block text-xs font-medium text-danger">Required to continue.</span>
+      </span>
+    </label>
+  </fieldset>
+
+  <!-- ═════════════════════════ 2. Radio group ═════════════════════════ -->
+  <!-- the group itself is the <fieldset>; <legend> labels it for screen readers -->
+  <fieldset class="flex flex-col gap-3 border-0 p-0">
+    <legend class="mb-1 text-sm font-medium text-foreground">Billing period</legend>
+
+    <!-- checked option -->
+    <label class="group inline-flex w-fit items-center gap-3 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+      <input
+        type="radio"
+        name="plan"
+        value="monthly"
+        checked
+        class="size-4 shrink-0 accent-primary
+               transition-colors duration-150 motion-reduce:transition-none
+               outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               disabled:cursor-not-allowed"
+      />
+      <span class="text-sm leading-tight text-foreground select-none">Monthly</span>
+    </label>
+
+    <!-- unchecked option -->
+    <label class="group inline-flex w-fit items-center gap-3 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+      <input
+        type="radio"
+        name="plan"
+        value="yearly"
+        class="size-4 shrink-0 accent-primary
+               transition-colors duration-150 motion-reduce:transition-none
+               outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               disabled:cursor-not-allowed"
+      />
+      <span class="text-sm leading-tight text-foreground select-none">
+        Yearly
+        <span class="block text-xs font-normal text-muted-foreground">Save 20% versus monthly.</span>
+      </span>
+    </label>
+
+    <!-- disabled option -->
+    <label class="group inline-flex w-fit items-center gap-3 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+      <input
+        type="radio"
+        name="plan"
+        value="lifetime"
+        disabled
+        class="size-4 shrink-0 accent-primary
+               transition-colors duration-150 motion-reduce:transition-none
+               outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               disabled:cursor-not-allowed"
+      />
+      <span class="text-sm leading-tight text-foreground select-none">Lifetime (sold out)</span>
+    </label>
+  </fieldset>
+
+  <!-- ═════════════════════════ 3. Switch ═════════════════════════ -->
+  <!--
+    Switch = <input type="checkbox" role="switch"> made invisible (appearance-none,
+    sr-only-like) and used as a `peer`. The visible track/thumb are siblings driven
+    by peer-checked:; the wrapping <label> reacts to has-[:checked]:/has-[:disabled]:.
+    role="switch" tells assistive tech this is on/off, not a generic checkbox.
+  -->
+  <fieldset class="flex flex-col gap-3 border-0 p-0">
+    <legend class="mb-1 text-sm font-medium text-foreground">Preferences</legend>
+
+    <!-- switch ON (checked) -->
+    <label class="inline-flex w-full items-center justify-between gap-3 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+      <span class="text-sm leading-tight text-foreground select-none">Dark mode</span>
+
+      <!-- relative wrapper: the input is the peer, track is the background, thumb slides -->
+      <span class="relative inline-flex shrink-0 items-center">
+        <input
+          type="checkbox"
+          role="switch"
+          name="dark-mode"
+          checked
+          class="peer absolute inset-0 z-10 m-0 size-full cursor-pointer appearance-none rounded-full
+                 outline-none disabled:cursor-not-allowed"
+        />
+        <!-- track -->
+        <span
+          class="h-6 w-10 rounded-full bg-input
+                 transition-colors duration-150 motion-reduce:transition-none
+                 peer-checked:bg-primary
+                 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring"
+        ></span>
+        <!-- thumb -->
+        <span
+          class="pointer-events-none absolute left-0.5 size-5 rounded-full bg-background shadow-sm
+                 transition-transform duration-150 ease-out motion-reduce:transition-none
+                 peer-checked:translate-x-4"
+        ></span>
+      </span>
+    </label>
+
+    <!-- switch OFF (unchecked) -->
+    <label class="inline-flex w-full items-center justify-between gap-3 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+      <span class="text-sm leading-tight text-foreground select-none">Compact layout</span>
+      <span class="relative inline-flex shrink-0 items-center">
+        <input
+          type="checkbox"
+          role="switch"
+          name="compact"
+          class="peer absolute inset-0 z-10 m-0 size-full cursor-pointer appearance-none rounded-full
+                 outline-none disabled:cursor-not-allowed"
+        />
+        <span
+          class="h-6 w-10 rounded-full bg-input
+                 transition-colors duration-150 motion-reduce:transition-none
+                 peer-checked:bg-primary
+                 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring"
+        ></span>
+        <span
+          class="pointer-events-none absolute left-0.5 size-5 rounded-full bg-background shadow-sm
+                 transition-transform duration-150 ease-out motion-reduce:transition-none
+                 peer-checked:translate-x-4"
+        ></span>
+      </span>
+    </label>
+
+    <!-- switch DISABLED (checked + disabled) -->
+    <label class="inline-flex w-full items-center justify-between gap-3 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
+      <span class="text-sm leading-tight text-foreground select-none">Beta features (locked)</span>
+      <span class="relative inline-flex shrink-0 items-center">
+        <input
+          type="checkbox"
+          role="switch"
+          name="beta"
+          checked
+          disabled
+          class="peer absolute inset-0 z-10 m-0 size-full cursor-pointer appearance-none rounded-full
+                 outline-none disabled:cursor-not-allowed"
+        />
+        <span
+          class="h-6 w-10 rounded-full bg-input
+                 transition-colors duration-150 motion-reduce:transition-none
+                 peer-checked:bg-primary
+                 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring"
+        ></span>
+        <span
+          class="pointer-events-none absolute left-0.5 size-5 rounded-full bg-background shadow-sm
+                 transition-transform duration-150 ease-out motion-reduce:transition-none
+                 peer-checked:translate-x-4"
+        ></span>
+      </span>
+    </label>
+  </fieldset>
+
+</form>

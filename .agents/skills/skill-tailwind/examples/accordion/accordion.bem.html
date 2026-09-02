@@ -1,0 +1,74 @@
+<!--
+  EXAMPLE · accordion · Approach (B): BEM markup — styles in accordion.bem.scss.
+
+  Same UI as accordion.utility.html (a stack of native <details>/<summary>
+  disclosure sections, an open-by-default item, a closed item and a disabled
+  (inert) item, with a rotating chevron and an animated content reveal), but the
+  markup carries SEMANTIC BEM classes; the look lives in accordion.bem.scss.
+
+  NO JS at all: native <details>/<summary> handles open/close, keyboard
+  (Enter/Space) and disclosure semantics on its own. No framework. For a
+  single-open accordion add the same `name="..."` to each <details> (native
+  exclusive-accordion) — still no JS.
+
+  BEM convention (strict): one block `accordion`; elements via hyphen —
+  accordion-item (<details>) / accordion-trigger (<summary>) / accordion-content
+  / accordion-icon. Elements descend from the block (no `-a-b` chains). The
+  open/closed look comes from the native [open] attribute (styled in the SCSS),
+  not from a JS class.
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css); .dark overrides
+  them, so this markup needs no dark-specific classes.
+-->
+
+<!-- demo wrapper: neutral page surface holding the accordion -->
+<div class="accordionDemo">
+
+  <!-- accordion block: a stack of independent disclosure sections -->
+  <div class="accordion">
+
+    <!-- item 1 — open by default (shows the expanded state) -->
+    <details class="accordion-item" open>
+      <summary class="accordion-trigger">
+        <span>Section one (open by default)</span>
+        <svg class="accordion-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </summary>
+      <div class="accordion-content">
+        Body content for the first section. Keep the skeleton neutral; the
+        surrounding design system supplies the real colors, type and spacing via
+        the @theme tokens.
+      </div>
+    </details>
+
+    <!-- item 2 — closed (resting state) -->
+    <details class="accordion-item">
+      <summary class="accordion-trigger">
+        <span>Section two</span>
+        <svg class="accordion-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </summary>
+      <div class="accordion-content">
+        Body content for the second section.
+      </div>
+    </details>
+
+    <!-- item 3 — disabled via the native `inert` attribute (no `disabled` on
+         <details>); the element modifier dims it. NOTE: `inert` is a native HTML
+         attribute — there is NO `inert:` variant. -->
+    <details class="accordion-item accordion-item_disabled" inert>
+      <summary class="accordion-trigger">
+        <span>Section three (disabled)</span>
+        <svg class="accordion-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </summary>
+      <div class="accordion-content">
+        This section is inert and cannot be opened.
+      </div>
+    </details>
+
+  </div>
+</div>

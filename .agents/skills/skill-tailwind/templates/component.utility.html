@@ -1,0 +1,111 @@
+<!--
+  TEMPLATE · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as component.bem.html (a neutral button + a simple card), so you can
+  diff A vs B on identical structure. No framework: plain HTML.
+
+  Tokens are the canonical SEMANTIC ones (see templates/theme.css). Replace the
+  token VALUES under your design system; the NAMES stay stable. Dark theme works
+  for free — every color is a semantic token that .dark overrides, so this markup
+  needs no `dark:` variants of its own.
+
+  All interactive states are expressed with variants:
+    hover:  focus-visible:  active:  disabled:
+-->
+
+<!-- ───────────────────────── Button ───────────────────────── -->
+
+<!-- Primary -->
+<button
+  type="button"
+  class="inline-flex items-center justify-center gap-2
+         h-10 px-4
+         rounded-md border border-transparent
+         bg-primary text-primary-foreground text-sm font-medium
+         transition-colors duration-150
+         hover:bg-primary/90
+         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+         active:bg-primary/95
+         disabled:opacity-50 disabled:pointer-events-none
+         cursor-pointer select-none"
+>
+  <!-- leading icon slot (decorative placeholder) -->
+  <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  </svg>
+  <span>Button</span>
+</button>
+
+<!-- Outline (secondary) — same geometry, different surface -->
+<button
+  type="button"
+  class="inline-flex items-center justify-center gap-2
+         h-10 px-4
+         rounded-md border border-border
+         bg-background text-foreground text-sm font-medium
+         transition-colors duration-150
+         hover:bg-muted
+         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+         active:bg-muted
+         disabled:opacity-50 disabled:pointer-events-none
+         cursor-pointer select-none"
+>
+  <span>Button</span>
+</button>
+
+<!-- ───────────────────────── Card ─────────────────────────── -->
+
+<article
+  class="flex flex-col gap-4
+         w-full max-w-sm
+         p-6
+         rounded-lg border border-border
+         bg-card text-card-foreground"
+>
+  <header class="flex flex-col gap-1">
+    <h3 class="text-lg font-semibold leading-tight tracking-tight">
+      Card title
+    </h3>
+    <p class="text-sm text-muted-foreground">
+      Supporting text that describes the card in one short line.
+    </p>
+  </header>
+
+  <div class="text-sm leading-relaxed">
+    Body content goes here. Keep the skeleton neutral; the surrounding design
+    system supplies the real colors, type and spacing via the @theme tokens.
+  </div>
+
+  <footer class="flex items-center justify-end gap-2">
+    <button
+      type="button"
+      class="inline-flex items-center justify-center
+             h-9 px-3
+             rounded-md border border-border
+             bg-background text-foreground text-sm font-medium
+             transition-colors duration-150
+             hover:bg-muted
+             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+             active:bg-muted
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="inline-flex items-center justify-center
+             h-9 px-3
+             rounded-md border border-transparent
+             bg-primary text-primary-foreground text-sm font-medium
+             transition-colors duration-150
+             hover:bg-primary/90
+             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+             active:bg-primary/95
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      Confirm
+    </button>
+  </footer>
+</article>

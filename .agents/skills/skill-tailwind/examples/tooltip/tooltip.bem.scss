@@ -1,0 +1,106 @@
+/*
+  EXAMPLE · tooltip · Approach (B): BEM + @apply — styles for tooltip.bem.html.
+
+  Same UI as tooltip.utility.html (a focusable trigger + a CSS-only tooltip that
+  appears on BOTH hover AND keyboard focus-visible), expressed with @apply grouped
+  by property kind. Group order follows the engine's property-order:
+    layout/position → size → spacing → background/border/shape → typography →
+    effects/motion → interaction; then nested states; then modifiers.
+
+  @reference — REQUIRED if this SCSS is compiled SEPARATELY from your Tailwind
+  entry (a CSS module, an isolated stylesheet, a framework's scoped <style>):
+  point it at the entry that does `@import "tailwindcss"`, otherwise @apply cannot
+  see the utilities/tokens. If this file is part of the same build that already
+  imports tailwindcss, DROP this line — a second reference is redundant.
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Behaviour (CSS only, no JS):
+    • The block is the positioning context (relative). The bubble is absolute,
+      centred above the trigger. The block reveals the bubble when the trigger is
+      hovered OR keyboard-focused — via :has(.tooltip-trigger:hover) and
+      :has(.tooltip-trigger:focus-visible) on the block. focus-visible (not focus)
+      means no tooltip flash on a mouse click.
+    • v4 enter animation: opacity + translate transition, with @starting-style
+      supplying the frame the browser transitions FROM. prefers-reduced-motion is
+      honored with motion-reduce.
+
+  PROGRESSIVE ENHANCEMENT — CSS anchor positioning:
+    This file uses the absolute + translate baseline that works in every browser.
+    On engines that support CSS anchor positioning (a native CSS feature —
+    anchor-name / position-anchor + position-area; no dedicated Tailwind
+    utilities, use arbitrary properties) you can drop the
+    manual translate math and let the bubble auto-flip when it would overflow the
+    viewport. Treat it as an optional upgrade, not the baseline.
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): bg-foreground /
+  text-background (contrasting bubble), outline-ring (focus). Because every color
+  is a token that .dark overrides, the dark theme needs no extra rules here.
+*/
+
+/* ───────────────────────── Tooltip ───────────────────────── */
+
+.tooltip {
+  /* positioning context for the absolute bubble */
+  @apply relative inline-block;
+
+  /* element: the focusable trigger control (neutral button base) */
+  &-trigger {
+    @apply inline-flex items-center justify-center gap-2;
+    @apply h-10;
+    @apply px-4;
+    @apply rounded-md border border-border bg-background;
+    @apply text-sm font-medium text-foreground;
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+    @apply cursor-pointer select-none;
+
+    &:hover         { @apply bg-muted; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+    &:active        { @apply bg-muted; }
+    &:disabled      { @apply opacity-50 pointer-events-none; }
+  }
+
+  /* element: the floating description bubble (hidden until revealed) */
+  &-bubble {
+    /* centred above the trigger */
+    @apply absolute bottom-full left-1/2 z-10 -translate-x-1/2;
+    @apply w-max max-w-xs;
+    /* mb-2 lifts it off the trigger */
+    @apply mb-2 px-2 py-1;
+    /* contrasting surface */
+    @apply rounded-md bg-foreground shadow-md;
+    @apply text-background text-xs font-medium;
+    /* closed (initial) frame */
+    @apply opacity-0 invisible translate-y-1;
+    @apply transition-[opacity,transform,visibility] duration-150 ease-out;
+    @apply motion-reduce:transition-none;
+    /* a hidden tip must never trap the pointer */
+    @apply pointer-events-none;
+
+    /* v4 enter animation: the frame the browser transitions FROM on appear */
+    @starting-style { @apply opacity-0; }
+  }
+
+  /* element: decorative arrow — a rotated square sharing the bubble surface */
+  &-arrow {
+    @apply absolute left-1/2 top-full -translate-x-1/2 -translate-y-1/2 rotate-45;
+    @apply size-2;
+    @apply rounded-[1px] bg-foreground;
+  }
+
+  /* reveal: show the bubble when the trigger is hovered OR keyboard-focused.
+     focus-visible (not focus) → no tooltip on a mouse click, only on keyboard. */
+  &:has(.tooltip-trigger:hover) .tooltip-bubble,
+  &:has(.tooltip-trigger:focus-visible) .tooltip-bubble {
+    /* open frame */
+    @apply opacity-100 visible translate-y-0;
+  }
+}
+
+/* ───────────────────── Demo wrapper (layout only) ───────────────────── */
+
+.tooltipDemo {
+  @apply flex min-h-40 items-center justify-center;
+  @apply p-12;
+  @apply bg-background text-foreground;
+}

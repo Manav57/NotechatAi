@@ -1,0 +1,162 @@
+/*
+  EXAMPLE · accordion · Approach (B): BEM + @apply — styles for accordion.bem.html.
+
+  Same UI as accordion.utility.html (a stack of native <details>/<summary>
+  disclosure sections — open-by-default, closed, and disabled/inert — with a
+  rotating chevron and an animated content reveal), expressed with @apply grouped
+  by property kind. Group order follows the engine's property-order:
+    layout/position → size → spacing → background/border/shape → typography →
+    effects/motion → interaction; then nested states; then modifiers.
+
+  NO JS: native <details> owns the open state via its [open] attribute, and
+  <summary> is keyboard-operable + exposes disclosure semantics on its own. We
+  only add a visible focus ring on the trigger.
+
+  BEM (strict): one block `accordion`; its elements are FLAT block-level
+  selectors — accordion-item / accordion-trigger / accordion-content /
+  accordion-icon — each descends from the BLOCK, not from another element (no
+  `-a-b` chains, no element-under-element nesting). The few descendant selectors
+  below exist only where the relationship is real: the open/inert look depends on
+  the native [open]/inert state living on the <details> item, so those state
+  rules reach the inner elements from the item.
+
+  v4 content reveal — the HEIGHT nuance (the crux of an accordion):
+    A <details> cannot transition height from 0 to `auto`, and the content box
+    only exists while [open]. Two v4-friendly options:
+      1) Animate the ::details-content pseudo via the v4.1 `details-content:`
+         variant (here written as the native `&::details-content {}` selector)
+         with @starting-style + transition-discrete, letting height interpolate
+         to the `auto` keyword. That keyword animation needs a document-level
+         opt-in `interpolate-size: allow-keywords;` — there is NO Tailwind
+         utility for it, so it is set once on the demo wrapper below.
+      2) Or wrap content in a CSS grid and animate grid-template-rows 0fr→1fr
+         (no keyword opt-in needed). See the commented alt at the bottom.
+    We use option 1 (less wrapper markup). Browsers without support snap open —
+    progressive enhancement.
+
+  @reference — REQUIRED if this SCSS is compiled SEPARATELY from your Tailwind
+  entry (a CSS module, an isolated stylesheet, a framework's scoped <style>):
+  point it at the entry that does `@import "tailwindcss"`, otherwise @apply
+  cannot see the utilities/tokens. If this file is part of the same build that
+  already imports tailwindcss, DROP this line — a second reference is redundant.
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css). Because every
+  color is a token that .dark overrides, the dark theme needs no extra rules.
+*/
+
+/* ───────────────────────── Accordion (native <details>) ───────────────────────── */
+
+.accordion {
+  @apply flex flex-col gap-2;
+  @apply w-full max-w-md;
+
+  /* element: item — one <details> disclosure section */
+  &-item {
+    @apply rounded-md border border-border bg-card;
+    /* default text color on the card surface */
+    @apply text-card-foreground;
+  }
+
+  /* element: trigger — the <summary> header row (the button) */
+  &-trigger {
+    @apply flex items-center justify-between gap-4;
+    @apply px-4 py-3;
+    @apply rounded-md;
+    @apply text-sm font-medium;
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+    /* hide the default disclosure marker, show pointer */
+    @apply cursor-pointer list-none;
+    &::-webkit-details-marker { @apply hidden; }
+
+    &:hover         { @apply bg-muted; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+    &:active        { @apply bg-muted; }
+  }
+
+  /* element: icon — chevron; rotates when the parent <details> is [open] */
+  &-icon {
+    @apply size-4 shrink-0;
+    /* color */
+    @apply text-muted-foreground;
+    @apply transition-transform duration-200 ease-out motion-reduce:transition-none;
+  }
+
+  /* element: content — animated reveal on the ::details-content pseudo.
+     height interpolates 0 ↔ auto thanks to `interpolate-size: allow-keywords`
+     on .accordionDemo; @starting-style supplies the frame the open animates
+     FROM; transition-discrete keeps content-visibility animatable so the panel
+     stays painted while collapsing. */
+  &-content {
+    @apply px-4 pb-4 pt-0;
+    @apply text-sm leading-relaxed text-muted-foreground;
+
+    /* the actual collapsible box is the ::details-content pseudo (v4.1) */
+    &::details-content {
+      /* closed (initial) frame */
+      @apply h-0 opacity-0;
+      @apply transition-[height,opacity,content-visibility] duration-200 ease-out transition-discrete;
+      @apply motion-reduce:transition-none;
+      @apply overflow-hidden;
+    }
+  }
+
+  /* --- state: open --- (driven by the native [open] attribute on the item;
+     the descendant selectors are required because the icon/content react to the
+     item's open state) */
+  &-item[open] {
+    .accordion-icon { @apply rotate-180; }
+
+    .accordion-content::details-content {
+      /* target (open) frame */
+      @apply h-auto opacity-100;
+    }
+  }
+
+  /* enter animation: the frame the browser transitions FROM on open */
+  @starting-style {
+    &-item[open] .accordion-content::details-content {
+      @apply h-0 opacity-0;
+    }
+  }
+
+  /* modifier (element): disabled — paired with the native `inert` attribute,
+     which removes interaction/focus; here we only dim it and neutralize the
+     trigger's hover/active. There is NO `inert:` variant; `inert` is a plain
+     HTML attribute on the element. */
+  &-item_disabled {
+    @apply opacity-50;
+
+    .accordion-trigger {
+      @apply cursor-not-allowed;
+      &:hover  { @apply bg-transparent; }
+      &:active { @apply bg-transparent; }
+    }
+  }
+}
+
+/* ───────────────────── Demo wrapper (layout + keyword opt-in) ───────────────────── */
+
+.accordionDemo {
+  @apply flex flex-col gap-6;
+  @apply p-6;
+  @apply bg-background text-foreground;
+
+  /* Document-level opt-in so height can animate to/from the `auto` keyword.
+     No Tailwind utility exists for this property, so it is written as raw CSS. */
+  interpolate-size: allow-keywords;
+}
+
+/* ───────────── Alternative content reveal: grid-rows 0fr→1fr (no keyword opt-in) ─────────────
+   If you prefer not to rely on interpolate-size, wrap the content text in an
+   extra inner element and animate the grid instead — works without the
+   document-level opt-in:
+
+   .accordion-content {                              // becomes the grid track owner
+     @apply grid grid-rows-[0fr] transition-[grid-template-rows] duration-200 ease-out;
+     @apply motion-reduce:transition-none;
+     & > * { @apply overflow-hidden; }               // inner wrapper clips during collapse
+   }
+   .accordion-item[open] .accordion-content { @apply grid-rows-[1fr]; }
+*/

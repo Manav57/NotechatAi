@@ -1,0 +1,58 @@
+/*
+  EXAMPLE · badge · Approach (B): BEM + @apply — styles for badge.bem.html.
+
+  Same UI as badge.utility.html (same tones, same sizes, same text), expressed
+  with @apply grouped by property kind. Grouping order follows the engine's
+  property-order: layout/position → size → spacing → background/border/shape →
+  typography → effects/motion → interaction; then states; then modifiers.
+  Badge is STATIC (non-interactive), so there are no state blocks — modifiers
+  follow the base groups directly.
+
+  @reference — REQUIRED only if this SCSS is compiled SEPARATELY from the page
+  (a CSS module, an isolated stylesheet, a framework's scoped <style>). Point it
+  at YOUR entry that does `@import "tailwindcss"`; otherwise the utilities below
+  are unknown and @apply fails. If this file is part of the same build that
+  already imports tailwindcss, DROP this line — a second reference is redundant.
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css). Because every
+  color is a token that .dark overrides, dark theme needs no extra rules here.
+  Base class = neutral tone, sm size; modifiers swap only what differs.
+*/
+
+/* ───────────────────────── Badge ───────────────────────── */
+
+.badge {
+  @apply inline-flex items-center gap-1;
+  @apply h-5;
+  @apply px-2;
+  /* neutral tone + small radius */
+  @apply rounded-sm bg-muted;
+  @apply text-xs font-medium text-muted-foreground;
+
+  /* element: leading dot (decorative); inherits tone via currentColor */
+  &-dot {
+    @apply size-1.5 shrink-0;
+  }
+
+  /* ── tone modifiers (swap the bg/text pair) ── */
+  &_primary {
+    @apply bg-primary text-primary-foreground;
+  }
+  &_success {
+    @apply bg-success text-success-foreground;
+  }
+  &_warning {
+    @apply bg-warning text-warning-foreground;
+  }
+  &_danger {
+    @apply bg-danger text-danger-foreground;
+  }
+
+  /* ── size modifier (md) — swaps size/spacing only ── */
+  &_md {
+    @apply h-6;
+    @apply px-2.5;
+  }
+}

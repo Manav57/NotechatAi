@@ -1,0 +1,60 @@
+/*
+  EXAMPLE · breadcrumb · Approach (B): BEM + @apply — styles for breadcrumb.bem.html.
+
+  Same UI as in breadcrumb.utility.html (breadcrumbs: links + current
+  page; "/" separator via the CSS pseudo-element ::before, not as text in the DOM).
+  Here the appearance is assembled from utilities via @apply, grouped by property type in
+  the order: layout → sizes → spacing → background/borders/shape → typography →
+  effects/motion → interaction; then states; then modifiers.
+
+  @reference — NEEDED if this SCSS is compiled SEPARATELY from the entry CSS
+  (CSS module, isolated <style>, framework scoped style): @apply and tokens
+  resolve against your Tailwind entry. If the file is part of the same build where
+  `@import "tailwindcss"` already exists, REMOVE this line (a second reference is redundant).
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css). Since every color
+  is a token that .dark overrides, dark mode requires no rules here.
+
+  BEM: block breadcrumb; elements breadcrumb-list, breadcrumb-item, breadcrumb-link;
+  element modifier breadcrumb-link_current.
+*/
+
+.breadcrumb {
+  /* element: breadcrumb list <ol> */
+  &-list {
+    @apply flex flex-wrap items-center gap-1.5;
+    @apply text-sm;
+  }
+
+  /* element: item <li>. The "/" separator — decorative ::before (NOT in the DOM),
+     so the screen reader does not announce it; on the first item it is suppressed. */
+  &-item {
+    @apply flex items-center gap-1.5;
+
+    &::before {
+      @apply text-muted-foreground content-['/'];
+    }
+    &:first-child::before {
+      /* remove the leading separator */
+      @apply content-none;
+    }
+  }
+
+  /* element: breadcrumb link <a> */
+  &-link {
+    @apply rounded-sm;
+    @apply text-muted-foreground;
+    @apply transition-colors duration-150;
+
+    &:hover         { @apply text-foreground; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+
+    /* element modifier: current page (= aria-current="page").
+       Applied to the non-link <span>: no hover/focus, regular color + weight. */
+    &_current {
+      @apply font-medium text-foreground;
+    }
+  }
+}

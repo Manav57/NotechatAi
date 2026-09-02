@@ -1,0 +1,66 @@
+<!--
+  EXAMPLE · progress · Approach (B): BEM markup — styles in progress.bem.scss.
+
+  Same UI as progress.utility.html (a determinate progress with label + percent
+  text, and an indeterminate progress with a label only), but the markup carries
+  SEMANTIC BEM classes; the look lives in progress.bem.scss.
+
+  NO JavaScript: the values are static placeholders on a native <progress>. A live
+  bar only needs its `value` attribute updated from your own code (~JS), which is
+  outside this skeleton. The indeterminate animation is owned by CSS (see the SCSS).
+
+  BEM convention (strict): one block `progress`; elements via hyphen
+    progress-label  — the field name (<label for>)
+    progress-bar    — the native <progress> itself (track + fill)
+    progress-value  — the percent text (decorative, aria-hidden)
+  plus a row wrapper element progress-header. Elements descend from the BLOCK — no
+  `-a-b` chains. The indeterminate bar uses the element modifier
+  progress-bar_indeterminate.
+
+  Accessibility: <progress> is its own ARIA progressbar; value/max come from the
+  attributes (we don't hand-roll role/aria-valuenow). Each bar links to its visible
+  <label> via for/id. The percent text is aria-hidden (the value is announced from
+  the element — avoid double reading). The indeterminate bar has no numeric value
+  to announce, but its visible <label for="sync"> still names it — no aria-label
+  (that would override the label and voice different text, a WCAG 2.5.3
+  Label-in-Name mismatch).
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css); .dark overrides
+  them, so this markup needs no dark-specific classes.
+
+  No AI-slop: neutral surfaces, no gradients / glass / blobs. The `rounded-full`
+  on the bar (in progress.bem.scss) is legitimate — a thin bar with fully rounded
+  ends is a PILL (an allowed case, same as the switch track), not over-rounding.
+-->
+
+
+<!-- demo wrapper: neutral page surface; not part of the component -->
+<div class="progressDemo">
+
+  <!-- ───────── Determinate ───────── -->
+  <div class="progress">
+
+    <!-- label row: name + live percent text -->
+    <div class="progress-header">
+      <label for="upload" class="progress-label">Uploading file</label>
+      <span aria-hidden="true" class="progress-value">60%</span>
+    </div>
+
+    <!-- native determinate <progress>: element box = track, value pseudo = fill -->
+    <progress id="upload" class="progress-bar" max="100" value="60">60%</progress>
+  </div>
+
+  <!-- ───────── Indeterminate ───────── -->
+  <div class="progress">
+
+    <!-- label only: no numeric value to show -->
+    <label for="sync" class="progress-label">Syncing</label>
+
+    <!-- native indeterminate <progress>: `max` but NO `value`; the visible
+         <label for="sync"> names it (no aria-label — it would override the label
+         and announce different text, a WCAG 2.5.3 Label-in-Name mismatch).
+         The looping sliver is painted in CSS via the -indeterminate modifier. -->
+    <progress id="sync" class="progress-bar progress-bar_indeterminate" max="100"></progress>
+  </div>
+
+</div>

@@ -1,0 +1,172 @@
+<!--
+  EXAMPLE · avatar · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as avatar.bem.html, so you can diff A vs B on identical structure.
+  Framework-agnostic: plain HTML + CSS only, NO JavaScript.
+
+  What this skeleton shows:
+    • An <img> avatar WITH a fallback: initials in a <span> behind the image.
+      The image sits on top; if it loads it covers the initials, if it 404s the
+      browser hides the broken <img> (onerror sets hidden) and the initials show.
+      The fallback layer always carries the same alt info via aria-label.
+    • Size modifiers expressed by swapping size-* utilities (sm = size-8,
+      base = size-10, lg = size-14). One geometry, three sizes.
+    • An optional status dot — a child element pinned bottom-right, tone via
+      bg-success, ring-2 ring-background so it reads as a separate puck on the
+      avatar surface. Meaning is duplicated in text (sr-only "Online").
+    • An avatar GROUP: an overlapping stack via -space-x-3; each avatar gets
+      ring-2 ring-background so the overlap stays legible against the page.
+
+  rounded-full is LEGITIMATE here — an avatar is a canonical round element (one of
+  the few allowed cases, alongside pills and spinners), not AI-slop over-rounding.
+
+  Accessibility:
+    • A meaningful <img> carries a real alt (the person's name). The initials
+      glyph is decorative, so it is aria-hidden; the name is surfaced via
+      role="img" + aria-label on the fallback wrapper. The role is required —
+      a roleless <span> is role=generic, on which aria-label is ignored.
+    • Status is not colour-only: an sr-only word ("Online") rides with the dot.
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): bg-muted /
+  text-muted-foreground (fallback surface), ring-background (overlap/status ring),
+  bg-success (status). Replace the token VALUES under your design system; the
+  NAMES stay stable. Dark theme works for free — every colour is a token .dark
+  overrides, so this markup needs no dark:* variants of its own.
+-->
+
+<!-- demo wrapper: neutral page surface; not part of the component -->
+<div class="flex flex-col items-start gap-8 bg-background p-6 text-foreground">
+
+  <!-- 1) single avatar — image with an initials fallback behind it -->
+  <span class="relative inline-flex size-10 shrink-0 overflow-hidden rounded-full bg-muted">
+    <!-- fallback (initials) sits underneath; name is exposed via role="img" + aria-label -->
+    <span
+      role="img"
+      aria-label="Ada Lovelace"
+      class="absolute inset-0 inline-flex items-center justify-center
+             text-sm font-medium text-muted-foreground select-none"
+    >
+      <span aria-hidden="true">AL</span>
+    </span>
+    <!-- image on top; if it fails to load it hides itself, revealing initials -->
+    <img
+      src="./avatar-ada.jpg"
+      alt="Ada Lovelace"
+      onerror="this.hidden = true"
+      class="relative size-full rounded-full object-cover"
+    />
+  </span>
+
+  <!-- 2) initials-only avatar (no image source) — same fallback layer, shown -->
+  <span class="relative inline-flex size-10 shrink-0 overflow-hidden rounded-full bg-muted">
+    <span
+      role="img"
+      aria-label="Grace Hopper"
+      class="absolute inset-0 inline-flex items-center justify-center
+             text-sm font-medium text-muted-foreground select-none"
+    >
+      <span aria-hidden="true">GH</span>
+    </span>
+  </span>
+
+  <!-- 3) sizes — same element, size-* swapped: sm · base · lg -->
+  <div class="flex items-end gap-4">
+    <!-- sm -->
+    <span class="relative inline-flex size-8 shrink-0 overflow-hidden rounded-full bg-muted">
+      <span
+        role="img"
+        aria-label="Alan Turing"
+        class="absolute inset-0 inline-flex items-center justify-center
+               text-xs font-medium text-muted-foreground select-none"
+      >
+        <span aria-hidden="true">AT</span>
+      </span>
+    </span>
+    <!-- base -->
+    <span class="relative inline-flex size-10 shrink-0 overflow-hidden rounded-full bg-muted">
+      <span
+        role="img"
+        aria-label="Alan Turing"
+        class="absolute inset-0 inline-flex items-center justify-center
+               text-sm font-medium text-muted-foreground select-none"
+      >
+        <span aria-hidden="true">AT</span>
+      </span>
+    </span>
+    <!-- lg -->
+    <span class="relative inline-flex size-14 shrink-0 overflow-hidden rounded-full bg-muted">
+      <span
+        role="img"
+        aria-label="Alan Turing"
+        class="absolute inset-0 inline-flex items-center justify-center
+               text-base font-medium text-muted-foreground select-none"
+      >
+        <span aria-hidden="true">AT</span>
+      </span>
+    </span>
+  </div>
+
+  <!-- 4) avatar with a status dot (online) -->
+  <span class="relative inline-flex size-10 shrink-0 rounded-full">
+    <!-- the avatar surface itself (clips the image to the circle) -->
+    <span class="inline-flex size-full overflow-hidden rounded-full bg-muted">
+      <span
+        role="img"
+        aria-label="Katherine Johnson"
+        class="absolute inset-0 inline-flex items-center justify-center
+               text-sm font-medium text-muted-foreground select-none"
+      >
+        <span aria-hidden="true">KJ</span>
+      </span>
+    </span>
+    <!-- status puck: pinned bottom-right, ring separates it from the avatar.
+         tone is duplicated as sr-only text — not colour-only. -->
+    <span class="absolute bottom-0 right-0 inline-flex size-3 rounded-full bg-success ring-2 ring-background">
+      <span class="sr-only">Online</span>
+    </span>
+  </span>
+
+  <!-- 5) avatar group — overlapping stack; each ring keeps the overlap legible -->
+  <ul class="flex -space-x-3">
+    <li class="relative inline-flex size-10 shrink-0 overflow-hidden rounded-full bg-muted ring-2 ring-background">
+      <span
+        role="img"
+        aria-label="Ada Lovelace"
+        class="absolute inset-0 inline-flex items-center justify-center
+               text-sm font-medium text-muted-foreground select-none"
+      >
+        <span aria-hidden="true">AL</span>
+      </span>
+    </li>
+    <li class="relative inline-flex size-10 shrink-0 overflow-hidden rounded-full bg-muted ring-2 ring-background">
+      <span
+        role="img"
+        aria-label="Grace Hopper"
+        class="absolute inset-0 inline-flex items-center justify-center
+               text-sm font-medium text-muted-foreground select-none"
+      >
+        <span aria-hidden="true">GH</span>
+      </span>
+    </li>
+    <li class="relative inline-flex size-10 shrink-0 overflow-hidden rounded-full bg-muted ring-2 ring-background">
+      <span
+        role="img"
+        aria-label="Alan Turing"
+        class="absolute inset-0 inline-flex items-center justify-center
+               text-sm font-medium text-muted-foreground select-none"
+      >
+        <span aria-hidden="true">AT</span>
+      </span>
+    </li>
+    <!-- overflow count — a non-image avatar reading "+5 more" -->
+    <li
+      aria-label="5 more people"
+      class="relative inline-flex size-10 shrink-0 items-center justify-center
+             rounded-full bg-muted text-xs font-medium text-muted-foreground
+             ring-2 ring-background select-none"
+    >
+      <span aria-hidden="true">+5</span>
+    </li>
+  </ul>
+
+</div>

@@ -1,0 +1,180 @@
+/*
+  EXAMPLE · table · Approach (B): BEM + @apply — styles for table.bem.html.
+
+  Same UI as in table.utility.html (semantic data table: <caption>,
+  <thead> with <th scope="col">, <tbody> with <th scope="row">, zebra, row hover,
+  sticky header, tabular-nums for numbers, responsive wrapper via @container).
+  The appearance is assembled from utilities via @apply, grouped by property type
+  in the order:
+  layout → sizing → spacing → background/borders/shape → typography →
+  effects/motion → interaction; then states; then modifiers.
+
+  @reference — NEEDED if this SCSS is compiled SEPARATELY from the entry CSS
+  (a CSS module, an isolated <style>, a framework scoped style): @apply and tokens
+  resolve against your Tailwind entry. If the file is part of the same build that
+  already has `@import "tailwindcss"`, REMOVE this line (a second reference is redundant).
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  SORTING/FILTERING — intentionally NOT implemented: the markup carries only the
+  semantics (aria-sort on the sorted column). Real click-to-sort requires native
+  JS (handler, comparator, <tbody> re-render, aria-sort update) — left as a
+  flagged TODO; we don't mimic a framework.
+
+  Tokens — canonical SEMANTIC ones (templates/theme.css): bg-card,
+  text-card-foreground, bg-muted/-foreground, border-border, outline-ring,
+  bg-success/-foreground (via slash-alpha), bg-warning, bg-danger. Since
+  every color is a token that .dark overrides, dark mode needs no rules here.
+
+  BEM (element = `-`, modifier = `_`): block dataTable (wrapper @container);
+  elements dataTable-table, dataTable-head, dataTable-row, dataTable-cell
+  (+ thead/tfoot/rowHead/footHead/caption/status); modifiers
+  dataTable-head_numeric, dataTable-cell_numeric,
+  dataTable-status_paid/_pending/_overdue. One block per component; no -a-b chains.
+*/
+
+/* ───────────────────────── dataTable (component wrapper) ───────────────────────── */
+
+.dataTable {
+  /* container context — responsive by the width of THIS wrapper, not the viewport */
+  @apply @container;
+  /* the height constraint enables vertical scroll (for the sticky header) */
+  @apply max-h-80 w-full;
+  /* no spacing of its own — padding lives on the cells */
+  @apply rounded-lg border border-border bg-card;
+  @apply text-card-foreground;
+  /* overflow-auto = horizontal scroll on a narrow one + vertical scroll by height */
+  @apply overflow-auto;
+
+  /* state: visible focus — the wrapper is focusable (tabindex="0") for scrolling */
+  &:focus-visible {
+    /* ring via outline — doesn't shift layout */
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+
+  /* element: native <table> */
+  &-table {
+    @apply w-full;
+    /* shared border-collapse for even lines */
+    @apply border-collapse;
+    @apply text-sm;
+  }
+
+  /* element: <caption> — accessible name. sr-only: hidden visually, announced */
+  &-caption {
+    @apply sr-only;
+  }
+
+  /* element: <thead> — sticky header above the scrollable body */
+  &-thead {
+    /* sticks to the top of the scroll wrapper */
+    @apply sticky top-0 z-10;
+    /* opaque background so rows don't show through */
+    @apply bg-muted;
+    @apply text-muted-foreground;
+  }
+
+  /* element: column header cell <th scope="col"> */
+  &-head {
+    @apply px-3 py-2.5 @md:px-4;
+    @apply border-b border-border;
+    /* left by default */
+    @apply text-left font-medium;
+    /* headers aren't selected when dragging */
+    @apply select-none;
+
+    /* element modifier: numeric column — right alignment */
+    &_numeric {
+      @apply text-right;
+    }
+  }
+
+  /* element: body row <tr> — zebra + hover. Attached ONLY to <tbody> rows
+     (header/total use their own borders), so :nth-child(even)
+     counts from tbody and highlights exactly the even data rows. */
+  &-row {
+    /* bottom divider */
+    @apply border-b border-border;
+    /* smooth background change on hover */
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+
+    /* zebra: even body rows — a muted backing (slash-alpha) */
+    &:nth-child(even) {
+      @apply bg-muted/40;
+    }
+
+    /* state: row hover (over the zebra) */
+    &:hover {
+      @apply bg-muted/60;
+    }
+  }
+
+  /* element: row name <th scope="row"> — first cell of a body row */
+  &-rowHead {
+    @apply px-3 py-2.5 @md:px-4;
+    @apply text-left font-medium;
+  }
+
+  /* element: data cell <td> */
+  &-cell {
+    @apply px-3 py-2.5 @md:px-4;
+
+    /* element modifier: numeric cell — right + monospaced digits.
+       tabular-nums aligns digits by place value (the amounts column "doesn't dance"). */
+    &_numeric {
+      @apply text-right tabular-nums;
+    }
+  }
+
+  /* element: <tfoot> — total row */
+  &-tfoot {
+    @apply border-t border-border bg-muted/30;
+    @apply font-medium;
+  }
+
+  /* element: total row label <th scope="row" colspan> */
+  &-footHead {
+    @apply px-3 py-2.5 @md:px-4;
+    /* pushed right, toward the amount column */
+    @apply text-right;
+  }
+
+  /* element: status badge. The tone carries a WORD + color (not color alone). */
+  &-status {
+    @apply inline-flex items-center;
+    @apply px-2 py-0.5;
+    /* neutral base */
+    @apply rounded-sm bg-muted;
+    @apply text-xs font-medium text-muted-foreground;
+
+    /* tone modifiers: soft backing via slash-alpha + saturated text */
+    &_paid {
+      @apply bg-success/15 text-success;
+    }
+    &_pending {
+      @apply bg-warning/15 text-warning;
+    }
+    &_overdue {
+      @apply bg-danger/15 text-danger;
+    }
+  }
+}
+
+/* ───────────────────── Demo wrapper (preview layout) ───────────────────── */
+
+.dataTableDemo {
+  @apply p-6;
+  @apply bg-background text-foreground;
+
+  /* element: width-container section */
+  &-section {
+    @apply mx-auto;
+    @apply max-w-3xl;
+  }
+
+  /* element: section heading above the table */
+  &-heading {
+    @apply mb-3;
+    @apply text-base font-semibold;
+  }
+}

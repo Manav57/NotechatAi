@@ -1,0 +1,82 @@
+<!--
+  EXAMPLE · textarea · Approach (B): BEM markup — styles in textarea.bem.scss.
+
+  Same UI as textarea.utility.html (label + auto-growing control + hint + error,
+  wired via aria-describedby). Here the markup carries SEMANTIC BEM class names;
+  all visual styling lives in textarea.bem.scss via grouped @apply.
+
+  BEM convention (skill): block `textarea`; elements `textarea-label`,
+  `textarea-control` (the <textarea>), `textarea-hint`, `textarea-error`; block
+  modifier `textarea_invalid`. One block per component; elements always from the block.
+
+  The control auto-grows with its content via field-sizing-content (v4.1) — no JS,
+  replacing the classic scrollHeight resize hack. States: focus-visible (ring-ring),
+  disabled, and invalid. Validation styling is keyed off user-invalid: in the SCSS
+  (NOT invalid:), so danger fires only after the user interacts. The error is always
+  duplicated as text — never colour-only. Tokens are the canonical SEMANTIC ones.
+-->
+
+<!-- demo wrapper: just lays the fields out for preview; not part of the component -->
+<div class="flex max-w-md flex-col gap-6 p-6">
+
+  <!-- ───────── Default (auto-growing + hint) ───────── -->
+  <div class="textarea">
+    <label for="bio" class="textarea-label">Bio</label>
+
+    <textarea
+      id="bio"
+      name="bio"
+      rows="2"
+      placeholder="Tell us a little about yourself…"
+      aria-describedby="bio-hint"
+      class="textarea-control"
+    ></textarea>
+
+    <p id="bio-hint" class="textarea-hint">
+      The box grows as you type — no scrollbar until it hits its max height.
+    </p>
+  </div>
+
+  <!-- ───────── Disabled ───────── -->
+  <div class="textarea">
+    <label for="notes" class="textarea-label">Internal notes</label>
+
+    <textarea
+      id="notes"
+      name="notes"
+      rows="2"
+      disabled
+      aria-describedby="notes-hint"
+      class="textarea-control"
+    >Locked while your account is being verified.</textarea>
+
+    <p id="notes-hint" class="textarea-hint">
+      Visible to reviewers only.
+    </p>
+  </div>
+
+  <!-- ───────── Invalid (block modifier + required + aria-invalid) ───────── -->
+  <div class="textarea textarea_invalid">
+    <label for="reason" class="textarea-label">Reason for refund</label>
+
+    <textarea
+      id="reason"
+      name="reason"
+      rows="2"
+      required
+      aria-invalid="true"
+      aria-describedby="reason-hint reason-error"
+      placeholder="Describe what went wrong…"
+      class="textarea-control"
+    ></textarea>
+
+    <p id="reason-hint" class="textarea-hint">
+      A few sentences is plenty.
+    </p>
+    <!-- error is announced and linked via aria-describedby; never colour-only -->
+    <p id="reason-error" class="textarea-error">
+      Please tell us why you&rsquo;re requesting a refund.
+    </p>
+  </div>
+
+</div>

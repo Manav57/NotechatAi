@@ -1,0 +1,169 @@
+/*
+  EXAMPLE · popover · Approach (B): BEM + @apply — styles for popover.bem.html.
+
+  Same UI as popover.utility.html (a button toggling a native Popover-API panel
+  with a small menu, a v4 enter animation + optional ::backdrop), expressed with
+  @apply grouped by property kind. Group order follows the engine's property-order:
+    layout/position → size → spacing → background/border/shape → typography →
+    effects/motion → interaction; then nested states; then modifiers.
+
+  @reference — REQUIRED if this SCSS is compiled SEPARATELY from your Tailwind
+  entry (a CSS module, an isolated stylesheet, a framework's scoped <style>):
+  point it at the entry that does `@import "tailwindcss"`, otherwise @apply cannot
+  see the utilities/tokens. If this file is part of the same build that already
+  imports tailwindcss, DROP this line — a second reference is redundant.
+*/
+@reference "../app.css";   /* ← path to YOUR entry that imports tailwindcss */
+
+/*
+  Behaviour (native platform, no framework):
+    • The trigger's `popovertarget` toggles the [popover] panel on click; the
+      platform supplies light-dismiss, Esc and top-layer paint.
+    • The panel is `display:none` until open. We animate it across that change
+      with @starting-style + `transition-discrete`. The closed frame is the base
+      (opacity-0 scale-95); the open frame is `&:popover-open`; @starting-style
+      supplies the frame the browser transitions FROM on appear.
+    • aria-expanded on the trigger needs a tiny native `toggle`-event listener to
+      stay in sync (needs ~JS — NOT faked with a framework).
+
+  PROGRESSIVE ENHANCEMENT — CSS anchor positioning:
+    This file uses the absolute + translate baseline that works in every browser.
+    On engines that support CSS anchor positioning (a native CSS feature —
+    anchor-name on the trigger / position-anchor on the panel + position-area;
+    no dedicated Tailwind utilities, use arbitrary properties) you
+    can drop the manual translate math and let the panel auto-flip on overflow.
+    Treat it as an optional upgrade, not the baseline.
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): bg-card /
+  text-card-foreground (panel), bg-accent / text-accent-foreground (item hover),
+  border-border, outline-ring (focus), text-danger (destructive). Because every
+  color is a token that .dark overrides, the dark theme needs no extra rules here.
+*/
+
+/* ───────────────────────── Popover ───────────────────────── */
+
+.popover {
+  /* positioning context for the absolute panel */
+  @apply relative inline-block;
+
+  /* element: the focusable trigger control (neutral button base) */
+  &-trigger {
+    @apply inline-flex items-center justify-center gap-2;
+    @apply h-10;
+    @apply px-4;
+    @apply rounded-md border border-border bg-background;
+    @apply text-sm font-medium text-foreground;
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+    @apply cursor-pointer select-none;
+
+    &:hover         { @apply bg-muted; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+    &:active        { @apply bg-muted; }
+    &:disabled      { @apply opacity-50 pointer-events-none; }
+  }
+
+  /* element: decorative chevron; rotates while the panel is open.
+     The open state lives on the panel sibling, so we drive rotation from the
+     trigger's own aria-expanded (synced by the native toggle listener). */
+  &-chevron {
+    @apply size-4 shrink-0;
+    @apply text-muted-foreground;
+    @apply transition-transform duration-200 ease-out motion-reduce:transition-none;
+  }
+  &-trigger[aria-expanded="true"] &-chevron {
+    /* flipped while open */
+    @apply rotate-180;
+  }
+
+  /* element: the native [popover] panel (top-layer floating surface) */
+  &-panel {
+    /* centred under the trigger; z above page content */
+    @apply absolute left-1/2 top-full z-10 -translate-x-1/2;
+    @apply w-56;
+    /* m-0 resets the UA [popover] margin; mt-2 lifts it off the trigger */
+    @apply m-0 mt-2;
+    @apply rounded-lg border border-border bg-card shadow-lg;
+    @apply text-card-foreground;
+    /* closed (initial) frame; animates display+overlay so the
+       panel stays painted long enough to fade out on close */
+    @apply opacity-0 scale-95;
+    @apply transition-[opacity,transform,display,overlay] duration-200 ease-out transition-discrete;
+    @apply motion-reduce:transition-none;
+
+    /* open frame — present while the popover is open */
+    &:popover-open {
+      @apply opacity-100 scale-100;
+    }
+
+    /* enter animation: the frame the browser transitions FROM on open */
+    @starting-style {
+      &:popover-open {
+        @apply opacity-0 scale-95;
+      }
+    }
+
+    /* optional platform backdrop — a faint tint behind the panel */
+    &::backdrop {
+      @apply bg-foreground/10;
+    }
+  }
+
+  /* element: header — gives the group an accessible name */
+  &-header {
+    @apply flex flex-col gap-0.5;
+    @apply p-3;
+  }
+
+  /* element: heading — aria-labelledby target */
+  &-heading {
+    @apply text-sm font-semibold leading-none tracking-tight;
+  }
+
+  /* element: description under the heading */
+  &-desc {
+    @apply text-xs leading-relaxed text-muted-foreground;
+  }
+
+  /* element: a 1px divider between sections */
+  &-divider {
+    @apply h-px;
+    @apply bg-border;
+  }
+
+  /* element: a list group wrapping the items */
+  &-list {
+    @apply flex flex-col;
+    @apply p-1;
+  }
+
+  /* element: a menu entry — real interactive control, full state set */
+  &-item {
+    @apply inline-flex w-full items-center gap-2;
+    @apply px-2 py-1.5;
+    @apply rounded-sm border border-transparent bg-transparent;
+    @apply text-sm text-foreground;
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+    @apply cursor-pointer select-none;
+
+    &:hover         { @apply bg-accent text-accent-foreground; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+    &:active        { @apply bg-accent/80; }
+    &:disabled      { @apply opacity-50 pointer-events-none; }
+
+    /* modifier: destructive tone (e.g. Sign out) */
+    &_danger {
+      @apply text-danger;
+
+      &:hover  { @apply bg-danger/10 text-danger; }
+      &:active { @apply bg-danger/15; }
+    }
+  }
+}
+
+/* ───────────────────── Demo wrapper (layout only) ───────────────────── */
+
+.popoverDemo {
+  @apply flex min-h-60 items-start justify-center;
+  @apply p-12;
+  @apply bg-background text-foreground;
+}

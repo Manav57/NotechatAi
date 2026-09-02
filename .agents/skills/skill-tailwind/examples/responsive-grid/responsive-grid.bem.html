@@ -1,0 +1,88 @@
+<!--
+  EXAMPLE · responsive-grid · Approach (B): BEM markup — styles in
+  responsive-grid.bem.scss.
+
+  Same UI as in responsive-grid.utility.html (a card grid that changes columns
+  based on the CONTAINER WIDTH via Tailwind v4 container queries). Here the markup
+  carries SEMANTIC BEM names; the appearance is assembled from utilities via @apply
+  in responsive-grid.bem.scss.
+
+  Skill BEM convention (element separator `-`, modifier separator `_`;
+  camelCase for multi-word parts):
+    block         cardGrid                  (@container context)
+    block modif.  cardGrid_viewport         (contrast: breakpoints by VIEWPORT)
+    elements      cardGrid-list, cardGrid-item, cardGrid-title, cardGrid-text
+
+  Container vs viewport:
+    • base cardGrid          — @container + @sm:/@lg: inside cardGrid-list:
+      columns are measured from the PARENT's width → the component is reusable anywhere
+      in the layout (narrow column → 1, wide area → 3), without knowing about the screen.
+    • cardGrid_viewport      — same cards, but columns by sm:/md:/lg: (media
+      queries): they react to the VIEWPORT's width, not the container's.
+
+  Parity with approach A: the structure, cell count and behavior are identical; only
+  WHERE the style lives differs (in SCSS, not in markup classes). The grid is layout,
+  not semantics → the list is built as <ul>/<li>. No framework: plain HTML.
+
+  The demo wrapper below only provides a background and page padding — it is not part of
+  the component.
+-->
+
+<div class="bg-background p-8">
+
+  <!-- ───── Grid by CONTAINER width (v4 container queries) ───── -->
+  <div class="cardGrid">
+    <ul class="cardGrid-list">
+      <li class="cardGrid-item">
+        <h3 class="cardGrid-title">Card one</h3>
+        <p class="cardGrid-text">Placeholder body for the first cell.</p>
+      </li>
+      <li class="cardGrid-item">
+        <h3 class="cardGrid-title">Card two</h3>
+        <p class="cardGrid-text">Placeholder body for the second cell.</p>
+      </li>
+      <li class="cardGrid-item">
+        <h3 class="cardGrid-title">Card three</h3>
+        <p class="cardGrid-text">Placeholder body for the third cell.</p>
+      </li>
+      <li class="cardGrid-item">
+        <h3 class="cardGrid-title">Card four</h3>
+        <p class="cardGrid-text">Placeholder body for the fourth cell.</p>
+      </li>
+      <li class="cardGrid-item">
+        <h3 class="cardGrid-title">Card five</h3>
+        <p class="cardGrid-text">Placeholder body for the fifth cell.</p>
+      </li>
+      <li class="cardGrid-item">
+        <h3 class="cardGrid-title">Card six</h3>
+        <p class="cardGrid-text">Placeholder body for the sixth cell.</p>
+      </li>
+    </ul>
+  </div>
+
+  <!--
+    ───── Contrast: same layout, but by VIEWPORT width (media queries) ─────
+
+    Block modifier cardGrid_viewport: the breakpoints sm:/md:/lg: inside
+    cardGrid-list are measured from the SCREEN width, not the parent — so the
+    @container context is not set here. The difference is one thing: @sm/@lg look at the CONTAINER,
+    sm/md/lg — at the VIEWPORT.
+  -->
+  <div class="cardGrid cardGrid_viewport mt-8">
+    <ul class="cardGrid-list">
+      <li class="cardGrid-item">
+        <h3 class="cardGrid-title">Viewport card one</h3>
+        <p class="cardGrid-text">Columns react to the screen width.</p>
+      </li>
+      <li class="cardGrid-item">
+        <h3 class="cardGrid-title">Viewport card two</h3>
+        <p class="cardGrid-text">Columns react to the screen width.</p>
+      </li>
+      <li class="cardGrid-item">
+        <h3 class="cardGrid-title">Viewport card three</h3>
+        <p class="cardGrid-text">Columns react to the screen width.</p>
+      </li>
+    </ul>
+  </div>
+
+</div>

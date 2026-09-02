@@ -1,0 +1,145 @@
+<!--
+  EXAMPLE · navbar · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Responsive navigation header: brand text + link list + actions block.
+  Mobile-first: the menu expands WITHOUT JS via the native <details>/<summary>
+  (burger). On >=md horizontal links are shown and the burger is hidden.
+
+  Same structure and states as in navbar.bem.html (diff A vs B on the same UI).
+  No framework: plain HTML. Platform <details> instead of a JS toggle — mobile
+  expansion is driven by the [open] attribute, and on >=md the menu is always
+  visible (md:flex), so whether the <details> is open on desktop is irrelevant.
+
+  Tokens are the canonical SEMANTIC ones (see templates/theme.css): bg-background,
+  text-foreground, text-muted-foreground, border-border, bg-accent, ring/outline-
+  ring, etc. Token values are placeholders for the design system; names are stable.
+  Dark mode works "for free" — every color is a token that .dark
+  overrides, so there are no dedicated dark: variants here.
+
+  Link states: hover / focus-visible; the active item is aria-current="page"
+  (+ a visual highlight). Buttons/burger get the full set of states.
+-->
+
+<!-- demo wrapper: neutral page background so the header reads in context -->
+<div class="min-h-32 bg-background text-foreground">
+  <header class="border-b border-border bg-background">
+    <nav aria-label="Main" class="mx-auto w-full max-w-6xl px-4">
+
+      <!--
+        <details class="group"> — the "menu open" state without JS. The menu panel
+        is hidden by default (hidden) and expands on [open] via group-open:,
+        and on >=md it is forced visible (md:flex), i.e. no burger needed on desktop.
+      -->
+      <details class="group">
+        <div class="flex h-14 items-center gap-4">
+
+          <!-- Brand: text link to home, no logo -->
+          <a
+            href="/"
+            class="mr-auto rounded-sm text-base font-semibold tracking-tight text-foreground
+                   transition-colors duration-150
+                   hover:text-foreground/80
+                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          >
+            Brand
+          </a>
+
+          <!-- Burger: <summary> as a button. Hidden on >=md (links are in a row there). -->
+          <summary
+            aria-label="Toggle navigation menu"
+            class="inline-flex size-9 list-none items-center justify-center
+                   rounded-md border border-border bg-background text-foreground
+                   transition-colors duration-150
+                   hover:bg-accent hover:text-accent-foreground
+                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                   active:bg-accent
+                   md:hidden
+                   cursor-pointer select-none [&::-webkit-details-marker]:hidden"
+          >
+            <!-- burger icon (decorative) -->
+            <svg class="size-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </summary>
+        </div>
+
+        <!--
+          Menu panel: links + actions. Mobile-first — hidden (hidden); when the
+          <details> is open it expands as a column (group-open:flex). On >=md it is
+          always visible as a horizontal row (md:flex).
+        -->
+        <div class="hidden flex-col gap-1 pb-3 group-open:flex md:flex md:flex-row md:items-center md:pb-0">
+          <ul class="flex flex-col gap-1 md:flex-row md:items-center">
+            <li>
+              <a
+                href="/"
+                aria-current="page"
+                class="block rounded-md px-3 py-2
+                       bg-accent text-sm font-medium text-accent-foreground
+                       transition-colors duration-150
+                       hover:bg-accent/80
+                       focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a
+                href="/projects"
+                class="block rounded-md px-3 py-2
+                       text-sm font-medium text-muted-foreground
+                       transition-colors duration-150
+                       hover:bg-accent hover:text-accent-foreground
+                       focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
+                Projects
+              </a>
+            </li>
+            <li>
+              <a
+                href="/team"
+                class="block rounded-md px-3 py-2
+                       text-sm font-medium text-muted-foreground
+                       transition-colors duration-150
+                       hover:bg-accent hover:text-accent-foreground
+                       focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
+                Team
+              </a>
+            </li>
+            <li>
+              <a
+                href="/settings"
+                class="block rounded-md px-3 py-2
+                       text-sm font-medium text-muted-foreground
+                       transition-colors duration-150
+                       hover:bg-accent hover:text-accent-foreground
+                       focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
+                Settings
+              </a>
+            </li>
+          </ul>
+
+          <!-- Actions block: primary button. On >=md pinned to the right. -->
+          <div class="mt-2 flex items-center gap-2 md:mt-0 md:ml-auto">
+            <button
+              type="button"
+              class="inline-flex h-9 w-full items-center justify-center gap-2 px-4
+                     rounded-md border border-transparent
+                     bg-primary text-sm font-medium text-primary-foreground
+                     transition-colors duration-150
+                     hover:bg-primary/90
+                     focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+                     active:bg-primary/95
+                     disabled:opacity-50 disabled:pointer-events-none
+                     md:w-auto cursor-pointer select-none"
+            >
+              Sign in
+            </button>
+          </div>
+        </div>
+      </details>
+    </nav>
+  </header>
+</div>

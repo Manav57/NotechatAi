@@ -1,0 +1,147 @@
+<!--
+  EXAMPLE · copy-to-clipboard · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  A button that copies a short value (here a generic placeholder string) to the
+  clipboard. On success it does TWO things, because each serves a different user:
+    1) VISIBLE feedback — the label and leading icon swap to "Copied" + a check,
+       briefly, then revert. Sighted users see the change.
+    2) ANNOUNCED feedback — a visually-hidden (sr-only) live region with
+       role="status" + aria-live="polite" is updated to "Copied to clipboard".
+       Assistive tech announces it WITHOUT moving focus. A text/icon swap alone is
+       NOT reliably announced; the live region is what reaches a screen-reader user.
+
+  Same UI as copy-to-clipboard.bem.html, so you can diff A vs B on identical
+  structure. Framework-agnostic: plain HTML.
+
+  ── ~JS needed (honest note — NOT a framework) ─────────────────────────────
+    There is NO CSS-only way to read the clipboard or to flip transient state and
+    revert it on a timer. The small <script> below is plain, vanilla, dependency-
+    free DOM code (navigator.clipboard.writeText + textContent updates + a
+    setTimeout revert). It is the kind of "stateful glue" the skill says to FLAG
+    rather than hide. It targets ids / data-* hooks, not utility classes, so the
+    look stays entirely in the markup. Swap it for your framework's equivalent
+    (a click handler + a reactive boolean) — the markup and ARIA model are the same.
+    Clipboard access requires a secure context (https or localhost) and is
+    user-gesture gated; the catch branch keeps the button honest if it is denied.
+
+  Accessibility:
+    • A real <button type="button"> with the full interactive state set:
+      hover · focus-visible · active · disabled.
+    • The leading icon is decoration (aria-hidden); meaning lives in the text.
+    • The copied value is shown in a <code> with an id; the button points at it
+      via aria-describedby so its accessible description includes the value.
+    • The live region is permanently in the DOM, empty at rest, and only its
+      TEXT changes — moving the element or toggling its existence can drop the
+      announcement.
+  prefers-reduced-motion is honored with motion-reduce:transition-none.
+
+  Tokens are the canonical SEMANTIC ones from templates/theme.css (bg-muted,
+  border-border, bg-background/foreground, ring-ring, text-success …). Replace the
+  token VALUES under your design system; the NAMES stay stable. Dark theme works
+  for free — every color is a token that .dark overrides, so this markup needs no
+  `dark:` variants of its own.
+-->
+
+<!-- demo wrapper: neutral page surface -->
+<div class="flex flex-col items-start gap-4 bg-background p-6 text-foreground">
+
+  <!-- the value to copy: a generic placeholder, shown in a <code> with an id -->
+  <div class="inline-flex items-center gap-2">
+    <code
+      id="copyValue"
+      class="rounded-sm border border-border bg-muted px-2 py-1
+             text-sm font-mono text-foreground"
+    >example-token-1234</code>
+
+    <!--
+      The copy button.
+      · aria-describedby="copyValue" — the description includes the copied value.
+      · data-copy-target points the script at the value element (a hook, not a class).
+      · The two label spans are toggled by the script (only one is shown at a time);
+        the idle one shows by default, the done one is `hidden` until success.
+    -->
+    <button
+      type="button"
+      id="copyButton"
+      data-copy-target="#copyValue"
+      aria-describedby="copyValue"
+      class="inline-flex items-center justify-center gap-2
+             h-9 px-3
+             rounded-md border border-border
+             bg-background text-foreground text-sm font-medium
+             transition-colors duration-150
+             hover:bg-muted
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-muted
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer select-none"
+    >
+      <!-- idle state: copy glyph + "Copy" -->
+      <span data-copy-idle class="inline-flex items-center gap-2">
+        <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <rect x="5.25" y="5.25" width="7.5" height="7.5" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+          <path d="M10.75 5.25V4A1.25 1.25 0 0 0 9.5 2.75H4A1.25 1.25 0 0 0 2.75 4v5.5A1.25 1.25 0 0 0 4 10.75h1.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span>Copy</span>
+      </span>
+
+      <!-- success state: check glyph + "Copied" — hidden until the script swaps it -->
+      <span data-copy-done hidden class="inline-flex items-center gap-2 text-success">
+        <svg class="size-4 shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3.5 8.5l2.75 2.75L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span>Copied</span>
+      </span>
+    </button>
+  </div>
+
+  <!--
+    The ANNOUNCEMENT region. Visually hidden (sr-only) but present in the
+    accessibility tree. role="status" + aria-live="polite" means a screen reader
+    announces text inserted here, without stealing focus. It stays in the DOM and
+    starts EMPTY; the script writes "Copied to clipboard" on success (and clears
+    it on revert). Do not move/recreate it — only change its text.
+  -->
+  <span id="copyStatus" role="status" aria-live="polite" class="sr-only"></span>
+
+</div>
+
+<script>
+  // ~JS — small, vanilla, dependency-free. The skill flags this as stateful glue,
+  // not a framework. Replace with your framework's click handler + reactive flag;
+  // the markup and ARIA model above stay identical.
+  (function () {
+    const button = document.getElementById("copyButton");
+    if (!button) return;
+
+    const idle   = button.querySelector("[data-copy-idle]");
+    const done   = button.querySelector("[data-copy-done]");
+    const status = document.getElementById("copyStatus");
+    const valueEl = document.querySelector(button.dataset.copyTarget);
+    let revertTimer;
+
+    function showCopied() {
+      idle.hidden = true;
+      done.hidden = false;
+      if (status) status.textContent = "Copied to clipboard"; // announced (polite)
+      clearTimeout(revertTimer);
+      revertTimer = setTimeout(function () {
+        done.hidden = true;
+        idle.hidden = false;
+        if (status) status.textContent = ""; // clear so the next copy re-announces
+      }, 2000);
+    }
+
+    button.addEventListener("click", async function () {
+      const text = valueEl ? valueEl.textContent.trim() : "";
+      try {
+        // Clipboard API needs a secure context (https/localhost) + user gesture.
+        await navigator.clipboard.writeText(text);
+        showCopied();
+      } catch (err) {
+        // Denied / unsupported — keep the control honest, announce the failure.
+        if (status) status.textContent = "Copy failed — select the text and copy manually";
+      }
+    });
+  })();
+</script>

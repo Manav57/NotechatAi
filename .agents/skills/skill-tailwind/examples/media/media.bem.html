@@ -1,0 +1,114 @@
+<!--
+  EXAMPLE · media · Approach (B): BEM markup — styled by media.bem.scss.
+
+  Same structure and same UI as media.utility.html, but classes follow the skill's BEM
+  convention (camelCase for multi-word parts): one block `figure`; elements via a
+  hyphen — figure-media (ratio wrapper), figure-image (<img>/<picture>),
+  figure-caption (caption); block modifiers via an underscore — ratio figure_video
+  / figure_square and figure_overlay (overlaid caption). No `-a-b` chains.
+  Plain HTML, framework-free, no JS.
+
+  The ratio is set by the block MODIFIER (figure_video → aspect-video on figure-media,
+  figure_square → aspect-square), the image fills the wrapper object-cover. The caption is
+  BELOW the media by default; figure_overlay places it over the image with a gradient scrim.
+
+  Accessibility (in the markup; visuals — in SCSS):
+    • A meaningful image carries a real alt; figure-caption captions it.
+    • Purely decorative — empty alt="" + role="presentation": not announced,
+      and no figure-caption (no information).
+    • The overlaid caption stays real text; contrast comes from scrim + text-background.
+
+  Tokens — canonical SEMANTIC ones (templates/theme.css); dark mode without dark:*.
+  The outer <div> is a demo wrapper for layout, not part of the block.
+-->
+
+<div class="mediaDemo">
+
+  <!-- ───────── 1. figure 16:9 (figure_video), caption below media ───────── -->
+
+  <figure class="figure figure_video">
+    <div class="figure-media">
+      <img
+        class="figure-image"
+        src="./media-landscape.jpg"
+        alt="Wide mountain ridge under an overcast sky"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <figcaption class="figure-caption">
+      A short caption that describes the image for sighted users.
+    </figcaption>
+  </figure>
+
+  <!-- ───────── 2. figure 1:1 (figure_square), caption below media ───────── -->
+
+  <figure class="figure figure_square">
+    <div class="figure-media">
+      <img
+        class="figure-image"
+        src="./media-square.jpg"
+        alt="Top-down view of tools arranged on a workbench"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <figcaption class="figure-caption">
+      Square crop (1:1) — same wrapper-driven aspect, different ratio.
+    </figcaption>
+  </figure>
+
+  <!-- ───────── 3. <picture> (art-direction), figure_video ───────── -->
+
+  <figure class="figure figure_video">
+    <div class="figure-media">
+      <picture>
+        <source media="(min-width: 640px)" srcset="./media-wide.jpg" />
+        <source media="(max-width: 639px)" srcset="./media-tall.jpg" />
+        <img
+          class="figure-image"
+          src="./media-wide.jpg"
+          alt="City street that re-frames from wide to tall on small screens"
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
+    </div>
+    <figcaption class="figure-caption">
+      &lt;picture&gt; swaps the source per breakpoint (art-direction).
+    </figcaption>
+  </figure>
+
+  <!-- ───────── 4. Variant with an OVERLAID caption (figure_overlay) ───────── -->
+
+  <figure class="figure figure_video figure_overlay">
+    <div class="figure-media">
+      <img
+        class="figure-image"
+        src="./media-overlay.jpg"
+        alt="Harbor at dusk with boats moored along the pier"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <figcaption class="figure-caption">
+      <span class="figure-captionTitle">Overlaid caption</span>
+      <span class="figure-captionText">Caption sits over the image, kept readable by a gradient scrim.</span>
+    </figcaption>
+  </figure>
+
+  <!-- ───────── 5. Purely DECORATIVE image (no caption) ───────── -->
+  <!-- Empty alt="" + role="presentation"; no figure-caption, media in the flow. -->
+
+  <figure class="figure figure_plain">
+    <img
+      class="figure-image"
+      src="./media-decorative.svg"
+      alt=""
+      role="presentation"
+      loading="lazy"
+      decoding="async"
+    />
+  </figure>
+
+</div>

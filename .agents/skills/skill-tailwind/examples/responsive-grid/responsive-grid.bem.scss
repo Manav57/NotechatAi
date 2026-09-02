@@ -1,0 +1,79 @@
+/*
+  EXAMPLE · responsive-grid · Approach (B): BEM + @apply — styles for
+  responsive-grid.bem.html.
+
+  Same UI as in responsive-grid.utility.html (a card grid that changes columns
+  based on the CONTAINER WIDTH via Tailwind v4 container queries). The look is assembled from
+  utilities via @apply, grouped by property type in the order: layout →
+  sizing → spacing → background/borders/shape → typography → effects/motion →
+  interaction; then states; then modifiers.
+
+  @reference — NEEDED if this SCSS is compiled SEPARATELY from the entry CSS
+  (a CSS module, an isolated <style>, a framework scoped style): @apply and tokens
+  resolve against your Tailwind entry. If the file is part of the same build that
+  already has `@import "tailwindcss"`, REMOVE this line (a second reference is redundant).
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): bg-card,
+  text-card-foreground, text-muted-foreground, border-border. Since every color
+  is a token that .dark overrides, dark mode requires no rules here.
+
+  Container vs viewport:
+    • cardGrid-list inside the base cardGrid (@container): @sm:/@lg: — breakpoints
+      by PARENT's width (container queries);
+    • cardGrid_viewport: the same list, but sm:/md:/lg: — by VIEWPORT's width
+      (media queries). The modifier disables the inherited container context
+      (container-type: normal) and resets the container @sm:/@lg:, so that the layout
+      is controlled only by the viewport.
+
+  BEM: block cardGrid; block modifier cardGrid_viewport; elements cardGrid-list,
+  cardGrid-item, cardGrid-title, cardGrid-text.
+*/
+
+.cardGrid {
+  /* container context — the child grid reads the width of THIS block */
+  @apply @container;
+
+  /* element: cell grid — columns by CONTAINER width (container queries) */
+  &-list {
+    /* base = narrow container: one column */
+    @apply grid grid-cols-1 gap-4;
+    /* responsive BY CONTAINER: @sm → 2, @lg → 3 columns */
+    @apply @sm:grid-cols-2 @lg:grid-cols-3;
+  }
+
+  /* element: card cell (neutral placeholder, no interactive states) */
+  &-item {
+    @apply flex flex-col gap-1;
+    @apply p-4;
+    @apply rounded-lg border border-border bg-card;
+    @apply text-card-foreground;
+  }
+
+  /* element: card title */
+  &-title {
+    @apply text-sm font-medium;
+  }
+
+  /* element: card text */
+  &-text {
+    @apply text-sm text-muted-foreground;
+  }
+
+  /* block modifier: contrast — columns by VIEWPORT width (media queries).
+     The base .cardGrid inherits @container, and its _list — the @sm:/@lg: container
+     columns. So that in this variant the layout is controlled ONLY by the viewport, we disable
+     the container context (container-type: normal) and reset the inherited
+     @sm:/@lg:, replacing them with the media variants sm:/md:/lg: (breakpoints from the screen). */
+  &_viewport {
+    /* remove the container context so the @sm:/@lg: below do not fire */
+    @apply [container-type:normal];
+
+    .cardGrid-list {
+      /* responsive BY VIEWPORT: sm → 2, lg → 3 columns */
+      @apply @sm:grid-cols-1 @lg:grid-cols-1;          /* neutralize the container columns */
+      @apply sm:grid-cols-2 lg:grid-cols-3;            /* columns by VIEWPORT width */
+    }
+  }
+}

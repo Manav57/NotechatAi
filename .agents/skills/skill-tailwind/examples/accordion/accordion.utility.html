@@ -1,0 +1,185 @@
+<!--
+  EXAMPLE · accordion · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as accordion.bem.html, so you can diff A vs B on identical structure.
+  Framework-agnostic: plain HTML on NATIVE <details>/<summary>. NO JS at all —
+  open/close, keyboard (Enter/Space toggles, focus moves with Tab) and a11y come
+  from the platform. <summary> is the button; <details> owns the open state via
+  its [open] attribute. Several sections sit side by side; this is a plain list
+  of independent <details> (each opens on its own). For a single-open accordion
+  give every <details> the same `name="..."` (native exclusive-accordion) — a
+  platform feature, still no JS.
+
+  v4 chevron: the icon lives inside <summary>, so we read the parent's open state
+  with the `open:` variant (open:rotate-180) and rotate it. transition + motion-
+  reduce:transition-none honor prefers-reduced-motion.
+
+  v4 content reveal — the height nuance (read this):
+    A <details> cannot transition height from 0 to `auto` directly, and the
+    content box only exists while [open]. Two v4-friendly options:
+      1) Animate the ::details-content pseudo (v4.1 `details-content:` variant)
+         with @starting-style + transition-discrete, and let height interpolate
+         to a keyword via `interpolate-size: allow-keywords` (set in <style>).
+      2) Or wrap the content in a CSS grid whose `grid-template-rows` animates
+         0fr→1fr (no keyword needed). We use option 1 here (less wrapper markup);
+         the BEM file shows the same with grouped @apply.
+
+  Tokens are the canonical SEMANTIC ones from templates/theme.css
+  (bg-card / text-card-foreground, border-border, bg-muted, text-muted-foreground,
+  outline-ring …). Replace the token VALUES under your design system; the NAMES
+  stay stable. Dark theme works for free — every color is a token that .dark
+  overrides, so this markup needs no `dark:` variants of its own.
+
+  Accessibility: native <details>/<summary> is fully keyboard-operable and
+  exposes disclosure semantics to assistive tech on its own — no ARIA needed.
+  We only add a visible focus ring (focus-visible) on the <summary>.
+-->
+
+<!--
+  `interpolate-size: allow-keywords` lets height animate to/from `auto`. It is a
+  document-level CSS opt-in with no Tailwind utility, so it lives in this tiny
+  <style>. Everything else is utilities. (Browsers without support just snap
+  open — progressive enhancement.)
+-->
+<style>
+  .accordionDemo { interpolate-size: allow-keywords; }
+</style>
+
+<!-- demo wrapper: neutral page surface holding the accordion -->
+<div class="accordionDemo flex flex-col gap-6 bg-background p-6 text-foreground">
+
+  <!-- accordion: a stack of independent disclosure sections -->
+  <div class="flex w-full max-w-md flex-col gap-2">
+
+    <!-- item 1 — open by default (shows the expanded state) -->
+    <details
+      open
+      class="group
+             rounded-md border border-border
+             bg-card text-card-foreground"
+    >
+      <!-- trigger (<summary>): the clickable header row; `group` is on <details> -->
+      <summary
+        class="flex cursor-pointer list-none items-center justify-between gap-4
+               px-4 py-3
+               rounded-md
+               text-sm font-medium
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:bg-muted
+               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               active:bg-muted
+               [&::-webkit-details-marker]:hidden"
+      >
+        <span>Section one (open by default)</span>
+
+        <!-- chevron: rotates when the parent <details> is open -->
+        <svg
+          class="size-4 shrink-0 text-muted-foreground
+                 transition-transform duration-200 motion-reduce:transition-none
+                 group-open:rotate-180"
+          viewBox="0 0 16 16" fill="none" aria-hidden="true"
+        >
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </summary>
+
+      <!--
+        content: the `details-content:` variant (v4.1) targets the
+        ::details-content pseudo so we can animate height + opacity. transition-
+        discrete keeps it visible long enough to collapse on close; @starting-style
+        (the `starting:` variant) supplies the frame the open transitions FROM.
+      -->
+      <div
+        class="px-4 pb-4 pt-0
+               text-sm leading-relaxed text-muted-foreground
+               details-content:overflow-hidden
+               details-content:h-0 details-content:opacity-0
+               details-content:transition-[height,opacity,content-visibility]
+               details-content:transition-discrete
+               details-content:duration-200 details-content:ease-out
+               details-content:motion-reduce:transition-none
+               group-open:details-content:h-auto group-open:details-content:opacity-100
+               starting:group-open:details-content:h-0 starting:group-open:details-content:opacity-0"
+      >
+        Body content for the first section. Keep the skeleton neutral; the
+        surrounding design system supplies the real colors, type and spacing via
+        the @theme tokens.
+      </div>
+    </details>
+
+    <!-- item 2 — closed (resting state) -->
+    <details
+      class="group
+             rounded-md border border-border
+             bg-card text-card-foreground"
+    >
+      <summary
+        class="flex cursor-pointer list-none items-center justify-between gap-4
+               px-4 py-3
+               rounded-md
+               text-sm font-medium
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:bg-muted
+               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+               active:bg-muted
+               [&::-webkit-details-marker]:hidden"
+      >
+        <span>Section two</span>
+        <svg
+          class="size-4 shrink-0 text-muted-foreground
+                 transition-transform duration-200 motion-reduce:transition-none
+                 group-open:rotate-180"
+          viewBox="0 0 16 16" fill="none" aria-hidden="true"
+        >
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </summary>
+      <div
+        class="px-4 pb-4 pt-0
+               text-sm leading-relaxed text-muted-foreground
+               details-content:overflow-hidden
+               details-content:h-0 details-content:opacity-0
+               details-content:transition-[height,opacity,content-visibility]
+               details-content:transition-discrete
+               details-content:duration-200 details-content:ease-out
+               details-content:motion-reduce:transition-none
+               group-open:details-content:h-auto group-open:details-content:opacity-100
+               starting:group-open:details-content:h-0 starting:group-open:details-content:opacity-0"
+      >
+        Body content for the second section.
+      </div>
+    </details>
+
+    <!-- item 3 — disabled: native <details> has no disabled attr, so we lock it
+         with inert (the section can't be opened/focused) and dim it visually.
+         NOTE: `inert` is a native HTML attribute — there is NO `inert:` variant. -->
+    <details
+      inert
+      class="group
+             rounded-md border border-border
+             bg-card text-card-foreground
+             opacity-50"
+    >
+      <summary
+        class="flex list-none items-center justify-between gap-4
+               px-4 py-3
+               rounded-md
+               text-sm font-medium
+               cursor-not-allowed
+               [&::-webkit-details-marker]:hidden"
+      >
+        <span>Section three (disabled)</span>
+        <svg
+          class="size-4 shrink-0 text-muted-foreground"
+          viewBox="0 0 16 16" fill="none" aria-hidden="true"
+        >
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </summary>
+      <div class="px-4 pb-4 pt-0 text-sm leading-relaxed text-muted-foreground">
+        This section is inert and cannot be opened.
+      </div>
+    </details>
+
+  </div>
+</div>

@@ -1,0 +1,118 @@
+/*
+  EXAMPLE · progress · Approach (B): BEM + @apply — styles for progress.bem.html.
+
+  Same UI as progress.utility.html (a determinate progress with label + percent
+  text, and an indeterminate progress with a label only), expressed with @apply
+  grouped by property kind. Group order follows the engine's property-order:
+    layout/position → size → spacing → background/border/shape → typography →
+    effects/motion → interaction; then nested states; then modifiers.
+
+  @reference — REQUIRED if this SCSS is compiled SEPARATELY from your Tailwind
+  entry (a CSS module, an isolated stylesheet, a framework's scoped <style>):
+  point it at the entry that does `@import "tailwindcss"`, otherwise @apply cannot
+  see the utilities/tokens. If this file is part of the same build that already
+  imports tailwindcss, DROP this line — a second reference is redundant.
+*/
+@reference "../app.css";   /* ← path to YOUR entry that imports tailwindcss */
+
+/*
+  Styling a native <progress> (no JS):
+    • `appearance-none` strips OS chrome so our token styles show through.
+    • The TRACK is the <progress> box itself (bg-muted, rounded, fixed height).
+    • The VALUE (fill) is a pseudo-element with NO cross-browser selector, so we
+      style it per engine: ::-webkit-progress-bar (track) +
+      ::-webkit-progress-value (fill) for WebKit/Blink, ::-moz-progress-bar (fill)
+      for Firefox. @apply works inside these pseudo-element selectors.
+    • The determinate fill animates its width with transition-[width];
+      prefers-reduced-motion is honored with motion-reduce.
+
+  INDETERMINATE (the _indeterminate modifier): a <progress> with `max` but no
+  `value` is indeterminate. We can't size a fill we don't control, so we paint a
+  looping sliver via a ::before on the element. The @keyframes is declared as RAW
+  CSS below — @apply is NOT allowed inside @keyframes.
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): bg-muted (track),
+  bg-primary (fill), text-foreground / text-muted-foreground (labels). Because
+  every color is a token that .dark overrides, the dark theme needs no extra rules.
+*/
+
+/* indeterminate sliver animation — raw CSS (never @apply inside @keyframes) */
+@keyframes progressIndeterminate {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+/* ───────────────────────── Progress ───────────────────────── */
+
+.progress {
+  @apply flex flex-col gap-1.5;
+  @apply w-full;
+
+  /* element: header row — label + percent text on one baseline */
+  &-header {
+    @apply flex items-baseline justify-between gap-4;
+  }
+
+  /* element: label — the field name, linked to the bar via for/id */
+  &-label {
+    @apply text-sm font-medium text-foreground;
+  }
+
+  /* element: value — decorative percent text (aria-hidden; value is on the bar) */
+  &-value {
+    @apply text-sm tabular-nums text-muted-foreground;
+  }
+
+  /* element: bar — the native <progress>. Element box = TRACK; fill = pseudo. */
+  &-bar {
+    @apply block;
+    @apply h-2 w-full;
+    /* rounded-full is legitimate here: a thin bar with fully rounded ends is a
+       PILL (an allowed case, same as the switch track) — not excessive rounding. */
+    @apply appearance-none overflow-hidden rounded-full bg-muted;
+
+    /* WebKit/Blink track — transparent so our bg-muted on the box shows through */
+    &::-webkit-progress-bar {
+      @apply rounded-full bg-muted;
+    }
+    /* WebKit/Blink fill — animates its width on value change */
+    &::-webkit-progress-value {
+      @apply rounded-full bg-primary;
+      @apply transition-[width] duration-300 ease-out motion-reduce:transition-none;
+    }
+    /* Firefox fill */
+    &::-moz-progress-bar {
+      @apply rounded-full bg-primary;
+    }
+
+    /* modifier (element): indeterminate — `max` but no `value`. We hide the engine
+       fill (transparent) and paint a looping sliver via ::before instead. */
+    &_indeterminate {
+      /* positioning context for the absolute sliver */
+      @apply relative;
+
+      &::-moz-progress-bar { @apply bg-transparent; }
+
+      &::before {
+        @apply absolute inset-y-0 left-0;
+        /* the sliver is a third of the track */
+        @apply w-1/3;
+        @apply rounded-full bg-primary;
+        /* the loop (keyframe is raw CSS above) */
+        @apply [animation:progressIndeterminate_1.5s_ease-in-out_infinite];
+        @apply motion-reduce:hidden;
+        /* required for ::before to render */
+        content: "";
+      }
+    }
+  }
+}
+
+/* ───────────────────── Demo wrapper (layout only) ───────────────────── */
+
+.progressDemo {
+  @apply flex flex-col gap-6;
+  @apply w-full max-w-md;
+  @apply p-6;
+  @apply bg-background text-foreground;
+}

@@ -1,0 +1,183 @@
+/*
+  EXAMPLE · checkbox-radio-switch · Approach (B): BEM + @apply — styles for
+  checkbox-radio-switch.bem.html.
+
+  Same UI as checkbox-radio-switch.utility.html (a checkbox group, a radio group
+  in a <fieldset>/<legend>, and switches). @apply is split into lines grouped by
+  property kind, in the engine's property-order:
+    layout/position → size → spacing → background/border/shape → typography →
+    effects/motion → interaction; then nested states; then modifiers.
+
+  @reference — REQUIRED only if this SCSS is compiled SEPARATELY from the page
+  (a CSS module / isolated stylesheet / framework scoped <style>); point it at
+  YOUR Tailwind entry so @apply can resolve the utilities/tokens. If this file is
+  part of the same build that already does `@import "tailwindcss"`, DROP this line.
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): accent-primary
+  (accent-color), bg-primary / bg-input / bg-background, border-input, ring/outline
+  via outline-ring, text-foreground / text-muted-foreground, text-danger /
+  outline-danger. Because every color is a token .dark overrides, dark theme is free.
+
+  Validation note: required controls use `user-invalid:` (NOT `invalid:` /
+  `peer-invalid:`), so the danger styling appears only AFTER the user interacts,
+  not on first paint. Motion on the switch thumb honors `motion-reduce`.
+*/
+
+/* ─────────────────── Shared group wrapper (fieldset) ─────────────────── */
+
+.fieldGroup {
+  @apply flex flex-col gap-3;
+  /* reset the native fieldset chrome */
+  @apply border-0;
+  @apply p-0;
+}
+
+.fieldGroup-legend {
+  @apply mb-1;
+  @apply text-sm font-medium text-foreground;
+}
+
+/* ═══════════════════════════ Block: checkbox ═══════════════════════════ */
+/* The whole row is a <label>, so the text labels the control without for/id. */
+
+.checkbox {
+  @apply inline-flex w-fit items-start gap-3;
+  /* when the inner control is disabled, dim + lock the whole row */
+  @apply has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50;
+}
+
+/* element: the native control — default look tinted via accent-color */
+.checkbox-control {
+  /* nudge down to align with the first text line */
+  @apply mt-0.5 shrink-0;
+  @apply size-4;
+  /* accent-primary maps to accent-color (v4) */
+  @apply rounded-sm accent-primary;
+  @apply transition-colors duration-150 motion-reduce:transition-none;
+  @apply outline-none;
+
+  &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+  &:disabled      { @apply cursor-not-allowed; }
+
+  /* element modifier: required field — danger outline ONLY after interaction.
+     user-invalid: (not invalid:/peer-invalid:) avoids flagging an untouched field */
+  &_invalid {
+    &:user-invalid { @apply outline-2 outline-danger; }
+  }
+}
+
+/* element: the text beside the control */
+.checkbox-label {
+  @apply text-sm leading-tight text-foreground;
+  @apply select-none;
+}
+
+/* element: secondary helper line under the label */
+.checkbox-hint {
+  @apply block;
+  @apply text-xs font-normal text-muted-foreground;
+}
+
+/* element: validation message — linked via aria-describedby; never colour-only */
+.checkbox-error {
+  @apply block;
+  @apply text-xs font-medium text-danger;
+}
+
+/* ═══════════════════════════ Block: radio ═══════════════════════════ */
+/* Each row is a <label>; the surrounding <fieldset>/<legend> names the group. */
+
+.radio {
+  @apply inline-flex w-fit items-center gap-3;
+  @apply has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50;
+}
+
+/* element: the native radio — default look tinted via accent-color */
+.radio-control {
+  @apply shrink-0;
+  @apply size-4;
+  /* radios are round natively; accent-color tints them */
+  @apply accent-primary;
+  @apply transition-colors duration-150 motion-reduce:transition-none;
+  @apply outline-none;
+
+  &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+  &:disabled      { @apply cursor-not-allowed; }
+}
+
+/* element: the text beside the radio */
+.radio-label {
+  @apply text-sm leading-tight text-foreground;
+  @apply select-none;
+}
+
+/* element: secondary helper line under a radio label */
+.radio-hint {
+  @apply block;
+  @apply text-xs font-normal text-muted-foreground;
+}
+
+/* ═══════════════════════════ Block: switch ═══════════════════════════ */
+/*
+  A switch is a checkbox with role="switch": the real <input> is invisible and
+  acts as a `peer`; the visible track + thumb are siblings driven by peer-checked:.
+  The row <label> reacts to has-[:checked]:/has-[:disabled]: on the inner control.
+  Elements: switch-control, switch-box, switch-track, switch-thumb, switch-label.
+*/
+
+.switch {
+  /* label on the left, control on the right */
+  @apply inline-flex w-full items-center justify-between gap-3;
+  @apply has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50;
+}
+
+/* element: the text label of the switch */
+.switch-label {
+  @apply text-sm leading-tight text-foreground;
+  @apply select-none;
+}
+
+/* element: positioning box that stacks the input (peer), track and thumb */
+.switch-box {
+  @apply relative inline-flex shrink-0 items-center;
+}
+
+/* element: the real control — invisible, covers the box, drives the peer states.
+   The `peer` marker is a literal class in the markup (you cannot @apply group/peer). */
+.switch-control {
+  @apply absolute inset-0 z-10;
+  @apply size-full;
+  @apply m-0;
+  /* appearance-none strips the native checkbox glyph */
+  @apply appearance-none rounded-full;
+  @apply cursor-pointer outline-none;
+
+  &:disabled { @apply cursor-not-allowed; }
+}
+
+/* element: the track — background pill behind the thumb */
+.switch-track {
+  @apply h-6 w-10;
+  @apply rounded-full bg-input;
+  @apply transition-colors duration-150 motion-reduce:transition-none;
+
+  /* peer state: checked → primary track */
+  @apply peer-checked:bg-primary;
+  /* peer state: keyboard focus on the hidden input → visible ring on the track */
+  @apply peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring;
+}
+
+/* element: the thumb — slides left↔right as the peer toggles */
+.switch-thumb {
+  /* start near the left edge of the track */
+  @apply pointer-events-none absolute left-0.5;
+  @apply size-5;
+  @apply rounded-full bg-background shadow-sm;
+  /* slide only the transform; honor reduced motion */
+  @apply transition-transform duration-150 ease-out motion-reduce:transition-none;
+
+  /* peer state: checked → slide to the right end of the track */
+  @apply peer-checked:translate-x-4;
+}

@@ -1,0 +1,119 @@
+/*
+  EXAMPLE · pagination · Approach (B): BEM + @apply — styles for pagination.bem.html.
+
+  Same UI as in pagination.utility.html (numbered pagination + prev/next;
+  current page aria-current="page"; on a narrow container the numbers collapse
+  into a compact "Page X of Y" status via @container). The look is assembled from
+  utilities via @apply, grouped by property type in the order: layout → sizing →
+  spacing → background/borders/shape → typography → effects/motion → interaction;
+  then states; then modifiers.
+
+  @reference — NEEDED if this SCSS is compiled SEPARATELY from the entry CSS
+  (a CSS module, an isolated <style>, a framework scoped style): @apply and tokens
+  resolve against your Tailwind entry. If the file is part of the same build that
+  already has `@import "tailwindcss"`, REMOVE this line (a second reference is redundant).
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens — canonical SEMANTIC ones (templates/theme.css): bg-background,
+  text-foreground, text-muted-foreground, border-border, bg-accent/
+  text-accent-foreground, bg-primary/text-primary-foreground, outline-ring.
+  Since every color is a token that .dark overrides, dark mode requires no rules here.
+
+  BEM: block pagination; elements pagination-list, pagination-item, pagination-link,
+  pagination-prev, pagination-next, pagination-ellipsis, pagination-status;
+  element modifiers pagination-link_current, pagination-prev_disabled,
+  pagination-next_disabled (and the utility pagination-item_numbered /
+  pagination-item_status for @container collapsing).
+*/
+
+.pagination {
+  /* container context — numbers respond to the width of THIS block */
+  @apply @container;
+
+  /* element: horizontal <ul> row (prev · numbers/status · next) */
+  &-list {
+    @apply flex items-center gap-1;
+  }
+
+  /* element: <li> cell. Base — always visible (prev/next live in it). */
+  &-item {
+    @apply flex items-center;
+
+    /* utility modifier: cell with a number — hidden on a narrow container */
+    &_numbered {
+      @apply @max-sm:hidden;
+    }
+
+    /* utility modifier: cell with the status — visible ONLY on a narrow container */
+    &_status {
+      @apply hidden grow items-center justify-center @max-sm:flex;
+    }
+  }
+
+  /* element: page link (number). The current one is a <span> with _current below. */
+  &-link {
+    @apply inline-flex items-center justify-center;
+    @apply h-9 min-w-9;
+    @apply px-3;
+    @apply rounded-md border border-border bg-background;
+    @apply text-sm font-medium text-foreground;
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+    @apply select-none;
+
+    &:hover         { @apply bg-accent text-accent-foreground; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+    &:active        { @apply bg-accent/80; }
+
+    /* element modifier: CURRENT page (= aria-current="page"); not a link */
+    &_current {
+      @apply border-transparent bg-primary;
+      @apply text-primary-foreground;
+    }
+  }
+
+  /* elements: prev / next — control links with an icon and a label */
+  &-prev,
+  &-next {
+    @apply inline-flex items-center justify-center gap-1;
+    @apply h-9;
+    @apply px-3;
+    @apply rounded-md border border-border bg-background;
+    @apply text-sm font-medium text-foreground;
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+    @apply select-none;
+
+    &:hover         { @apply bg-accent text-accent-foreground; }
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+    &:active        { @apply bg-accent/80; }
+  }
+
+  /* element modifier: prev/next at the edge of the range (= aria-disabled="true").
+     This is a <span>, so there are no link states — we dim the look and block the pointer.
+     pointer-events-none is needed so the base &:hover/&:active of prev/next do NOT
+     fire on the "disabled" span (otherwise :hover specificity would override it). */
+  &-prev_disabled,
+  &-next_disabled {
+    @apply text-muted-foreground;
+    @apply opacity-50;
+    @apply cursor-not-allowed pointer-events-none;
+  }
+
+  /* element: chevron icon inside prev/next */
+  &-icon {
+    @apply size-4;
+  }
+
+  /* element: decorative range break (…); not focusable (aria-hidden in the markup) */
+  &-ellipsis {
+    @apply inline-flex items-center justify-center;
+    @apply h-9 min-w-9;
+    @apply text-sm text-muted-foreground;
+    @apply select-none;
+  }
+
+  /* element: compact "Page X of Y" status (visible only on a narrow container) */
+  &-status {
+    @apply text-sm font-medium text-muted-foreground;
+  }
+}

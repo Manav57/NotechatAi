@@ -1,0 +1,69 @@
+<!--
+  EXAMPLE · modal · Approach (B): BEM markup — styles in modal.bem.scss.
+
+  Same UI as modal.utility.html (a native <dialog> with header / body / footer,
+  a × close control and Cancel / Confirm actions, plus a v4 enter animation on
+  the panel and its ::backdrop), but the markup carries SEMANTIC BEM classes;
+  the look lives in modal.bem.scss.
+
+  The only JS is a native platform API: the trigger calls dialog.showModal()
+  (real modal — focus trap + Esc-to-close from the platform) and every action
+  sits in a <form method="dialog"> so submitting closes the dialog. No framework.
+
+  BEM convention (default): one block `modal`; elements via hyphen
+  (modal-panel / modal-header / modal-title / modal-body / modal-footer /
+  modal-close), modifiers via underscore. Elements descend from the block — no
+  `-a-b` chains. The Cancel / Confirm buttons reuse the `button` block + its
+  modifiers (one block per component: the button is its own component, embedded
+  here).
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css); .dark overrides
+  them, so this markup needs no dark-specific classes.
+-->
+
+<!-- demo wrapper: neutral page surface + the trigger that opens the dialog -->
+<div class="modalDemo">
+
+  <!-- Trigger: native platform API. Opens the NEXT sibling dialog. -->
+  <button
+    type="button"
+    class="button button_primary"
+    onclick="this.nextElementSibling.showModal()"
+  >
+    Open dialog
+  </button>
+
+  <!-- Native <dialog>; enter animation + ::backdrop are styled in the SCSS. -->
+  <dialog class="modal" aria-labelledby="modal-title" aria-describedby="modal-body">
+    <div class="modal-panel">
+
+      <!-- header: title + a close (×) control -->
+      <header class="modal-header">
+        <h2 id="modal-title" class="modal-title">Dialog title</h2>
+
+        <!-- close button: a submit inside method="dialog" closes the dialog -->
+        <form method="dialog" class="modal-closeForm">
+          <button type="submit" class="modal-close" aria-label="Close dialog">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </button>
+        </form>
+      </header>
+
+      <!-- body -->
+      <p id="modal-body" class="modal-body">
+        Body content goes here. Keep the skeleton neutral; the surrounding design
+        system supplies the real colors, type and spacing via the @theme tokens.
+      </p>
+
+      <!-- footer: a single <form method="dialog"> so either button closes the dialog -->
+      <form method="dialog" class="modal-footer">
+        <button type="submit" class="button button_outline">Cancel</button>
+        <button type="submit" value="confirm" class="button button_primary">Confirm</button>
+      </form>
+
+    </div>
+  </dialog>
+
+</div>

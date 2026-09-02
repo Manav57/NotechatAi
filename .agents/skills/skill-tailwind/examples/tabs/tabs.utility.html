@@ -1,0 +1,193 @@
+<!--
+  EXAMPLE · tabs · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as tabs.bem.html, so you can diff A vs B on identical structure.
+  Framework-agnostic: NO framework, NO JS. This is a pure CSS pattern —
+  hidden radio <input>s drive which panel shows:
+
+    <input type="radio" name="tabs" class="peer/<id>"> + <label> (the visible tab)
+    + a sibling <section> shown via peer-checked/<id>:block.
+
+  Each radio is `sr-only` (off-screen but focusable); its <label> is the visible
+  tab and clicking the label checks the radio. One radio is `checked` for the
+  initial selection.
+
+  WHY the peer styling targets the TABLIST, not each label: the `peer-*` variant
+  compiles to a general-sibling selector (`.peer:checked ~ .target`), which only
+  reaches SIBLINGS of the radio. The panels ARE siblings of the radios, so
+  `peer-checked/<id>:block` on a panel works directly. The labels, however, are
+  NESTED inside the tablist <div> — so they are NOT siblings of the radios. We
+  therefore drive the active-tab look from the tablist (a true sibling) and reach
+  the matching label with an arbitrary descendant selector keyed by its `for`,
+  e.g. `peer-checked/overview:[&_[for=tab-overview]]:text-foreground`. This
+  mirrors the BEM file's `radio:checked ~ list tab` wiring. The :checked
+  machinery needs the inputs to be SIBLINGS that precede both the tablist and the
+  panels — hence the flat layout.
+
+  HONEST LIMITATION — accessibility of the CSS-only version:
+  We set role="tablist" / role="tab" / role="tabpanel" and aria-selected so the
+  STRUCTURE is announced correctly, and keyboard focus + Space/Enter activation
+  work because the controls are real radio inputs. BUT full WAI-ARIA tabs require
+  ROVING TABINDEX + Arrow-key navigation (Left/Right move and select the next
+  tab, Home/End jump to ends) — that is ~15 lines of vanilla JS this CSS-only
+  version deliberately does NOT include. With real <input type="radio"> the
+  native behavior is close (Arrow keys DO move between same-name radios), but it
+  is not the exact APG tabs pattern. If you need strict APG semantics, add that
+  small JS layer; do not fake a framework.
+
+  Tokens are the canonical SEMANTIC ones from templates/theme.css
+  (text-muted-foreground, text-foreground, border-border, bg-background,
+  outline-ring …). Replace the token VALUES under your design system; the NAMES
+  stay stable. Dark theme works for free — every color is a token that .dark
+  overrides, so this markup needs no `dark:` variants of its own.
+-->
+
+<!-- demo wrapper: neutral page surface only; not part of the component -->
+<div class="flex flex-col gap-4 bg-background p-6 text-foreground">
+
+  <div class="w-full max-w-xl">
+    <!--
+      The radios live FIRST so they precede the labels (tablist) and the panels
+      as siblings — that is what lets `peer-checked/<id>:` reach both. They are
+      sr-only: visually hidden but still focusable and operable from the keyboard.
+    -->
+    <input type="radio" name="tabs" id="tab-overview" class="peer/overview sr-only" checked />
+    <input type="radio" name="tabs" id="tab-activity" class="peer/activity sr-only" />
+    <input type="radio" name="tabs" id="tab-settings" class="peer/settings sr-only" />
+
+    <!--
+      tablist: the visible tabs are <label>s bound to the radios above. The
+      active-tab look and the keyboard focus ring are driven from HERE (the
+      tablist is a real sibling of the radios) via `peer-checked/<id>:` and
+      `peer-focus-visible/<id>:`, each reaching the matching label with an
+      arbitrary descendant selector keyed by its `for`. Putting these on the
+      labels directly would NOT work — labels are not siblings of the radios.
+    -->
+    <div
+      role="tablist"
+      aria-label="Account sections"
+      class="flex items-stretch gap-1 border-b border-border
+             peer-checked/overview:[&_[for=tab-overview]]:border-primary peer-checked/overview:[&_[for=tab-overview]]:text-foreground
+             peer-checked/activity:[&_[for=tab-activity]]:border-primary peer-checked/activity:[&_[for=tab-activity]]:text-foreground
+             peer-checked/settings:[&_[for=tab-settings]]:border-primary peer-checked/settings:[&_[for=tab-settings]]:text-foreground
+             peer-focus-visible/overview:[&_[for=tab-overview]]:outline-2 peer-focus-visible/overview:[&_[for=tab-overview]]:outline-offset-2 peer-focus-visible/overview:[&_[for=tab-overview]]:outline-ring
+             peer-focus-visible/activity:[&_[for=tab-activity]]:outline-2 peer-focus-visible/activity:[&_[for=tab-activity]]:outline-offset-2 peer-focus-visible/activity:[&_[for=tab-activity]]:outline-ring
+             peer-focus-visible/settings:[&_[for=tab-settings]]:outline-2 peer-focus-visible/settings:[&_[for=tab-settings]]:outline-offset-2 peer-focus-visible/settings:[&_[for=tab-settings]]:outline-ring"
+    >
+      <!--
+        Each tab: a label whose `for` checks its radio. The inactive look is the
+        default below; the active text color + bottom indicator and the focus
+        ring are applied from the tablist (see above).
+      -->
+      <label
+        for="tab-overview"
+        id="tab-overview-label"
+        role="tab"
+        aria-selected="true"
+        aria-controls="panel-overview"
+        class="-mb-px inline-flex cursor-pointer select-none items-center justify-center
+               h-10 px-4
+               border-b-2 border-transparent
+               text-sm font-medium text-muted-foreground
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:text-foreground"
+      >
+        Overview
+      </label>
+
+      <label
+        for="tab-activity"
+        id="tab-activity-label"
+        role="tab"
+        aria-selected="false"
+        aria-controls="panel-activity"
+        class="-mb-px inline-flex cursor-pointer select-none items-center justify-center
+               h-10 px-4
+               border-b-2 border-transparent
+               text-sm font-medium text-muted-foreground
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:text-foreground"
+      >
+        Activity
+      </label>
+
+      <!-- a disabled tab: no radio to bind, so it's an inert label, not focusable -->
+      <span
+        role="tab"
+        aria-selected="false"
+        aria-disabled="true"
+        class="-mb-px inline-flex select-none items-center justify-center
+               h-10 px-4
+               border-b-2 border-transparent
+               text-sm font-medium text-muted-foreground
+               opacity-50
+               cursor-not-allowed"
+      >
+        Billing
+      </span>
+
+      <label
+        for="tab-settings"
+        id="tab-settings-label"
+        role="tab"
+        aria-selected="false"
+        aria-controls="panel-settings"
+        class="-mb-px inline-flex cursor-pointer select-none items-center justify-center
+               h-10 px-4
+               border-b-2 border-transparent
+               text-sm font-medium text-muted-foreground
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:text-foreground"
+      >
+        Settings
+      </label>
+    </div>
+
+    <!--
+      Panels: hidden by default, revealed by the matching radio via
+      `peer-checked/<id>:block`. They are siblings of the radios (so the peer
+      selector reaches them). Each panel has an id its tab points at via
+      aria-controls, and its aria-labelledby points back at the tab's id — the
+      two-way tab<->panel wiring of the APG pattern.
+    -->
+    <section
+      id="panel-overview"
+      role="tabpanel"
+      aria-labelledby="tab-overview-label"
+      tabindex="0"
+      class="hidden p-4 text-sm leading-relaxed
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             peer-checked/overview:block"
+    >
+      <p>Overview panel. Keep the skeleton neutral; the surrounding design system
+        supplies the real colors, type and spacing via the @theme tokens.</p>
+    </section>
+
+    <section
+      id="panel-activity"
+      role="tabpanel"
+      aria-labelledby="tab-activity-label"
+      tabindex="0"
+      class="hidden p-4 text-sm leading-relaxed
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             peer-checked/activity:block"
+    >
+      <p>Activity panel. Each panel is shown only when its sibling radio is
+        checked — no JavaScript involved.</p>
+    </section>
+
+    <section
+      id="panel-settings"
+      role="tabpanel"
+      aria-labelledby="tab-settings-label"
+      tabindex="0"
+      class="hidden p-4 text-sm leading-relaxed
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             peer-checked/settings:block"
+    >
+      <p>Settings panel. Replace the token VALUES under your design system; the
+        token NAMES stay stable across both approaches.</p>
+    </section>
+  </div>
+
+</div>

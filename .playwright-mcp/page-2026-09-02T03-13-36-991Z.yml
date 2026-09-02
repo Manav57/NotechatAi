@@ -1,0 +1,82 @@
+- generic [ref=f9e1]:
+  - banner [ref=f9e2]:
+    - generic [ref=f9e3]:
+      - link "NotesChatAI Dashboard" [ref=f9e4] [cursor=pointer]:
+        - /url: /app
+        - generic [ref=f9e8]: NotesChatAI
+      - navigation "App navigation" [ref=f9e9]:
+        - link "Dashboard" [ref=f9e10] [cursor=pointer]:
+          - /url: /app
+        - link "Documents" [ref=f9e11] [cursor=pointer]:
+          - /url: /app/documents
+        - link "Chat" [ref=f9e12] [cursor=pointer]:
+          - /url: /app/chat
+        - link "Audio" [ref=f9e13] [cursor=pointer]:
+          - /url: /app/audio
+        - link "Mind Map" [ref=f9e14] [cursor=pointer]:
+          - /url: /app/mindmap
+        - link "Study" [ref=f9e15] [cursor=pointer]:
+          - /url: /app/study
+      - generic [ref=f9e16]:
+        - button "Toggle dark mode" [ref=f9e17]
+        - generic [ref=f9e21]: Free Beta
+        - button "Manav Patidar" [ref=f9e23]
+  - main [ref=f9e27]:
+    - generic [ref=f9e28]:
+      - generic [ref=f9e29]:
+        - generic [ref=f9e30]:
+          - generic [ref=f9e31]:
+            - link "Settings" [ref=f9e32] [cursor=pointer]:
+              - /url: /app/settings
+            - generic [ref=f9e35]: Billing
+          - heading "Billing" [level=1] [ref=f9e36]
+          - paragraph [ref=f9e37]: Manage your subscription, payment method, and billing history.
+        - generic [ref=f9e38]:
+          - generic [ref=f9e39]:
+            - heading "Current Plan" [level=2] [ref=f9e40]
+            - generic [ref=f9e41]: Free Beta
+          - generic [ref=f9e42]:
+            - generic [ref=f9e43]:
+              - paragraph [ref=f9e44]: "50"
+              - paragraph [ref=f9e45]: Documents
+            - generic [ref=f9e46]:
+              - paragraph [ref=f9e47]: "30"
+              - paragraph [ref=f9e48]: Chats / day
+            - generic [ref=f9e49]:
+              - paragraph [ref=f9e50]: "2"
+              - paragraph [ref=f9e51]: Audio / day
+          - generic [ref=f9e52]:
+            - button "Upgrade to Pro — $15/mo" [active] [ref=f9e53]
+            - button "Upgrade to Plus — $25/mo" [ref=f9e54]
+        - generic [ref=f9e55]:
+          - heading "Payment Method" [level=2] [ref=f9e56]
+          - generic [ref=f9e57]:
+            - paragraph [ref=f9e58]: No payment method on file
+            - paragraph [ref=f9e59]: Add a payment method to upgrade to Pro
+        - generic [ref=f9e60]:
+          - heading "Billing History" [level=2] [ref=f9e61]
+          - paragraph [ref=f9e63]: No billing history yet
+      - dialog "Upgrade to Pro" [ref=f9e69]:
+        - generic [ref=f9e71]:
+          - heading "Pro Tier — Private Beta" [level=2] [ref=f9e75]
+          - paragraph [ref=f9e76]: Pro tier is currently in private beta. Early access billing is opening soon. Join the waitlist to be notified when it launches.
+          - generic [ref=f9e77]:
+            - paragraph [ref=f9e78]: "Pro includes:"
+            - list [ref=f9e79]:
+              - listitem [ref=f9e80]: Unlimited documents & chats
+              - listitem [ref=f9e84]: 20 audio overviews/day
+              - listitem [ref=f9e88]: 50 GB storage
+              - listitem [ref=f9e92]: Priority processing
+              - listitem [ref=f9e96]: API access (coming soon)
+          - generic [ref=f9e100]:
+            - button "Maybe Later" [ref=f9e101]
+            - link "Join Waitlist" [ref=f9e102] [cursor=pointer]:
+              - /url: /contact
+  - contentinfo [ref=f9e64]:
+    - paragraph [ref=f9e66]:
+      - text: © 2026 NotesChatAI.
+      - link "Privacy" [ref=f9e67] [cursor=pointer]:
+        - /url: /privacy
+      - text: ·
+      - link "Terms" [ref=f9e68] [cursor=pointer]:
+        - /url: /terms

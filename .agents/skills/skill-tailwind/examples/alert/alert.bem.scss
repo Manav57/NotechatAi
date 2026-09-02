@@ -1,0 +1,90 @@
+/*
+  EXAMPLE · alert · Approach (B): BEM + @apply — styles for alert.bem.html.
+
+  Same UI as alert.utility.html (info / success / warning / danger notification
+  with icon slot, title, body and a dismiss button), expressed with @apply
+  grouped by property kind. Grouping order follows the engine's property-order:
+  layout/position → size → spacing → background/border/shape → typography →
+  effects/motion → interaction; then nested states; then modifiers.
+
+  @reference — REQUIRED if this SCSS is compiled SEPARATELY from the page (a CSS
+  module, an isolated stylesheet, a framework's scoped <style>). @apply and the
+  tokens are resolved against your Tailwind entry, so point @reference at it;
+  otherwise the utilities are unknown and @apply fails. If this file is part of
+  the same build that already does `@import "tailwindcss"`, DROP this line.
+*/
+
+/* @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss */
+
+/* ───────────────────────── Alert ───────────────────────── */
+
+.alert {
+  @apply flex items-start gap-3;
+  @apply p-4;
+  /* base = info (accent surface) */
+  @apply rounded-md border border-border bg-accent;
+  /* default text color on the surface */
+  @apply text-accent-foreground;
+
+  /* element: status icon slot (decorative; meaning lives in the text) */
+  &-icon {
+    @apply size-5 shrink-0;
+  }
+
+  /* element: text column */
+  &-content {
+    @apply flex min-w-0 flex-col gap-1;
+  }
+
+  /* element: title — carries the tone in words, not color alone */
+  &-title {
+    @apply text-sm font-medium;
+  }
+
+  /* element: body */
+  &-body {
+    @apply text-sm text-muted-foreground;
+  }
+
+  /* element: dismiss button — interactive, full state set */
+  &-close {
+    @apply -m-1 ml-auto inline-flex shrink-0 items-center justify-center;
+    @apply size-7;
+    @apply rounded-sm border border-transparent;
+    /* inherits the variant text color */
+    @apply text-current;
+    @apply transition-colors duration-150;
+    @apply cursor-pointer;
+
+    &:hover          { @apply bg-foreground/10; }
+    &:focus-visible  { @apply outline-2 outline-offset-2 outline-ring; }
+    &:active         { @apply bg-foreground/15; }
+    &:disabled       { @apply opacity-50 pointer-events-none; }
+
+    /* nested icon glyph */
+    & > svg { @apply size-4; }
+  }
+
+  /* ─── modifiers: tone (override surface/border + icon color only) ─── */
+
+  &_success {
+    @apply border-success/30 bg-success/10;
+    @apply text-foreground;
+
+    .alert-icon { @apply text-success; }
+  }
+
+  &_warning {
+    @apply border-warning/30 bg-warning/10;
+    @apply text-foreground;
+
+    .alert-icon { @apply text-warning; }
+  }
+
+  &_danger {
+    @apply border-danger/30 bg-danger/10;
+    @apply text-foreground;
+
+    .alert-icon { @apply text-danger; }
+  }
+}

@@ -1,0 +1,192 @@
+<!--
+  EXAMPLE · button · Approach (B): BEM + @apply — markup for button.bem.scss.
+
+  Same UI as button.utility.html (variants × sizes + disabled + a link), but the
+  markup carries SEMANTIC BEM classes; the look lives in button.bem.scss.
+
+  BEM convention (default): block `button`; element via single hyphen
+  (`button-icon`); modifier via single underscore (`button_primary`,
+  `button_sm`); multi-word parts camelCase, lowercase-first (`buttonDemo`).
+  One block per component; the icon element is read from the block, no `-a-b`.
+
+  SIZE: the bare `.button` IS the md (default) size — there is NO `button_md`
+  modifier (it would only re-apply the base = a dead modifier). Only the
+  off-default sizes carry a modifier: `button_sm`, `button_lg`.
+  Configurable — if your project standardises on another scheme (classic
+  `block__elem_mod`, Two-Dashes, React, or its own), follow that one instead.
+
+  Tag by BEHAVIOUR, not by look: a thing that ACTS is a <button>, a thing that
+  NAVIGATES is an <a href>. The `button` block is tag-agnostic, so the SAME
+  classes style EITHER element — see the "link styled as a button" row below.
+  NEVER nest an <a> inside a styled <button> to borrow its look; put the button
+  classes (and the focus-visible ring) directly on the <a>.
+
+  Tokens are the canonical SEMANTIC ones from templates/theme.css; values are
+  placeholders under your design system. Dark theme comes for free via .dark.
+  No JS, no framework.
+-->
+
+<!-- demo wrapper: rows by variant, columns by size + one disabled per variant -->
+<div class="buttonDemo">
+
+  <!-- ── Variant: primary ───────────────────────────────────── -->
+  <div class="buttonDemo-row">
+    <button type="button" class="button button_primary button_sm">
+      <span class="button-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>Primary</span>
+    </button>
+
+    <button type="button" class="button button_primary">
+      <span class="button-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>Primary</span>
+    </button>
+
+    <button type="button" class="button button_primary button_lg">
+      <span class="button-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>Primary</span>
+    </button>
+
+    <button type="button" class="button button_primary" disabled>
+      <span>Disabled</span>
+    </button>
+  </div>
+
+  <!-- ── Variant: outline (secondary) ───────────────────────── -->
+  <div class="buttonDemo-row">
+    <button type="button" class="button button_outline button_sm">
+      <span class="button-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>Outline</span>
+    </button>
+
+    <button type="button" class="button button_outline">
+      <span class="button-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>Outline</span>
+    </button>
+
+    <button type="button" class="button button_outline button_lg">
+      <span class="button-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>Outline</span>
+    </button>
+
+    <button type="button" class="button button_outline" disabled>
+      <span>Disabled</span>
+    </button>
+  </div>
+
+  <!-- ── Variant: ghost ─────────────────────────────────────── -->
+  <div class="buttonDemo-row">
+    <button type="button" class="button button_ghost button_sm">
+      <span class="button-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>Ghost</span>
+    </button>
+
+    <button type="button" class="button button_ghost">
+      <span class="button-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>Ghost</span>
+    </button>
+
+    <button type="button" class="button button_ghost button_lg">
+      <span class="button-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>Ghost</span>
+    </button>
+
+    <button type="button" class="button button_ghost" disabled>
+      <span>Disabled</span>
+    </button>
+  </div>
+
+  <!-- ── Variant: danger ────────────────────────────────────── -->
+  <div class="buttonDemo-row">
+    <button type="button" class="button button_danger button_sm">
+      <span class="button-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>Danger</span>
+    </button>
+
+    <button type="button" class="button button_danger">
+      <span class="button-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>Danger</span>
+    </button>
+
+    <button type="button" class="button button_danger button_lg">
+      <span class="button-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>Danger</span>
+    </button>
+
+    <button type="button" class="button button_danger" disabled>
+      <span>Disabled</span>
+    </button>
+  </div>
+
+  <!-- ── Link styled as a button (NAVIGATES) ─────────────────── -->
+  <!--
+    A real <a href> carrying the SAME `button` block classes. It looks identical
+    to the primary <button> above but it NAVIGATES instead of acting, so it is
+    the right tag for a link. The block styles AND the :focus-visible ring (see
+    button.bem.scss — the selector targets the class, not the tag) land directly
+    on the <a>, so the focus ring is on the actually-focusable navigation
+    control. No <a> is wrapped in a <button>.
+  -->
+  <div class="buttonDemo-row">
+    <a href="#" class="button button_primary">
+      <span class="button-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>Link styled as a button</span>
+    </a>
+
+    <a href="#" class="button button_outline">
+      <span>Outline link</span>
+    </a>
+  </div>
+
+</div>

@@ -1,0 +1,99 @@
+/*
+  EXAMPLE · input-field · Approach (B): BEM + @apply — styles for input-field.bem.html.
+
+  Same UI as input-field.utility.html (label + optional leading icon + control +
+  hint + error). @apply is split into lines grouped by property kind, in the
+  engine's property-order: layout/position → size → spacing → background/border/
+  shape → typography → effects/motion → interaction; then nested states; then
+  the `inputField_invalid` block modifier.
+
+  @reference — REQUIRED only if this SCSS is compiled SEPARATELY from the page
+  (a CSS module / isolated stylesheet / framework scoped <style>); point it at
+  YOUR Tailwind entry so @apply can resolve the tokens. If this file is part of
+  the same build that already does `@import "tailwindcss"`, DROP this line.
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css): bg-input,
+  border-border, text-foreground, placeholder:text-muted-foreground, ring-ring,
+  text-muted-foreground (hint), border-danger / ring-danger / text-danger
+  (invalid). Because every color is a token .dark overrides, dark theme is free.
+*/
+
+/* ─────────────────────── Block: inputField ─────────────────────── */
+
+.inputField {
+  @apply flex flex-col gap-1.5;
+  @apply w-full;
+}
+
+/* element: label — tied to the input via for/id in the markup */
+.inputField-label {
+  @apply text-sm font-medium text-foreground;
+}
+
+/* element: control — row that holds the optional leading icon + the input;
+   :has(:focus-visible) lifts the visible ring to the whole control */
+.inputField-control {
+  @apply relative flex items-center;
+  @apply h-10 w-full;
+  @apply rounded-md border border-border bg-input;
+  @apply transition-colors duration-150;
+
+  /* state: keyboard focus → visible ring. :has(:focus-visible) keeps the ring
+     off mouse clicks (focus-visible semantics) while lifting it to the control */
+  &:has(:focus-visible) {
+    @apply ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+/* element: leading icon — decorative, positioned inside the control */
+.inputField-icon {
+  @apply pointer-events-none absolute left-3;
+  @apply size-4 shrink-0;
+  @apply text-muted-foreground;
+}
+
+/* element: input — the actual field; transparent so the control owns the surface */
+.inputField-input {
+  @apply h-full w-full;
+  @apply px-3;
+  @apply rounded-md bg-transparent;
+  @apply text-sm text-foreground placeholder:text-muted-foreground;
+  /* control draws the ring, so the input itself stays outline-free */
+  @apply outline-none;
+
+  /* state: disabled */
+  &:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+
+  /* element modifier: extra left padding to clear the leading icon */
+  &_withIcon {
+    @apply pl-9;
+  }
+}
+
+/* element: hint — secondary helper text */
+.inputField-hint {
+  @apply text-xs text-muted-foreground;
+}
+
+/* element: error — shown in the invalid state; linked via aria-describedby.
+   Never colour-only: the message itself carries the meaning. */
+.inputField-error {
+  @apply text-xs font-medium text-danger;
+}
+
+/* ──────────────── Block modifier: invalid ───────────────
+   Pairs with aria-invalid="true" on the input. Swaps the control's border and
+   focus ring to the danger token; the error text is already danger above. */
+.inputField_invalid {
+  .inputField-control {
+    @apply border-danger;
+
+    &:has(:focus-visible) {
+      @apply ring-danger;
+    }
+  }
+}

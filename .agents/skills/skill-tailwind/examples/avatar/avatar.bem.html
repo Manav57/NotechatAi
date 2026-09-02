@@ -1,0 +1,109 @@
+<!--
+  EXAMPLE · avatar · Approach (B): BEM markup — styling lives in avatar.bem.scss.
+
+  Same UI as avatar.utility.html (single image avatar with an initials fallback,
+  an initials-only avatar, the three sizes, an avatar with a status dot, and an
+  overlapping avatar group), on the exact same structure, so you can diff A vs B.
+  Framework-agnostic: plain HTML, NO JavaScript.
+
+  BEM convention (strict): one block `avatar`; elements via hyphen —
+  avatar-image (the <img>), avatar-fallback (the initials layer), avatar-status
+  (the status puck). Block size modifiers via underscore — avatar_sm / avatar_lg.
+  The overlapping stack is its own block `avatarGroup` (a separate component: a row
+  of avatars), not an element of avatar. Elements descend from the block — no
+  `-a-b` element-of-element chains.
+
+  rounded-full is LEGITIMATE here — an avatar is a canonical round element.
+
+  Accessibility (in the markup; visuals in the SCSS):
+    • The real <img> carries a name in alt; if it fails to load, onerror hides it
+      and the initials fallback (role="img" + aria-label = name, glyph aria-hidden)
+      shows. The role is required: a roleless <span> is role=generic, on which
+      aria-label is ignored, so the fallback would otherwise have no name.
+    • The status dot is not colour-only — an sr-only word rides with it.
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css); .dark overrides
+  them, so this markup needs no dark-specific classes.
+-->
+
+<!-- demo wrapper: neutral page surface; not part of the component -->
+<div class="avatarDemo">
+
+  <!-- 1) single avatar — image with an initials fallback behind it -->
+  <span class="avatar">
+    <span class="avatar-fallback" role="img" aria-label="Ada Lovelace">
+      <span aria-hidden="true">AL</span>
+    </span>
+    <img
+      class="avatar-image"
+      src="./avatar-ada.jpg"
+      alt="Ada Lovelace"
+      onerror="this.hidden = true"
+    />
+  </span>
+
+  <!-- 2) initials-only avatar (no image) — same fallback layer, shown -->
+  <span class="avatar">
+    <span class="avatar-fallback" role="img" aria-label="Grace Hopper">
+      <span aria-hidden="true">GH</span>
+    </span>
+  </span>
+
+  <!-- 3) sizes — same block, size modifier swapped: sm · base · lg -->
+  <div class="avatarSizes">
+    <span class="avatar avatar_sm">
+      <span class="avatar-fallback" role="img" aria-label="Alan Turing">
+        <span aria-hidden="true">AT</span>
+      </span>
+    </span>
+    <span class="avatar">
+      <span class="avatar-fallback" role="img" aria-label="Alan Turing">
+        <span aria-hidden="true">AT</span>
+      </span>
+    </span>
+    <span class="avatar avatar_lg">
+      <span class="avatar-fallback" role="img" aria-label="Alan Turing">
+        <span aria-hidden="true">AT</span>
+      </span>
+    </span>
+  </div>
+
+  <!-- 4) avatar with a status dot (online)
+       avatar_hasStatus turns the block into a NON-clipping positioning context so
+       the status puck's outward ring is not cut off; the inner avatar-surface does
+       the circular clipping of the image / initials instead. -->
+  <span class="avatar avatar_hasStatus">
+    <span class="avatar-surface">
+      <span class="avatar-fallback" role="img" aria-label="Katherine Johnson">
+        <span aria-hidden="true">KJ</span>
+      </span>
+    </span>
+    <span class="avatar-status">
+      <span class="sr-only">Online</span>
+    </span>
+  </span>
+
+  <!-- 5) avatar group — overlapping stack (its own block) -->
+  <ul class="avatarGroup">
+    <li class="avatar avatar_ringed">
+      <span class="avatar-fallback" role="img" aria-label="Ada Lovelace">
+        <span aria-hidden="true">AL</span>
+      </span>
+    </li>
+    <li class="avatar avatar_ringed">
+      <span class="avatar-fallback" role="img" aria-label="Grace Hopper">
+        <span aria-hidden="true">GH</span>
+      </span>
+    </li>
+    <li class="avatar avatar_ringed">
+      <span class="avatar-fallback" role="img" aria-label="Alan Turing">
+        <span aria-hidden="true">AT</span>
+      </span>
+    </li>
+    <!-- overflow count — a non-image avatar reading "+5" -->
+    <li class="avatar avatar_ringed" aria-label="5 more people">
+      <span class="avatar-fallback" aria-hidden="true">+5</span>
+    </li>
+  </ul>
+
+</div>

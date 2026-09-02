@@ -1,0 +1,94 @@
+/*
+  EXAMPLE · spinner-skeleton · Approach (B): BEM + @apply — styles for
+  spinner-skeleton.bem.html.
+
+  Same UI as spinner-skeleton.utility.html (a SPINNER ring with role="status" +
+  an sr-only label, and a SKELETON of pulsing placeholders in an aria-busy
+  container), expressed with @apply grouped by property kind. Group order follows
+  the engine's property-order:
+    layout/position → size → spacing → background/border/shape → typography →
+    effects/motion → interaction; then nested states; then modifiers.
+
+  @reference — REQUIRED if this SCSS is compiled SEPARATELY from your Tailwind
+  entry (a CSS module, an isolated stylesheet, a framework's scoped <style>):
+  point it at the entry that does `@import "tailwindcss"`, otherwise @apply cannot
+  see the utilities/tokens. If this file is part of the same build that already
+  imports tailwindcss, DROP this line — a second reference is redundant.
+*/
+
+@reference "../app.css"; /* ← path to YOUR entry that imports tailwindcss */
+
+/* ───────────────────────── Spinner ───────────────────────── */
+/* An indeterminate loading ring. role="status" + the sr-only label (in the
+   markup) do the announcing; the ring is decorative and aria-hidden. */
+
+.spinner {
+  @apply inline-flex items-center gap-3;
+
+  /* element: the spinning ring — a circle border with one transparent edge */
+  &-ring {
+    @apply inline-block shrink-0;
+    @apply size-6;
+    /* rounded-full is legitimate: it IS a circle */
+    @apply rounded-full border-2 border-border border-t-transparent;
+    /* spin; stop entirely under reduced motion */
+    @apply animate-spin motion-reduce:animate-none;
+  }
+
+  /* element: optional visible helper text next to the ring */
+  &-label {
+    @apply text-sm text-muted-foreground;
+  }
+}
+
+/* ───────────────────────── Skeleton ───────────────────────── */
+/* Placeholder shapes that pulse while real content loads. The block is the busy
+   region (aria-busy in the markup); every placeholder is aria-hidden decoration. */
+
+.skeleton {
+  @apply flex items-start gap-4;
+  @apply w-full max-w-sm;
+  @apply p-6;
+  @apply rounded-lg border border-border bg-card;
+  /* default text color on the card surface */
+  @apply text-card-foreground;
+
+  /* element: round avatar placeholder — rounded-full is legitimate (a circle) */
+  &-avatar {
+    @apply shrink-0;
+    @apply size-12;
+    @apply rounded-full bg-muted;
+    @apply animate-pulse motion-reduce:animate-none;
+  }
+
+  /* element: vertical stack of text-line placeholders */
+  &-lines {
+    @apply flex min-w-0 flex-1 flex-col gap-3;
+  }
+
+  /* element: a single text-bar placeholder (default = body line) */
+  &-line {
+    @apply h-3 w-full;
+    /* bars, not pills: rounded-sm only */
+    @apply rounded-sm bg-muted;
+    @apply animate-pulse motion-reduce:animate-none;
+
+    /* modifier: title bar — taller and narrower than a body line */
+    &_title {
+      @apply h-4 w-2/3;
+    }
+
+    /* modifier: short trailing body line */
+    &_short {
+      @apply w-4/5;
+    }
+  }
+}
+
+/* ───────────────────── Demo wrapper (layout only) ───────────────────── */
+
+.spinnerSkeletonDemo {
+  @apply flex flex-col items-start gap-8;
+  @apply p-6;
+  @apply bg-background text-foreground;
+}

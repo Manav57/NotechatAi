@@ -1,0 +1,190 @@
+<!--
+  EXAMPLE · alert · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Notification / inline message. Variants: info (base, accent/muted), success,
+  warning, danger. Structure: leading icon slot, title, body, dismiss button.
+
+  Same UI as alert.bem.html, so you can diff A vs B on identical structure.
+  No framework: plain HTML. The only inline JS is a native platform call
+  (the dismiss button removes its own alert) — not a framework.
+
+  Tokens are the canonical SEMANTIC ones (see templates/theme.css). Replace the
+  token VALUES under your design system; the NAMES stay stable. Dark theme works
+  for free — every color is a semantic token that .dark overrides, so this markup
+  needs no `dark:` variants of its own.
+
+  Accessibility:
+    · role="alert"  — urgent / assertive (errors, warnings the user must see now).
+    · role="status" — polite / non-urgent (success confirmations, info).
+    · The status icon is aria-hidden (meaning is carried by the title/body text).
+    · The tone is duplicated in words (title), never conveyed by color alone.
+    · Dismiss is a real <button type="button"> with aria-label and the full set
+      of interactive states: hover / focus-visible / active / disabled.
+-->
+
+<!-- demo wrapper: neutral page surface so the variants are visible side by side -->
+<div class="flex flex-col gap-4 bg-background p-6 text-foreground">
+
+  <!-- ───────────── info (base variant: accent surface, muted body) ───────────── -->
+  <div
+    role="status"
+    class="flex items-start gap-3
+           p-4
+           rounded-md border border-border bg-accent text-accent-foreground"
+  >
+    <!-- icon slot (decorative; meaning lives in the text) -->
+    <svg class="size-5 shrink-0" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.5" />
+      <path d="M10 9v4.5M10 6.5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+
+    <div class="flex min-w-0 flex-col gap-1">
+      <p class="text-sm font-medium">Heads up</p>
+      <p class="text-sm text-muted-foreground">
+        This is an informational message. Keep the skeleton neutral; the design
+        system supplies the real tone via the @theme tokens.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      aria-label="Dismiss"
+      onclick="this.closest('[role]').remove()"
+      class="-m-1 ml-auto inline-flex shrink-0 items-center justify-center
+             size-7
+             rounded-sm border border-transparent
+             text-current
+             transition-colors duration-150
+             hover:bg-foreground/10
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-foreground/15
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer"
+    >
+      <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- ───────────── success ───────────── -->
+  <div
+    role="status"
+    class="flex items-start gap-3
+           p-4
+           rounded-md border border-success/30 bg-success/10 text-foreground"
+  >
+    <svg class="size-5 shrink-0 text-success" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.5" />
+      <path d="M6.5 10.25l2.25 2.25L13.5 7.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+
+    <div class="flex min-w-0 flex-col gap-1">
+      <p class="text-sm font-medium">Saved</p>
+      <p class="text-sm text-muted-foreground">
+        Your changes were saved successfully.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      aria-label="Dismiss"
+      onclick="this.closest('[role]').remove()"
+      class="-m-1 ml-auto inline-flex shrink-0 items-center justify-center
+             size-7
+             rounded-sm border border-transparent
+             text-current
+             transition-colors duration-150
+             hover:bg-foreground/10
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-foreground/15
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer"
+    >
+      <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- ───────────── warning ───────────── -->
+  <div
+    role="alert"
+    class="flex items-start gap-3
+           p-4
+           rounded-md border border-warning/30 bg-warning/10 text-foreground"
+  >
+    <svg class="size-5 shrink-0 text-warning" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M10 3.5l6.5 11.25H3.5L10 3.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+      <path d="M10 8.5v3M10 13.5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+
+    <div class="flex min-w-0 flex-col gap-1">
+      <p class="text-sm font-medium">Check your input</p>
+      <p class="text-sm text-muted-foreground">
+        Some fields need attention before you can continue.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      aria-label="Dismiss"
+      onclick="this.closest('[role]').remove()"
+      class="-m-1 ml-auto inline-flex shrink-0 items-center justify-center
+             size-7
+             rounded-sm border border-transparent
+             text-current
+             transition-colors duration-150
+             hover:bg-foreground/10
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-foreground/15
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer"
+    >
+      <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- ───────────── danger ───────────── -->
+  <div
+    role="alert"
+    class="flex items-start gap-3
+           p-4
+           rounded-md border border-danger/30 bg-danger/10 text-foreground"
+  >
+    <svg class="size-5 shrink-0 text-danger" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.5" />
+      <path d="M7.5 7.5l5 5M12.5 7.5l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+
+    <div class="flex min-w-0 flex-col gap-1">
+      <p class="text-sm font-medium">Something went wrong</p>
+      <p class="text-sm text-muted-foreground">
+        The action could not be completed. Please try again.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      aria-label="Dismiss"
+      onclick="this.closest('[role]').remove()"
+      class="-m-1 ml-auto inline-flex shrink-0 items-center justify-center
+             size-7
+             rounded-sm border border-transparent
+             text-current
+             transition-colors duration-150
+             hover:bg-foreground/10
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-foreground/15
+             disabled:opacity-50 disabled:pointer-events-none
+             cursor-pointer"
+    >
+      <svg class="size-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      </svg>
+    </button>
+  </div>
+
+</div>

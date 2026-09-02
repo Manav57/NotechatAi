@@ -1,0 +1,70 @@
+<!--
+  EXAMPLE · card · Approach (B): BEM markup — styled by card.bem.scss.
+
+  The same structure and the same UI as in card.utility.html, but classes follow the skill's
+  BEM convention (camelCase for multi-word parts): one block `card`; elements via
+  a hyphen (`card-header`, `card-title`, `card-subtitle`, `card-body`,
+  `card-footer`, `card-action`); block modifier via an underscore (`card_interactive`).
+  No `_a_b` chains. Pure HTML, framework-free.
+
+  Footer buttons carry the shared `button` classes + an intent modifier (`button_primary`
+  / `button_outline`) — the same as in the button example — and a flat `card-action` element
+  for the footer button's geometry. Styles for both blocks are in card.bem.scss.
+
+  Tokens are the canonical SEMANTIC ones (see templates/theme.css); dark mode without
+  `dark:` variants. The outer <div> is a demo wrapper for centering, not part of the block.
+-->
+
+<div class="flex flex-col items-center gap-8 bg-background p-8">
+
+  <!-- ───────── 1. Static card with footer actions ───────── -->
+
+  <article class="card">
+    <header class="card-header">
+      <h3 class="card-title">Card title</h3>
+      <p class="card-subtitle">
+        Supporting subtitle that describes the card in one short line.
+      </p>
+    </header>
+
+    <div class="card-body">
+      Body content goes here. Keep the skeleton neutral; the surrounding design
+      system supplies the real colors, type and spacing via the @theme tokens.
+    </div>
+
+    <footer class="card-footer">
+      <!-- action: outline (secondary) — same button classes as the button example -->
+      <button type="button" class="button button_outline card-action">Cancel</button>
+      <!-- action: primary -->
+      <button type="button" class="button button_primary card-action">Confirm</button>
+    </footer>
+  </article>
+
+  <!-- ───────── 2. Interactive card-link (card_interactive) ───────── -->
+  <!--
+    Block modifier `card_interactive`: the entire <a> is clickable (no nested
+    clickable areas). Hover: shadow-sm → shadow-md + border-border → border-ring.
+    Visible focus-visible ring. Motion is shadow only, with motion-reduce.
+  -->
+  <a href="#" class="card card_interactive">
+    <header class="card-header">
+      <h3 class="card-title">Interactive card</h3>
+      <p class="card-subtitle">
+        The whole card is a link — hover lifts it with a stronger shadow.
+      </p>
+    </header>
+
+    <div class="card-body">
+      Use this variant when the entire surface navigates somewhere. Avoid nesting
+      separate clickable controls inside a clickable card.
+    </div>
+
+    <footer class="card-footer card-footer_meta">
+      <span>Read more</span>
+      <svg class="card-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </footer>
+  </a>
+
+</div>

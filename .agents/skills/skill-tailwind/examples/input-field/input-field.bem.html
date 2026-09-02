@@ -1,0 +1,90 @@
+<!--
+  EXAMPLE · input-field · Approach (B): BEM markup — styles in input-field.bem.scss.
+
+  Same UI as input-field.utility.html (label + optional leading icon + control +
+  hint + error, wired via aria-describedby). Here the markup carries SEMANTIC BEM
+  class names; all visual styling lives in input-field.bem.scss via grouped @apply.
+
+  BEM convention (skill): block `inputField`; elements `inputField-label`,
+  `inputField-control`, `inputField-hint`, `inputField-error`; block modifier
+  `inputField_invalid`. One block per component; elements always from the block.
+
+  States covered: focus-visible (ring-ring via :has(:focus-visible) on the control),
+  disabled, and invalid (`inputField_invalid` + aria-invalid="true" → danger
+  border/ring + error text). Tokens are the canonical SEMANTIC ones (theme.css).
+-->
+
+<!-- demo wrapper: just lays the fields out for preview; not part of the component -->
+<div class="flex max-w-sm flex-col gap-6 p-6">
+
+  <!-- ───────── Default (with leading icon + hint) ───────── -->
+  <div class="inputField">
+    <label for="email" class="inputField-label">Email</label>
+
+    <div class="inputField-control">
+      <svg
+        class="inputField-icon"
+        viewBox="0 0 16 16" fill="none" aria-hidden="true"
+      >
+        <path d="M2 4.5h12v7H2zM2 5l6 4 6-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+
+      <input
+        id="email"
+        type="email"
+        name="email"
+        placeholder="you@example.com"
+        aria-describedby="email-hint"
+        class="inputField-input inputField-input_withIcon"
+      />
+    </div>
+
+    <p id="email-hint" class="inputField-hint">
+      We&rsquo;ll only use this to send sign-in links.
+    </p>
+  </div>
+
+  <!-- ───────── Disabled ───────── -->
+  <div class="inputField">
+    <label for="company" class="inputField-label">Company</label>
+
+    <div class="inputField-control">
+      <input
+        id="company"
+        type="text"
+        name="company"
+        value="Example Co."
+        disabled
+        aria-describedby="company-hint"
+        class="inputField-input"
+      />
+    </div>
+
+    <p id="company-hint" class="inputField-hint">
+      Locked while your account is being verified.
+    </p>
+  </div>
+
+  <!-- ───────── Invalid (block modifier + aria-invalid="true") ───────── -->
+  <div class="inputField inputField_invalid">
+    <label for="password" class="inputField-label">Password</label>
+
+    <div class="inputField-control">
+      <input
+        id="password"
+        type="password"
+        name="password"
+        value="123"
+        aria-invalid="true"
+        aria-describedby="password-error"
+        class="inputField-input"
+      />
+    </div>
+
+    <!-- error is announced and linked via aria-describedby; never colour-only -->
+    <p id="password-error" class="inputField-error">
+      Password must be at least 8 characters.
+    </p>
+  </div>
+
+</div>

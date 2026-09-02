@@ -1,0 +1,130 @@
+/*
+  EXAMPLE · tabs · Approach (B): BEM + @apply — styles for tabs.bem.html.
+
+  Same UI as tabs.utility.html (a tablist + matching panels, one tab initially
+  active, one disabled tab), expressed with @apply grouped by property kind.
+  Group order follows the engine's property-order:
+    layout/position → size → spacing → background/border/shape → typography →
+    effects/motion → interaction; then nested states; then modifiers.
+
+  Framework-agnostic CSS-only pattern: hidden radio <input>s (tabs-radio) drive
+  which panel shows. The radios precede the list and panels as SIBLINGS, so the
+  general-sibling selector `.tabs-radio:checked ~ ...` can reach BOTH the active
+  tab's label AND its panel. The active-tab modifier `tabs-tab_active` is driven
+  purely by :checked here — a real CSS state, no JS toggling a class.
+
+  HONEST LIMITATION: this gives the structure (roles + aria-selected) and real
+  focusable controls, but full WAI-ARIA tabs (roving tabindex + Arrow/Home/End)
+  need ~15 lines of vanilla JS, deliberately omitted. Do not fake a framework.
+
+  @reference — REQUIRED if this SCSS is compiled SEPARATELY from your Tailwind
+  entry (a CSS module, an isolated stylesheet, a framework's scoped <style>):
+  point it at the entry that does `@import "tailwindcss"`, otherwise @apply
+  cannot see the utilities/tokens. If this file is part of the same build that
+  already imports tailwindcss, DROP this line — a second reference is redundant.
+
+    @reference "../app.css";   // ← path to YOUR entry that imports tailwindcss
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css). Because every
+  color is a token that .dark overrides, the dark theme needs no extra rules.
+*/
+
+/* ───────────────────────── Tabs (CSS-only, radio-driven) ───────────────────────── */
+
+.tabs {
+  /* own stacking context for the sibling radios + list + panels */
+  @apply relative block;
+  @apply w-full max-w-xl;
+
+  /* element: the hidden radio that holds each tab's checked state.
+     sr-only keeps it off-screen but focusable and operable from the keyboard. */
+  &-radio {
+    @apply sr-only;
+  }
+
+  /* element: the tablist row */
+  &-list {
+    @apply flex items-stretch gap-1;
+    @apply border-b border-border;
+  }
+
+  /* element: a single tab (a <label> bound to its radio; inactive look by default) */
+  &-tab {
+    /* negative margin laps the list's bottom border */
+    @apply -mb-px inline-flex items-center justify-center;
+    @apply h-10;
+    @apply px-4;
+    /* transparent indicator until active */
+    @apply border-b-2 border-transparent;
+    @apply text-sm font-medium text-muted-foreground;
+    @apply transition-colors duration-150 motion-reduce:transition-none;
+    @apply cursor-pointer select-none;
+
+    /* state: hover (pointer affordance on the label) */
+    &:hover { @apply text-foreground; }
+
+    /* modifier: disabled tab (rendered as an inert <span>, not focusable) */
+    &_disabled {
+      @apply opacity-50;
+      @apply cursor-not-allowed;
+      /* cancel the hover lift so it reads as non-interactive */
+      &:hover { @apply text-muted-foreground; }
+    }
+  }
+
+  /* element: a panel — hidden until its sibling radio is checked */
+  &-panel {
+    @apply hidden;
+    @apply p-4;
+    @apply text-sm leading-relaxed;
+
+    /* state: roving focus into the panel body shows a visible ring */
+    &:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+  }
+
+  /*
+    --- :checked wiring (the whole interaction) ---
+    Each radio precedes BOTH the tablist and the panels, so a general-sibling
+    selector from the checked radio reaches the active tab's <label> (active
+    modifier) and the matching panel (reveal). nth-of-type maps radio→tab/panel.
+    `tabs-tab_active` is thus a pure-CSS state, not a JS-toggled class.
+  */
+
+  /* active TAB look (= the BEM element modifier tabs-tab_active, driven by :checked).
+     Tabs mix <label> and a disabled <span>, so we count by nth-CHILD (position
+     among ALL tablist children), not nth-of-type. Children order in the markup:
+       1 = Overview <label>, 2 = Activity <label>, 3 = Billing <span> (disabled),
+       4 = Settings <label>. So radio 3 maps to the 4th child. */
+  &-radio:nth-of-type(1):checked ~ &-list &-tab:nth-child(1),
+  &-radio:nth-of-type(2):checked ~ &-list &-tab:nth-child(2),
+  &-radio:nth-of-type(3):checked ~ &-list &-tab:nth-child(4) {
+    /* colored bottom indicator */
+    @apply border-primary;
+    @apply text-foreground;
+  }
+
+  /* keyboard focus ring on the active tab, driven by the radio's focus-visible */
+  &-radio:nth-of-type(1):focus-visible ~ &-list &-tab:nth-child(1),
+  &-radio:nth-of-type(2):focus-visible ~ &-list &-tab:nth-child(2),
+  &-radio:nth-of-type(3):focus-visible ~ &-list &-tab:nth-child(4) {
+    /* visible focus, no layout shift */
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+
+  /* reveal the matching PANEL — same nth-of-type sibling mapping as the tabs.
+     Panels are matched by sibling order (the Nth radio reveals the Nth panel), so
+     the radio→panel map is exact; each panel is identified for AT via aria-labelledby. */
+  &-radio:nth-of-type(1):checked ~ &-panel:nth-of-type(1),
+  &-radio:nth-of-type(2):checked ~ &-panel:nth-of-type(2),
+  &-radio:nth-of-type(3):checked ~ &-panel:nth-of-type(3) {
+    @apply block;
+  }
+}
+
+/* ───────────────────── Demo wrapper (layout only) ───────────────────── */
+
+.tabsDemo {
+  @apply flex flex-col gap-4;
+  @apply p-6;
+  @apply bg-background text-foreground;
+}

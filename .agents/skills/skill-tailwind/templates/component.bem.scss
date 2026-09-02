@@ -1,0 +1,140 @@
+/*
+  TEMPLATE · Approach (B): BEM + @apply — styles for component.bem.html.
+
+  Same UI as the utility template (a neutral button + a simple card), expressed
+  with @apply grouped by property kind. The grouping order follows the engine's
+  property-order: layout/position → size → spacing → background/border/shape →
+  typography → effects/motion → interaction; then nested states; then elements;
+  then modifiers last.
+
+  BEM convention (DEFAULT — element `-`, modifier `_`, mod-value `_`, camelCase
+  lowercase-first; configurable: if the project already declares a scheme, follow
+  that instead):
+    block:               button            card
+    element:             button-icon       card-title  card-body  card-footer
+    block modifier:      button_primary    button_outline
+    element modifier:    card-footer_meta  (element + single underscore)
+  In SCSS this nests as `.block { &-element {…} &_modifier {…} &-element { &_modifier {…} } }`,
+  so `&`-concatenation appends the literal `-`/`_` onto the parent.
+
+  TOOLCHAIN (Approach B in a component framework's scoped styles). If you write
+  this @apply in an SFC `<style lang="scss">`, build with `@tailwindcss/postcss`,
+  NOT `@tailwindcss/vite`: the Vite plugin only transforms ids ending in `.css`
+  (or `&lang.css`) and silently SKIPS a `lang="scss"` block (id contains
+  `&lang.scss`) — your @apply/@reference then ship raw and unexpanded with NO
+  build error. PostCSS runs after the Sass preprocessor on every CSS module
+  (including scoped styles), so @apply expands. See references/build-integration.md.
+
+  @reference — REQUIRED if this SCSS is compiled SEPARATELY from the page (a
+  CSS module, an isolated component stylesheet, a framework's scoped <style>).
+  @apply and tokens are resolved against your Tailwind ENTRY, so point @reference
+  at the entry file that defines your @theme tokens — NOT at "tailwindcss" (the
+  bare package only exposes the DEFAULT theme and silently drops the custom tokens
+  these examples use, e.g. bg-card / border-border / bg-primary). The path is
+  resolved relative to THIS file, so its `../` depth changes with nesting; a build
+  alias (e.g. `@/styles/app.css`) avoids brittle relative paths. If this file is
+  part of the same build that already does `@import "tailwindcss"`, DROP this line
+  — a second reference is redundant.
+
+    @reference "../app.css";   // ← YOUR entry that imports tailwindcss AND defines @theme
+
+  Tokens are the canonical SEMANTIC ones (templates/theme.css). Because every
+  color is a token that .dark overrides, dark theme needs no extra rules here.
+*/
+
+/* ───────────────────────── Button ───────────────────────── */
+
+/*
+  The `button` block styles either tag: a thing that NAVIGATES is an <a href>,
+  a thing that ACTS is a <button> — pick the tag by behavior and put the button
+  classes on it. So `<a class="button button_primary">` is a link styled as a
+  button, and `<button class="button">` is a real button. Because the focus ring
+  below lives on `.button` itself, it lands on whichever element is actually
+  focusable. NEVER wrap an <a> inside a styled <button> to reuse these styles.
+*/
+.button {
+  @apply inline-flex items-center justify-center gap-2;
+  @apply h-10;
+  @apply px-4;
+  @apply rounded-md border border-transparent;
+  @apply text-sm font-medium no-underline;
+  @apply transition-colors duration-150;
+  @apply cursor-pointer select-none;
+
+  &:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+  &:disabled {
+    @apply opacity-50 pointer-events-none;
+  }
+
+  /* element: leading icon */
+  &-icon {
+    @apply size-4 shrink-0;
+  }
+
+  /* element: label */
+  &-label {
+    @apply truncate;
+  }
+
+  /* modifier: primary */
+  &_primary {
+    @apply bg-primary text-primary-foreground;
+    &:hover  { @apply bg-primary/90; }
+    &:active { @apply bg-primary/95; }
+  }
+
+  /* modifier: outline (secondary) */
+  &_outline {
+    @apply bg-background text-foreground;
+    @apply border-border;
+    &:hover  { @apply bg-muted; }
+    &:active { @apply bg-muted; }
+  }
+}
+
+/* ───────────────────────── Card ─────────────────────────── */
+
+.card {
+  @apply flex flex-col gap-4;
+  @apply w-full max-w-sm;
+  @apply p-6;
+  @apply rounded-lg border border-border bg-card;
+  @apply text-card-foreground;
+
+  /* element: header */
+  &-header {
+    @apply flex flex-col gap-1;
+  }
+
+  /* element: title */
+  &-title {
+    @apply text-lg font-semibold leading-tight tracking-tight;
+  }
+
+  /* element: subtitle */
+  &-subtitle {
+    @apply text-sm text-muted-foreground;
+  }
+
+  /* element: body */
+  &-body {
+    @apply text-sm leading-relaxed;
+  }
+
+  /* element: footer */
+  &-footer {
+    @apply flex items-center justify-end gap-2;
+
+    /* element modifier: footer with leading meta text */
+    &_meta {
+      @apply justify-between;
+    }
+  }
+
+  /* element: action — a footer button; geometry only, variant comes from .button_* */
+  &-action {
+    @apply h-9 px-3;
+  }
+}

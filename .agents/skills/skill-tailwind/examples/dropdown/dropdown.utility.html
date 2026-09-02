@@ -1,0 +1,166 @@
+<!--
+  EXAMPLE · dropdown · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Same UI as dropdown.bem.html, so you can diff A vs B on identical structure.
+  Framework-agnostic: plain HTML on a NATIVE <details>/<summary>. The disclosure
+  itself needs NO JS — open/close, Enter/Space on the trigger, Esc, Tab focus and
+  the [open] state all come from the platform. <summary> is the trigger; <details>
+  owns the open state. We add ONE tiny inline-handler shim (closeMenu) only to
+  close the menu after a choice — see "Close on select" below.
+
+  HONEST A11Y LIMIT (read this — it is the point of the example):
+    <details>/<summary> gives a real, keyboard-operable disclosure button and a
+    focus order, but it is NOT a WAI-ARIA `role="menu"`. A full menu (roving
+    tabindex, ArrowUp/ArrowDown between items, Home/End, type-ahead, focus
+    returning to the trigger on Esc) requires ~15 lines of native JS. We therefore
+    DO NOT fake role="menu"/role="menuitem" here (that would lie to a screen
+    reader about keyboard behaviour we don't provide). Instead we ship correct
+    disclosure semantics + real focusable links/buttons that Tab works through,
+    and mark the limit. If you need strict APG menu semantics, add a small native
+    JS layer — do NOT pull in a framework.
+
+  ALTERNATIVE (popover API, also no framework). The same UI can be built with the
+  native popover API instead of <details>:
+    <button popovertarget="menu">Options</button>
+    <div id="menu" popover class="…">…</div>
+  Popover gives top-layer rendering (escapes overflow/stacking), light-dismiss
+  (click-outside + Esc) and `popovertargetaction` for free; a menu item closes the
+  surface with <button popovertarget="menu" popovertargetaction="hide">. It has
+  the same role-vs-keyboard caveat. We show <details> as the baseline (one tag,
+  widest support) and leave popover as a drop-in upgrade.
+
+  Close on select: each item carries onclick="this.closest('details').open=false"
+  (a one-line native DOM write, NOT a framework) so choosing an item collapses the
+  menu. Links navigate first; buttons run their own handler then close.
+
+  Tokens are the canonical SEMANTIC ones from templates/theme.css
+  (bg-card / text-card-foreground, bg-popover-less surfaces reuse card, bg-accent /
+  text-accent-foreground for item hover, text-muted-foreground, bg-border for the
+  separator, bg-danger/text-danger for the destructive item, outline-ring for
+  focus). Replace the token VALUES under your design system; the NAMES stay stable.
+  Dark theme works for free — every color is a token that .dark overrides, so this
+  markup needs no `dark:` variants of its own.
+-->
+
+<!-- demo wrapper: neutral page surface; min height gives the open menu room -->
+<div class="flex min-h-64 items-start justify-center bg-background p-6 text-foreground">
+
+  <!--
+    block = the disclosure. `group` lets the chevron + trigger react to [open].
+    `relative` is the positioning context for the absolutely-placed menu.
+    `w-fit` keeps the trigger from stretching across the demo surface.
+  -->
+  <details class="group relative w-fit">
+
+    <!--
+      trigger (<summary>): the real, keyboard-operable button. We hide the native
+      disclosure marker and add our own chevron. aria-haspopup="menu" hints that a
+      menu opens; the platform reflects expanded/collapsed for <summary> itself.
+    -->
+    <summary
+      aria-haspopup="menu"
+      class="inline-flex cursor-pointer list-none select-none items-center justify-between gap-2
+             h-10 min-w-44 px-3
+             rounded-md border border-border bg-background
+             text-sm font-medium text-foreground
+             transition-colors duration-150 motion-reduce:transition-none
+             hover:bg-muted
+             focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+             active:bg-muted
+             [&::-webkit-details-marker]:hidden"
+    >
+      <span>Options</span>
+      <!-- chevron: rotates when the parent <details> is [open] -->
+      <svg
+        class="size-4 shrink-0 text-muted-foreground
+               transition-transform duration-200 motion-reduce:transition-none
+               group-open:rotate-180"
+        viewBox="0 0 16 16" fill="none" aria-hidden="true"
+      >
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </summary>
+
+    <!--
+      menu: an absolutely-positioned surface below the trigger. It only exists in
+      the layout while [open] (native). We animate it in with opacity/translate +
+      the `starting:` variant (@starting-style) for a v4 enter transition.
+      NOTE on role: we keep the list as a plain <ul> of links/buttons rather than
+      role="menu", because we cannot honor full menu keyboard semantics without JS
+      (see the header). Tab still moves through every item.
+    -->
+    <ul
+      class="absolute left-0 top-full z-20 mt-2
+             w-56
+             rounded-md border border-border bg-card text-card-foreground shadow-lg
+             p-1
+             opacity-0 -translate-y-1
+             transition-[opacity,transform] duration-150 ease-out motion-reduce:transition-none
+             group-open:opacity-100 group-open:translate-y-0
+             starting:group-open:opacity-0 starting:group-open:-translate-y-1"
+    >
+      <!-- item (link): navigates, then collapses the menu -->
+      <li>
+        <a
+          href="#profile"
+          onclick="this.closest('details').open=false"
+          class="flex items-center gap-2
+                 w-full
+                 px-2 py-1.5
+                 rounded-sm
+                 text-sm text-foreground
+                 transition-colors duration-150 motion-reduce:transition-none
+                 hover:bg-accent hover:text-accent-foreground
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring focus-visible:bg-accent focus-visible:text-accent-foreground
+                 active:bg-accent/80"
+        >
+          View profile
+        </a>
+      </li>
+
+      <!-- item (button): runs an action, then collapses the menu -->
+      <li>
+        <button
+          type="button"
+          onclick="this.closest('details').open=false"
+          class="flex items-center gap-2
+                 w-full
+                 px-2 py-1.5
+                 rounded-sm
+                 text-left text-sm text-foreground
+                 transition-colors duration-150 motion-reduce:transition-none
+                 hover:bg-accent hover:text-accent-foreground
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring focus-visible:bg-accent focus-visible:text-accent-foreground
+                 active:bg-accent/80
+                 cursor-pointer"
+        >
+          Account settings
+        </button>
+      </li>
+
+      <!-- separator: decorative divider; aria-hidden so SR doesn't announce it -->
+      <li aria-hidden="true" class="my-1 h-px bg-border"></li>
+
+      <!-- item (danger): destructive action; tone via danger token, still focusable -->
+      <li>
+        <button
+          type="button"
+          onclick="this.closest('details').open=false"
+          class="flex items-center gap-2
+                 w-full
+                 px-2 py-1.5
+                 rounded-sm
+                 text-left text-sm text-danger
+                 transition-colors duration-150 motion-reduce:transition-none
+                 hover:bg-danger hover:text-danger-foreground
+                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring focus-visible:bg-danger focus-visible:text-danger-foreground
+                 active:bg-danger/90
+                 cursor-pointer"
+        >
+          Sign out
+        </button>
+      </li>
+    </ul>
+  </details>
+
+</div>

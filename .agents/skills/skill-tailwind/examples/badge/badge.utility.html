@@ -1,0 +1,88 @@
+<!--
+  EXAMPLE · badge · Approach (A): UTILITY-FIRST — classes live in the markup.
+
+  Compact status/label chip. Same UI as badge.bem.html, so you can diff A vs B
+  on identical structure (same tones, same sizes, same text).
+
+  Tokens are the canonical SEMANTIC ones (see templates/theme.css). Replace the
+  token VALUES under your design system; the NAMES stay stable. Dark theme works
+  for free — every color is a semantic token that .dark overrides, so this markup
+  needs no `dark:` variants of its own.
+
+  Static, non-interactive component: no hover/focus/active/disabled states.
+  Tone is conveyed by the WORD (Neutral/Success/…), never by color alone; when a
+  badge carries meaning not present in surrounding text, give it an aria-label or
+  a visually-hidden prefix (see the "status" example at the bottom).
+
+  Shared recipe for every badge (base = neutral tone, sm size):
+    inline-flex items-center gap-1   → layout
+    h-5 px-2                          → size + tight padding (sm)
+    rounded-sm                       → small radius
+    bg-muted text-muted-foreground   → neutral surface/text pair
+    text-xs font-medium              → typography
+  Tone swaps the bg/text pair; size md swaps h/px/text.
+-->
+
+<!-- demo wrapper: neutral page surface so token pairs read correctly -->
+<div class="flex flex-col gap-6 bg-background p-6 text-foreground">
+
+  <!-- ── Tones (sm) ─────────────────────────────────────────── -->
+  <div class="flex flex-wrap items-center gap-2">
+    <!-- Neutral (base tone) -->
+    <span class="inline-flex items-center gap-1 h-5 px-2 rounded-sm bg-muted text-muted-foreground text-xs font-medium">
+      Neutral
+    </span>
+    <!-- Primary -->
+    <span class="inline-flex items-center gap-1 h-5 px-2 rounded-sm bg-primary text-primary-foreground text-xs font-medium">
+      Primary
+    </span>
+    <!-- Success -->
+    <span class="inline-flex items-center gap-1 h-5 px-2 rounded-sm bg-success text-success-foreground text-xs font-medium">
+      Success
+    </span>
+    <!-- Warning -->
+    <span class="inline-flex items-center gap-1 h-5 px-2 rounded-sm bg-warning text-warning-foreground text-xs font-medium">
+      Warning
+    </span>
+    <!-- Danger -->
+    <span class="inline-flex items-center gap-1 h-5 px-2 rounded-sm bg-danger text-danger-foreground text-xs font-medium">
+      Danger
+    </span>
+  </div>
+
+  <!-- ── Tones (md) — same tones, larger size ───────────────── -->
+  <div class="flex flex-wrap items-center gap-2">
+    <span class="inline-flex items-center gap-1 h-6 px-2.5 rounded-sm bg-muted text-muted-foreground text-xs font-medium">
+      Neutral
+    </span>
+    <span class="inline-flex items-center gap-1 h-6 px-2.5 rounded-sm bg-primary text-primary-foreground text-xs font-medium">
+      Primary
+    </span>
+    <span class="inline-flex items-center gap-1 h-6 px-2.5 rounded-sm bg-success text-success-foreground text-xs font-medium">
+      Success
+    </span>
+    <span class="inline-flex items-center gap-1 h-6 px-2.5 rounded-sm bg-warning text-warning-foreground text-xs font-medium">
+      Warning
+    </span>
+    <span class="inline-flex items-center gap-1 h-6 px-2.5 rounded-sm bg-danger text-danger-foreground text-xs font-medium">
+      Danger
+    </span>
+  </div>
+
+  <!-- ── With a leading dot (decorative) + accessible status ─── -->
+  <div class="flex flex-wrap items-center gap-2">
+    <!-- The dot is decorative; the word "Active" carries the meaning. -->
+    <span class="inline-flex items-center gap-1 h-5 px-2 rounded-sm bg-success text-success-foreground text-xs font-medium">
+      <svg class="size-1.5 shrink-0" viewBox="0 0 6 6" aria-hidden="true">
+        <circle cx="3" cy="3" r="3" fill="currentColor" />
+      </svg>
+      Active
+    </span>
+    <!-- Meaning not in surrounding text → spell it out for screen readers. -->
+    <span class="inline-flex items-center gap-1 h-5 px-2 rounded-sm bg-danger text-danger-foreground text-xs font-medium">
+      <span class="sr-only">Status:</span>
+      Failed
+    </span>
+  </div>
+
+</div>

@@ -1,0 +1,156 @@
+<!--
+  EXAMPLE · list · Approach (A): UTILITY-FIRST — classes in the markup.
+
+  A list / list-group in plain HTML. Semantics: <ul> → <li>. This is a list of
+  uniform items, so the container is a native <ul> (NOT a <div> and NOT
+  table/grid hacks). Each row is clickable → inside each <li> sits an <a>
+  with a FULL set of states (hover / focus-visible / active).
+
+  Separators between rows are drawn via divide-y divide-border on the <ul> (not
+  border-b on every <li>): one utility class, no "extra" bottom border on the
+  last item. Rounding the list — a wrapper with overflow-hidden, so the first
+  and last rows follow the container radius.
+
+  Anatomy of a row (left to right):
+    leading icon (list_leading, aria-hidden) →
+    main block (list_content): title (list_title) + secondary text
+      (text-muted-foreground) →
+    trailing meta/badge (list_meta) at the right edge.
+
+  The active row — aria-current="page" (position for the screen reader, NOT only
+  color) + visual highlight (bg-muted/left accent). In approach B this is the
+  modifier list_item-active.
+
+  Same structure and states as in list.bem.html (diff A vs B on the same UI).
+  No framework: plain HTML.
+
+  Tokens — the canonical SEMANTIC ones (see templates/theme.css): bg-card,
+  text-card-foreground, text-muted-foreground, border-border, bg-muted,
+  outline-ring, etc. Token values are placeholders for your design system; the
+  names are stable. Dark mode works "for free" — every color is a token that
+  .dark overrides, so there are no dedicated dark: variants here.
+-->
+
+<!-- demo wrapper: neutral page background so the list reads in context -->
+<div class="min-h-64 bg-background text-foreground p-6">
+
+  <!--
+    List container. The <ul> carries the surface (bg-card), border and radius;
+    overflow-hidden clips the rows to the rounded corners. divide-y divide-border
+    draws the separators BETWEEN <li> elements (the last one has no bottom line).
+    aria-label names the list for the screen reader.
+  -->
+  <ul
+    aria-label="Projects"
+    class="w-full max-w-md
+           overflow-hidden
+           divide-y divide-border rounded-lg border border-border bg-card
+           text-card-foreground"
+  >
+
+    <!-- Row 1: a regular clickable row -->
+    <li>
+      <a
+        href="/projects/atlas"
+        class="group flex items-center gap-3
+               px-4 py-3
+               text-sm
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:bg-muted
+               focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring
+               active:bg-muted"
+      >
+        <!-- leading icon: decorative (the adjacent text carries the meaning) -->
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             class="size-5 shrink-0 text-muted-foreground">
+          <rect x="3" y="3" width="18" height="18" rx="2" stroke-width="2" />
+        </svg>
+
+        <!-- main block: title + secondary (muted) text -->
+        <span class="flex min-w-0 flex-col">
+          <span class="truncate font-medium text-foreground">Atlas</span>
+          <span class="truncate text-muted-foreground">Updated 2 hours ago</span>
+        </span>
+
+        <!-- trailing meta: counter badge at the right edge (ml-auto pushes it) -->
+        <span class="ml-auto inline-flex shrink-0 items-center
+                     h-5 px-2
+                     rounded-sm bg-muted
+                     text-xs font-medium text-muted-foreground">
+          12
+        </span>
+      </a>
+    </li>
+
+    <!--
+      Row 2: ACTIVE. aria-current="page" announces the position to the screen
+      reader; visually — a persistent bg-muted + left accent (inset box-shadow via
+      shadow-[...], so the content isn't shifted by a border). This is the pair to
+      the list_item-active modifier in approach B.
+    -->
+    <li>
+      <a
+        href="/projects/orbit"
+        aria-current="page"
+        class="group flex items-center gap-3
+               px-4 py-3
+               bg-muted shadow-[inset_2px_0_0_0_var(--color-primary)]
+               text-sm
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:bg-muted
+               focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring
+               active:bg-muted"
+      >
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             class="size-5 shrink-0 text-foreground">
+          <circle cx="12" cy="12" r="9" stroke-width="2" />
+          <circle cx="12" cy="12" r="2" stroke-width="2" />
+        </svg>
+
+        <span class="flex min-w-0 flex-col">
+          <span class="truncate font-medium text-foreground">Orbit</span>
+          <span class="truncate text-muted-foreground">Updated yesterday</span>
+        </span>
+
+        <span class="ml-auto inline-flex shrink-0 items-center
+                     h-5 px-2
+                     rounded-sm bg-primary
+                     text-xs font-medium text-primary-foreground">
+          3
+        </span>
+      </a>
+    </li>
+
+    <!-- Row 3: a regular clickable row -->
+    <li>
+      <a
+        href="/projects/relay"
+        class="group flex items-center gap-3
+               px-4 py-3
+               text-sm
+               transition-colors duration-150 motion-reduce:transition-none
+               hover:bg-muted
+               focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring
+               active:bg-muted"
+      >
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             class="size-5 shrink-0 text-muted-foreground">
+          <path d="M4 7h16M4 12h16M4 17h10" stroke-width="2" stroke-linecap="round" />
+        </svg>
+
+        <span class="flex min-w-0 flex-col">
+          <span class="truncate font-medium text-foreground">Relay</span>
+          <span class="truncate text-muted-foreground">Updated last week</span>
+        </span>
+
+        <!-- trailing meta: secondary status as a word (not only color) -->
+        <span class="ml-auto inline-flex shrink-0 items-center
+                     h-5 px-2
+                     rounded-sm bg-success/15
+                     text-xs font-medium text-success">
+          Active
+        </span>
+      </a>
+    </li>
+  </ul>
+</div>

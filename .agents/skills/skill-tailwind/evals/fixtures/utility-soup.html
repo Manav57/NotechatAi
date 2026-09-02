@@ -1,0 +1,32 @@
+<!-- FIXTURE — INPUT ONLY. "Utility soup": the same wall of classes copied N times + hex.            -->
+<!-- NOT a reference. Material for refactoring into tokens/partial/BEM. Cases: EV-10 (refactor), EV-11 (review). -->
+<!-- Smell: duplication WITHOUT extracting markup + arbitrary hex/radii instead of @theme tokens.       -->
+
+<ul class="space-y-3">
+  <!-- card 1 -->
+  <li class="flex items-start gap-3 w-full p-4 bg-[#ffffff] border border-[#e5e7eb] rounded-[10px] shadow-[0_2px_8px_rgba(0,0,0,0.08)] text-[#111827]">
+    <span class="shrink-0 w-9 h-9 rounded-full bg-[#eef2ff] text-[#1f6feb] flex items-center justify-center">A</span>
+    <div>
+      <p class="text-sm font-medium text-[#111827]">Item one</p>
+      <p class="text-xs text-[#6b7280]">Description placeholder.</p>
+    </div>
+  </li>
+
+  <!-- card 2 — the same wall of classes, copied -->
+  <li class="flex items-start gap-3 w-full p-4 bg-[#ffffff] border border-[#e5e7eb] rounded-[10px] shadow-[0_2px_8px_rgba(0,0,0,0.08)] text-[#111827]">
+    <span class="shrink-0 w-9 h-9 rounded-full bg-[#eef2ff] text-[#1f6feb] flex items-center justify-center">B</span>
+    <div>
+      <p class="text-sm font-medium text-[#111827]">Item two</p>
+      <p class="text-xs text-[#6b7280]">Description placeholder.</p>
+    </div>
+  </li>
+
+  <!-- card 3 — the same wall again -->
+  <li class="flex items-start gap-3 w-full p-4 bg-[#ffffff] border border-[#e5e7eb] rounded-[10px] shadow-[0_2px_8px_rgba(0,0,0,0.08)] text-[#111827]">
+    <span class="shrink-0 w-9 h-9 rounded-full bg-[#eef2ff] text-[#1f6feb] flex items-center justify-center">C</span>
+    <div>
+      <p class="text-sm font-medium text-[#111827]">Item three</p>
+      <p class="text-xs text-[#6b7280]">Description placeholder.</p>
+    </div>
+  </li>
+</ul>
