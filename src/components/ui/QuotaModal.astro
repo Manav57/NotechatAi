@@ -1,0 +1,98 @@
+---
+/**
+ * QuotaModal — shown when a 429 QUOTA_EXCEEDED response is received.
+ * Prompts user to upgrade to Pro ($2/mo) or Plus ($10/mo).
+ *
+ * Include this component in app pages, then call
+ * `window.showQuotaModal(feature, plan, used, limit)` from error handlers.
+ */
+---
+
+<div id="quota-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Upgrade required">
+  <div class="bg-canvas rounded-xl shadow-level-5 w-full max-w-md overflow-y-auto animate-slide-up">
+    <div class="p-6 text-center">
+      {/* Icon */}
+      <div class="w-16 h-16 mx-auto mb-5 bg-warning-soft rounded-2xl flex items-center justify-center">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" class="text-warning-deep" aria-hidden="true">
+          <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2"/>
+          <path d="M16 10v8M16 22h.01" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <h2 class="font-display-md text-ink mb-2">You've reached your daily limit</h2>
+      <p class="font-body-md text-body mb-6" id="quota-message">
+        Upgrade to Pro ($2/mo) or Plus ($10/mo) for higher limits, faster processing, and uninterrupted access.
+      </p>
+
+      <div class="space-y-3 mb-6">
+        <button onclick="handleQuotaUpgrade('pro')" class="w-full h-12 flex items-center justify-center rounded-pill bg-primary text-on-primary font-button-lg hover:opacity-90 active:opacity-70 transition-all gap-2">
+          <span>Upgrade to Pro</span>
+          <span class="font-caption text-on-primary/60">— $2/mo</span>
+        </button>
+        <button onclick="handleQuotaUpgrade('plus')" class="w-full h-12 flex items-center justify-center rounded-pill bg-canvas text-ink font-button-lg border border-hairline hover:bg-canvas-soft active:bg-canvas-soft-2 transition-all gap-2">
+          <span>Upgrade to Plus</span>
+          <span class="font-caption text-mute">— $10/mo</span>
+        </button>
+      </div>
+
+      <button id="quota-modal-close" class="font-body-sm text-mute hover:text-ink transition-colors">
+        Maybe later
+      </button>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  window.showQuotaModal = function (feature, plan, used, limit) {
+    var modal = document.getElementById('quota-modal');
+    var msg = document.getElementById('quota-message');
+    if (!modal) return;
+
+    if (msg) {
+      var featureLabel = feature === 'chat' ? 'chats' : feature === 'audio' ? 'audio overviews' : 'documents';
+      msg.textContent = 'You\'ve used ' + used + ' of ' + limit + ' daily ' + featureLabel + ' on your ' + plan + ' plan. Upgrade for higher limits and uninterrupted access.';
+    }
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  };
+
+  function closeQuotaModal() {
+    var modal = document.getElementById('quota-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  window.handleQuotaUpgrade = async function (plan) {
+    closeQuotaModal();
+    try {
+      var res = await fetch('/api/billing/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: plan }),
+      });
+      var data = await res.json();
+      if (res.ok && data.url) {
+        window.location.href = data.url;
+      } else if (res.status === 503 || (data.error && data.error.indexOf('not configured') !== -1)) {
+        window.location.href = '/pricing';
+      } else {
+        alert(data.error || 'Failed to start checkout.');
+      }
+    } catch (e) {
+      window.location.href = '/pricing';
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var closeBtn = document.getElementById('quota-modal-close');
+    var modal = document.getElementById('quota-modal');
+    closeBtn?.addEventListener('click', closeQuotaModal);
+    modal?.addEventListener('click', function (e) {
+      if (e.target === modal) closeQuotaModal();
+    });
+  });
+</script>

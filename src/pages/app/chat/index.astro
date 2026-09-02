@@ -186,7 +186,17 @@ import AppLayout from '../../../layouts/AppLayout.astro';
 
         document.getElementById(typingId)?.remove();
 
-        if (!res.ok) throw new Error('Chat failed');
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          if (res.status === 429 && errData.error === 'QUOTA_EXCEEDED') {
+            (window as any).showQuotaModal?.(errData.feature, errData.plan, errData.used, errData.limit);
+            // Lock the send button
+            if (sendBtn) sendBtn.disabled = true;
+            isStreaming = false;
+            return;
+          }
+          throw new Error(errData.error || 'Chat failed');
+        }
 
         const data = await res.json();
 

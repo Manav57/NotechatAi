@@ -230,7 +230,14 @@ import Badge from '../../../components/ui/Badge.astro';
           body: JSON.stringify({ filename: title, tags, size: file.size }),
         });
 
-        if (!res.ok) throw new Error('Upload failed');
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          if (res.status === 429 && errData.error === 'QUOTA_EXCEEDED') {
+            (window as any).showQuotaModal?.(errData.feature, errData.plan, errData.used, errData.limit);
+            return;
+          }
+          throw new Error(errData.error || 'Upload failed');
+        }
         closeModalFn();
         loadDocuments();
       } catch { alert('Upload failed. Please try again.'); }

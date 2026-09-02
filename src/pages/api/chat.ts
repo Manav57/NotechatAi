@@ -3,6 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { dbGetSession } from '../../lib/db-auth';
 import { devGetSession } from '../../lib/dev-auth';
+import { verifyQuota, incrementUsage } from '../../lib/billing';
 
 // ─── Env bindings ───
 
@@ -154,6 +155,25 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const db = bindings.DB;
   const OPENROUTER_API_KEY = bindings.OPENROUTER_API_KEY;
 
+  // ─── Quota enforcement ───
+  if (db) {
+    const quota = await verifyQuota(db, user.id, 'chat');
+    if (!quota.allowed) {
+      return new Response(JSON.stringify({
+        error: 'QUOTA_EXCEEDED',
+        message: quota.message,
+        plan: quota.plan,
+        feature: quota.feature,
+        used: quota.used,
+        limit: quota.limit,
+        upgradeUrl: '/pricing',
+      }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+  }
+
   if (!OPENROUTER_API_KEY) {
     return new Response(JSON.stringify({ error: 'OpenRouter API key not configured' }), {
       status: 500,
@@ -253,6 +273,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   // Update conversation timestamp
   await db.prepare(`UPDATE conversations SET updated_at = unixepoch() WHERE id = ?1`).bind(conv.id).run();
+
+  // ─── Increment usage counter ───
+  if (db) {
+    try { await incrementUsage(db, user.id, 'chat'); } catch {}
+  }
 
   return new Response(JSON.stringify({
     message: assistantContent,

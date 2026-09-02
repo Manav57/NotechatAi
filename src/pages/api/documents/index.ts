@@ -3,6 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { devGetSession } from '../../../lib/dev-auth';
 import { getUserDocuments, createDocument, getDocumentStats } from '../../../lib/dev-store';
+import { verifyQuota, incrementDocumentCount } from '../../../lib/billing';
 
 // ─── Security: MIME-type whitelist & file-size limits ───
 const ALLOWED_EXTENSIONS = new Set(['.pdf', '.epub', '.txt', '.md', '.mdx', '.docx', '.doc', '.mp3', '.wav', '.mp4', '.webm']);
@@ -65,6 +66,30 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const user = getUser(cookies);
   if (!user) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
 
+  // ─── Quota enforcement ───
+  let db: any = null;
+  try {
+    const mod = await import('cloudflare:workers');
+    db = (mod as any).env?.DB ?? null;
+  } catch {}
+  if (db) {
+    const quota = await verifyQuota(db, user.id, 'document');
+    if (!quota.allowed) {
+      return new Response(JSON.stringify({
+        error: 'QUOTA_EXCEEDED',
+        message: quota.message,
+        plan: quota.plan,
+        feature: quota.feature,
+        used: quota.used,
+        limit: quota.limit,
+        upgradeUrl: '/pricing',
+      }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+  }
+
   try {
     const body = await request.json();
     const { filename, url: fileUrl, tags, size } = body;
@@ -121,6 +146,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       tags: tags || [],
       size: size || 0,
     });
+
+    // ─── Increment document count ───
+    if (db) {
+      try { await incrementDocumentCount(db, user.id); } catch {}
+    }
 
     return new Response(JSON.stringify({ document: doc }), {
       status: 201,

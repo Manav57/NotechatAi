@@ -171,20 +171,24 @@ try {
 
     <Card variant="marketing-large">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="font-display-md text-ink">Your Plan: {user?.plan === 'pro' ? 'Pro' : user?.plan === 'team' ? 'Team' : 'Free Beta'}</h2>
-        <button onclick="showUpgradeModal()" class="btn-secondary-sm">Upgrade to Pro</button>
+        <h2 class="font-display-md text-ink">Your Plan: {user?.plan === 'pro' ? 'Pro ($2/mo)' : user?.plan === 'plus' ? 'Plus ($10/mo)' : 'Free'}</h2>
+        {user?.plan === 'free' ? (
+          <button onclick="handleUpgradeFromDashboard('pro')" class="btn-secondary-sm">Upgrade to Pro</button>
+        ) : user?.plan === 'pro' ? (
+          <button onclick="handleUpgradeFromDashboard('plus')" class="btn-secondary-sm">Upgrade to Plus</button>
+        ) : null}
       </div>
       <div class="grid sm:grid-cols-3 gap-6">
         <div class="text-center p-4 bg-canvas-soft/50 rounded-lg">
-          <p class="font-display-xl text-ink">50</p>
+          <p class="font-display-xl text-ink">{user?.plan === 'plus' ? '∞' : user?.plan === 'pro' ? '500' : '50'}</p>
           <p class="font-body-sm text-mute">Documents</p>
         </div>
         <div class="text-center p-4 bg-canvas-soft/50 rounded-lg">
-          <p class="font-display-xl text-ink">30</p>
+          <p class="font-display-xl text-ink">{user?.plan === 'plus' ? '∞' : user?.plan === 'pro' ? '300' : '30'}</p>
           <p class="font-body-sm text-mute">Chats / day</p>
         </div>
         <div class="text-center p-4 bg-canvas-soft/50 rounded-lg">
-          <p class="font-display-xl text-ink">2</p>
+          <p class="font-display-xl text-ink">{user?.plan === 'plus' ? '100' : user?.plan === 'pro' ? '20' : '2'}</p>
           <p class="font-body-sm text-mute">Audio / day</p>
         </div>
       </div>
@@ -193,3 +197,26 @@ try {
 
   <UpgradeModal />
 </AppLayout>
+
+<script>
+  async function handleUpgradeFromDashboard(plan: string) {
+    try {
+      const res = await fetch('/api/billing/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan }),
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        window.location.href = data.url;
+      } else if (res.status === 503 || data.error?.includes('not configured')) {
+        (window as any).showUpgradeModal?.();
+      } else {
+        alert(data.error || 'Failed to start checkout.');
+      }
+    } catch {
+      (window as any).showUpgradeModal?.();
+    }
+  }
+  (window as any).handleUpgradeFromDashboard = handleUpgradeFromDashboard;
+</script>

@@ -3,6 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { devGetSession } from '../../../lib/dev-auth';
 import { getDocument, deleteDocument } from '../../../lib/dev-store';
+import { decrementDocumentCount } from '../../../lib/billing';
 
 function getUser(cookies: { get: (name: string) => { value: string } | undefined }) {
   const token = cookies.get('session')?.value;
@@ -31,6 +32,16 @@ export const DELETE: APIRoute = async ({ params, cookies }) => {
 
   const deleted = deleteDocument(params.id!, user.id);
   if (!deleted) return new Response(JSON.stringify({ error: 'Not found' }), { status: 404 });
+
+  // Decrement document count
+  let db: any = null;
+  try {
+    const mod = await import('cloudflare:workers');
+    db = (mod as any).env?.DB ?? null;
+  } catch {}
+  if (db) {
+    try { await decrementDocumentCount(db, user.id); } catch {}
+  }
 
   return new Response(JSON.stringify({ success: true }), {
     headers: { 'Content-Type': 'application/json' },

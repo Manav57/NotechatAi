@@ -30,19 +30,26 @@ const user = (Astro.locals as any)?.user;
       </div>
       <div class="grid sm:grid-cols-3 gap-4 mb-6">
         <div class="text-center p-4 bg-canvas-soft rounded-lg">
-          <p class="font-display-xl text-ink">50</p>
+          <p class="font-display-xl text-ink">{user?.plan === 'plus' ? '∞' : user?.plan === 'pro' ? '500' : '50'}</p>
           <p class="font-body-sm text-mute">Documents</p>
         </div>
         <div class="text-center p-4 bg-canvas-soft rounded-lg">
-          <p class="font-display-xl text-ink">30</p>
+          <p class="font-display-xl text-ink">{user?.plan === 'plus' ? '∞' : user?.plan === 'pro' ? '300' : '30'}</p>
           <p class="font-body-sm text-mute">Chats / day</p>
         </div>
         <div class="text-center p-4 bg-canvas-soft rounded-lg">
-          <p class="font-display-xl text-ink">2</p>
+          <p class="font-display-xl text-ink">{user?.plan === 'plus' ? '100' : user?.plan === 'pro' ? '20' : '2'}</p>
           <p class="font-body-sm text-mute">Audio / day</p>
         </div>
       </div>
-      <button onclick="showUpgradeModal()" class="btn-primary inline-flex">Upgrade to Pro</button>
+      {user?.plan === 'free' ? (
+        <div class="flex gap-3">
+          <button onclick="handleBillingUpgrade('pro')" class="btn-primary inline-flex">Upgrade to Pro — $2/mo</button>
+          <button onclick="handleBillingUpgrade('plus')" class="btn-secondary inline-flex">Upgrade to Plus — $10/mo</button>
+        </div>
+      ) : user?.plan === 'pro' ? (
+        <button onclick="handleBillingUpgrade('plus')" class="btn-primary inline-flex">Upgrade to Plus — $10/mo</button>
+      ) : null}
     </Card>
 
     {/* Payment Method */}
@@ -64,3 +71,26 @@ const user = (Astro.locals as any)?.user;
   </div>
   <UpgradeModal />
 </AppLayout>
+
+<script>
+  async function handleBillingUpgrade(plan: string) {
+    try {
+      const res = await fetch('/api/billing/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan }),
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        window.location.href = data.url;
+      } else if (res.status === 503 || data.error?.includes('not configured')) {
+        (window as any).showUpgradeModal?.();
+      } else {
+        alert(data.error || 'Failed to start checkout.');
+      }
+    } catch {
+      (window as any).showUpgradeModal?.();
+    }
+  }
+  (window as any).handleBillingUpgrade = handleBillingUpgrade;
+</script>

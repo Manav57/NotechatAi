@@ -6,6 +6,7 @@ import '@fontsource/geist/700.css';
 import '@fontsource/geist-mono/400.css';
 import '../styles/global.css';
 import ThemeToggle from '../components/ui/ThemeToggle.astro';
+import QuotaModal from '../components/ui/QuotaModal.astro';
 
 interface Props {
   title?: string;
@@ -239,3 +240,5 @@ const isActive = (href: string) => {
   menuBackdrop?.addEventListener('click', closeMenu);
   menuClose?.addEventListener('click', closeMenu);
 </script>
+
+<QuotaModal />
