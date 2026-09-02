@@ -194,6 +194,28 @@ import AppLayout from '../../../layouts/AppLayout.astro';
 
     function escapeHtml(text: string) { const d = document.createElement('div'); d.textContent = text; return d.innerHTML.replace(/\n/g, '<br>'); }
 
+    // Simple markdown renderer for chat messages
+    function renderMarkdown(text: string): string {
+      let html = escapeHtml(text);
+      // Code blocks
+      html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre class="bg-canvas-soft border border-hairline rounded-lg p-3 my-2 overflow-x-auto"><code class="font-mono text-sm">$2</code></pre>');
+      // Inline code
+      html = html.replace(/`([^`]+)`/g, '<code class="bg-canvas-soft-2 px-1.5 py-0.5 rounded text-sm font-mono">$1</code>');
+      // Bold
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong class="font-body-md-strong">$1</strong>');
+      // Italic
+      html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      // Headers
+      html = html.replace(/^### (.+)$/gm, '<h4 class="font-display-sm text-ink mt-3 mb-1">$1</h4>');
+      html = html.replace(/^## (.+)$/gm, '<h3 class="font-display-md text-ink mt-4 mb-2">$1</h3>');
+      html = html.replace(/^# (.+)$/gm, '<h2 class="font-display-lg text-ink mt-4 mb-2">$1</h2>');
+      // Lists
+      html = html.replace(/^[-*] (.+)$/gm, '<li class="ml-4">$1</li>');
+      // Line breaks
+      html = html.replace(/\n/g, '<br>');
+      return html;
+    }
+
     function addMessage(role: 'user' | 'assistant', content: string, citations?: any[], generatedFile?: { filename: string; downloadUrl: string; size: number }) {
       if (!messagesList) return;
       const div = document.createElement('div');
@@ -225,7 +247,8 @@ import AppLayout from '../../../layouts/AppLayout.astro';
           </div>`;
           })()
         : '';
-      div.innerHTML = `${avatar}<div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="font-body-sm-strong ${role === 'user' ? 'text-ink' : 'text-primary'}">${role === 'user' ? 'You' : 'NotesChatAI'}</span><span class="font-caption text-mute">Just now</span></div><div class="font-body-md text-ink/90 leading-relaxed whitespace-pre-wrap">${escapeHtml(content)}</div>${fileHtml}${citationsHtml}</div>`;
+      const renderedContent = role === 'assistant' ? renderMarkdown(content) : escapeHtml(content).replace(/\n/g, '<br>');
+      div.innerHTML = `${avatar}<div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="font-body-sm-strong ${role === 'user' ? 'text-ink' : 'text-primary'}">${role === 'user' ? 'You' : 'NotesChatAI'}</span><span class="font-caption text-mute">Just now</span></div><div class="font-body-md text-ink/90 leading-relaxed">${renderedContent}</div>${fileHtml}${citationsHtml}</div>`;
       messagesList.appendChild(div);
       scrollToBottom();
     }
@@ -289,8 +312,26 @@ import AppLayout from '../../../layouts/AppLayout.astro';
         addMessage('assistant', data.message || 'No response generated.', data.citations, data.generatedFile);
       } catch (err) {
         document.getElementById(typingId)?.remove();
-        // Visible, in-page error instead of an injected fake assistant message
-        showChatError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+        const errorMsg = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+        showChatError(errorMsg);
+        // Add retry button in the messages area
+        if (messagesList) {
+          const retryDiv = document.createElement('div');
+          retryDiv.className = 'flex gap-3 animate-slide-up';
+          retryDiv.innerHTML = `<div class="w-8 h-8 rounded-full bg-error/10 flex items-center justify-center text-error text-sm font-medium flex-shrink-0">!</div><div class="flex-1"><div class="flex items-center gap-2 mb-1"><span class="font-body-sm-strong text-error">Error</span></div><p class="font-body-sm text-error/80 mb-2">${escapeHtml(errorMsg)}</p><button class="retry-btn btn-secondary-sm text-xs inline-flex items-center gap-1.5" data-retry-message="${escapeHtml(message)}"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7a6 6 0 1 1 1.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M1 3v4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Retry</button></div>`;
+          messagesList.appendChild(retryDiv);
+          scrollToBottom();
+          // Attach retry handler
+          retryDiv.querySelector('.retry-btn')?.addEventListener('click', () => {
+            const retryMsg = (retryDiv.querySelector('.retry-btn') as HTMLElement)?.dataset.retryMessage;
+            if (retryMsg && chatInput) {
+              chatInput.value = retryMsg;
+              chatInput.dispatchEvent(new Event('input'));
+              retryDiv.remove();
+              chatForm?.dispatchEvent(new Event('submit'));
+            }
+          });
+        }
       } finally {
         isStreaming = false;
         if (sendBtn) sendBtn.disabled = !chatInput?.value?.trim();

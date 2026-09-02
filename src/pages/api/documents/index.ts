@@ -4,11 +4,13 @@ import type { APIRoute } from 'astro';
 import { dbGetSession } from '../../../lib/db-auth';
 import { devGetSession } from '../../../lib/dev-auth';
 import { verifyQuota, incrementDocumentCount } from '../../../lib/billing';
+import { getExtension } from '../../../lib/mime-validation';
 
 // ─── Security: MIME-type whitelist & file-size limits ───
 const ALLOWED_EXTENSIONS = new Set(['.pdf', '.epub', '.txt', '.md', '.mdx', '.docx', '.doc', '.mp3', '.wav', '.mp4', '.webm', '.jpg', '.jpeg', '.png', '.webp', '.heic', '.heif']);
 const BLOCKED_EXTENSIONS = new Set(['.exe', '.sh', '.bat', '.cmd', '.com', '.msi', '.scr', '.pif', '.js', '.mjs', '.cjs', '.ts', '.jsx', '.tsx', '.vbs', '.vbe', '.wsf', '.wsh', '.ps1', '.psc1', '.psc2', '.reg', '.dll', '.so', '.dylib', '.app', '.deb', '.rpm', '.apk', '.jar', '.class', '.py', '.rb', '.pl', '.php', '.asp', '.aspx', '.jsp', '.cgi']);
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+const MAX_REQUEST_SIZE = 15 * 1024 * 1024; // 15 MB (allows base64 overhead)
 
 function validateFilename(filename: string): { valid: boolean; error?: string } {
   const lower = filename.toLowerCase();
@@ -89,7 +91,22 @@ export const GET: APIRoute = async ({ cookies, url }) => {
         createdAt: d.created_at ? new Date(d.created_at * 1000).toISOString() : null,
         updatedAt: d.updated_at ? new Date(d.updated_at * 1000).toISOString() : null,
       }));
-      return new Response(JSON.stringify({ documents: docs }), { headers: { 'Content-Type': 'application/json' } });
+      // Get stats
+      const statsRow = await db.prepare(
+        `SELECT COUNT(*) as total,
+                SUM(CASE WHEN status = 'ready' THEN 1 ELSE 0 END) as ready,
+                SUM(CASE WHEN status = 'processing' THEN 1 ELSE 0 END) as processing
+         FROM documents WHERE user_id = ?1`
+      ).bind(user.id).first();
+
+      return new Response(JSON.stringify({
+        documents: docs,
+        stats: {
+          totalDocuments: statsRow?.total || 0,
+          readyCount: statsRow?.ready || 0,
+          processingCount: statsRow?.processing || 0,
+        },
+      }), { headers: { 'Content-Type': 'application/json' } });
     } catch (e) {
       console.error('D1 document list error:', e);
     }
@@ -155,15 +172,40 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
 
     // Validate file size (if provided by client)
-    if (typeof size === 'number' && size > MAX_FILE_SIZE) {
-      return new Response(JSON.stringify({ error: `File too large. Maximum size is ${MAX_FILE_SIZE / (1024 * 1024)} MB.` }), {
+    if (typeof size === 'number') {
+      if (size === 0) {
+        return new Response(JSON.stringify({
+          error: 'EMPTY_FILE',
+          message: 'The file is empty (0 bytes). Please upload a valid file with content.',
+        }), {
+          status: 422,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+      if (size > MAX_FILE_SIZE) {
+        return new Response(JSON.stringify({
+          error: 'FILE_TOO_LARGE',
+          message: `File too large. Maximum size is ${MAX_FILE_SIZE / (1024 * 1024)} MB. Your file is ${(size / (1024 * 1024)).toFixed(1)} MB.`,
+          maxSize: MAX_FILE_SIZE,
+          actualSize: size,
+          upgradeUrl: '/pricing',
+        }), {
+          status: 413,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
+    if (!filename && !fileUrl) {
+      return new Response(JSON.stringify({ error: 'Either filename or url is required.' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    if (!filename && !fileUrl) {
-      return new Response(JSON.stringify({ error: 'Either filename or url is required.' }), {
+    // Validate URL is not empty string
+    if (fileUrl && fileUrl.trim() === '') {
+      return new Response(JSON.stringify({ error: 'URL cannot be empty.' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
