@@ -12,6 +12,17 @@ const comparisonRows = [
   { plan: 'Pro', nc: `$${PLAN_PRICES.pro.monthly}/mo — 500 docs, 300 chats/day, 25 GB`, nlm: '$19.99/mo — 300 sources, 500 chats/day' },
   { plan: 'Plus', nc: `$${PLAN_PRICES.plus.monthly}/mo — Unlimited docs & chats, 100 GB`, nlm: '$19.99/mo Ultra — 600 sources, 5000 chats/day' },
 ];
+
+// Annual-billing note copy. Computed here (frontmatter) because nested backticks
+// inside the markup section get mangled by Astro's parser (double-dollar bug).
+function annualNote(plan: 'pro' | 'plus'): string {
+  const annual = PLAN_PRICES[plan].annual;
+  const perMonth = annualPerMonth(plan);
+  const monthly = PLAN_PRICES[plan].monthly;
+  return perMonth === monthly
+    ? `$${annual}/year ($${perMonth}/mo)`
+    : `${annualSavingsPct(plan)}% off yearly ($${perMonth}/mo billed annually)`;
+}
 ---
 
 <Layout title="Pricing — NotesChatAI | Free AI Study Assistant" description="Simple, transparent pricing for NotesChatAI. Free beta with 50 documents. Pro for unlimited docs and chats. Better value than NotebookLM." keywords="noteschatai pricing, free notebooklm alternative, ai study assistant pricing, free ai study assistant">
@@ -99,7 +110,7 @@ const comparisonRows = [
               <span class="font-display-xl text-on-primary pricing-price" data-monthly="${PLAN_PRICES.pro.monthly}" data-annual="${PLAN_PRICES.pro.annual}" data-suffix="/mo">${PLAN_PRICES.pro.monthly}</span>
               <span class="font-body-md text-on-primary/50 ml-1 pricing-suffix">/mo</span>
             </div>
-            <p class="font-body-sm text-on-primary/50 mb-6 pricing-annual-note">Cancel anytime · ${PLAN_PRICES.pro.annual}/year (${annualPerMonth('pro') === PLAN_PRICES.pro.monthly ? `$${PLAN_PRICES.pro.monthly}/mo` : `${annualSavingsPct('pro')}% off yearly ($${annualPerMonth('pro')}/mo billed annually)`})</p>
+            <p class="font-body-sm text-on-primary/50 mb-6 pricing-annual-note">Cancel anytime · {annualNote('pro')}</p>
             <ul class="space-y-3 mb-8" role="list">
               {[
                 '500 documents',
@@ -135,7 +146,7 @@ const comparisonRows = [
               <span class="font-display-xl text-ink pricing-price" data-monthly="${PLAN_PRICES.plus.monthly}" data-annual="${PLAN_PRICES.plus.annual}" data-suffix="/mo">${PLAN_PRICES.plus.monthly}</span>
               <span class="font-body-md text-mute ml-1 pricing-suffix">/mo</span>
             </div>
-            <p class="font-body-sm text-mute mb-6 pricing-annual-note">Cancel anytime · ${PLAN_PRICES.plus.annual}/year (${annualPerMonth('plus') === PLAN_PRICES.plus.monthly ? `$${PLAN_PRICES.plus.monthly}/mo` : `${annualSavingsPct('plus')}% off yearly ($${annualPerMonth('plus')}/mo billed annually)`})</p>
+            <p class="font-body-sm text-mute mb-6 pricing-annual-note">Cancel anytime · {annualNote('plus')}</p>
             <ul class="space-y-3 mb-8" role="list">
               {[
                 'Unlimited documents',
