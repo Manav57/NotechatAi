@@ -98,6 +98,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       "https://static.cloudflareinsights.com " +
       "https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com " +
       "https://adservice.google.com https://adservice.google.de https://ads.google.com " +
+      "https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.adtrafficquality.google " +
       "https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; " +
     "style-src 'self' 'unsafe-inline'; " +
     "img-src 'self' data: https: blob:; " +
@@ -107,7 +108,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
       "https://static.cloudflareinsights.com " +
       "https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com " +
       "https://adservice.google.com https://adservice.google.de " +
-      "https://ep1.adtrafficquality.google https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; " +
+      "https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.adtrafficquality.google " +
+      "https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; " +
     "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com " +
       "https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; " +
     "frame-ancestors 'none'; " +
