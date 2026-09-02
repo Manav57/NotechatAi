@@ -103,6 +103,14 @@ and the AdSense domain set). Deployed to `noteschatai.com` — zero console erro
 > ("50% off yearly ($2/mo → $1/mo)") — corrected to "Pro $24/year ($2/mo)",
 > "Plus $60/year ($5/mo)" to match the real Stripe prices. Deployed + verified live.
 
+> **Copy-consistency pass (2026-09-02):** audited every public page for stale pricing
+> and aligned all copy to the source of truth (`src/lib/pricing.ts` / `src/lib/billing.ts`):
+> - Removed false **"Save 50%"** badge on the Annual pricing toggle (annual = $24/yr = no discount).
+> - Homepage + FAQ + JSON-LD: corrected "Pro = unlimited" → **Pro = 500 docs & 300 chats/day**,
+>   Plus = unlimited + API access.
+> - Features page comparison + free-beta docs: Pro storage **50 GB → 25 GB**.
+> All deployed + verified live with zero console errors.
+
 ---
 
 ## Ownership / accountability
