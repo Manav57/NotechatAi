@@ -86,16 +86,30 @@ export const onRequest = defineMiddleware(async (context, next) => {
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
-  // CSP — allow inline scripts (Astro requires it) and the specific external origins
+  // CSP — allow inline scripts (Astro requires it), Cloudflare insights,
+  // and the full set of Google Analytics + AdSense origins (scripts, connections,
+  // and iframes). Without these, Cloudflare Web Analytics is blocked and AdSense
+  // quality/traffic checks fail.
   response.headers.set(
     'Content-Security-Policy',
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com https://adservice.google.com https://adservice.google.de; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
+      "https://www.googletagmanager.com https://www.google-analytics.com " +
+      "https://static.cloudflareinsights.com " +
+      "https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com " +
+      "https://adservice.google.com https://adservice.google.de https://ads.google.com " +
+      "https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; " +
     "style-src 'self' 'unsafe-inline'; " +
     "img-src 'self' data: https: blob:; " +
     "font-src 'self' data:; " +
-    "connect-src 'self' https://openrouter.ai https://www.google-analytics.com https://pagead2.googlesyndication.com; " +
-    "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; " +
+    "connect-src 'self' https://openrouter.ai " +
+      "https://www.google-analytics.com https://www.googletagmanager.com " +
+      "https://static.cloudflareinsights.com " +
+      "https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com " +
+      "https://adservice.google.com https://adservice.google.de " +
+      "https://ep1.adtrafficquality.google https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; " +
+    "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com " +
+      "https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; " +
     "frame-ancestors 'none'; " +
     "base-uri 'self'; " +
     "form-action 'self'"
