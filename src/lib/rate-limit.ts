@@ -11,13 +11,14 @@ interface RateLimitEntry {
 
 const store = new Map<string, RateLimitEntry>();
 
-// Cleanup old entries every 5 minutes
-setInterval(() => {
-  const now = Date.now();
+// Lazy cleanup — purges expired entries whenever a new check runs.
+// (Note: global setInterval/setTimeout are not allowed at module scope in
+// Cloudflare Workers, so we clean up inline instead.)
+function purgeExpired(now: number): void {
   for (const [key, entry] of store) {
     if (entry.resetAt <= now) store.delete(key);
   }
-}, 5 * 60 * 1000);
+}
 
 /**
  * Check rate limit for a given key (e.g. IP address).
@@ -32,6 +33,8 @@ export function checkRateLimit(
   windowMs: number = 60_000 // 1 minute
 ): { allowed: boolean; retryAfterMs: number } {
   const now = Date.now();
+  // Opportunistic cleanup of expired entries.
+  if (store.size > 100) purgeExpired(now);
   const entry = store.get(key);
 
   if (!entry || entry.resetAt <= now) {
