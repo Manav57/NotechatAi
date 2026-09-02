@@ -133,9 +133,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     // Create Checkout Session
     const origin = new URL(request.url).origin;
-    const session = await stripe.checkout.sessions.create({
+    const sessionPayload = {
       customer: customerId,
-      mode: 'subscription',
+      mode: 'subscription' as const,
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${origin}/app/settings/billing?success=true`,
       cancel_url: `${origin}/app/settings/billing?canceled=true`,
@@ -143,9 +143,25 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         metadata: { userId: user.id, plan, period },
       },
       metadata: { userId: user.id, plan, period },
-      payment_method_collection: 'always',
-      automatic_tax: { enabled: true },
-    });
+      payment_method_collection: 'always' as const,
+    };
+
+    // Attempt checkout with automatic tax; fall back gracefully if Stripe Tax
+    // hasn't been configured yet (e.g. missing head office address).
+    let session;
+    try {
+      session = await stripe.checkout.sessions.create({
+        ...sessionPayload,
+        automatic_tax: { enabled: true },
+      });
+    } catch (taxErr: any) {
+      if (taxErr?.type === 'invalid_request_error' && taxErr?.message?.includes('automatic tax')) {
+        console.warn('Stripe Tax not configured — creating checkout without automatic_tax');
+        session = await stripe.checkout.sessions.create(sessionPayload);
+      } else {
+        throw taxErr;
+      }
+    }
 
     return new Response(JSON.stringify({ url: session.url }), {
       status: 200,
