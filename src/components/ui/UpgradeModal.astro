@@ -53,6 +53,7 @@
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
+    if (typeof window.trapFocus === 'function') window.trapFocus(modal);
   };
 
   function closeUpgradeModal() {
@@ -61,6 +62,7 @@
     modal.classList.add('hidden');
     modal.classList.remove('flex');
     document.body.style.overflow = '';
+    if (typeof window.releaseFocus === 'function') window.releaseFocus(modal);
   }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -70,5 +72,6 @@
     modal?.addEventListener('click', function (e) {
       if (e.target === modal) closeUpgradeModal();
     });
+    modal?.addEventListener('focus-trap-escape', closeUpgradeModal);
   });
 </script>

@@ -262,12 +262,18 @@ const audioItems: any[] = [];
     generateModal?.classList.remove('hidden');
     generateModal?.classList.add('flex');
     document.body.style.overflow = 'hidden';
+    if (generateModal && typeof (window as any).trapFocus === 'function') {
+      (window as any).trapFocus(generateModal);
+    }
   }
 
   function closeGenerateModal() {
     generateModal?.classList.add('hidden');
     generateModal?.classList.remove('flex');
     document.body.style.overflow = '';
+    if (generateModal && typeof (window as any).releaseFocus === 'function') {
+      (window as any).releaseFocus(generateModal);
+    }
   }
 
   generateBtn?.addEventListener('click', openGenerateModal);
@@ -277,6 +283,7 @@ const audioItems: any[] = [];
   generateModal?.addEventListener('click', (e) => {
     if (e.target === generateModal) closeGenerateModal();
   });
+  generateModal?.addEventListener('focus-trap-escape', () => closeGenerateModal());
 
   generateForm?.addEventListener('submit', async (e) => {
     e.preventDefault();

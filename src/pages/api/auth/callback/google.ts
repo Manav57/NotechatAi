@@ -88,7 +88,7 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
       // D1 unavailable — fall back to in-memory dev-auth
       let user = devGetUserByEmail(googleUser.email);
       if (!user) {
-        user = devCreateUser(
+        user = await devCreateUser(
           googleUser.name || googleUser.email.split('@')[0],
           googleUser.email,
           'oauth-no-password-' + Math.random().toString(36).slice(2),

@@ -42,7 +42,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     // Fallback: in-memory dev-auth
     const user = devGetUserByEmail(email);
-    if (!user || !devVerifyPassword(user, password)) {
+    if (!user || !(await devVerifyPassword(user, password))) {
       return new Response(
         JSON.stringify({ error: 'Invalid email or password' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }

@@ -56,6 +56,7 @@ const isActive = (href: string) => {
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
+    <script is:inline src="/focus-trap.js"></script>
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -230,17 +231,24 @@ const isActive = (href: string) => {
     menu?.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     menuBtn?.setAttribute('aria-expanded', 'true');
+    if (menu && typeof (window as any).trapFocus === 'function') {
+      (window as any).trapFocus(menu);
+    }
   }
 
   function closeMenu() {
     menu?.classList.add('hidden');
     document.body.style.overflow = '';
     menuBtn?.setAttribute('aria-expanded', 'false');
+    if (menu && typeof (window as any).releaseFocus === 'function') {
+      (window as any).releaseFocus(menu);
+    }
   }
 
   menuBtn?.addEventListener('click', openMenu);
   menuBackdrop?.addEventListener('click', closeMenu);
   menuClose?.addEventListener('click', closeMenu);
+  menu?.addEventListener('focus-trap-escape', closeMenu);
 
   // Mobile signout
   document.getElementById('mobile-signout-btn')?.addEventListener('click', async () => {

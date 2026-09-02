@@ -299,17 +299,24 @@ try {
     generateModal?.classList.remove('hidden');
     generateModal?.classList.add('flex');
     document.body.style.overflow = 'hidden';
+    if (generateModal && typeof (window as any).trapFocus === 'function') {
+      (window as any).trapFocus(generateModal);
+    }
   });
 
   function closeModal() {
     generateModal?.classList.add('hidden');
     generateModal?.classList.remove('flex');
     document.body.style.overflow = '';
+    if (generateModal && typeof (window as any).releaseFocus === 'function') {
+      (window as any).releaseFocus(generateModal);
+    }
   }
 
   closeGenerate?.addEventListener('click', closeModal);
   cancelGenerate?.addEventListener('click', closeModal);
   generateModal?.addEventListener('click', (e) => { if (e.target === generateModal) closeModal(); });
+  generateModal?.addEventListener('focus-trap-escape', () => closeModal());
   generateForm?.addEventListener('submit', (e) => { e.preventDefault(); closeModal(); });
 
   // Flashcard flip

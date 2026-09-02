@@ -256,16 +256,24 @@ import Badge from '../../../components/ui/Badge.astro';
     const submitUpload = document.getElementById('submit-upload') as HTMLButtonElement;
     const filePreview = document.getElementById('file-preview');
 
+    let uploadTrapCleanup: (() => void) | null = null;
+
     function openModal() {
       modal?.classList.remove('hidden');
       modal?.classList.add('flex');
       document.body.style.overflow = 'hidden';
+      if (modal && typeof (window as any).trapFocus === 'function') {
+        (window as any).trapFocus(modal);
+      }
     }
 
     function closeModalFn() {
       modal?.classList.add('hidden');
       modal?.classList.remove('flex');
       document.body.style.overflow = '';
+      if (modal && typeof (window as any).releaseFocus === 'function') {
+        (window as any).releaseFocus(modal);
+      }
       uploadForm?.reset();
       if (filePreview) { filePreview.innerHTML = ''; filePreview.classList.add('hidden'); }
       imagePreview?.classList.add('hidden');
@@ -275,6 +283,7 @@ import Badge from '../../../components/ui/Badge.astro';
     closeModalBtn?.addEventListener('click', closeModalFn);
     cancelUpload?.addEventListener('click', closeModalFn);
     modal?.addEventListener('click', (e) => { if (e.target === modal) closeModalFn(); });
+    modal?.addEventListener('focus-trap-escape', () => closeModalFn());
 
     dropZone?.addEventListener('click', () => fileInput?.click());
     dropZone?.addEventListener('keydown', (e) => {
@@ -640,6 +649,9 @@ import Badge from '../../../components/ui/Badge.astro';
       if (cameraTags) cameraTags.value = '';
       showCameraView();
       startCamera();
+      if (cameraModal && typeof (window as any).trapFocus === 'function') {
+        (window as any).trapFocus(cameraModal);
+      }
     }
 
     function closeCameraModal() {
@@ -647,7 +659,11 @@ import Badge from '../../../components/ui/Badge.astro';
       cameraModal?.classList.add('hidden');
       document.body.style.overflow = '';
       capturedDataUrl = null;
+      if (cameraModal && typeof (window as any).releaseFocus === 'function') {
+        (window as any).releaseFocus(cameraModal);
+      }
     }
+    cameraModal?.addEventListener('focus-trap-escape', () => closeCameraModal());
 
     // Open camera modal
     scanBtn?.addEventListener('click', openCameraModal);

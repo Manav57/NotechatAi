@@ -4,13 +4,40 @@
  * Falls back to dev-auth if D1 is unavailable (e.g., local dev without workerd).
  */
 
-import { randomUUID } from 'node:crypto';
-import { createHash } from 'node:crypto';
+import { randomUUID, scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
+import { promisify } from 'node:util';
 
-// ─── Password hashing (same as dev-auth for backward compatibility) ───
+const scryptAsync = promisify(scrypt);
 
-function hashPassword(password: string): string {
-  return createHash('sha256').update(password + 'noteschatai-salt').digest('hex');
+// ─── Password hashing — scrypt with per-user random salt ───
+// Format: scrypt:<N>:<r>:<p>:<salt_hex>:<hash_hex>
+// N=16384, r=8, p=1 are OWASP recommended defaults for scrypt.
+
+const SCRYPT_N = 16384;
+const SCRYPT_R = 8;
+const SCRYPT_P = 1;
+const SCRYPT_KEYLEN = 64;
+
+export async function hashPassword(password: string): Promise<string> {
+  const salt = randomBytes(16);
+  const key = (await scryptAsync(password, salt, SCRYPT_KEYLEN, { N: SCRYPT_N, r: SCRYPT_R, p: SCRYPT_P })) as Buffer;
+  return `scrypt:${SCRYPT_N}:${SCRYPT_R}:${SCRYPT_P}:${salt.toString('hex')}:${key.toString('hex')}`;
+}
+
+export async function verifyPassword(storedHash: string, password: string): Promise<boolean> {
+  // Legacy: detect old SHA-256 hashes and reject (force re-hash on next login)
+  if (!storedHash.startsWith('scrypt:')) {
+    // For backward compat during migration, we can't verify — return false
+    // User must reset password. Alternatively, we could keep a legacy check,
+    // but that weakens security. Return false to force re-hash.
+    return false;
+  }
+  const [, nStr, rStr, pStr, saltHex, hashHex] = storedHash.split(':');
+  const salt = Buffer.from(saltHex, 'hex');
+  const expectedHash = Buffer.from(hashHex, 'hex');
+  const key = (await scryptAsync(password, salt, SCRYPT_KEYLEN, { N: parseInt(nStr), r: parseInt(rStr), p: parseInt(pStr) })) as Buffer;
+  if (key.length !== expectedHash.length) return false;
+  return timingSafeEqual(key, expectedHash);
 }
 
 // ─── Types ───
@@ -77,7 +104,7 @@ export async function dbCreateUser(
   if (!db) throw new Error('D1 database not available');
 
   const id = randomUUID();
-  const passwordHash = hashPassword(password);
+  const passwordHash = await hashPassword(password);
 
   await db.prepare(
     `INSERT INTO users (id, email, name, password_hash, plan)
@@ -88,7 +115,7 @@ export async function dbCreateUser(
 }
 
 export async function dbVerifyPassword(user: DbUser, password: string): Promise<boolean> {
-  return user.passwordHash === hashPassword(password);
+  return verifyPassword(user.passwordHash, password);
 }
 
 // ─── Session operations ───

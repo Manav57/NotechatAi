@@ -57,6 +57,7 @@ import { formatMonthly } from '../../lib/pricing';
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
+    if (typeof window.trapFocus === 'function') window.trapFocus(modal);
   };
 
   function closeQuotaModal() {
@@ -65,6 +66,7 @@ import { formatMonthly } from '../../lib/pricing';
     modal.classList.add('hidden');
     modal.classList.remove('flex');
     document.body.style.overflow = '';
+    if (typeof window.releaseFocus === 'function') window.releaseFocus(modal);
   }
 
   window.handleQuotaUpgrade = async function (plan) {
@@ -96,5 +98,6 @@ import { formatMonthly } from '../../lib/pricing';
     modal?.addEventListener('click', function (e) {
       if (e.target === modal) closeQuotaModal();
     });
+    modal?.addEventListener('focus-trap-escape', closeQuotaModal);
   });
 </script>

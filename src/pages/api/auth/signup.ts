@@ -55,7 +55,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         { status: 409, headers: { 'Content-Type': 'application/json' } }
       );
     }
-    const user = devCreateUser(name || email.split('@')[0], email, password);
+    const user = await devCreateUser(name || email.split('@')[0], email, password);
     const session = devCreateSession(user.id);
     cookies.set('session', session.token, {
       path: '/',

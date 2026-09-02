@@ -21,7 +21,7 @@ const { user = null } = Astro.props;
     <nav class="hidden md:flex items-center gap-1" aria-label="Main navigation">
       <a href="/features" class="nav-link">Features</a>
       <a href="/pricing" class="nav-link">Pricing</a>
-      <a href="/free-beta" class="nav-link">Docs</a>
+      <a href="/free-beta" class="nav-link">Free Beta</a>
       <a href="/blog" class="nav-link">Blog</a>
     </nav>
 
@@ -78,7 +78,7 @@ const { user = null } = Astro.props;
     <nav class="flex-1 p-4 space-y-1" aria-label="Mobile navigation">
       <a href="/features" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-body-md text-body hover:bg-canvas-soft hover:text-ink transition-colors">Features</a>
       <a href="/pricing" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-body-md text-body hover:bg-canvas-soft hover:text-ink transition-colors">Pricing</a>
-      <a href="/free-beta" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-body-md text-body hover:bg-canvas-soft hover:text-ink transition-colors">Docs</a>
+      <a href="/free-beta" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-body-md text-body hover:bg-canvas-soft hover:text-ink transition-colors">Free Beta</a>
       <a href="/blog" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-body-md text-body hover:bg-canvas-soft hover:text-ink transition-colors">Blog</a>
     </nav>
     <div class="p-4 border-t border-hairline">
@@ -119,14 +119,17 @@ const { user = null } = Astro.props;
     pubMenu?.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     pubMenuBtn.setAttribute('aria-expanded', 'true');
+    if (typeof window.trapFocus === 'function' && pubMenu) window.trapFocus(pubMenu);
   });
 
   function closePubMenu() {
     pubMenu?.classList.add('hidden');
     document.body.style.overflow = '';
     pubMenuBtn?.setAttribute('aria-expanded', 'false');
+    if (typeof window.releaseFocus === 'function' && pubMenu) window.releaseFocus(pubMenu);
   }
 
   pubMenuBackdrop?.addEventListener('click', closePubMenu);
   pubMenuClose?.addEventListener('click', closePubMenu);
+  pubMenu?.addEventListener('focus-trap-escape', closePubMenu);
 </script>

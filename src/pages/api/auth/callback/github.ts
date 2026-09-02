@@ -123,7 +123,7 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
       // D1 unavailable — fall back to in-memory dev-auth
       let user = devGetUserByEmail(primaryEmail);
       if (!user) {
-        user = devCreateUser(
+        user = await devCreateUser(
           githubUser.name || githubUser.login,
           primaryEmail,
           'oauth-no-password-' + Math.random().toString(36).slice(2),
