@@ -4,7 +4,7 @@ import NavBar from '../../components/ui/NavBar.astro';
 import Footer from '../../components/ui/Footer.astro';
 import Badge from '../../components/ui/Badge.astro';
 import UpgradeModal from '../../components/ui/UpgradeModal.astro';
-import { PLAN_PRICES, formatMonthly, annualPerMonth, annualSavingsPct } from '../../lib/pricing';
+import { PLAN_PRICES, annualPerMonth, annualSavingsPct } from '../../lib/pricing';
 
 // Comparison table rows (NotesChatAI side sourced from src/lib/pricing.ts)
 const comparisonRows = [
@@ -99,7 +99,7 @@ const comparisonRows = [
               <span class="font-display-xl text-on-primary pricing-price" data-monthly="${PLAN_PRICES.pro.monthly}" data-annual="${PLAN_PRICES.pro.annual}" data-suffix="/mo">${PLAN_PRICES.pro.monthly}</span>
               <span class="font-body-md text-on-primary/50 ml-1 pricing-suffix">/mo</span>
             </div>
-            <p class="font-body-sm text-on-primary/50 mb-6 pricing-annual-note">Cancel anytime · {annualSavingsPct('pro')}% off yearly ({formatMonthly('pro')} → ${annualPerMonth('pro')}/mo billed annually)</p>
+            <p class="font-body-sm text-on-primary/50 mb-6 pricing-annual-note">Cancel anytime · ${PLAN_PRICES.pro.annual}/year (${annualPerMonth('pro') === PLAN_PRICES.pro.monthly ? `$${PLAN_PRICES.pro.monthly}/mo` : `${annualSavingsPct('pro')}% off yearly ($${annualPerMonth('pro')}/mo billed annually)`})</p>
             <ul class="space-y-3 mb-8" role="list">
               {[
                 '500 documents',
@@ -135,7 +135,7 @@ const comparisonRows = [
               <span class="font-display-xl text-ink pricing-price" data-monthly="${PLAN_PRICES.plus.monthly}" data-annual="${PLAN_PRICES.plus.annual}" data-suffix="/mo">${PLAN_PRICES.plus.monthly}</span>
               <span class="font-body-md text-mute ml-1 pricing-suffix">/mo</span>
             </div>
-            <p class="font-body-sm text-mute mb-6 pricing-annual-note">Cancel anytime · Billed ${annualPerMonth('plus')}/mo annually</p>
+            <p class="font-body-sm text-mute mb-6 pricing-annual-note">Cancel anytime · ${PLAN_PRICES.plus.annual}/year (${annualPerMonth('plus') === PLAN_PRICES.plus.monthly ? `$${PLAN_PRICES.plus.monthly}/mo` : `${annualSavingsPct('plus')}% off yearly ($${annualPerMonth('plus')}/mo billed annually)`})</p>
             <ul class="space-y-3 mb-8" role="list">
               {[
                 'Unlimited documents',
