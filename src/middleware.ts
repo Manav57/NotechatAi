@@ -111,7 +111,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
       "https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.adtrafficquality.google " +
       "https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; " +
     "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com " +
-      "https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; " +
+      "https://pagead2.googlesyndication.com https://ep1.adtrafficquality.google https://ep2.adtrafficquality.google https://*.adtrafficquality.google " +
+      "https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; " +
     "frame-ancestors 'none'; " +
     "base-uri 'self'; " +
     "form-action 'self'"
