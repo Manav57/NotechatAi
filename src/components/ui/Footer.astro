@@ -74,7 +74,7 @@ const socialLinks = [
         <div class="flex items-center gap-6">
           {socialLinks.map((social) => (
             <a href={social.href} class="font-body-sm text-body hover:text-ink transition-colors duration-150 flex items-center gap-1.5" aria-label={social.label} target="_blank" rel="noopener noreferrer">
-              <span aria-hidden="true">{social.icon}</span>
+              <span aria-hidden="true" set:html={social.icon} />
               <span class="hidden sm:inline">{social.label}</span>
             </a>
           ))}
