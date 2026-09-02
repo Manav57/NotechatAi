@@ -5,9 +5,9 @@
  * dashboard, billing settings, upgrade modals, blog posts) MUST be imported
  * from this module. Do NOT hardcode "$" figures elsewhere in the codebase.
  *
- * ─── CEO DECISION (2026-09-02) ───────────────────────────────
+ * ─── CEO DECISION (2026-09-02, updated 2026-09-03) ───────────
  *   Free   $0        — 50 docs, 30 chats/day, 1 GB
- *   Pro    $2/mo     — 500 docs, 300 chats/day, 25 GB  ($12/yr ≈ $1/mo)
+ *   Pro    $2/mo     — 500 docs, 300 chats/day, 25 GB  ($24/yr ≈ $2/mo)
  *   Plus   $5/mo     — unlimited docs & chats, 100 GB  ($60/yr ≈ $5/mo)
  */
 
@@ -40,7 +40,7 @@ export const PLANS: PlanInfo[] = [
     name: 'Pro',
     tagline: 'For power users who need more',
     monthlyPrice: 2,
-    annualPrice: 12,
+    annualPrice: 24,
     isPopular: true,
   },
   {
@@ -62,7 +62,7 @@ export const PLAN_LOOKUP: Record<PlanTier, PlanInfo> = {
 /** Backward-compatible shape used by lib/billing.ts. */
 export const PLAN_PRICES: Record<PlanTier, { monthly: number; annual: number }> = {
   free: { monthly: 0, annual: 0 },
-  pro: { monthly: 2, annual: 12 },
+  pro: { monthly: 2, annual: 24 },
   plus: { monthly: 5, annual: 60 },
 };
 

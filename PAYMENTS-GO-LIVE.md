@@ -17,7 +17,7 @@ are what matter.
 | Env var (set in Cloudflare)        | Product     | Billing        | Amount |
 |------------------------------------|-------------|----------------|--------|
 | `STRIPE_PRO_MONTHLY_PRICE_ID`      | Pro         | Monthly        | $2.00  |
-| `STRIPE_PRO_ANNUAL_PRICE_ID`       | Pro         | Yearly         | $12.00 |
+| `STRIPE_PRO_ANNUAL_PRICE_ID`       | Pro         | Yearly         | $24.00 |
 | `STRIPE_PLUS_MONTHLY_PRICE_ID`     | Plus        | Monthly        | $5.00  |
 | `STRIPE_PLUS_ANNUAL_PRICE_ID`      | Plus        | Yearly         | $60.00 |
 
