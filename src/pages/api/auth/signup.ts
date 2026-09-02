@@ -55,8 +55,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         JSON.stringify({ success: true, user: { id: user.id, email: user.email, name: user.name, plan: user.plan } }),
         { status: 200, headers: { 'Content-Type': 'application/json' } }
       );
-    } catch {
-      // D1 unavailable — fall back to in-memory dev-auth
+    } catch (e) {
+      console.error('D1 signup error (falling back):', e && (e as Error).message, (e as Error)?.stack);
     }
 
     // Fallback: in-memory dev-auth
