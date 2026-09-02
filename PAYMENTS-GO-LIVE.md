@@ -80,9 +80,9 @@ Optional fallback (still supported by code):
 
 ## 7. D1 database migration
 
-- [ ] Ensure `billing_period` column exists on `users`:
+- [x] `billing_period` column added to production `users` table (DONE — applied directly to prod D1 on 2026-09-02, committed as `a34446e`)
       `ALTER TABLE users ADD COLUMN billing_period TEXT DEFAULT 'monthly';`
-      (or run the drizzle migration). Store whether a subscription is monthly/annual.
+      ✅ Verified present: `id, email, ..., stripe_customer_id, stripe_subscription_id, subscription_status, chats_used_today, audio_used_today, documents_count, last_usage_reset, billing_period`
 
 ## 8. CSP — must be deployed to main domain (pending)
 
