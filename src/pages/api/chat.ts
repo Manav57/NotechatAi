@@ -16,6 +16,11 @@ async function getEnv() {
   }
 }
 
+// ISO timestamp aliases — D1 stores unixepoch() INTEGERs (seconds). SQLite's
+// strftime treats bare integers as Julian day numbers, so the 'unixepoch'
+// modifier is required or the result is NULL / out-of-range.
+const CONV_COLS = `id, user_id, title, model, strftime('%Y-%m-%dT%H:%M:%SZ', created_at, 'unixepoch') AS createdAt, strftime('%Y-%m-%dT%H:%M:%SZ', updated_at, 'unixepoch') AS updatedAt`;
+
 // ─── AI Model ───
 
 const DEFAULT_MODEL = 'openai/gpt-4o-mini';
@@ -294,10 +299,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     if (!OPENROUTER_API_KEY) return new Response(JSON.stringify({ error: 'OpenRouter API key not configured' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
 
-    // ISO timestamp aliases — D1 stores unixepoch() INTEGERs, convert to ISO so
-    // the frontend can `new Date(...)` them directly.
-    const CONV_COLS = `id, user_id, title, model, strftime('%Y-%m-%dT%H:%M:%SZ', created_at) AS createdAt, strftime('%Y-%m-%dT%H:%M:%SZ', updated_at) AS updatedAt`;
-
     // Get or create conversation
     let conv: any;
     if (conversationId) {
@@ -408,53 +409,26 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 };
 
-// ─── GET /api/chat — List conversations or get single conversation ───
+// ─── GET /api/chat — List conversations (single-conversation GET is handled
+// by /api/chat/[id].ts, which is a separate Astro route) ───
 
 export const GET: APIRoute = async ({ request, cookies }) => {
-  const user = await getUser(cookies);
-  if (!user) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+  try {
+    const user = await getUser(cookies);
+    if (!user) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
 
-  const bindings = await getEnv();
-  if (!bindings) return new Response(JSON.stringify({ error: 'Environment not available' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    const bindings = await getEnv();
+    if (!bindings) return new Response(JSON.stringify({ error: 'Environment not available' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
 
-  const db = bindings.DB;
-  const url = new URL(request.url);
-  const pathParts = url.pathname.split('/').filter(Boolean);
-  const conversationId = pathParts.length > 2 ? pathParts[2] : null;
+    const db = bindings.DB;
+    const url = new URL(request.url);
+    const limit = parseInt(url.searchParams.get('limit') || '20');
+    const offset = parseInt(url.searchParams.get('offset') || '0');
+    const convs = await db.prepare(`SELECT ${CONV_COLS} FROM conversations WHERE user_id = ?1 ORDER BY updated_at DESC LIMIT ?2 OFFSET ?3`).bind(user.id, limit, offset).all();
 
-  if (conversationId) {
-    const conv = await db.prepare(`SELECT ${CONV_COLS} FROM conversations WHERE id = ?1 AND user_id = ?2`).bind(conversationId, user.id).first();
-    if (!conv) return new Response(JSON.stringify({ error: 'Conversation not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
-    const msgs = await db.prepare(`SELECT id, conversation_id AS conversationId, role, content, model, citations, strftime('%Y-%m-%dT%H:%M:%SZ', created_at) AS createdAt FROM messages WHERE conversation_id = ?1 ORDER BY created_at ASC`).bind(conversationId).all();
-    return new Response(JSON.stringify({ conversation: conv, messages: msgs }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ conversations: convs.results || convs }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  } catch (e) {
+    console.error('Chat GET error:', e);
+    return new Response(JSON.stringify({ error: 'Internal server error: ' + (e instanceof Error ? e.message : String(e)) }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
-
-  const limit = parseInt(url.searchParams.get('limit') || '20');
-  const offset = parseInt(url.searchParams.get('offset') || '0');
-  const convs = await db.prepare(`SELECT ${CONV_COLS} FROM conversations WHERE user_id = ?1 ORDER BY updated_at DESC LIMIT ?2 OFFSET ?3`).bind(user.id, limit, offset).all();
-  return new Response(JSON.stringify({ conversations: convs }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-};
-
-// ─── DELETE /api/chat/:id — Delete a conversation ───
-
-export const DELETE: APIRoute = async ({ request, cookies }) => {
-  const user = await getUser(cookies);
-  if (!user) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
-
-  const bindings = await getEnv();
-  if (!bindings) return new Response(JSON.stringify({ error: 'Environment not available' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
-
-  const db = bindings.DB;
-  const url = new URL(request.url);
-  const pathParts = url.pathname.split('/').filter(Boolean);
-  const conversationId = pathParts.length > 2 ? pathParts[2] : null;
-
-  if (!conversationId) return new Response(JSON.stringify({ error: 'conversationId required' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
-
-  const conv = await db.prepare(`SELECT * FROM conversations WHERE id = ?1 AND user_id = ?2`).bind(conversationId, user.id).first();
-  if (!conv) return new Response(JSON.stringify({ error: 'Conversation not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
-
-  await db.prepare(`DELETE FROM messages WHERE conversation_id = ?1`).bind(conversationId).run();
-  await db.prepare(`DELETE FROM conversations WHERE id = ?1`).bind(conversationId).run();
-  return new Response(JSON.stringify({ success: true }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 };
