@@ -3,15 +3,49 @@
  * Only used when WORKER_URL is not set (no Cloudflare Worker running).
  */
 
-import { randomUUID, scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
-import { promisify } from 'node:util';
+import { randomUUID } from 'node:crypto';
 
-const scryptAsync = promisify(scrypt);
+// ─── Password hashing — WebCrypto PBKDF2-SHA256 (works in Cloudflare Workers) ───
+// Format: pbkdf2:<iterations>:<salt_hex>:<hash_hex>
+const PBKDF2_ITERATIONS = 210000;
+const PBKDF2_KEY_BITS = 256;
 
-const SCRYPT_N = 16384;
-const SCRYPT_R = 8;
-const SCRYPT_P = 1;
-const SCRYPT_KEYLEN = 64;
+const encoder = new TextEncoder();
+
+function bytesToHex(bytes: Uint8Array): string {
+  return Array.from(bytes).map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+function hexToBytes(hex: string): Uint8Array {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < bytes.length; i++) {
+    bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+  }
+  return bytes;
+}
+
+function timingSafeEqualStr(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+async function pbkdf2Derive(password: string, salt: Uint8Array, iterations: number): Promise<Uint8Array> {
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(password),
+    { name: 'PBKDF2' },
+    false,
+    ['deriveBits']
+  );
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', salt: salt as BufferSource, iterations, hash: 'SHA-256' },
+    keyMaterial,
+    PBKDF2_KEY_BITS
+  );
+  return new Uint8Array(bits);
+}
 
 export interface DevUser {
   id: string;
@@ -34,20 +68,20 @@ const users = new Map<string, DevUser>();
 const sessions = new Map<string, DevSession>();
 const emailIndex = new Map<string, string>(); // email → userId
 
-async function hashPassword(password: string): Promise<string> {
-  const salt = randomBytes(16);
-  const key = (await scryptAsync(password, salt, SCRYPT_KEYLEN, { N: SCRYPT_N, r: SCRYPT_R, p: SCRYPT_P })) as Buffer;
-  return `scrypt:${SCRYPT_N}:${SCRYPT_R}:${SCRYPT_P}:${salt.toString('hex')}:${key.toString('hex')}`;
+export async function devHashPassword(password: string): Promise<string> {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const key = await pbkdf2Derive(password, salt, PBKDF2_ITERATIONS);
+  return `pbkdf2:${PBKDF2_ITERATIONS}:${bytesToHex(salt)}:${bytesToHex(key)}`;
 }
 
 export async function devVerifyPassword(user: DevUser, password: string): Promise<boolean> {
-  if (!user.passwordHash.startsWith('scrypt:')) return false;
-  const [, nStr, rStr, pStr, saltHex, hashHex] = user.passwordHash.split(':');
-  const salt = Buffer.from(saltHex, 'hex');
-  const expectedHash = Buffer.from(hashHex, 'hex');
-  const key = (await scryptAsync(password, salt, SCRYPT_KEYLEN, { N: parseInt(nStr), r: parseInt(rStr), p: parseInt(pStr) })) as Buffer;
-  if (key.length !== expectedHash.length) return false;
-  return timingSafeEqual(key, expectedHash);
+  if (user.passwordHash.startsWith('pbkdf2:')) {
+    const [, iterStr, saltHex, expectedHex] = user.passwordHash.split(':');
+    const salt = hexToBytes(saltHex);
+    const computed = await pbkdf2Derive(password, salt, parseInt(iterStr, 10) || PBKDF2_ITERATIONS);
+    return timingSafeEqualStr(bytesToHex(computed), expectedHex);
+  }
+  return false; // legacy scrypt/other — force password reset
 }
 
 export function devGetUserByEmail(email: string): DevUser | undefined {
@@ -62,7 +96,7 @@ export async function devCreateUser(name: string, email: string, password: strin
     id,
     email: email.toLowerCase(),
     name,
-    passwordHash: await hashPassword(password),
+    passwordHash: await devHashPassword(password),
     plan: 'free',
     createdAt: Date.now(),
   };
