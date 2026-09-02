@@ -76,18 +76,16 @@ import { formatMonthly } from '../../lib/pricing';
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ plan: plan }),
+        body: JSON.stringify({ plan: plan, period: 'monthly' }),
       });
       var data = await res.json();
       if (res.ok && data.url) {
         window.location.href = data.url;
-      } else if (res.status === 503 || (data.error && data.error.indexOf('not configured') !== -1)) {
-        window.location.href = '/pricing';
       } else {
         alert(data.error || 'Failed to start checkout.');
       }
     } catch (e) {
-      window.location.href = '/pricing';
+      alert('Network error. Please try again.');
     }
   };
 

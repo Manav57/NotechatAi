@@ -377,6 +377,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       let messagesForApi = [...fullMessages];
       let result = await callOpenRouter(OPENROUTER_API_KEY, messagesForApi, model, CHAT_TOOLS);
 
+      // Per-request file spec (not shared via globalThis)
+      let pendingFileSpec: any = null;
+
       // Tool call loop (max 5 rounds)
       for (let round = 0; round < 5 && result.toolCalls.length > 0; round++) {
         messagesForApi.push({ role: 'assistant', content: result.content || null, tool_calls: result.toolCalls.map(tc => ({ id: tc.id, type: 'function', function: { name: tc.name, arguments: tc.arguments } })) });
@@ -387,8 +390,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
             const args = JSON.parse(tc.arguments);
             if (tc.name === 'generate_document' && args.content && (args.type === 'pdf' || args.type === 'docx' || args.type === 'xlsx')) {
               toolResult = JSON.stringify({ success: true, message: `Document "${args.title}" will be generated as ${args.type.toUpperCase()}.` });
-              // Store for generation after loop
-              (globalThis as any).__pendingFileSpec = args;
+              // Store for generation after loop — per-request, not globalThis
+              pendingFileSpec = args;
             } else if (tc.name === 'search_knowledge_base' && args.query && bindings.VECTORIZE && bindings.AI) {
               const qe = await generateEmbedding(bindings, args.query);
               const sr = await searchVectorize(bindings, qe, user.id, 5);
@@ -403,10 +406,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       }
       assistantContent = result.content || '';
 
-      // Generate pending file
-      const spec = (globalThis as any).__pendingFileSpec;
+      // Generate pending file from per-request spec
+      const spec = pendingFileSpec;
       if (spec && !generatedFile) {
-        delete (globalThis as any).__pendingFileSpec;
         const r2 = bindings.R2;
         if (r2 && spec.content) {
           const fn = spec.filename || spec.title || 'document';

@@ -3,7 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { devGetSession } from '../../../lib/dev-auth';
 import { dbGetSession } from '../../../lib/db-auth';
-import { getStripePriceId, type PlanTier } from '../../../lib/billing';
+import { getStripePriceId, type PlanTier, type BillingPeriod } from '../../../lib/billing';
 
 // ─── Auth helper (D1 sessions first, then in-memory dev-auth) ───
 
@@ -37,11 +37,19 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   try {
     const body = await request.json();
-    const { plan } = body as { plan?: string };
+    const { plan, period = 'monthly' } = body as { plan?: string; period?: string };
 
     // Validate plan
     if (!plan || !['pro', 'plus'].includes(plan)) {
       return new Response(JSON.stringify({ error: 'Invalid plan. Must be "pro" or "plus".' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Validate period
+    if (!['monthly', 'annual'].includes(period)) {
+      return new Response(JSON.stringify({ error: 'Invalid period. Must be "monthly" or "annual".' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -73,7 +81,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       });
     }
 
-    const priceId = getStripePriceId(plan as PlanTier, env);
+    const priceId = getStripePriceId(plan as PlanTier, period as BillingPeriod, env);
     if (!priceId) {
       return new Response(JSON.stringify({ error: 'Invalid plan configuration.' }), {
         status: 500,
@@ -132,9 +140,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       success_url: `${origin}/app/settings/billing?success=true`,
       cancel_url: `${origin}/app/settings/billing?canceled=true`,
       subscription_data: {
-        metadata: { userId: user.id, plan },
+        metadata: { userId: user.id, plan, period },
       },
-      metadata: { userId: user.id, plan },
+      metadata: { userId: user.id, plan, period },
+      payment_method_collection: 'always',
+      automatic_tax: { enabled: true },
     });
 
     return new Response(JSON.stringify({ url: session.url }), {

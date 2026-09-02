@@ -2,9 +2,20 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { dbGetUserByEmail, dbCreateUser, dbCreateSession } from '../../../lib/db-auth';
 import { devCreateUser, devCreateSession, devGetUserByEmail } from '../../../lib/dev-auth';
+import { checkRateLimit, getClientIp } from '../../../lib/rate-limit';
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
+    // Rate limit: 5 signups per hour per IP
+    const ip = getClientIp(request);
+    const rl = checkRateLimit(`signup:${ip}`, 5, 3600_000);
+    if (!rl.allowed) {
+      return new Response(
+        JSON.stringify({ error: 'Too many signup attempts. Please try again later.' }),
+        { status: 429, headers: { 'Content-Type': 'application/json', 'Retry-After': String(Math.ceil(rl.retryAfterMs / 1000)) } }
+      );
+    }
+
     const body = await request.json();
     const { name, email, password } = body;
 

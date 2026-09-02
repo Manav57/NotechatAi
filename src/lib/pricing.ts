@@ -7,8 +7,8 @@
  *
  * ─── CEO DECISION (2026-09-02) ───────────────────────────────
  *   Free   $0        — 50 docs, 30 chats/day, 1 GB
- *   Pro    $15/mo    — 500 docs, 300 chats/day, 25 GB  ($150/yr ≈ $12.50/mo)
- *   Plus   $25/mo    — unlimited docs & chats, 100 GB  ($250/yr ≈ $20.83/mo)
+ *   Pro    $2/mo     — 500 docs, 300 chats/day, 25 GB  ($12/yr ≈ $1/mo)
+ *   Plus   $5/mo     — unlimited docs & chats, 100 GB  ($60/yr ≈ $5/mo)
  */
 
 export type PlanTier = 'free' | 'pro' | 'plus';
@@ -39,16 +39,16 @@ export const PLANS: PlanInfo[] = [
     id: 'pro',
     name: 'Pro',
     tagline: 'For power users who need more',
-    monthlyPrice: 15,
-    annualPrice: 150,
+    monthlyPrice: 2,
+    annualPrice: 12,
     isPopular: true,
   },
   {
     id: 'plus',
     name: 'Plus',
     tagline: 'For teams and institutions',
-    monthlyPrice: 25,
-    annualPrice: 250,
+    monthlyPrice: 5,
+    annualPrice: 60,
   },
 ];
 
@@ -62,8 +62,8 @@ export const PLAN_LOOKUP: Record<PlanTier, PlanInfo> = {
 /** Backward-compatible shape used by lib/billing.ts. */
 export const PLAN_PRICES: Record<PlanTier, { monthly: number; annual: number }> = {
   free: { monthly: 0, annual: 0 },
-  pro: { monthly: 15, annual: 150 },
-  plus: { monthly: 25, annual: 250 },
+  pro: { monthly: 2, annual: 12 },
+  plus: { monthly: 5, annual: 60 },
 };
 
 /** Resolve a plan by id (lenient about unknown/custom ids). */

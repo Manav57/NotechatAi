@@ -79,6 +79,11 @@ export const POST: APIRoute = async ({ request }) => {
         break;
       }
 
+      case 'invoice.payment_failed': {
+        await handleInvoicePaymentFailed(db, event.data.object, env);
+        break;
+      }
+
       default:
         // Unhandled event type — acknowledge receipt
         break;
@@ -114,8 +119,9 @@ async function handleCheckoutCompleted(db: any, session: any, env: any) {
   const subscriptionId = session.subscription;
   const customerId = session.customer;
 
-  // Determine plan from the subscription's price ID
+  // Determine plan from the subscription's price ID (authoritative)
   let resolvedPlan = plan;
+  let resolvedPeriod = session.metadata?.period || 'monthly';
   if (subscriptionId) {
     const stripe = new (await import('stripe')).default(env.STRIPE_SECRET_KEY, {
       apiVersion: '2025-08-27.basil' as any,
@@ -123,8 +129,11 @@ async function handleCheckoutCompleted(db: any, session: any, env: any) {
     const subscription = await stripe.subscriptions.retrieve(subscriptionId);
     const priceId = subscription.items.data[0]?.price?.id;
     if (priceId) {
-      const mappedPlan = planFromPriceId(priceId, env);
-      if (mappedPlan) resolvedPlan = mappedPlan;
+      const mapped = planFromPriceId(priceId, env);
+      if (mapped) {
+        resolvedPlan = mapped.plan;
+        resolvedPeriod = mapped.period;
+      }
     }
   }
 
@@ -132,13 +141,14 @@ async function handleCheckoutCompleted(db: any, session: any, env: any) {
   await db.prepare(
     `UPDATE users SET
       plan = ?1,
-      stripe_subscription_id = ?2,
-      stripe_customer_id = COALESCE(?3, stripe_customer_id),
+      billing_period = ?2,
+      stripe_subscription_id = ?3,
+      stripe_customer_id = COALESCE(?4, stripe_customer_id),
       subscription_status = 'active'
-    WHERE id = ?4`
-  ).bind(resolvedPlan, subscriptionId || null, customerId || null, userId).run();
+    WHERE id = ?5`
+  ).bind(resolvedPlan, resolvedPeriod, subscriptionId || null, customerId || null, userId).run();
 
-  console.log(`User ${userId} upgraded to ${resolvedPlan} (checkout.session.completed)`);
+  console.log(`User ${userId} upgraded to ${resolvedPlan} (${resolvedPeriod}) (checkout.session.completed)`);
 }
 
 /**
@@ -150,12 +160,16 @@ async function handleSubscriptionUpdated(db: any, subscription: any, env: any) {
   const customerId = subscription.customer;
   const status = subscription.status; // active, past_due, canceled, etc.
 
-  // Determine plan from price ID
+  // Determine plan from price ID (authoritative — never trust metadata alone)
   const priceId = subscription.items.data[0]?.price?.id;
   let plan = 'free';
+  let billingPeriod = 'monthly';
   if (priceId) {
-    const mappedPlan = planFromPriceId(priceId, env);
-    if (mappedPlan) plan = mappedPlan;
+    const mapped = planFromPriceId(priceId, env);
+    if (mapped) {
+      plan = mapped.plan;
+      billingPeriod = mapped.period;
+    }
   }
 
   // Map Stripe status to our status
@@ -183,13 +197,14 @@ async function handleSubscriptionUpdated(db: any, subscription: any, env: any) {
   await db.prepare(
     `UPDATE users SET
       plan = ?1,
-      subscription_status = ?2,
-      stripe_subscription_id = COALESCE(?3, stripe_subscription_id),
-      stripe_customer_id = COALESCE(?4, stripe_customer_id)
-    WHERE id = ?5`
-  ).bind(plan, subscriptionStatus, subscriptionId, customerId, user.id).run();
+      billing_period = ?2,
+      subscription_status = ?3,
+      stripe_subscription_id = COALESCE(?4, stripe_subscription_id),
+      stripe_customer_id = COALESCE(?5, stripe_customer_id)
+    WHERE id = ?6`
+  ).bind(plan, billingPeriod, subscriptionStatus, subscriptionId, customerId, user.id).run();
 
-  console.log(`User ${user.id} subscription updated: plan=${plan}, status=${subscriptionStatus}`);
+  console.log(`User ${user.id} subscription updated: plan=${plan}, period=${billingPeriod}, status=${subscriptionStatus}`);
 }
 
 /**
@@ -219,10 +234,51 @@ async function handleSubscriptionDeleted(db: any, subscription: any) {
   await db.prepare(
     `UPDATE users SET
       plan = 'free',
+      billing_period = 'monthly',
       subscription_status = 'canceled',
       stripe_subscription_id = NULL
     WHERE id = ?1`
   ).bind(user.id).run();
 
   console.log(`User ${user.id} downgraded to free (subscription deleted)`);
+}
+
+/**
+ * invoice.payment_failed
+ * Payment failed — mark subscription as past_due so we can notify/downgrade.
+ */
+async function handleInvoicePaymentFailed(db: any, invoice: any, env: any) {
+  const customerId = invoice.customer;
+  const subscriptionId = invoice.subscription;
+
+  if (!customerId && !subscriptionId) {
+    console.error('invoice.payment_failed: no customer or subscription', invoice.id);
+    return;
+  }
+
+  // Find user
+  let user: any = null;
+  if (subscriptionId) {
+    user = await db.prepare(
+      `SELECT id FROM users WHERE stripe_subscription_id = ?1`
+    ).bind(subscriptionId).first();
+  }
+  if (!user && customerId) {
+    user = await db.prepare(
+      `SELECT id FROM users WHERE stripe_customer_id = ?1`
+    ).bind(customerId).first();
+  }
+
+  if (!user) {
+    console.error('invoice.payment_failed: user not found for customer', customerId);
+    return;
+  }
+
+  // Mark as past_due — the next subscription.updated webhook from Stripe
+  // will handle the actual status transition (active → past_due → canceled)
+  await db.prepare(
+    `UPDATE users SET subscription_status = 'past_due' WHERE id = ?1 AND subscription_status = 'active'`
+  ).bind(user.id).run();
+
+  console.log(`User ${user.id} marked as past_due (invoice.payment_failed)`);
 }

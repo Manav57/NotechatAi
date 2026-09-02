@@ -44,6 +44,11 @@ const comparisonRows = [
       <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
         <div class="text-center mb-12">
           <h2 id="plans-title" class="font-display-lg text-ink mb-4">Choose Your Plan</h2>
+          {/* Monthly / Annual toggle */}
+          <div class="inline-flex items-center gap-3 bg-canvas rounded-full border border-hairline p-1 mt-4">
+            <button id="period-monthly" class="px-4 py-1.5 rounded-full font-body-sm-strong transition-all bg-primary text-on-primary" data-period="monthly">Monthly</button>
+            <button id="period-annual" class="px-4 py-1.5 rounded-full font-body-sm-strong transition-all text-body hover:text-ink" data-period="annual">Annual <span class="text-success font-caption">Save 50%</span></button>
+          </div>
         </div>
 
         <div class="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto items-start">
@@ -54,8 +59,7 @@ const comparisonRows = [
               <p class="font-body-sm text-body">For students and casual learners</p>
             </div>
             <div class="mb-6">
-              <span class="font-display-xl text-ink">${PLAN_PRICES.free.monthly}</span>
-              <span class="font-body-md text-mute ml-1">/month</span>
+              <span class="font-display-xl text-ink">Free</span>
             </div>
             <Badge variant="secondary" class="mb-6">Current Beta</Badge>
             <ul class="space-y-3 mb-8" role="list">
@@ -92,10 +96,10 @@ const comparisonRows = [
               <p class="font-body-sm text-on-primary/70">For power users who need more</p>
             </div>
             <div class="mb-2">
-              <span class="font-display-xl text-on-primary">${PLAN_PRICES.pro.monthly}</span>
-              <span class="font-body-md text-on-primary/50 ml-1">/month</span>
+              <span class="font-display-xl text-on-primary pricing-price" data-monthly="${PLAN_PRICES.pro.monthly}" data-annual="${PLAN_PRICES.pro.annual}" data-suffix="/mo">${PLAN_PRICES.pro.monthly}</span>
+              <span class="font-body-md text-on-primary/50 ml-1 pricing-suffix">/mo</span>
             </div>
-            <p class="font-body-sm text-on-primary/50 mb-6">Cancel anytime · {annualSavingsPct('pro')}% off yearly ({formatMonthly('pro')} → ${annualPerMonth('pro')}/mo billed annually)</p>
+            <p class="font-body-sm text-on-primary/50 mb-6 pricing-annual-note">Cancel anytime · {annualSavingsPct('pro')}% off yearly ({formatMonthly('pro')} → ${annualPerMonth('pro')}/mo billed annually)</p>
             <ul class="space-y-3 mb-8" role="list">
               {[
                 '500 documents',
@@ -118,7 +122,7 @@ const comparisonRows = [
                 </li>
               ))}
             </ul>
-            <button onclick="handleUpgrade('pro')" class="w-full h-11 flex items-center justify-center rounded-pill bg-on-primary text-primary font-button-lg hover:opacity-90 active:opacity-70 transition-all">Upgrade to Pro</button>
+            <button onclick="handleUpgrade('pro')" class="w-full h-11 flex items-center justify-center rounded-pill bg-on-primary text-primary font-button-lg hover:opacity-90 active:opacity-70 transition-all" data-plan="pro">Upgrade to Pro</button>
           </div>
 
           {/* Plus */}
@@ -128,10 +132,10 @@ const comparisonRows = [
               <p class="font-body-sm text-body">For teams and institutions</p>
             </div>
             <div class="mb-2">
-              <span class="font-display-xl text-ink">${PLAN_PRICES.plus.monthly}</span>
-              <span class="font-body-md text-mute ml-1">/month</span>
+              <span class="font-display-xl text-ink pricing-price" data-monthly="${PLAN_PRICES.plus.monthly}" data-annual="${PLAN_PRICES.plus.annual}" data-suffix="/mo">${PLAN_PRICES.plus.monthly}</span>
+              <span class="font-body-md text-mute ml-1 pricing-suffix">/mo</span>
             </div>
-            <p class="font-body-sm text-mute mb-6">Cancel anytime · {annualSavingsPct('plus')}% off yearly ({formatMonthly('plus')} → ${annualPerMonth('plus')}/mo billed annually)</p>
+            <p class="font-body-sm text-mute mb-6 pricing-annual-note">Cancel anytime · Billed ${annualPerMonth('plus')}/mo annually</p>
             <ul class="space-y-3 mb-8" role="list">
               {[
                 'Unlimited documents',
@@ -154,7 +158,7 @@ const comparisonRows = [
                 </li>
               ))}
             </ul>
-            <button onclick="handleUpgrade('plus')" class="btn-secondary w-full text-center h-11 leading-11">Upgrade to Plus</button>
+            <button onclick="handleUpgrade('plus')" class="btn-secondary w-full text-center h-11 leading-11" data-plan="plus">Upgrade to Plus</button>
           </div>
         </div>
 
@@ -350,7 +354,40 @@ const comparisonRows = [
 </Layout>
 
 <script>
-  // Handle upgrade: check auth, then redirect to Stripe Checkout or show modal
+  // Billing period state
+  let selectedPeriod: 'monthly' | 'annual' = 'monthly';
+
+  // Period toggle
+  const monthlyBtn = document.getElementById('period-monthly');
+  const annualBtn = document.getElementById('period-annual');
+
+  function updatePeriod(period: 'monthly' | 'annual') {
+    selectedPeriod = period;
+    // Update toggle UI
+    if (monthlyBtn && annualBtn) {
+      monthlyBtn.classList.toggle('bg-primary', period === 'monthly');
+      monthlyBtn.classList.toggle('text-on-primary', period === 'monthly');
+      monthlyBtn.classList.toggle('text-body', period !== 'monthly');
+      annualBtn.classList.toggle('bg-primary', period === 'annual');
+      annualBtn.classList.toggle('text-on-primary', period === 'annual');
+      annualBtn.classList.toggle('text-body', period !== 'annual');
+    }
+    // Update displayed prices
+    document.querySelectorAll('.pricing-price').forEach((el) => {
+      const priceEl = el as HTMLElement;
+      const monthly = priceEl.dataset.monthly;
+      const annual = priceEl.dataset.annual;
+      priceEl.textContent = period === 'annual' ? (annual || monthly) : monthly;
+    });
+    document.querySelectorAll('.pricing-suffix').forEach((el) => {
+      el.textContent = period === 'annual' ? '/yr' : '/mo';
+    });
+  }
+
+  monthlyBtn?.addEventListener('click', () => updatePeriod('monthly'));
+  annualBtn?.addEventListener('click', () => updatePeriod('annual'));
+
+  // Handle upgrade: check auth, then redirect to Stripe Checkout
   async function handleUpgrade(plan: string) {
     plan = plan || 'pro';
     try {
@@ -358,44 +395,28 @@ const comparisonRows = [
       const sessionData = await sessionRes.json();
 
       if (!sessionData.session?.user) {
-        // Not logged in — send to signup with plan param
         window.location.href = `/auth/signup?plan=${plan}`;
         return;
       }
 
-      // Logged in — try to create Stripe Checkout session
       const checkoutRes = await fetch('/api/billing/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify({ plan, period: selectedPeriod }),
       });
       const checkoutData = await checkoutRes.json();
 
       if (checkoutRes.ok && checkoutData.url) {
-        // Redirect to Stripe Checkout
         window.location.href = checkoutData.url;
-      } else if (checkoutRes.status === 503 || checkoutData.error?.includes('not configured')) {
-        // Stripe not configured — show upgrade modal
-        var showUpgrade = (window as any).showUpgradeModal;
-        if (typeof showUpgrade === 'function') showUpgrade();
-        else window.location.href = '/app/settings/billing';
       } else if (checkoutRes.status === 400 && checkoutData.error?.includes('already on')) {
-        // Already on this plan
         alert(checkoutData.error);
       } else {
-        // Other error — show upgrade modal as fallback
-        var showUpgrade2 = (window as any).showUpgradeModal;
-        if (typeof showUpgrade2 === 'function') showUpgrade2();
-        else alert(checkoutData.error || 'Failed to start checkout. Please try again.');
+        alert(checkoutData.error || 'Failed to start checkout. Please try again.');
       }
     } catch {
-      // Network error — show upgrade modal as fallback
-      var showUpgrade3 = (window as any).showUpgradeModal;
-      if (typeof showUpgrade3 === 'function') showUpgrade3();
-      else window.location.href = '/app/settings/billing';
+      alert('Network error. Please try again.');
     }
   }
-  // Expose to onclick handlers
   (window as any).handleUpgrade = handleUpgrade;
 </script>

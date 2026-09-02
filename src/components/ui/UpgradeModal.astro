@@ -18,15 +18,15 @@
         </svg>
       </div>
 
-      <h2 class="font-display-md text-ink mb-2">Pro Tier — Private Beta</h2>
+      <h2 class="font-display-md text-ink mb-2">Upgrade Your Plan</h2>
       <p class="font-body-md text-body mb-6">
-        Pro tier is currently in private beta. Early access billing is opening soon. Join the waitlist to be notified when it launches.
+        Get more documents, chats, audio overviews, and priority processing with a paid plan.
       </p>
 
       <div class="bg-canvas-soft rounded-lg p-4 mb-6 text-left">
         <p class="font-body-sm-strong text-ink mb-2">Pro includes:</p>
         <ul class="space-y-1.5">
-          {['Unlimited documents & chats', '20 audio overviews/day', '50 GB storage', 'Priority processing', 'API access (coming soon)'].map((item) => (
+          {['500 documents & 300 chats/day', '20 audio overviews/day', '25 GB storage', 'Priority processing'].map((item) => (
             <li class="flex items-center gap-2 font-body-sm text-body">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="text-success flex-shrink-0" aria-hidden="true">
                 <circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/>
@@ -40,7 +40,7 @@
 
       <div class="flex gap-3">
         <button id="upgrade-modal-close" class="flex-1 btn-secondary">Maybe Later</button>
-        <a href="/contact" class="flex-1 btn-primary text-center">Join Waitlist</a>
+        <button id="upgrade-modal-checkout" class="flex-1 btn-primary">Upgrade to Pro</button>
       </div>
     </div>
   </div>
@@ -67,11 +67,16 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     var closeBtn = document.getElementById('upgrade-modal-close');
+    var checkoutBtn = document.getElementById('upgrade-modal-checkout');
     var modal = document.getElementById('upgrade-modal');
     closeBtn?.addEventListener('click', closeUpgradeModal);
     modal?.addEventListener('click', function (e) {
       if (e.target === modal) closeUpgradeModal();
     });
     modal?.addEventListener('focus-trap-escape', closeUpgradeModal);
+    checkoutBtn?.addEventListener('click', function () {
+      closeUpgradeModal();
+      window.location.href = '/pricing';
+    });
   });
 </script>

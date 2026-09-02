@@ -111,13 +111,11 @@ const user = (Astro.locals as any)?.user;
       const data = await res.json();
       if (res.ok && data.url) {
         window.location.href = data.url;
-      } else if (res.status === 503 || data.error?.includes('not configured')) {
-        (window as any).showUpgradeModal?.();
       } else {
-        showBillingError(data.error || 'Failed to start checkout.');
+        showBillingError(data.error || 'Failed to start checkout. Please try again.');
       }
     } catch {
-      (window as any).showUpgradeModal?.();
+      showBillingError('Network error. Please try again.');
     }
   }
   (window as any).handleBillingUpgrade = handleBillingUpgrade;

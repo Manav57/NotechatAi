@@ -96,15 +96,29 @@ export function getTodayUTC(): string {
 
 // ─── Stripe Price ID Mapping ───────────────────────────────
 
-export function getStripePriceId(plan: PlanTier, env: any): string | null {
-  if (plan === 'pro') return env.STRIPE_PRO_PRICE_ID || null;
-  if (plan === 'plus') return env.STRIPE_PLUS_PRICE_ID || null;
+export type BillingPeriod = 'monthly' | 'annual';
+
+export function getStripePriceId(plan: PlanTier, period: BillingPeriod, env: any): string | null {
+  if (plan === 'pro') {
+    return period === 'annual'
+      ? (env.STRIPE_PRO_ANNUAL_PRICE_ID || env.STRIPE_PRO_PRICE_ID || null)
+      : (env.STRIPE_PRO_MONTHLY_PRICE_ID || env.STRIPE_PRO_PRICE_ID || null);
+  }
+  if (plan === 'plus') {
+    return period === 'annual'
+      ? (env.STRIPE_PLUS_ANNUAL_PRICE_ID || env.STRIPE_PLUS_PRICE_ID || null)
+      : (env.STRIPE_PLUS_MONTHLY_PRICE_ID || env.STRIPE_PLUS_PRICE_ID || null);
+  }
   return null;
 }
 
-export function planFromPriceId(priceId: string, env: any): PlanTier | null {
-  if (priceId === env.STRIPE_PRO_PRICE_ID) return 'pro';
-  if (priceId === env.STRIPE_PLUS_PRICE_ID) return 'plus';
+export function planFromPriceId(priceId: string, env: any): { plan: PlanTier; period: BillingPeriod } | null {
+  // Check annual first (more specific)
+  if (priceId === env.STRIPE_PRO_ANNUAL_PRICE_ID) return { plan: 'pro', period: 'annual' };
+  if (priceId === env.STRIPE_PLUS_ANNUAL_PRICE_ID) return { plan: 'plus', period: 'annual' };
+  // Then monthly / legacy single-price
+  if (priceId === env.STRIPE_PRO_MONTHLY_PRICE_ID || priceId === env.STRIPE_PRO_PRICE_ID) return { plan: 'pro', period: 'monthly' };
+  if (priceId === env.STRIPE_PLUS_MONTHLY_PRICE_ID || priceId === env.STRIPE_PLUS_PRICE_ID) return { plan: 'plus', period: 'monthly' };
   return null;
 }
 

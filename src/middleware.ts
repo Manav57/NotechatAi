@@ -90,15 +90,23 @@ export const onRequest = defineMiddleware(async (context, next) => {
   response.headers.set(
     'Content-Security-Policy',
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com https://adservice.google.com https://adservice.google.de; " +
     "style-src 'self' 'unsafe-inline'; " +
     "img-src 'self' data: https: blob:; " +
     "font-src 'self' data:; " +
-    "connect-src 'self' https://openrouter.ai https://www.google-analytics.com; " +
+    "connect-src 'self' https://openrouter.ai https://www.google-analytics.com https://pagead2.googlesyndication.com; " +
+    "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; " +
     "frame-ancestors 'none'; " +
     "base-uri 'self'; " +
     "form-action 'self'"
   );
+  // HSTS for production (only on HTTPS)
+  try {
+    const proto = context.url?.protocol;
+    if (proto === 'https:') {
+      response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    }
+  } catch {} // prerender may not have full context
 
   return response;
 });

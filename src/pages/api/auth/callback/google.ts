@@ -24,6 +24,14 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
       return redirect('/auth/login?error=google_not_configured');
     }
 
+    // Verify CSRF state
+    const returnedState = url.searchParams.get('state');
+    const storedState = cookies.get('oauth_state')?.value;
+    cookies.delete('oauth_state', { path: '/' });
+    if (!returnedState || !storedState || returnedState !== storedState) {
+      return redirect('/auth/login?error=invalid_state');
+    }
+
     const code = url.searchParams.get('code');
     if (!code) {
       return redirect('/auth/login?error=missing_code');
