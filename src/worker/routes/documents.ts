@@ -30,6 +30,11 @@ documentsRoutes.post('/upload', async (c) => {
     'audio/mpeg',
     'audio/wav',
     'video/mp4',
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'image/heic',
+    'image/heif',
   ];
   
   if (!allowedTypes.includes(contentType) && !filename.endsWith('.pdf') && !filename.endsWith('.epub')) {
@@ -56,7 +61,8 @@ documentsRoutes.post('/upload', async (c) => {
     userId: user.id,
     title: filename,
     type: contentType === 'application/pdf' ? 'pdf' : 
-          contentType === 'application/epub+zip' ? 'epub' : 'other',
+          contentType === 'application/epub+zip' ? 'epub' :
+          contentType.startsWith('image/') ? 'image' : 'other',
     originalFileKey: key,
     status: 'pending_upload',
     metadata: { filename, contentType, size },

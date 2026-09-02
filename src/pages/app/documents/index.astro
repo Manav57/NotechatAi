@@ -13,6 +13,13 @@ import Badge from '../../../components/ui/Badge.astro';
         <p class="font-body-md text-body mt-1">Manage your knowledge base. Upload PDFs, EPUBs, YouTube links, and more.</p>
       </div>
       <div class="flex gap-3">
+        <button id="scan-btn" class="btn-secondary inline-flex items-center">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
+            <path d="M2 6V4a2 2 0 0 1 2-2h2M12 2h2a2 2 0 0 1 2 2v2M16 12v2a2 2 0 0 1-2 2h-2M6 16H4a2 2 0 0 1-2-2v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="9" cy="9" r="3" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          Scan Notes
+        </button>
         <button id="upload-btn" class="btn-primary inline-flex items-center">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="mr-2" aria-hidden="true">
             <path d="M9 3v12M3 9h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -66,12 +73,21 @@ import Badge from '../../../components/ui/Badge.astro';
           <p class="font-body-sm text-body mb-6 max-w-sm mx-auto">
             Upload PDFs, EPUBs, text files, or paste a URL to start building your knowledge base.
           </p>
-          <button id="upload-btn-empty" class="btn-primary">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="mr-1.5" aria-hidden="true">
-              <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            Upload your first document
-          </button>
+          <div class="flex gap-3 justify-center">
+            <button id="scan-btn-empty" class="btn-secondary inline-flex items-center">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="mr-1.5" aria-hidden="true">
+                <path d="M2 5V3.5A1.5 1.5 0 0 1 3.5 2h1.5M11 2h1.5A1.5 1.5 0 0 1 14 3.5V5M14 11v1.5a1.5 1.5 0 0 1-1.5 1.5H11M5 14H3.5A1.5 1.5 0 0 1 2 12.5V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              Scan handwritten notes
+            </button>
+            <button id="upload-btn-empty" class="btn-primary inline-flex items-center">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="mr-1.5" aria-hidden="true">
+                <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Upload your first document
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -101,10 +117,19 @@ import Badge from '../../../components/ui/Badge.astro';
             <p class="font-body-md text-body mb-1">
               <span class="text-violet font-body-md-strong">Click to browse</span> or drag and drop
             </p>
-            <p class="font-body-sm text-mute">PDF, EPUB, TXT, MDX, DOCX, MP3, WAV — max 100 MB</p>
-            <input type="file" id="file-input" class="hidden" accept=".pdf,.epub,.txt,.mdx,.docx,.mp3,.wav" multiple />
+            <p class="font-body-sm text-mute">PDF, EPUB, TXT, MDX, DOCX, MP3, WAV, JPG, PNG, WebP — max 100 MB</p>
+            <input type="file" id="file-input" class="hidden" accept=".pdf,.epub,.txt,.mdx,.docx,.mp3,.wav,.jpg,.jpeg,.png,.webp,.heic,.heif" multiple />
           </div>
           <div id="file-preview" class="hidden mt-3 space-y-2"></div>
+          <div id="image-preview" class="hidden mt-3">
+            <div class="relative rounded-lg overflow-hidden border border-hairline">
+              <img id="image-preview-img" src="" alt="Preview" class="w-full max-h-64 object-contain bg-canvas-soft" />
+              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
+                <p class="font-body-sm text-white" id="image-preview-name"></p>
+                <p class="font-caption text-white/70" id="image-preview-size"></p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -129,6 +154,93 @@ import Badge from '../../../components/ui/Badge.astro';
         </div>
       </form>
     </div>
+  </div>
+
+  {/* Camera Capture Modal */}
+  <div id="camera-modal" class="fixed inset-0 z-50 hidden bg-black" role="dialog" aria-modal="true" aria-label="Scan handwritten notes">
+    {/* Camera View (step 1) */}
+    <div id="camera-view" class="absolute inset-0 flex flex-col">
+      {/* Top bar */}
+      <div class="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent">
+        <button id="camera-close" class="w-10 h-10 flex items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm" aria-label="Close camera">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <p class="font-body-sm-strong text-white/90">Scan Handwritten Notes</p>
+        <button id="camera-flip" class="w-10 h-10 flex items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm" aria-label="Flip camera">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10a6 6 0 0 1 10.2-4.2M16 10a6 6 0 0 1-10.2 4.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 2v3h3M6 18v-3h-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      {/* Video feed */}
+      <video id="camera-video" class="absolute inset-0 w-full h-full object-cover" autoplay playsinline muted></video>
+
+      {/* Viewfinder guide */}
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div class="w-[85%] max-w-md aspect-[3/4] border-2 border-white/30 rounded-lg"></div>
+      </div>
+
+      {/* Bottom controls */}
+      <div class="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center gap-4 p-6 pb-8 bg-gradient-to-t from-black/60 to-transparent">
+        <p class="font-body-sm text-white/70 text-center">Position your notes within the frame</p>
+        <div class="flex items-center gap-8">
+          {/* Gallery pick (hidden file input) */}
+          <button id="camera-gallery" class="w-12 h-12 flex items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm" aria-label="Pick from gallery">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="9" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M3 15l4-4 3 3 4-4 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          {/* Capture button */}
+          <button id="camera-capture" class="w-16 h-16 rounded-full bg-white border-4 border-white/50 flex items-center justify-center shadow-lg active:scale-95 transition-transform" aria-label="Capture photo">
+            <div class="w-12 h-12 rounded-full bg-white"></div>
+          </button>
+          {/* Spacer for symmetry */}
+          <div class="w-12 h-12"></div>
+        </div>
+      </div>
+    </div>
+
+    {/* Review View (step 2) */}
+    <div id="review-view" class="absolute inset-0 flex-col hidden">
+      {/* Top bar */}
+      <div class="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-gradient-to-b from-black/60 to-transparent">
+        <button id="review-retake" class="btn-secondary-sm text-white bg-black/40 backdrop-blur-sm border-white/20" aria-label="Retake photo">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="mr-1.5"><path d="M2 8a6 6 0 0 1 10.2-4.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 8a6 6 0 0 1-10.2 4.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 1v3h3M4 15v-3h-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Retake
+        </button>
+        <p class="font-body-sm-strong text-white/90">Review Photo</p>
+        <div class="w-20"></div>
+      </div>
+
+      {/* Captured image */}
+      <img id="review-image" src="" alt="Captured note" class="absolute inset-0 w-full h-full object-contain bg-black" />
+
+      {/* Bottom controls */}
+      <div class="absolute bottom-0 left-0 right-0 z-10 p-4 pb-8 bg-gradient-to-t from-black/70 to-transparent">
+        <div class="max-w-md mx-auto space-y-3">
+          <div>
+            <label class="block font-body-sm text-white/80 mb-1.5">Title</label>
+            <input type="text" id="camera-title" placeholder="e.g. Lecture Notes - Week 5" class="w-full bg-white/10 text-white border border-white/20 font-body-sm rounded-lg px-3 py-2.5 placeholder:text-white/40 focus:outline-none focus:border-white/50 backdrop-blur-sm" />
+          </div>
+          <div>
+            <label class="block font-body-sm text-white/80 mb-1.5">Tags <span class="text-white/50 font-normal">(optional)</span></label>
+            <input type="text" id="camera-tags" placeholder="e.g. math, lecture" class="w-full bg-white/10 text-white border border-white/20 font-body-sm rounded-lg px-3 py-2.5 placeholder:text-white/40 focus:outline-none focus:border-white/50 backdrop-blur-sm" />
+          </div>
+          <button id="camera-submit" class="w-full btn-primary bg-violet hover:bg-violet-bright border-violet flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="mr-2"><path d="M14 2L6.5 9.5 2 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Extract Text & Add to Knowledge Base
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {/* Processing overlay */}
+    <div id="camera-processing" class="absolute inset-0 z-20 hidden items-center justify-center bg-black/80 backdrop-blur-sm flex-col gap-4">
+      <div class="w-12 h-12 border-3 border-white/20 border-t-white rounded-full animate-spin"></div>
+      <p class="font-body-md text-white">Reading your handwriting...</p>
+      <p class="font-body-sm text-white/60">This may take a few seconds</p>
+    </div>
+
+    {/* Hidden canvas for capture + hidden file input for gallery */}
+    <canvas id="camera-canvas" class="hidden"></canvas>
+    <input type="file" id="camera-file-input" class="hidden" accept="image/*" capture="environment" />
   </div>
 
   <script>
@@ -156,6 +268,7 @@ import Badge from '../../../components/ui/Badge.astro';
       document.body.style.overflow = '';
       uploadForm?.reset();
       if (filePreview) { filePreview.innerHTML = ''; filePreview.classList.add('hidden'); }
+      imagePreview?.classList.add('hidden');
     }
 
     uploadBtns.forEach(btn => btn?.addEventListener('click', openModal));
@@ -173,21 +286,53 @@ import Badge from '../../../components/ui/Badge.astro';
     });
     fileInput?.addEventListener('change', updateFilePreview);
 
+    const imagePreview = document.getElementById('image-preview');
+    const imagePreviewImg = document.getElementById('image-preview-img') as HTMLImageElement;
+    const imagePreviewName = document.getElementById('image-preview-name');
+    const imagePreviewSize = document.getElementById('image-preview-size');
+    const imageExts = ['.jpg', '.jpeg', '.png', '.webp', '.heic', '.heif'];
+
+    function isImageFile(file: File): boolean {
+      return imageExts.some(ext => file.name.toLowerCase().endsWith(ext)) || file.type.startsWith('image/');
+    }
+
     function updateFilePreview() {
-      if (!fileInput?.files?.length || !filePreview) return;
-      filePreview.classList.remove('hidden');
-      filePreview.innerHTML = Array.from(fileInput.files).map(file => {
-        const size = file.size < 1024*1024 ? `${(file.size/1024).toFixed(1)} KB` : `${(file.size/(1024*1024)).toFixed(1)} MB`;
-        return `<div class="flex items-center gap-3 p-2 bg-canvas-soft rounded-lg">
-          <div class="w-8 h-8 rounded bg-canvas-soft-2 flex items-center justify-center flex-shrink-0">
-            <span class="font-caption-mono text-[10px] text-mute uppercase">${file.name.split('.').pop()}</span>
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="font-body-sm text-ink truncate">${file.name}</p>
-            <p class="font-caption text-mute">${size}</p>
-          </div>
-        </div>`;
-      }).join('');
+      if (!fileInput?.files?.length) return;
+      const file = fileInput.files[0];
+
+      if (isImageFile(file)) {
+        // Show image preview
+        filePreview?.classList.add('hidden');
+        imagePreview?.classList.remove('hidden');
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (imagePreviewImg) imagePreviewImg.src = e.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+        if (imagePreviewName) imagePreviewName.textContent = file.name;
+        if (imagePreviewSize) {
+          const size = file.size < 1024*1024 ? `${(file.size/1024).toFixed(1)} KB` : `${(file.size/(1024*1024)).toFixed(1)} MB`;
+          imagePreviewSize.textContent = `${size} · Handwriting OCR will be applied`;
+        }
+      } else {
+        // Show regular file preview
+        imagePreview?.classList.add('hidden');
+        if (!filePreview) return;
+        filePreview.classList.remove('hidden');
+        filePreview.innerHTML = Array.from(fileInput.files).map(f => {
+          const size = f.size < 1024*1024 ? `${(f.size/1024).toFixed(1)} KB` : `${(f.size/(1024*1024)).toFixed(1)} MB`;
+          return `<div class="flex items-center gap-3 p-2 bg-canvas-soft rounded-lg">
+            <div class="w-8 h-8 rounded bg-canvas-soft-2 flex items-center justify-center flex-shrink-0">
+              <span class="font-caption-mono text-[10px] text-mute uppercase">${f.name.split('.').pop()}</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-body-sm text-ink truncate">${f.name}</p>
+              <p class="font-caption text-mute">${size}</p>
+            </div>
+          </div>`;
+        }).join('');
+      }
+
       if (!titleInput?.value && fileInput.files[0]) {
         titleInput.value = fileInput.files[0].name.replace(/\.[^.]+$/, '');
       }
@@ -202,7 +347,7 @@ import Badge from '../../../components/ui/Badge.astro';
       if (!file) { alert('Please select a file'); return; }
 
       // Client-side file validation
-      const allowedExts = ['.pdf', '.epub', '.txt', '.md', '.mdx', '.docx', '.doc', '.mp3', '.wav', '.mp4', '.webm'];
+      const allowedExts = ['.pdf', '.epub', '.txt', '.md', '.mdx', '.docx', '.doc', '.mp3', '.wav', '.mp4', '.webm', '.jpg', '.jpeg', '.png', '.webp', '.heic', '.heif'];
       const blockedExts = ['.exe', '.sh', '.bat', '.cmd', '.com', '.msi', '.scr', '.pif', '.js', '.mjs', '.cjs', '.ts', '.jsx', '.tsx', '.vbs', '.vbe', '.wsf', '.wsh', '.ps1', '.reg', '.dll', '.so', '.dylib', '.app', '.deb', '.rpm', '.apk', '.jar', '.py', '.rb', '.pl', '.php'];
       const fileExt = '.' + file.name.split('.').pop()?.toLowerCase();
       const maxSize = 10 * 1024 * 1024; // 10 MB
@@ -221,23 +366,68 @@ import Badge from '../../../components/ui/Badge.astro';
       }
 
       submitUpload.disabled = true;
-      submitUpload.innerHTML = '<span class="animate-spin inline-block mr-1.5">⏳</span>Uploading...';
+
+      // Check if this is an image file (use OCR endpoint)
+      const isImage = isImageFile(file);
+      if (isImage) {
+        submitUpload.innerHTML = '<span class="animate-spin inline-block mr-1.5">⏳</span>Reading handwriting...';
+      } else {
+        submitUpload.innerHTML = '<span class="animate-spin inline-block mr-1.5">⏳</span>Uploading...';
+      }
 
       try {
-        const res = await fetch('/api/documents', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ filename: title, tags, size: file.size }),
-        });
+        if (isImage) {
+          // Convert image to base64 data URL for OCR
+          const dataUrl = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
 
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          if (res.status === 429 && errData.error === 'QUOTA_EXCEEDED') {
-            (window as any).showQuotaModal?.(errData.feature, errData.plan, errData.used, errData.limit);
-            return;
+          const res = await fetch('/api/documents/ocr', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              imageDataUrl: dataUrl,
+              filename: title,
+              tags,
+            }),
+          });
+
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            if (res.status === 429 && errData.error === 'QUOTA_EXCEEDED') {
+              (window as any).showQuotaModal?.(errData.feature, errData.plan, errData.used, errData.limit);
+              return;
+            }
+            if (res.status === 422) {
+              alert(errData.message || 'Could not read handwriting from this image. Please try a clearer photo.');
+              return;
+            }
+            throw new Error(errData.error || 'OCR failed');
           }
-          throw new Error(errData.error || 'Upload failed');
+
+          const result = await res.json();
+          alert(`Successfully extracted ${result.extractedText.length} characters from your handwritten notes! The text has been added to your knowledge base.`);
+        } else {
+          // Regular file upload
+          const res = await fetch('/api/documents', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename: title, tags, size: file.size }),
+          });
+
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            if (res.status === 429 && errData.error === 'QUOTA_EXCEEDED') {
+              (window as any).showQuotaModal?.(errData.feature, errData.plan, errData.used, errData.limit);
+              return;
+            }
+            throw new Error(errData.error || 'Upload failed');
+          }
         }
+
         closeModalFn();
         loadDocuments();
       } catch { alert('Upload failed. Please try again.'); }
@@ -252,6 +442,8 @@ import Badge from '../../../components/ui/Badge.astro';
       epub: { bg: 'bg-cyan-soft text-cyan-deep', label: 'EPUB' },
       mdx: { bg: 'bg-canvas-soft-2 text-body', label: 'MDX' },
       txt: { bg: 'bg-canvas-soft-2 text-body', label: 'TXT' },
+      image: { bg: 'bg-emerald-soft text-emerald-deep', label: 'IMG' },
+      handwritten: { bg: 'bg-emerald-soft text-emerald-deep', label: 'OCR' },
       other: { bg: 'bg-canvas-soft-2 text-body', label: 'FILE' },
     };
 
@@ -312,5 +504,239 @@ import Badge from '../../../components/ui/Badge.astro';
     };
 
     loadDocuments();
+
+    // ─── Camera Capture ──────────────────────────────────
+    const cameraModal = document.getElementById('camera-modal');
+    const cameraView = document.getElementById('camera-view');
+    const reviewView = document.getElementById('review-view');
+    const cameraProcessing = document.getElementById('camera-processing');
+    const cameraVideo = document.getElementById('camera-video') as HTMLVideoElement;
+    const cameraCanvas = document.getElementById('camera-canvas') as HTMLCanvasElement;
+    const cameraCapture = document.getElementById('camera-capture');
+    const cameraFlip = document.getElementById('camera-flip');
+    const cameraClose = document.getElementById('camera-close');
+    const cameraGallery = document.getElementById('camera-gallery');
+    const cameraFileInput = document.getElementById('camera-file-input') as HTMLInputElement;
+    const reviewImage = document.getElementById('review-image') as HTMLImageElement;
+    const reviewRetake = document.getElementById('review-retake');
+    const cameraSubmit = document.getElementById('camera-submit') as HTMLButtonElement;
+    const cameraTitle = document.getElementById('camera-title') as HTMLInputElement;
+    const cameraTags = document.getElementById('camera-tags') as HTMLInputElement;
+    const scanBtn = document.getElementById('scan-btn');
+
+    let cameraStream: MediaStream | null = null;
+    let facingMode: 'user' | 'environment' = 'environment';
+    let capturedDataUrl: string | null = null;
+
+    function showCameraView() {
+      cameraView?.classList.remove('hidden');
+      cameraView?.classList.add('flex');
+      reviewView?.classList.add('hidden');
+      reviewView?.classList.remove('flex');
+      cameraProcessing?.classList.add('hidden');
+      cameraProcessing?.classList.remove('flex');
+    }
+
+    function showReviewView() {
+      cameraView?.classList.add('hidden');
+      cameraView?.classList.remove('flex');
+      reviewView?.classList.remove('hidden');
+      reviewView?.classList.add('flex');
+    }
+
+    function showProcessing() {
+      cameraProcessing?.classList.remove('hidden');
+      cameraProcessing?.classList.add('flex');
+    }
+
+    function hideProcessing() {
+      cameraProcessing?.classList.add('hidden');
+      cameraProcessing?.classList.remove('flex');
+    }
+
+    async function startCamera() {
+      try {
+        // Stop any existing stream
+        stopCamera();
+
+        const constraints: MediaStreamConstraints = {
+          video: {
+            facingMode,
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+          },
+          audio: false,
+        };
+
+        cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+        if (cameraVideo) {
+          cameraVideo.srcObject = cameraStream;
+          await cameraVideo.play();
+        }
+      } catch (err) {
+        console.error('Camera access failed:', err);
+        alert('Could not access camera. Please allow camera permissions and try again.');
+        closeCameraModal();
+      }
+    }
+
+    function stopCamera() {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+      }
+      if (cameraVideo) {
+        cameraVideo.srcObject = null;
+      }
+    }
+
+    function capturePhoto(): string | null {
+      if (!cameraVideo || !cameraCanvas) return null;
+      const video = cameraVideo;
+      const canvas = cameraCanvas;
+
+      // Set canvas size to video dimensions
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return null;
+
+      // Mirror if front camera
+      if (facingMode === 'user') {
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+      }
+
+      ctx.drawImage(video, 0, 0);
+      return canvas.toDataURL('image/jpeg', 0.92);
+    }
+
+    function openCameraModal() {
+      cameraModal?.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      capturedDataUrl = null;
+      if (cameraTitle) cameraTitle.value = '';
+      if (cameraTags) cameraTags.value = '';
+      showCameraView();
+      startCamera();
+    }
+
+    function closeCameraModal() {
+      stopCamera();
+      cameraModal?.classList.add('hidden');
+      document.body.style.overflow = '';
+      capturedDataUrl = null;
+    }
+
+    // Open camera modal
+    scanBtn?.addEventListener('click', openCameraModal);
+    document.getElementById('scan-btn-empty')?.addEventListener('click', openCameraModal);
+
+    // Close camera
+    cameraClose?.addEventListener('click', closeCameraModal);
+
+    // Flip camera
+    cameraFlip?.addEventListener('click', async () => {
+      facingMode = facingMode === 'environment' ? 'user' : 'environment';
+      await startCamera();
+    });
+
+    // Capture photo
+    cameraCapture?.addEventListener('click', () => {
+      const dataUrl = capturePhoto();
+      if (!dataUrl) return;
+      capturedDataUrl = dataUrl;
+      if (reviewImage) reviewImage.src = dataUrl;
+      // Auto-fill title with date
+      if (cameraTitle && !cameraTitle.value) {
+        const now = new Date();
+        cameraTitle.value = `Handwritten Notes - ${now.toLocaleDateString()} ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      }
+      showReviewView();
+    });
+
+    // Retake photo
+    reviewRetake?.addEventListener('click', () => {
+      capturedDataUrl = null;
+      showCameraView();
+    });
+
+    // Gallery pick
+    cameraGallery?.addEventListener('click', () => cameraFileInput?.click());
+    cameraFileInput?.addEventListener('change', () => {
+      const file = cameraFileInput.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        capturedDataUrl = e.target?.result as string;
+        if (reviewImage) reviewImage.src = capturedDataUrl;
+        if (cameraTitle && !cameraTitle.value) {
+          cameraTitle.value = file.name.replace(/\.[^.]+$/, '');
+        }
+        showReviewView();
+      };
+      reader.readAsDataURL(file);
+      // Reset input so same file can be picked again
+      cameraFileInput.value = '';
+    });
+
+    // Submit for OCR
+    cameraSubmit?.addEventListener('click', async () => {
+      if (!capturedDataUrl) return;
+
+      const title = cameraTitle?.value || `Handwritten Notes - ${new Date().toLocaleDateString()}`;
+      const tags = cameraTags?.value?.split(',').map(t => t.trim()).filter(Boolean) || [];
+
+      cameraSubmit.disabled = true;
+      cameraSubmit.innerHTML = '<span class="animate-spin inline-block mr-1.5">⏳</span>Processing...';
+      showProcessing();
+
+      try {
+        const res = await fetch('/api/documents/ocr', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageDataUrl: capturedDataUrl,
+            filename: title,
+            tags,
+          }),
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          if (res.status === 429 && errData.error === 'QUOTA_EXCEEDED') {
+            closeCameraModal();
+            (window as any).showQuotaModal?.(errData.feature, errData.plan, errData.used, errData.limit);
+            return;
+          }
+          if (res.status === 422) {
+            hideProcessing();
+            alert(errData.message || 'Could not read handwriting. Try a clearer photo with better lighting.');
+            showReviewView();
+            return;
+          }
+          throw new Error(errData.error || 'OCR failed');
+        }
+
+        const result = await res.json();
+        closeCameraModal();
+        loadDocuments();
+
+        // Show success toast
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-6 right-6 z-[60] bg-success text-white font-body-sm px-4 py-3 rounded-lg shadow-level-4 animate-slide-up';
+        toast.innerHTML = `<span class="font-body-sm-strong">✓ Notes scanned!</span> Extracted ${result.extractedText.length} characters from your handwriting.`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 5000);
+      } catch {
+        hideProcessing();
+        alert('Failed to process the image. Please try again.');
+        showReviewView();
+      } finally {
+        cameraSubmit.disabled = false;
+        cameraSubmit.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="mr-2"><path d="M14 2L6.5 9.5 2 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Extract Text & Add to Knowledge Base';
+      }
+    });
   </script>
 </AppLayout>

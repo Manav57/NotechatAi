@@ -38,6 +38,8 @@
     "better-auth": "^1.7.1",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.13.3",
+    "jszip": "^3.10.1",
+    "pdf-lib": "^1.17.1",
     "puppeteer": "^25.8.0",
     "stripe": "^22.6.1",
     "uuid": "^14.0.2"

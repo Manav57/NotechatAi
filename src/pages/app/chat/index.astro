@@ -137,7 +137,7 @@ import AppLayout from '../../../layouts/AppLayout.astro';
 
     function escapeHtml(text: string) { const d = document.createElement('div'); d.textContent = text; return d.innerHTML.replace(/\n/g, '<br>'); }
 
-    function addMessage(role: 'user' | 'assistant', content: string, citations?: any[]) {
+    function addMessage(role: 'user' | 'assistant', content: string, citations?: any[], generatedFile?: { filename: string; downloadUrl: string; size: number }) {
       if (!messagesList) return;
       const div = document.createElement('div');
       div.className = 'message flex gap-3 animate-slide-up';
@@ -146,7 +146,29 @@ import AppLayout from '../../../layouts/AppLayout.astro';
         : '<div class="w-8 h-8 rounded-full bg-violet flex items-center justify-center text-on-primary text-sm font-medium flex-shrink-0">AI</div>';
       const citationsHtml = citations?.length
         ? `<div class="flex flex-wrap gap-1.5 mt-3">${citations.map((c: any) => `<span class="inline-flex items-center gap-1 px-2 py-1 bg-violet/10 text-violet-deep rounded-full text-xs">📄 ${c.title}</span>`).join('')}</div>` : '';
-      div.innerHTML = `${avatar}<div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="font-body-sm-strong ${role === 'user' ? 'text-ink' : 'text-violet'}">${role === 'user' ? 'You' : 'NotesChatAI'}</span><span class="font-caption text-mute">Just now</span></div><div class="font-body-md text-ink/90 leading-relaxed whitespace-pre-wrap">${escapeHtml(content)}</div>${citationsHtml}</div>`;
+      const fileHtml = generatedFile
+        ? (() => {
+            const isDocx = generatedFile.filename.endsWith('.docx');
+            const isXlsx = generatedFile.filename.endsWith('.xlsx');
+            const badgeBg = isXlsx ? 'bg-success/10' : isDocx ? 'bg-link/10' : 'bg-error/10';
+            const badgeText = isXlsx ? 'text-success' : isDocx ? 'text-link' : 'text-error';
+            const badgeLabel = isXlsx ? 'XLSX' : isDocx ? 'DOCX' : 'PDF';
+            return `<div class="mt-3 p-3 bg-canvas-soft border border-hairline rounded-lg flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg ${badgeBg} flex items-center justify-center flex-shrink-0">
+              <span class="font-caption-mono text-xs font-medium ${badgeText}">${badgeLabel}</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-body-sm-strong text-ink truncate">${escapeHtml(generatedFile.filename)}</p>
+              <p class="font-caption text-mute">${(generatedFile.size / 1024).toFixed(1)} KB</p>
+            </div>
+            <a href="${generatedFile.downloadUrl}" target="_blank" rel="noopener" class="btn-primary-sm text-xs inline-flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v8M4 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 10v1.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Download
+            </a>
+          </div>`;
+          })()
+        : '';
+      div.innerHTML = `${avatar}<div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="font-body-sm-strong ${role === 'user' ? 'text-ink' : 'text-violet'}">${role === 'user' ? 'You' : 'NotesChatAI'}</span><span class="font-caption text-mute">Just now</span></div><div class="font-body-md text-ink/90 leading-relaxed whitespace-pre-wrap">${escapeHtml(content)}</div>${fileHtml}${citationsHtml}</div>`;
       messagesList.appendChild(div);
       scrollToBottom();
     }
@@ -206,7 +228,7 @@ import AppLayout from '../../../layouts/AppLayout.astro';
           loadConversations();
         }
 
-        addMessage('assistant', data.message || 'No response generated.', data.citations);
+        addMessage('assistant', data.message || 'No response generated.', data.citations, data.generatedFile);
       } catch {
         document.getElementById(typingId)?.remove();
         addMessage('assistant', 'Sorry, something went wrong. Please try again.');

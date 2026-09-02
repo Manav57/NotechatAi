@@ -5,6 +5,7 @@ interface Env {
   R2: R2Bucket;
   VECTORIZE: VectorizeIndex;
   AI: Ai;
+  OPENROUTER_API_KEY: string;
 }
 
 interface DocumentProcessMessage {
@@ -59,6 +60,10 @@ async function processDocument(env: Env, msg: DocumentProcessMessage) {
       case 'epub':
         text = await extractEPUBText(arrayBuffer);
         metadata = { chapters: extractChapters(text) };
+        break;
+      case 'image':
+        text = await extractImageText(env, arrayBuffer, key);
+        metadata = { sourceType: 'ocr' };
         break;
       case 'text':
       case 'markdown':
@@ -157,6 +162,68 @@ async function extractPDFText(buffer: ArrayBuffer): Promise<string> {
 async function extractEPUBText(buffer: ArrayBuffer): Promise<string> {
   // Placeholder - would use epub parser
   return 'EPUB text extraction not implemented yet';
+}
+
+async function extractImageText(env: Env, buffer: ArrayBuffer, key: string): Promise<string> {
+  // Convert ArrayBuffer to base64 data URL for OpenRouter vision API
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  const base64 = btoa(binary);
+
+  // Detect MIME type from key extension
+  const ext = key.split('.').pop()?.toLowerCase() || 'jpeg';
+  const mimeMap: Record<string, string> = {
+    jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png',
+    webp: 'image/webp', heic: 'image/heic', heif: 'image/heif',
+  };
+  const mimeType = mimeMap[ext] || 'image/jpeg';
+  const dataUrl = `data:${mimeType};base64,${base64}`;
+
+  if (!env.OPENROUTER_API_KEY) {
+    throw new Error('OpenRouter API key not configured for OCR');
+  }
+
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${env.OPENROUTER_API_KEY}`,
+      'HTTP-Referer': 'https://noteschatai.com',
+      'X-Title': 'NotesChatAI-OCR',
+    },
+    body: JSON.stringify({
+      model: 'openai/gpt-4o',
+      messages: [
+        {
+          role: 'system',
+          content: `You are a handwriting recognition and OCR specialist. Extract ALL text from the provided image of handwritten notes.\n\nRules:\n- Extract EVERY word, number, symbol, and abbreviation exactly as written\n- Preserve the original structure: headings, bullet points, numbered lists, paragraphs\n- Use markdown formatting to represent the structure\n- If a word is illegible, put [illegible] in its place — do NOT guess\n- Return ONLY the extracted text — no commentary, no explanations`,
+        },
+        {
+          role: 'user',
+          content: [
+            { type: 'image_url', image_url: { url: dataUrl } },
+            { type: 'text', text: 'Extract all text from this image of handwritten notes.' },
+          ],
+        },
+      ],
+      max_tokens: 4096,
+      temperature: 0.1,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('OpenRouter OCR error:', response.status, errorText);
+    throw new Error(`Vision API error: ${response.status}`);
+  }
+
+  const data = (await response.json()) as any;
+  const text = data.choices?.[0]?.message?.content;
+  if (!text) throw new Error('No text returned from vision model');
+  return text;
 }
 
 function estimatePages(text: string): number {

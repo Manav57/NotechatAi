@@ -6,7 +6,7 @@ import { getUserDocuments, createDocument, getDocumentStats } from '../../../lib
 import { verifyQuota, incrementDocumentCount } from '../../../lib/billing';
 
 // ─── Security: MIME-type whitelist & file-size limits ───
-const ALLOWED_EXTENSIONS = new Set(['.pdf', '.epub', '.txt', '.md', '.mdx', '.docx', '.doc', '.mp3', '.wav', '.mp4', '.webm']);
+const ALLOWED_EXTENSIONS = new Set(['.pdf', '.epub', '.txt', '.md', '.mdx', '.docx', '.doc', '.mp3', '.wav', '.mp4', '.webm', '.jpg', '.jpeg', '.png', '.webp', '.heic', '.heif']);
 const BLOCKED_EXTENSIONS = new Set(['.exe', '.sh', '.bat', '.cmd', '.com', '.msi', '.scr', '.pif', '.js', '.mjs', '.cjs', '.ts', '.jsx', '.tsx', '.vbs', '.vbe', '.wsf', '.wsh', '.ps1', '.psc1', '.psc2', '.reg', '.dll', '.so', '.dylib', '.app', '.deb', '.rpm', '.apk', '.jar', '.class', '.py', '.rb', '.pl', '.php', '.asp', '.aspx', '.jsp', '.cgi']);
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
@@ -138,6 +138,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       : title.endsWith('.txt') ? 'txt'
       : title.endsWith('.docx') || title.endsWith('.doc') ? 'docx'
       : title.endsWith('.mp3') || title.endsWith('.wav') ? 'audio'
+      : /\.(jpe?g|png|webp|heic|heif)$/i.test(title) ? 'image'
       : 'other';
 
     const doc = createDocument(user.id, title, type, {
