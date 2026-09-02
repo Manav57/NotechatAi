@@ -7,7 +7,8 @@ import { randomUUID } from 'node:crypto';
 
 // ─── Password hashing — WebCrypto PBKDF2-SHA256 (works in Cloudflare Workers) ───
 // Format: pbkdf2:<iterations>:<salt_hex>:<hash_hex>
-const PBKDF2_ITERATIONS = 210000;
+// Cloudflare Workers caps WebCrypto PBKDF2 at 100,000 iterations.
+const PBKDF2_ITERATIONS = 100000;
 const PBKDF2_KEY_BITS = 256;
 
 const encoder = new TextEncoder();
