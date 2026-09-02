@@ -354,7 +354,7 @@ const comparisonRows = [
   async function handleUpgrade(plan: string) {
     plan = plan || 'pro';
     try {
-      const sessionRes = await fetch('/api/auth/session');
+      const sessionRes = await fetch('/api/auth/session', { credentials: 'include' });
       const sessionData = await sessionRes.json();
 
       if (!sessionData.session?.user) {
@@ -367,6 +367,7 @@ const comparisonRows = [
       const checkoutRes = await fetch('/api/billing/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ plan }),
       });
       const checkoutData = await checkoutRes.json();

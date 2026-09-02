@@ -211,7 +211,7 @@ const isActive = (href: string) => {
   // Sign out handler
   document.getElementById('signout-btn')?.addEventListener('click', async () => {
     try {
-      await fetch('/api/auth/signout', { method: 'POST' });
+      await fetch('/api/auth/signout', { method: 'POST', credentials: 'include' });
       window.location.href = '/';
     } catch (e) {
       console.error('Sign out failed:', e);

@@ -1,16 +1,26 @@
 export const prerender = false;
 
-import { env } from "cloudflare:workers";
 import type { APIRoute } from 'astro';
 import { dbGetUserByEmail, dbCreateUser, dbCreateSession, dbUpsertOAuthAccount } from '../../../../lib/db-auth';
 import { devCreateUser, devCreateSession, devGetUserByEmail } from '../../../../lib/dev-auth';
 
+async function getEnv() {
+  try {
+    const mod = await import('cloudflare:workers');
+    return (mod as any).env ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export const GET: APIRoute = async ({ url, cookies, redirect }) => {
   try {
-    const GITHUB_CLIENT_ID = env.GITHUB_CLIENT_ID || '';
-    const GITHUB_CLIENT_SECRET = env.GITHUB_CLIENT_SECRET || '';
+    const env = await getEnv();
+    const GITHUB_CLIENT_ID = env?.GITHUB_CLIENT_ID || '';
+    const GITHUB_CLIENT_SECRET = env?.GITHUB_CLIENT_SECRET || '';
 
     if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
+      console.error('GitHub OAuth: GITHUB_CLIENT_ID or GITHUB_CLIENT_SECRET not configured');
       return redirect('/auth/login?error=github_not_configured');
     }
 
@@ -20,11 +30,7 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
     }
 
     // Exchange code for token.
-    // Note: GitHub REQUIRES redirect_uri in the token-exchange request when it
-    // was included in the authorization request — omitting it returns
-    // `bad_verification_code` and the login silently fails. It must match the
-    // redirect_uri used in /api/auth/signin/github exactly.
-    const BASE_URL = env.BETTER_AUTH_URL || url.origin;
+    const BASE_URL = env?.BETTER_AUTH_URL || 'https://noteschatai.com';
     const redirectUri = `${BASE_URL}/api/auth/callback/github`;
 
     const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
@@ -67,7 +73,7 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
 
     const githubUser = await userResponse.json();
 
-    // Get primary email (read only — this endpoint is always available)
+    // Get primary email
     const emailResponse = await fetch('https://api.github.com/user/emails', {
       headers: {
         Authorization: `Bearer ${tokens.access_token}`,
@@ -112,7 +118,8 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
       );
       const session = await dbCreateSession(user.id);
       sessionToken = session.token;
-    } catch {
+    } catch (e) {
+      console.error('D1 auth failed, falling back to dev-auth:', e);
       // D1 unavailable — fall back to in-memory dev-auth
       let user = devGetUserByEmail(primaryEmail);
       if (!user) {

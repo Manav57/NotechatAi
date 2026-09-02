@@ -388,6 +388,7 @@ import Badge from '../../../components/ui/Badge.astro';
           const res = await fetch('/api/documents/ocr', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
             body: JSON.stringify({
               imageDataUrl: dataUrl,
               filename: title,
@@ -415,6 +416,7 @@ import Badge from '../../../components/ui/Badge.astro';
           const res = await fetch('/api/documents', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
             body: JSON.stringify({ filename: title, tags, size: file.size }),
           });
 
@@ -449,7 +451,7 @@ import Badge from '../../../components/ui/Badge.astro';
 
     async function loadDocuments() {
       try {
-        const res = await fetch('/api/documents');
+        const res = await fetch('/api/documents', { credentials: 'include' });
         if (!res.ok) throw new Error('Failed');
         const data = await res.json();
         const docs = data.documents || [];
@@ -499,7 +501,7 @@ import Badge from '../../../components/ui/Badge.astro';
 
     (window as any).deleteDoc = async (id: string) => {
       if (!confirm('Delete this document?')) return;
-      await fetch(`/api/documents/${id}`, { method: 'DELETE' });
+      await fetch(`/api/documents/${id}`, { method: 'DELETE', credentials: 'include' });
       loadDocuments();
     };
 
@@ -696,6 +698,7 @@ import Badge from '../../../components/ui/Badge.astro';
         const res = await fetch('/api/documents/ocr', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify({
             imageDataUrl: capturedDataUrl,
             filename: title,

@@ -261,6 +261,7 @@ import AppLayout from '../../../layouts/AppLayout.astro';
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify({ message, conversationId: currentConversationId }),
         });
 
@@ -312,7 +313,7 @@ import AppLayout from '../../../layouts/AppLayout.astro';
 
     async function loadConversations() {
       try {
-        const res = await fetch('/api/chat');
+        const res = await fetch('/api/chat', { credentials: 'include' });
         const data = await res.json();
         const convs = data.conversations || [];
         if (!convList) return;
@@ -343,7 +344,7 @@ import AppLayout from '../../../layouts/AppLayout.astro';
       if (messagesList) messagesList.innerHTML = '';
 
       try {
-        const res = await fetch(`/api/chat/${id}`);
+        const res = await fetch(`/api/chat/${id}`, { credentials: 'include' });
         const data = await res.json();
         (data.messages || []).forEach((m: any) => {
           if (m.role === 'user' || m.role === 'assistant') {

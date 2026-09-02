@@ -1,8 +1,8 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
+import { dbGetSession } from '../../../lib/db-auth';
 import { devGetSession } from '../../../lib/dev-auth';
-import { getUserDocuments, createDocument, getDocumentStats } from '../../../lib/dev-store';
 import { verifyQuota, incrementDocumentCount } from '../../../lib/billing';
 
 // ─── Security: MIME-type whitelist & file-size limits ───
@@ -39,32 +39,70 @@ function validateUrl(urlStr: string): { valid: boolean; error?: string } {
   }
 }
 
-function getUser(cookies: { get: (name: string) => { value: string } | undefined }) {
-  const token = cookies.get('session')?.value;
+async function getUser(cookies: { get: (name: string) => { value: string } | undefined }) {
+  const token = cookies.get('session')?.value || cookies.get('better-auth.session_token')?.value;
   if (!token) return null;
-  const result = devGetSession(token);
-  return result?.session?.user || null;
+  // Try D1-backed session first
+  try {
+    const result = await dbGetSession(token);
+    if (result) return { id: result.session.user.id, email: result.session.user.email, name: result.session.user.name };
+  } catch {}
+  // Fallback to in-memory dev-auth
+  try {
+    const result = devGetSession(token);
+    if (result) return { id: result.session.user.id, email: result.session.user.email, name: result.session.user.name };
+  } catch {}
+  return null;
 }
 
 // GET /api/documents — list user documents
 export const GET: APIRoute = async ({ cookies, url }) => {
-  const user = getUser(cookies);
-  if (!user) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+  const user = await getUser(cookies);
+  if (!user) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
 
   const limit = parseInt(url.searchParams.get('limit') || '50');
   const offset = parseInt(url.searchParams.get('offset') || '0');
-  const docs = getUserDocuments(user.id).slice(offset, offset + limit);
-  const stats = getDocumentStats(user.id);
 
-  return new Response(JSON.stringify({ documents: docs, stats }), {
-    headers: { 'Content-Type': 'application/json' },
-  });
+  // Try D1 first
+  let db: any = null;
+  try {
+    const mod = await import('cloudflare:workers');
+    db = (mod as any).env?.DB ?? null;
+  } catch {}
+
+  if (db) {
+    try {
+      const result = await db.prepare(
+        `SELECT id, user_id, title, type, status, metadata, chunk_count, token_count, created_at, updated_at
+         FROM documents WHERE user_id = ?1
+         ORDER BY created_at DESC LIMIT ?2 OFFSET ?3`
+      ).bind(user.id, limit, offset).all();
+      const docs = (result.results || result).map((d: any) => ({
+        id: d.id,
+        userId: d.user_id,
+        title: d.title,
+        type: d.type,
+        status: d.status,
+        metadata: d.metadata ? JSON.parse(d.metadata) : {},
+        chunkCount: d.chunk_count || 0,
+        tokenCount: d.token_count || 0,
+        createdAt: d.created_at ? new Date(d.created_at * 1000).toISOString() : null,
+        updatedAt: d.updated_at ? new Date(d.updated_at * 1000).toISOString() : null,
+      }));
+      return new Response(JSON.stringify({ documents: docs }), { headers: { 'Content-Type': 'application/json' } });
+    } catch (e) {
+      console.error('D1 document list error:', e);
+    }
+  }
+
+  // Fallback: empty list (no in-memory fallback for production)
+  return new Response(JSON.stringify({ documents: [] }), { headers: { 'Content-Type': 'application/json' } });
 };
 
 // POST /api/documents — create/upload a document
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const user = getUser(cookies);
-  if (!user) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+  const user = await getUser(cookies);
+  if (!user) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
 
   // ─── Quota enforcement ───
   let db: any = null;
@@ -141,12 +179,44 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       : /\.(jpe?g|png|webp|heic|heif)$/i.test(title) ? 'image'
       : 'other';
 
-    const doc = createDocument(user.id, title, type, {
-      filename,
-      url: fileUrl,
-      tags: tags || [],
-      size: size || 0,
-    });
+    // Try D1 first
+    let db2: any = null;
+    try {
+      const mod = await import('cloudflare:workers');
+      db2 = (mod as any).env?.DB ?? null;
+    } catch {}
+
+    let doc: any;
+    if (db2) {
+      const docId = crypto.randomUUID();
+      const now = Math.floor(Date.now() / 1000);
+      const metadata = JSON.stringify({ filename, url: fileUrl, tags: tags || [], size: size || 0 });
+      await db2.prepare(
+        `INSERT INTO documents (id, user_id, title, type, status, metadata, created_at, updated_at)
+         VALUES (?1, ?2, ?3, ?4, 'ready', ?5, ?6, ?7)`
+      ).bind(docId, user.id, title, type, metadata, now, now).run();
+      doc = {
+        id: docId,
+        userId: user.id,
+        title,
+        type,
+        status: 'ready',
+        metadata: { filename, url: fileUrl, tags: tags || [], size: size || 0 },
+        chunkCount: 0,
+        tokenCount: 0,
+        createdAt: new Date(now * 1000).toISOString(),
+        updatedAt: new Date(now * 1000).toISOString(),
+      };
+    } else {
+      // Fallback: in-memory dev-store
+      const { createDocument } = await import('../../../lib/dev-store');
+      doc = createDocument(user.id, title, type, {
+        filename,
+        url: fileUrl,
+        tags: tags || [],
+        size: size || 0,
+      });
+    }
 
     // ─── Increment document count ───
     if (db) {

@@ -1,16 +1,26 @@
 export const prerender = false;
 
-import { env } from "cloudflare:workers";
 import type { APIRoute } from 'astro';
 import { dbGetUserByEmail, dbCreateUser, dbCreateSession, dbUpsertOAuthAccount } from '../../../../lib/db-auth';
 import { devCreateUser, devCreateSession, devGetUserByEmail } from '../../../../lib/dev-auth';
 
+async function getEnv() {
+  try {
+    const mod = await import('cloudflare:workers');
+    return (mod as any).env ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export const GET: APIRoute = async ({ url, cookies, redirect }) => {
   try {
-    const GOOGLE_CLIENT_ID = env.GOOGLE_CLIENT_ID || '';
-    const GOOGLE_CLIENT_SECRET = env.GOOGLE_CLIENT_SECRET || '';
+    const env = await getEnv();
+    const GOOGLE_CLIENT_ID = env?.GOOGLE_CLIENT_ID || '';
+    const GOOGLE_CLIENT_SECRET = env?.GOOGLE_CLIENT_SECRET || '';
 
     if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+      console.error('Google OAuth: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET not configured');
       return redirect('/auth/login?error=google_not_configured');
     }
 
@@ -73,7 +83,8 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
       );
       const session = await dbCreateSession(user.id);
       sessionToken = session.token;
-    } catch {
+    } catch (e) {
+      console.error('D1 auth failed, falling back to dev-auth:', e);
       // D1 unavailable — fall back to in-memory dev-auth
       let user = devGetUserByEmail(googleUser.email);
       if (!user) {

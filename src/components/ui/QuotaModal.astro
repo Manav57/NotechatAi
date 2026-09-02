@@ -73,6 +73,7 @@ import { formatMonthly } from '../../lib/pricing';
       var res = await fetch('/api/billing/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ plan: plan }),
       });
       var data = await res.json();
