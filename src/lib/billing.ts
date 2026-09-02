@@ -7,7 +7,11 @@
 
 // ─── Plan Definitions ─────────────────────────────────────
 
-export type PlanTier = 'free' | 'pro' | 'plus';
+import { PLAN_PRICES, type PlanTier } from './pricing';
+
+// Re-export from the single source of truth (src/lib/pricing.ts).
+export { PLAN_PRICES } from './pricing';
+export type { PlanTier } from './pricing';
 
 export interface PlanLimits {
   documents: number;      // max documents (-1 = unlimited)
@@ -47,12 +51,6 @@ export const PLANS: Record<PlanTier, PlanLimits> = {
     apiAccess: true,
     realTimeCollab: true,
   },
-};
-
-export const PLAN_PRICES: Record<PlanTier, { monthly: number; annual: number }> = {
-  free: { monthly: 0, annual: 0 },
-  pro: { monthly: 2, annual: 19 },     // ~$1.58/mo annual (20% off)
-  plus: { monthly: 10, annual: 96 },   // $8/mo annual (20% off)
 };
 
 // ─── Quota Helpers ─────────────────────────────────────────

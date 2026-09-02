@@ -238,8 +238,11 @@
 
 
   :focus-visible {
-    outline: 2px solid var(--color-link);
+    /* Subtle, on-brand focus ring: thin neutral outline + soft glow. */
+    outline: 1px solid var(--color-hairline-strong);
     outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(23, 23, 23, 0.05);
+    border-radius: 4px;
   }
 
   a {
@@ -280,27 +283,27 @@
 @layer components {
   .btn-primary {
     @apply bg-primary text-on-primary font-button-lg rounded-pill px-3 py-3 transition-all duration-150 border border-hairline-strong shadow-level-2;
-    @apply hover:opacity-90 active:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply hover:opacity-90 active:opacity-70 focus:outline-none focus-visible:ring-1 focus-visible:ring-mute/70 focus-visible:ring-offset-1;
   }
 
   .btn-secondary {
     @apply bg-canvas text-ink font-button-lg rounded-pill px-3 py-3 border border-hairline transition-all duration-150;
-    @apply hover:bg-canvas-soft active:bg-canvas-soft-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply hover:bg-canvas-soft active:bg-canvas-soft-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-mute/70 focus-visible:ring-offset-1;
   }
 
   .btn-primary-sm {
     @apply bg-primary text-on-primary font-button-md rounded-pill px-2 py-2 transition-all duration-150;
-    @apply hover:opacity-90 active:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply hover:opacity-90 active:opacity-70 focus:outline-none focus-visible:ring-1 focus-visible:ring-mute/70 focus-visible:ring-offset-1;
   }
 
   .btn-secondary-sm {
     @apply bg-canvas text-ink font-button-md rounded-pill px-2 py-2 border border-hairline transition-all duration-150;
-    @apply hover:bg-canvas-soft active:bg-canvas-soft-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply hover:bg-canvas-soft active:bg-canvas-soft-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-mute/70 focus-visible:ring-offset-1;
   }
 
   .btn-ghost {
     @apply bg-canvas text-ink font-body-sm rounded-pill-sm px-4 py-1.5 transition-all duration-150;
-    @apply hover:bg-canvas-soft active:bg-canvas-soft-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply hover:bg-canvas-soft active:bg-canvas-soft-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-mute/70 focus-visible:ring-offset-1;
   }
 
   .card-marketing {
@@ -318,18 +321,18 @@
 
   .input {
     @apply bg-canvas text-ink border border-hairline font-body-sm rounded-sm px-3 h-10 w-full transition-all duration-150;
-    @apply placeholder:text-mute focus:outline-none focus:border-link focus:ring-2 focus:ring-link-bg-soft;
+    @apply placeholder:text-mute focus:outline-none focus:border-link focus:ring-1 focus:ring-mute/40;
     @apply disabled:bg-canvas-soft disabled:cursor-not-allowed;
   }
 
   .input-sm {
     @apply bg-canvas text-ink border border-hairline font-body-sm rounded-sm px-3 h-8 w-full transition-all duration-150;
-    @apply placeholder:text-mute focus:outline-none focus:border-link focus:ring-2 focus:ring-link-bg-soft;
+    @apply placeholder:text-mute focus:outline-none focus:border-link focus:ring-1 focus:ring-mute/40;
   }
 
   .input-lg {
     @apply bg-canvas text-ink border border-hairline font-body-md rounded-sm px-3 h-12 w-full transition-all duration-150;
-    @apply placeholder:text-mute focus:outline-none focus:border-link focus:ring-2 focus:ring-link-bg-soft;
+    @apply placeholder:text-mute focus:outline-none focus:border-link focus:ring-1 focus:ring-mute/40;
   }
 
   .badge-secondary {
@@ -338,22 +341,22 @@
 
   .nav-link {
     @apply text-body font-body-sm rounded-full px-3 py-3 transition-all duration-150;
-    @apply hover:bg-canvas-soft hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply hover:bg-canvas-soft hover:text-ink focus:outline-none focus-visible:ring-1 focus-visible:ring-mute/70 focus-visible:ring-offset-1;
   }
 
   .nav-cta-signup {
     @apply bg-primary text-on-primary font-body-sm-strong rounded-sm px-3 h-7 transition-all duration-150;
-    @apply hover:opacity-90 active:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply hover:opacity-90 active:opacity-70 focus:outline-none focus-visible:ring-1 focus-visible:ring-mute/70 focus-visible:ring-offset-1;
   }
 
   .nav-cta-login {
     @apply bg-canvas text-ink font-body-sm-strong rounded-sm px-3 h-7 border border-hairline transition-all duration-150;
-    @apply hover:bg-canvas-soft active:bg-canvas-soft-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply hover:bg-canvas-soft active:bg-canvas-soft-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-mute/70 focus-visible:ring-offset-1;
   }
 
   .nav-cta-ask-ai {
     @apply bg-canvas text-ink font-body-sm-strong rounded-sm px-3 h-7 border border-hairline transition-all duration-150;
-    @apply hover:bg-canvas-soft active:bg-canvas-soft-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    @apply hover:bg-canvas-soft active:bg-canvas-soft-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-mute/70 focus-visible:ring-offset-1;
   }
 
   .hero-band {
@@ -652,10 +655,12 @@
   background-color: #222222;
   color: #ededed;}
 
-/* Focus ring offset color for dark backgrounds */
+/* Focus ring offset color for dark backgrounds — subtle neutral ring + soft glow */
 .dark *:focus-visible {
-  outline: 2px solid #4d9fff;
+  outline: 1px solid #555555;
   outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
 }
 
 /* Scrollbar styling for dark mode */

@@ -4,6 +4,7 @@ import AppLayout from '../../layouts/AppLayout.astro';
 import Card from '../../components/ui/Card.astro';
 import Badge from '../../components/ui/Badge.astro';
 import UpgradeModal from '../../components/ui/UpgradeModal.astro';
+import { formatMonthly, getPlan } from '../../lib/pricing';
 
 const user = (Astro.locals as any)?.user;
 
@@ -171,7 +172,7 @@ try {
 
     <Card variant="marketing-large">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="font-display-md text-ink">Your Plan: {user?.plan === 'pro' ? 'Pro ($2/mo)' : user?.plan === 'plus' ? 'Plus ($10/mo)' : 'Free'}</h2>
+        <h2 class="font-display-md text-ink">Your Plan: {user?.plan === 'pro' ? `Pro (${formatMonthly('pro')})` : user?.plan === 'plus' ? `Plus (${formatMonthly('plus')})` : 'Free'}</h2>
         {user?.plan === 'free' ? (
           <button onclick="handleUpgradeFromDashboard('pro')" class="btn-secondary-sm">Upgrade to Pro</button>
         ) : user?.plan === 'pro' ? (

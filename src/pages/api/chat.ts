@@ -284,21 +284,29 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const OPENROUTER_API_KEY = bindings.OPENROUTER_API_KEY;
 
     if (db) {
-      const quota = await verifyQuota(db, user.id, 'chat');
-      if (!quota.allowed) return new Response(JSON.stringify({ error: 'QUOTA_EXCEEDED', message: quota.message, plan: quota.plan, feature: quota.feature, used: quota.used, limit: quota.limit, upgradeUrl: '/pricing' }), { status: 429, headers: { 'Content-Type': 'application/json' } });
+      // Defensive quota check: if the schema ever drifts (e.g. billing columns
+      // missing), never let it break chat — log and proceed.
+      try {
+        const quota = await verifyQuota(db, user.id, 'chat');
+        if (!quota.allowed) return new Response(JSON.stringify({ error: 'QUOTA_EXCEEDED', message: quota.message, plan: quota.plan, feature: quota.feature, used: quota.used, limit: quota.limit, upgradeUrl: '/pricing' }), { status: 429, headers: { 'Content-Type': 'application/json' } });
+      } catch (e) { console.error('verifyQuota failed (proceeding):', e); }
     }
 
     if (!OPENROUTER_API_KEY) return new Response(JSON.stringify({ error: 'OpenRouter API key not configured' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
 
+    // ISO timestamp aliases — D1 stores unixepoch() INTEGERs, convert to ISO so
+    // the frontend can `new Date(...)` them directly.
+    const CONV_COLS = `id, user_id, title, model, strftime('%Y-%m-%dT%H:%M:%SZ', created_at) AS createdAt, strftime('%Y-%m-%dT%H:%M:%SZ', updated_at) AS updatedAt`;
+
     // Get or create conversation
     let conv: any;
     if (conversationId) {
-      conv = await db.prepare(`SELECT * FROM conversations WHERE id = ?1 AND user_id = ?2`).bind(conversationId, user.id).first();
+      conv = await db.prepare(`SELECT ${CONV_COLS} FROM conversations WHERE id = ?1 AND user_id = ?2`).bind(conversationId, user.id).first();
     }
     if (!conv) {
       const newId = crypto.randomUUID();
       await db.prepare(`INSERT INTO conversations (id, user_id, title, model, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, unixepoch(), unixepoch())`).bind(newId, user.id, message.slice(0, 50), model).run();
-      conv = await db.prepare(`SELECT * FROM conversations WHERE id = ?1`).bind(newId).first();
+      conv = await db.prepare(`SELECT ${CONV_COLS} FROM conversations WHERE id = ?1`).bind(newId).first();
     }
 
     await db.prepare(`INSERT INTO messages (id, conversation_id, role, content, model, created_at) VALUES (?1, ?2, 'user', ?3, ?4, unixepoch())`).bind(crypto.randomUUID(), conv.id, message, model).run();
@@ -415,15 +423,15 @@ export const GET: APIRoute = async ({ request, cookies }) => {
   const conversationId = pathParts.length > 2 ? pathParts[2] : null;
 
   if (conversationId) {
-    const conv = await db.prepare(`SELECT * FROM conversations WHERE id = ?1 AND user_id = ?2`).bind(conversationId, user.id).first();
+    const conv = await db.prepare(`SELECT ${CONV_COLS} FROM conversations WHERE id = ?1 AND user_id = ?2`).bind(conversationId, user.id).first();
     if (!conv) return new Response(JSON.stringify({ error: 'Conversation not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
-    const msgs = await db.prepare(`SELECT * FROM messages WHERE conversation_id = ?1 ORDER BY created_at ASC`).bind(conversationId).all();
+    const msgs = await db.prepare(`SELECT id, conversation_id AS conversationId, role, content, model, citations, strftime('%Y-%m-%dT%H:%M:%SZ', created_at) AS createdAt FROM messages WHERE conversation_id = ?1 ORDER BY created_at ASC`).bind(conversationId).all();
     return new Response(JSON.stringify({ conversation: conv, messages: msgs }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   }
 
   const limit = parseInt(url.searchParams.get('limit') || '20');
   const offset = parseInt(url.searchParams.get('offset') || '0');
-  const convs = await db.prepare(`SELECT * FROM conversations WHERE user_id = ?1 ORDER BY updated_at DESC LIMIT ?2 OFFSET ?3`).bind(user.id, limit, offset).all();
+  const convs = await db.prepare(`SELECT ${CONV_COLS} FROM conversations WHERE user_id = ?1 ORDER BY updated_at DESC LIMIT ?2 OFFSET ?3`).bind(user.id, limit, offset).all();
   return new Response(JSON.stringify({ conversations: convs }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 };
 

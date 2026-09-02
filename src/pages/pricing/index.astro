@@ -4,6 +4,14 @@ import NavBar from '../../components/ui/NavBar.astro';
 import Footer from '../../components/ui/Footer.astro';
 import Badge from '../../components/ui/Badge.astro';
 import UpgradeModal from '../../components/ui/UpgradeModal.astro';
+import { PLAN_PRICES, formatMonthly, annualPerMonth, annualSavingsPct } from '../../lib/pricing';
+
+// Comparison table rows (NotesChatAI side sourced from src/lib/pricing.ts)
+const comparisonRows = [
+  { plan: 'Free', nc: `$${PLAN_PRICES.free.monthly} — 50 docs, 30 chats/day`, nlm: '$0 — 50 sources, 50 chats/day' },
+  { plan: 'Pro', nc: `$${PLAN_PRICES.pro.monthly}/mo — 500 docs, 300 chats/day, 25 GB`, nlm: '$19.99/mo — 300 sources, 500 chats/day' },
+  { plan: 'Plus', nc: `$${PLAN_PRICES.plus.monthly}/mo — Unlimited docs & chats, 100 GB`, nlm: '$19.99/mo Ultra — 600 sources, 5000 chats/day' },
+];
 ---
 
 <Layout title="Pricing — NotesChatAI | Free AI Study Assistant" description="Simple, transparent pricing for NotesChatAI. Free beta with 50 documents. Pro for unlimited docs and chats. Better value than NotebookLM." keywords="noteschatai pricing, free notebooklm alternative, ai study assistant pricing, free ai study assistant">
@@ -46,7 +54,7 @@ import UpgradeModal from '../../components/ui/UpgradeModal.astro';
               <p class="font-body-sm text-body">For students and casual learners</p>
             </div>
             <div class="mb-6">
-              <span class="font-display-xl text-ink">$0</span>
+              <span class="font-display-xl text-ink">${PLAN_PRICES.free.monthly}</span>
               <span class="font-body-md text-mute ml-1">/month</span>
             </div>
             <Badge variant="secondary" class="mb-6">Current Beta</Badge>
@@ -84,10 +92,10 @@ import UpgradeModal from '../../components/ui/UpgradeModal.astro';
               <p class="font-body-sm text-on-primary/70">For power users who need more</p>
             </div>
             <div class="mb-2">
-              <span class="font-display-xl text-on-primary">$2</span>
+              <span class="font-display-xl text-on-primary">${PLAN_PRICES.pro.monthly}</span>
               <span class="font-body-md text-on-primary/50 ml-1">/month</span>
             </div>
-            <p class="font-body-sm text-on-primary/50 mb-6">Cancel anytime</p>
+            <p class="font-body-sm text-on-primary/50 mb-6">Cancel anytime · {annualSavingsPct('pro')}% off yearly ({formatMonthly('pro')} → ${annualPerMonth('pro')}/mo billed annually)</p>
             <ul class="space-y-3 mb-8" role="list">
               {[
                 '500 documents',
@@ -120,10 +128,10 @@ import UpgradeModal from '../../components/ui/UpgradeModal.astro';
               <p class="font-body-sm text-body">For teams and institutions</p>
             </div>
             <div class="mb-2">
-              <span class="font-display-xl text-ink">$10</span>
+              <span class="font-display-xl text-ink">${PLAN_PRICES.plus.monthly}</span>
               <span class="font-body-md text-mute ml-1">/month</span>
             </div>
-            <p class="font-body-sm text-mute mb-6">Cancel anytime</p>
+            <p class="font-body-sm text-mute mb-6">Cancel anytime · {annualSavingsPct('plus')}% off yearly ({formatMonthly('plus')} → ${annualPerMonth('plus')}/mo billed annually)</p>
             <ul class="space-y-3 mb-8" role="list">
               {[
                 'Unlimited documents',
@@ -179,11 +187,7 @@ import UpgradeModal from '../../components/ui/UpgradeModal.astro';
                 <span class="font-body-sm-strong text-body">NotebookLM</span>
               </div>
             </div>
-            {[
-              { plan: 'Free', nc: '$0 — 50 docs, 30 chats/day', nlm: '$0 — 50 sources, 50 chats/day' },
-              { plan: 'Pro', nc: '$2/mo — 500 docs, 300 chats/day, 25 GB', nlm: '$19.99/mo — 300 sources, 500 chats/day' },
-              { plan: 'Plus', nc: '$10/mo — Unlimited docs & chats, 100 GB', nlm: '$19.99/mo Ultra — 600 sources, 5000 chats/day' },
-            ].map((row) => (
+            {comparisonRows.map((row) => (
               <div class="grid grid-cols-3 border-b border-hairline last:border-b-0 hover:bg-canvas-soft/50 transition-colors">
                 <div class="p-4 flex items-center"><span class="font-body-sm-strong text-ink">{row.plan}</span></div>
                 <div class="p-4 flex items-center justify-center border-x border-hairline bg-violet/5">
@@ -205,7 +209,7 @@ import UpgradeModal from '../../components/ui/UpgradeModal.astro';
             </div>
             <div>
               <p class="font-body-sm-strong text-ink">The bottom line</p>
-              <p class="font-body-sm text-body">NotesChatAI Pro at $2/mo gives you 500 documents and 300 chats/day. Plus at $10/mo gives you unlimited documents and chats. NotebookLM Pro at $19.99/mo still limits you to 300 sources and 500 chats/day. You get more for less with NotesChatAI.</p>
+              <p class="font-body-sm text-body">NotesChatAI Pro at ${PLAN_PRICES.pro.monthly}/mo gives you 500 documents and 300 chats/day. Plus at ${PLAN_PRICES.plus.monthly}/mo gives you unlimited documents and chats. NotebookLM Pro at $19.99/mo still limits you to 300 sources and 500 chats/day. You get more for less with NotesChatAI.</p>
             </div>
           </div>
         </div>

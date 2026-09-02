@@ -8,6 +8,7 @@ import Footer from '../../components/ui/Footer.astro';
 import Badge from '../../components/ui/Badge.astro';
 import Button from '../../components/ui/Button.astro';
 import Card from '../../components/ui/Card.astro';
+import { PLAN_PRICES } from '../../lib/pricing';
 ---
 
 <Layout title="Features — NotesChatAI vs NotebookLM | AI Study Assistant" description="Full feature comparison: why NotesChatAI is the better AI study assistant and free NotebookLM alternative. Persistent memory, flashcards, citations, and study tools." keywords="notebooklm alternative, ai study assistant, features, persistent ai memory, chat with pdf ai, ai flashcard generator">
@@ -292,7 +293,7 @@ import Card from '../../components/ui/Card.astro';
             </div>
             {[
               { f: 'Free tier', nc: '50 docs, 30 chats/day, 2 audio/day', nlm: '50 sources, 50 chats/day, 3 audio/day' },
-              { f: 'Pro price', nc: '$15/mo', nlm: '$19.99/mo (AI Pro)' },
+              { f: 'Pro price', nc: `$${PLAN_PRICES.pro.monthly}/mo`, nlm: '$19.99/mo (AI Pro)' },
               { f: 'Enterprise', nc: 'Self-hosted, custom limits', nlm: 'Google Workspace' },
               { f: 'API included', nc: 'Coming soon', nlm: 'Not available' },
               { f: 'Storage', nc: '1 GB (Free) / 50 GB (Pro)', nlm: '2 TB (Pro) → 5 TB (Ultra)' },

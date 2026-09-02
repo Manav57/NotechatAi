@@ -19,7 +19,14 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
       return redirect('/auth/login?error=missing_code');
     }
 
-    // Exchange code for token
+    // Exchange code for token.
+    // Note: GitHub REQUIRES redirect_uri in the token-exchange request when it
+    // was included in the authorization request — omitting it returns
+    // `bad_verification_code` and the login silently fails. It must match the
+    // redirect_uri used in /api/auth/signin/github exactly.
+    const BASE_URL = env.BETTER_AUTH_URL || url.origin;
+    const redirectUri = `${BASE_URL}/api/auth/callback/github`;
+
     const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
       method: 'POST',
       headers: {
@@ -30,15 +37,18 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
         client_id: GITHUB_CLIENT_ID,
         client_secret: GITHUB_CLIENT_SECRET,
         code,
+        redirect_uri: redirectUri,
       }),
     });
 
     if (!tokenResponse.ok) {
+      console.error('GitHub token exchange failed:', tokenResponse.status, await tokenResponse.text());
       return redirect('/auth/login?error=oauth_failed');
     }
 
     const tokens = await tokenResponse.json();
     if (tokens.error) {
+      console.error('GitHub token exchange error:', tokens.error, tokens.error_description || '');
       return redirect('/auth/login?error=oauth_failed');
     }
 
@@ -46,23 +56,29 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
     const userResponse = await fetch('https://api.github.com/user', {
       headers: {
         Authorization: `Bearer ${tokens.access_token}`,
-        Accept: 'application/vnd.github.v2+json',
+        Accept: 'application/vnd.github+json',
       },
     });
 
     if (!userResponse.ok) {
+      console.error('GitHub user info failed:', userResponse.status, await userResponse.text());
       return redirect('/auth/login?error=oauth_user_info_failed');
     }
 
     const githubUser = await userResponse.json();
 
-    // Get primary email
+    // Get primary email (read only — this endpoint is always available)
     const emailResponse = await fetch('https://api.github.com/user/emails', {
       headers: {
         Authorization: `Bearer ${tokens.access_token}`,
-        Accept: 'application/vnd.github.v2+json',
+        Accept: 'application/vnd.github+json',
       },
     });
+
+    if (!emailResponse.ok) {
+      console.error('GitHub emails failed:', emailResponse.status, await emailResponse.text());
+      return redirect('/auth/login?error=oauth_user_info_failed');
+    }
 
     const emails = await emailResponse.json();
     const primaryEmail = emails?.find((e: { primary: boolean; verified: boolean }) => e.primary && e.verified)?.email

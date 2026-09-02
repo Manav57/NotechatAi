@@ -2,20 +2,31 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { devGetSession } from '../../../lib/dev-auth';
+import { dbGetSession } from '../../../lib/db-auth';
 
-// ─── Auth helper ───
+// ─── Auth helper (D1 sessions first, then in-memory dev-auth) ───
 
-function getUser(cookies: { get: (name: string) => { value: string } | undefined }) {
+async function getUser(cookies: { get: (name: string) => { value: string } | undefined }) {
   const token = cookies.get('session')?.value;
   if (!token) return null;
-  const result = devGetSession(token);
-  return result?.session?.user || null;
+  // Production path: D1-backed sessions.
+  try {
+    const result = await dbGetSession(token);
+    if (result) return result.session.user;
+  } catch {}
+  // Local dev path: in-memory sessions.
+  try {
+    const result = devGetSession(token);
+    return result?.session?.user || null;
+  } catch {
+    return null;
+  }
 }
 
 // ─── POST /api/billing/portal — Create Stripe Customer Portal Session ───
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const user = getUser(cookies);
+  const user = await getUser(cookies);
   if (!user) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,

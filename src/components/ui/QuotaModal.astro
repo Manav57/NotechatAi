@@ -1,7 +1,8 @@
 ---
+import { formatMonthly } from '../../lib/pricing';
 /**
  * QuotaModal — shown when a 429 QUOTA_EXCEEDED response is received.
- * Prompts user to upgrade to Pro ($2/mo) or Plus ($10/mo).
+ * Prompts user to upgrade to Pro or Plus.
  *
  * Include this component in app pages, then call
  * `window.showQuotaModal(feature, plan, used, limit)` from error handlers.
@@ -21,17 +22,17 @@
 
       <h2 class="font-display-md text-ink mb-2">You've reached your daily limit</h2>
       <p class="font-body-md text-body mb-6" id="quota-message">
-        Upgrade to Pro ($2/mo) or Plus ($10/mo) for higher limits, faster processing, and uninterrupted access.
+        Upgrade to Pro ({formatMonthly('pro')}) or Plus ({formatMonthly('plus')}) for higher limits, faster processing, and uninterrupted access.
       </p>
 
       <div class="space-y-3 mb-6">
         <button onclick="handleQuotaUpgrade('pro')" class="w-full h-12 flex items-center justify-center rounded-pill bg-primary text-on-primary font-button-lg hover:opacity-90 active:opacity-70 transition-all gap-2">
           <span>Upgrade to Pro</span>
-          <span class="font-caption text-on-primary/60">— $2/mo</span>
+          <span class="font-caption text-on-primary/60">— {formatMonthly('pro')}</span>
         </button>
         <button onclick="handleQuotaUpgrade('plus')" class="w-full h-12 flex items-center justify-center rounded-pill bg-canvas text-ink font-button-lg border border-hairline hover:bg-canvas-soft active:bg-canvas-soft-2 transition-all gap-2">
           <span>Upgrade to Plus</span>
-          <span class="font-caption text-mute">— $10/mo</span>
+          <span class="font-caption text-mute">— {formatMonthly('plus')}</span>
         </button>
       </div>
 
