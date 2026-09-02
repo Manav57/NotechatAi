@@ -4,7 +4,7 @@ import AppLayout from '../../../layouts/AppLayout.astro';
 ---
 
 <AppLayout title="Chat — NotesChatAI">
-  <div class="h-[calc(100vh-64px)] flex -my-8 -mx-4 lg:-mx-8 bg-canvas">
+  <div class="h-[calc(100vh-64px)] flex -my-8 -mx-4 lg:-mx-8 bg-canvas overflow-x-hidden">
     {/* ═══════════ Sidebar ═══════════ */}
     <aside id="chat-sidebar" class="hidden lg:flex w-80 bg-canvas border-r border-hairline flex-col flex-shrink-0 transition-all duration-200">
       {/* New Chat / Add Document */}
@@ -293,7 +293,7 @@ import AppLayout from '../../../layouts/AppLayout.astro';
         showChatError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
       } finally {
         isStreaming = false;
-        sendBtn.disabled = true;
+        if (sendBtn) sendBtn.disabled = !chatInput?.value?.trim();
       }
     });
 

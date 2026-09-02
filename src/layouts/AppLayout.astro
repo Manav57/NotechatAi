@@ -181,7 +181,7 @@ const isActive = (href: string) => {
               </div>
               <a href="/app/settings" class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-md text-body hover:bg-canvas-soft">Settings</a>
               <a href="/app/settings/billing" class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-md text-body hover:bg-canvas-soft">Billing</a>
-              <button class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-md text-error hover:bg-error-soft w-full text-left">Sign out</button>
+              <button id="mobile-signout-btn" class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-md text-error hover:bg-error-soft w-full text-left">Sign out</button>
             </div>
           ) : (
             <div class="flex gap-2">
@@ -193,7 +193,7 @@ const isActive = (href: string) => {
       </div>
     </div>
 
-    <main class="min-h-[calc(100vh-64px)]">
+    <main class="min-h-[calc(100vh-64px)] overflow-x-hidden">
       <div class="max-w-[1400px] mx-auto px-4 lg:px-8 py-8">
         <slot />
       </div>
@@ -239,6 +239,16 @@ const isActive = (href: string) => {
   menuBtn?.addEventListener('click', openMenu);
   menuBackdrop?.addEventListener('click', closeMenu);
   menuClose?.addEventListener('click', closeMenu);
+
+  // Mobile signout
+  document.getElementById('mobile-signout-btn')?.addEventListener('click', async () => {
+    try {
+      await fetch('/api/auth/signout', { method: 'POST', credentials: 'include' });
+      window.location.href = '/';
+    } catch (e) {
+      console.error('Sign out failed:', e);
+    }
+  });
 </script>
 
 <QuotaModal />

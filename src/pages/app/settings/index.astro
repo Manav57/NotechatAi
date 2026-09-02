@@ -30,6 +30,7 @@ const userImage = user?.image || `https://api.dicebear.com/7.x/avataaars/svg?see
       ].map((tab, i) => (
         <button
           role="tab"
+          id={`tab-btn-${tab.id}`}
           class:list={[
             'settings-tab px-4 py-2.5 font-body-sm transition-colors -mb-px',
             i === 0
@@ -38,6 +39,7 @@ const userImage = user?.image || `https://api.dicebear.com/7.x/avataaars/svg?see
           ]}
           data-tab={tab.id}
           aria-selected={i === 0 ? 'true' : 'false'}
+          aria-controls={`tab-${tab.id}`}
         >
           {tab.label}
         </button>
@@ -45,7 +47,7 @@ const userImage = user?.image || `https://api.dicebear.com/7.x/avataaars/svg?see
     </div>
 
     {/* Profile Tab */}
-    <div id="tab-profile" class="settings-panel space-y-6" role="tabpanel">
+    <div id="tab-profile" class="settings-panel space-y-6" role="tabpanel" aria-labelledby="tab-btn-profile">
       <Card variant="marketing-large">
         <h2 class="font-display-md text-ink mb-6">Profile Information</h2>
         <div class="flex items-center gap-6 mb-6">
@@ -98,7 +100,7 @@ const userImage = user?.image || `https://api.dicebear.com/7.x/avataaars/svg?see
     </div>
 
     {/* Preferences Tab */}
-    <div id="tab-preferences" class="settings-panel hidden space-y-6" role="tabpanel">
+    <div id="tab-preferences" class="settings-panel hidden space-y-6" role="tabpanel" aria-labelledby="tab-btn-preferences">
       <Card variant="marketing-large">
         <h2 class="font-display-md text-ink mb-6">AI Preferences</h2>
         <div class="space-y-6">
@@ -136,7 +138,7 @@ const userImage = user?.image || `https://api.dicebear.com/7.x/avataaars/svg?see
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" checked class="sr-only peer" />
-              <div class="w-11 h-6 bg-hairline peer-focus:ring-2 peer-focus:ring-link-bg-0 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+              <div class="w-11 h-6 bg-hairline peer-focus:ring-2 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
             </label>
           </div>
 
@@ -147,7 +149,7 @@ const userImage = user?.image || `https://api.dicebear.com/7.x/avataaars/svg?see
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" checked class="sr-only peer" />
-              <div class="w-11 h-6 bg-hairline peer-focus:ring-2 peer-focus:ring-link-bg-0 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+              <div class="w-11 h-6 bg-hairline peer-focus:ring-2 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
             </label>
           </div>
         </div>
@@ -169,7 +171,7 @@ const userImage = user?.image || `https://api.dicebear.com/7.x/avataaars/svg?see
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" checked={item.checked} class="sr-only peer" />
-                <div class="w-11 h-6 bg-hairline peer-focus:ring-2 peer-focus:ring-link-bg-0 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                <div class="w-11 h-6 bg-hairline peer-focus:ring-2 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
               </label>
             </div>
           ))}
@@ -178,7 +180,7 @@ const userImage = user?.image || `https://api.dicebear.com/7.x/avataaars/svg?see
     </div>
 
     {/* Billing Tab */}
-    <div id="tab-billing" class="settings-panel hidden space-y-6" role="tabpanel">
+    <div id="tab-billing" class="settings-panel hidden space-y-6" role="tabpanel" aria-labelledby="tab-btn-billing">
       <Card variant="marketing-large">
         <div class="flex items-center justify-between mb-6">
           <h2 class="font-display-md text-ink">Current Plan</h2>
@@ -221,7 +223,7 @@ const userImage = user?.image || `https://api.dicebear.com/7.x/avataaars/svg?see
     </div>
 
     {/* API Keys Tab */}
-    <div id="tab-api" class="settings-panel hidden space-y-6" role="tabpanel">
+    <div id="tab-api" class="settings-panel hidden space-y-6" role="tabpanel" aria-labelledby="tab-btn-api">
       <Card variant="marketing-large">
         <div class="flex items-center justify-between mb-6">
           <h2 class="font-display-md text-ink">API Keys</h2>
@@ -269,7 +271,7 @@ const userImage = user?.image || `https://api.dicebear.com/7.x/avataaars/svg?see
     </div>
 
     {/* Data & Export Tab */}
-    <div id="tab-data" class="settings-panel hidden space-y-6" role="tabpanel">
+    <div id="tab-data" class="settings-panel hidden space-y-6" role="tabpanel" aria-labelledby="tab-btn-data">
       <Card variant="marketing-large">
         <h2 class="font-display-md text-ink mb-6">Export Data</h2>
         <p class="font-body-sm text-body mb-4">Export your knowledge base, conversations, and study sets.</p>
